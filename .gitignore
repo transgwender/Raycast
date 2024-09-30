@@ -1,0 +1,5 @@
+cmake-build-debug
+cmake-build-release
+.idea
+.vscode
+ext/project_path.hpp
