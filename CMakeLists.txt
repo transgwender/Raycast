@@ -8,7 +8,7 @@ if (POLICY CMP0025)
 endif ()
 set (CMAKE_CXX_STANDARD 14)
 
-# nice hierarchichal structure in MSVC
+# nice hierarchical structure in MSVC
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #Find OS
