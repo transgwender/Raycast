@@ -111,17 +111,15 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
     fprintf(stderr, "Loaded music\n");
-    createFish(renderer, vec2(100.0, 100.0));
 
     // Set all states to default
     restart_game();
+
+    createSprite(renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 
 // Update our game world
-bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    createFish(renderer, vec2(100.0, 100.0));
-    return false;
-}
+bool WorldSystem::step(float elapsed_ms_since_last_update) { return false; }
 
 // Reset the world state to its initial state
 void WorldSystem::restart_game() {

@@ -12,14 +12,12 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     Transform transform;
     transform.translate(motion.position);
     transform.scale(motion.scale);
-    // !!! TODO A1: add rotation to the chain of transformations, mind the order
-    // of transformations
 
     assert(registry.renderRequests.has(entity));
     const RenderRequest& render_request = registry.renderRequests.get(entity);
 
     const GLuint used_effect_enum = (GLuint)render_request.used_effect;
-    assert(used_effect_enum != (GLuint)EFFECT_ASSET_ID::EFFECT_COUNT);
+    assert(used_effect_enum != (GLuint)effect_count);
     const GLuint program = (GLuint)effects[used_effect_enum];
 
     // Setting shaders
@@ -64,32 +62,6 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
 
         glBindTexture(GL_TEXTURE_2D, texture_id);
         gl_has_errors();
-    } else if (render_request.used_effect == EFFECT_ASSET_ID::SALMON ||
-               render_request.used_effect == EFFECT_ASSET_ID::EGG) {
-        GLint in_position_loc = glGetAttribLocation(program, "in_position");
-        GLint in_color_loc = glGetAttribLocation(program, "in_color");
-        gl_has_errors();
-
-        glEnableVertexAttribArray(in_position_loc);
-        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(ColoredVertex), (void*)0);
-        gl_has_errors();
-
-        glEnableVertexAttribArray(in_color_loc);
-        glVertexAttribPointer(in_color_loc, 3, GL_FLOAT, GL_FALSE,
-                              sizeof(ColoredVertex), (void*)sizeof(vec3));
-        gl_has_errors();
-
-        if (render_request.used_effect == EFFECT_ASSET_ID::SALMON) {
-            // Light up?
-            GLint light_up_uloc = glGetUniformLocation(program, "light_up");
-            assert(light_up_uloc >= 0);
-
-            // !!! TODO A1: set the light_up shader variable using glUniform1i,
-            // similar to the glUniform1f call below. The 1f or 1i specified the
-            // type, here a single int.
-            gl_has_errors();
-        }
     } else {
         assert(false && "Type of render request not supported");
     }
@@ -126,9 +98,9 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
 void RenderSystem::drawToScreen() {
     // Setting shaders
     // get the water texture, sprite mesh, and program
-    glUseProgram(effects[(GLuint)EFFECT_ASSET_ID::WATER]);
+    glUseProgram(effects[(GLuint)EFFECT_ASSET_ID::SCREEN]);
     gl_has_errors();
-    // Clearing backbuffer
+    // Clearing back buffer
     int w, h;
     glfwGetFramebufferSize(window, &w,
                            &h); // Note, this will be 2x the resolution given to
@@ -142,7 +114,6 @@ void RenderSystem::drawToScreen() {
     gl_has_errors();
     // Enabling alpha channel for textures
     glDisable(GL_BLEND);
-    // glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
 
     // Draw the screen texture on the quad geometry
@@ -155,14 +126,14 @@ void RenderSystem::drawToScreen() {
                                              // associates indices to the bound
                                              // GL_ARRAY_BUFFER
     gl_has_errors();
-    const GLuint water_program = effects[(GLuint)EFFECT_ASSET_ID::WATER];
+    const GLuint screen_program = effects[(GLuint)EFFECT_ASSET_ID::SCREEN];
     // Set clock
-    GLuint time_uloc = glGetUniformLocation(water_program, "time");
+    GLuint time_uloc = glGetUniformLocation(screen_program, "time");
     glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
     gl_has_errors();
     // Set the vertex position and vertex texture coordinates (both stored in
     // the same VBO)
-    GLint in_position_loc = glGetAttribLocation(water_program, "in_position");
+    GLint in_position_loc = glGetAttribLocation(screen_program, "in_position");
     glEnableVertexAttribArray(in_position_loc);
     glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(vec3),
                           (void*)0);
@@ -196,8 +167,7 @@ void RenderSystem::draw() {
     // Clearing backbuffer
     glViewport(0, 0, w, h);
     glDepthRange(0.00001, 10);
-    glClearColor(GLfloat(172 / 255), GLfloat(216 / 255), GLfloat(255 / 255),
-                 1.0);
+    glClearColor(GLfloat(0.0), GLfloat(0.0), GLfloat(0.0), 1.0);
     glClearDepth(10.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
@@ -217,7 +187,7 @@ void RenderSystem::draw() {
         drawTexturedMesh(entity, projection_2D);
     }
 
-    // Truely render to the screen
+    // Truly render to the screen
     drawToScreen();
 
     // flicker-free display with a double buffer

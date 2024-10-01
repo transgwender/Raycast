@@ -42,13 +42,13 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
                "https://stackoverflow.com/questions/36672935/"
                "why-retina-screen-coordinate-value-is-twice-the-value-of-pixel-"
                "value\n");
-        printf("glfwGetFramebufferSize = %d,%d\n", frame_buffer_width_px,
+        printf("OpenGL Frame Buffer Size = %d,%d\n", frame_buffer_width_px,
                frame_buffer_height_px);
-        printf("window width_height = %d,%d\n", window_width_px,
+        printf("Window Dimensions = %d,%d\n", window_width_px,
                window_height_px);
     }
 
-    // Hint: Ask your TA for how to setup pretty OpenGL error callbacks.
+    // Hint: Ask your TA for how to set up pretty OpenGL error callbacks.
     // This can not be done in macOS, so do not enable
     // it unless you are on Linux or Windows. You will need to change the window
     // creation code to use OpenGL 4.3 (not suported in macOS) and add
@@ -165,57 +165,6 @@ void RenderSystem::initializeGlGeometryBuffers() {
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SPRITE, textured_vertices,
                   textured_indices);
 
-    ////////////////////////
-    // Initialize Egg
-    std::vector<ColoredVertex> egg_vertices;
-    std::vector<uint16_t> egg_indices;
-    constexpr float z = -0.1f;
-    constexpr int NUM_TRIANGLES = 62;
-
-    for (int i = 0; i < NUM_TRIANGLES; i++) {
-        const float t = float(i) * M_PI * 2.f / float(NUM_TRIANGLES - 1);
-        egg_vertices.push_back({});
-        egg_vertices.back().position = {0.5 * cos(t), 0.5 * sin(t), z};
-        egg_vertices.back().color = {0.8, 0.8, 0.8};
-    }
-    egg_vertices.push_back({});
-    egg_vertices.back().position = {0, 0, 0};
-    egg_vertices.back().color = {1, 1, 1};
-    for (int i = 0; i < NUM_TRIANGLES; i++) {
-        egg_indices.push_back((uint16_t)i);
-        egg_indices.push_back((uint16_t)((i + 1) % NUM_TRIANGLES));
-        egg_indices.push_back((uint16_t)NUM_TRIANGLES);
-    }
-    int geom_index = (int)GEOMETRY_BUFFER_ID::EGG;
-    meshes[geom_index].vertices = egg_vertices;
-    meshes[geom_index].vertex_indices = egg_indices;
-    bindVBOandIBO(GEOMETRY_BUFFER_ID::EGG, meshes[geom_index].vertices,
-                  meshes[geom_index].vertex_indices);
-
-    //////////////////////////////////
-    // Initialize debug line
-    std::vector<ColoredVertex> line_vertices;
-    std::vector<uint16_t> line_indices;
-
-    constexpr float depth = 0.5f;
-    constexpr vec3 red = {0.8, 0.1, 0.1};
-
-    // Corner points
-    line_vertices = {
-        {{-0.5, -0.5, depth}, red},
-        {{-0.5, 0.5, depth}, red},
-        {{0.5, 0.5, depth}, red},
-        {{0.5, -0.5, depth}, red},
-    };
-
-    // Two triangles
-    line_indices = {0, 1, 3, 1, 2, 3};
-
-    geom_index = (int)GEOMETRY_BUFFER_ID::DEBUG_LINE;
-    meshes[geom_index].vertices = line_vertices;
-    meshes[geom_index].vertex_indices = line_indices;
-    bindVBOandIBO(GEOMETRY_BUFFER_ID::DEBUG_LINE, line_vertices, line_indices);
-
     ///////////////////////////////////////////////////////
     // Initialize screen triangle (yes, triangle, not quad; its more efficient).
     std::vector<vec3> screen_vertices(3);
@@ -248,7 +197,7 @@ RenderSystem::~RenderSystem() {
     gl_has_errors();
 
     // remove all entities created by the render system
-    while (registry.renderRequests.entities.size() > 0)
+    while (!registry.renderRequests.entities.empty())
         registry.remove_all_components_of(
             registry.renderRequests.entities.back());
 }
