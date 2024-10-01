@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
-project(salmon)
+project(raycast)
 
 # Set c++11
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
@@ -8,7 +8,7 @@ if (POLICY CMP0025)
 endif ()
 set (CMAKE_CXX_STANDARD 14)
 
-# nice hierarchichal structure in MSVC
+# nice hierarchical structure in MSVC
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 #Find OS
@@ -28,7 +28,14 @@ endif()
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp")
 
 # You can switch to use the file GLOB for simplicity but at your own risk
-file(GLOB SOURCE_FILES src/*.cpp src/*.hpp)
+file(GLOB SOURCE_FILES
+        src/*.cpp
+        src/*.hpp
+        src/systems/*.cpp
+        src/systems/*.hpp
+        src/ecs/*.cpp
+        src/ecs/*.hpp
+)
 
 # external libraries will be installed into /usr/local/include and /usr/local/lib but that folder is not automatically included in the search on MACs
 if (IS_OS_MAC)
@@ -40,7 +47,7 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC src/)
+target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/ecs)
 
 # Added this so policy CMP0065 doesn't scream
 set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
