@@ -1,4 +1,3 @@
-
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
 
@@ -6,9 +5,9 @@
 #include <chrono>
 
 // internal
-#include "physics_system.hpp"
-#include "render_system.hpp"
-#include "world_system.hpp"
+#include "systems/physics.hpp"
+#include "systems/render.hpp"
+#include "systems/world.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -32,7 +31,7 @@ int main() {
     renderer.init(window);
     world.init(&renderer);
 
-    // variable timestep loop
+    // variable time step loop
     auto t = Clock::now();
     while (!world.is_over()) {
         // Processes system messages, if this wasn't present the window would
@@ -42,9 +41,9 @@ int main() {
         // Calculating elapsed times in milliseconds from the previous iteration
         auto now = Clock::now();
         float elapsed_ms =
-            (float)(std::chrono::duration_cast<std::chrono::microseconds>(now -
-                                                                          t))
-                .count() /
+            static_cast<float>(
+                (std::chrono::duration_cast<std::chrono::microseconds>(now - t))
+                    .count()) /
             1000;
         t = now;
 

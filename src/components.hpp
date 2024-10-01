@@ -4,15 +4,6 @@
 #include <unordered_map>
 #include <vector>
 
-// Player component
-struct Player {};
-
-// anything that is deadly to the player
-struct Deadly {};
-
-// anything the player can eat
-struct Eatable {};
-
 // All data relevant to the shape and motion of entities
 struct Motion {
     vec2 position = {0, 0};
@@ -26,28 +17,6 @@ struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other; // the second object involved in the collision
     Collision(Entity& other) { this->other = other; };
-};
-
-// Data structure for toggling debug mode
-struct Debug {
-    bool in_debug_mode = 0;
-    bool in_freeze_mode = 0;
-};
-extern Debug debugging;
-
-// Sets the brightness of the screen
-struct ScreenState {
-    float darken_screen_factor = -1;
-};
-
-// A struct to refer to debugging graphics in the ECS
-struct DebugComponent {
-    // Note, an empty struct has size 1
-};
-
-// A timer that will be associated to dying salmon
-struct DeathTimer {
-    float counter_ms = 3000;
 };
 
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl &
@@ -104,7 +73,7 @@ enum class TEXTURE_ASSET_ID {
     EEL = FISH + 1,
     TEXTURE_COUNT = EEL + 1
 };
-const int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
+constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
 
 enum class EFFECT_ASSET_ID {
     COLOURED = 0,

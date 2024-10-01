@@ -1,5 +1,5 @@
 // internal
-#include "tiny_ecs.hpp"
+#include "ecs.hpp"
 
 // All we need to store besides the containers is the id of every entity and
 // callbacks to be able to remove entities across containers

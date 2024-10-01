@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "components.hpp"
-#include "tiny_ecs.hpp"
+#include "ecs.hpp"
 
 class ECSRegistry {
     // Callbacks to remove a particular or all entities in the system
@@ -10,34 +10,18 @@ class ECSRegistry {
 
   public:
     // Manually created list of all components this game has
-    // TODO: A1 add a LightUp component
-    ComponentContainer<DeathTimer> deathTimers;
     ComponentContainer<Motion> motions;
     ComponentContainer<Collision> collisions;
-    ComponentContainer<Player> players;
     ComponentContainer<Mesh*> meshPtrs;
     ComponentContainer<RenderRequest> renderRequests;
-    ComponentContainer<ScreenState> screenStates;
-    ComponentContainer<Eatable> eatables;
-    ComponentContainer<Deadly> deadlys;
-    ComponentContainer<DebugComponent> debugComponents;
-    ComponentContainer<vec3> colors;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
     ECSRegistry() {
-        // TODO: A1 add a LightUp component
-        registry_list.push_back(&deathTimers);
         registry_list.push_back(&motions);
         registry_list.push_back(&collisions);
-        registry_list.push_back(&players);
         registry_list.push_back(&meshPtrs);
         registry_list.push_back(&renderRequests);
-        registry_list.push_back(&screenStates);
-        registry_list.push_back(&eatables);
-        registry_list.push_back(&deadlys);
-        registry_list.push_back(&debugComponents);
-        registry_list.push_back(&colors);
     }
 
     void clear_all_components() {
@@ -45,7 +29,7 @@ class ECSRegistry {
             reg->clear();
     }
 
-    void list_all_components() {
+    void list_all_components() const {
         printf("Debug info on all registry entries:\n");
         for (ContainerInterface* reg : registry_list)
             if (reg->size() > 0)
@@ -53,7 +37,7 @@ class ECSRegistry {
                        typeid(*reg).name());
     }
 
-    void list_all_components_of(Entity e) {
+    void list_all_components_of(Entity e) const {
         printf("Debug info on components of entity %u:\n", (unsigned int)e);
         for (ContainerInterface* reg : registry_list)
             if (reg->has(e))

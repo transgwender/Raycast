@@ -7,8 +7,10 @@
 
 // glfw (OpenGL)
 #define NOMINMAX
+// clang-format off
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
+// clang-format on
 
 // The glm library provides vector and matrix operations as in GLSL
 #include <glm/ext/vector_int2.hpp> // ivec2
@@ -17,7 +19,7 @@
 #include <glm/vec3.hpp>            // vec3
 using namespace glm;
 
-#include "tiny_ecs.hpp"
+#include "ecs/ecs.hpp"
 
 // Simple utility functions to avoid mistyping directory name
 // audio_path("audio.ogg") -> data/audio/audio.ogg

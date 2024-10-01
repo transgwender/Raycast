@@ -11,7 +11,7 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-#include "render_system.hpp"
+#include "systems/render.hpp"
 
 // Container for all our entities and game logic. Individual rendering / update
 // is deferred to the relative update() methods
@@ -48,20 +48,12 @@ class WorldSystem {
     // OpenGL window handle
     GLFWwindow* window;
 
-    // Number of fish eaten by the salmon, displayed in the window title
-    unsigned int points;
-
     // Game state
     RenderSystem* renderer;
     float current_speed;
-    float next_eel_spawn;
-    float next_fish_spawn;
-    Entity player_salmon;
 
     // music references
     Mix_Music* background_music;
-    Mix_Chunk* salmon_dead_sound;
-    Mix_Chunk* salmon_eat_sound;
 
     // C++ random number generator
     std::default_random_engine rng;

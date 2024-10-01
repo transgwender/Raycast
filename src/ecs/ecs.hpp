@@ -8,18 +8,18 @@
 #include <unordered_map>
 #include <vector>
 
-// Unique identifyer for all entities
+// Unique identifier for all entities
 class Entity {
     unsigned int id;
     static unsigned int
-        id_count; // starts from 1, entit 0 is the default initialization
+        id_count; // starts from 1, entity 0 is the default initialization
   public:
     Entity() {
         id = id_count++;
         // Note, indices of already deleted entities arent re-used in this
         // simple implementation.
     }
-    operator unsigned int() {
+    operator unsigned int() const {
         return id;
     } // this enables automatic casting to int
 };

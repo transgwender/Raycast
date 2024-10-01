@@ -1,8 +1,8 @@
 // internal
-#include "render_system.hpp"
+#include "render.hpp"
 #include <SDL.h>
 
-#include "tiny_ecs_registry.hpp"
+#include "ecs/registry.hpp"
 
 void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
     Motion& motion = registry.motions.get(entity);
@@ -96,8 +96,7 @@ void RenderSystem::drawTexturedMesh(Entity entity, const mat3& projection) {
 
     // Getting uniform locations for glUniform* calls
     GLint color_uloc = glGetUniformLocation(program, "fcolor");
-    const vec3 color =
-        registry.colors.has(entity) ? registry.colors.get(entity) : vec3(1);
+    const vec3 color = vec3(1);
     glUniform3fv(color_uloc, 1, (float*)&color);
     gl_has_errors();
 
@@ -159,11 +158,7 @@ void RenderSystem::drawToScreen() {
     const GLuint water_program = effects[(GLuint)EFFECT_ASSET_ID::WATER];
     // Set clock
     GLuint time_uloc = glGetUniformLocation(water_program, "time");
-    GLuint dead_timer_uloc =
-        glGetUniformLocation(water_program, "darken_screen_factor");
     glUniform1f(time_uloc, (float)(glfwGetTime() * 10.0f));
-    ScreenState& screen = registry.screenStates.get(screen_state_entity);
-    glUniform1f(dead_timer_uloc, screen.darken_screen_factor);
     gl_has_errors();
     // Set the vertex position and vertex texture coordinates (both stored in
     // the same VBO)

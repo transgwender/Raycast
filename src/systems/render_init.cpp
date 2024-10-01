@@ -1,5 +1,5 @@
 // internal
-#include "render_system.hpp"
+#include "render.hpp"
 
 #include <array>
 #include <fstream>
@@ -7,7 +7,7 @@
 #include "../ext/stb_image/stb_image.h"
 
 // This creates circular header inclusion, that is quite bad.
-#include "tiny_ecs_registry.hpp"
+#include "ecs/registry.hpp"
 
 // stlib
 #include <iostream>
@@ -255,8 +255,6 @@ RenderSystem::~RenderSystem() {
 
 // Initialize the screen texture from a standard sprite
 bool RenderSystem::initScreenTexture() {
-    registry.screenStates.emplace(screen_state_entity);
-
     int framebuffer_width, framebuffer_height;
     glfwGetFramebufferSize(
         const_cast<GLFWwindow*>(window), &framebuffer_width,

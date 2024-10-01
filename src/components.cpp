@@ -1,5 +1,5 @@
 #include "components.hpp"
-#include "render_system.hpp" // for gl_has_errors
+#include "systems/render.hpp" // for gl_has_errors
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "../ext/stb_image/stb_image.h"
@@ -7,9 +7,6 @@
 // stlib
 #include <iostream>
 #include <sstream>
-
-Debug debugging;
-float death_timer_counter_ms = 3000;
 
 // Very, VERY simple OBJ loader from https://github.com/opengl-tutorials/ogl
 // tutorial 7 (modified to also read vertex color and omit uv and normals)
