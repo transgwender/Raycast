@@ -3,6 +3,8 @@
 #include "../../../../../../Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/FixMath.h"
 #include "world_init.hpp"
 
+#include <iostream>
+
 // Returns the local bounding coordinates (bottom left and top right)
 // scaled by the current size of the entity
 // rotated by the entity's current rotation, relative to the origin
@@ -63,32 +65,38 @@ bool collides(const Motion& motion1, const Motion& motion2) {
     float dist_squared = dot(dp, dp);
     float max_possible_collision_distance = (dot(motion1.scale, motion1.scale) +
                                              dot(motion2.scale, motion2.scale)) / 2.f;
-	// radial boundary-based estimate
-	if (dist_squared < max_possible_collision_distance) {
-	    // move points to their screen location
-    	std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
-    	for (vec2& point : m1_bounding_points) {
-    		point += motion1.position;
-    	}
-    	std::array<vec2, 4> m2_bounding_points = get_bounding_points(motion2);
-    	for (vec2& point : m2_bounding_points) {
-    		point += motion2.position;
-    	}
-		// define all axis angles (normals to edges)
-    	float axis_angles[4];
-    	axis_angles[0] = motion1.angle;
-    	axis_angles[1] = M_PI_2 + motion1.angle;
-    	axis_angles[2] = motion2.angle;
-    	axis_angles[3] = M_PI_2 + motion2.angle;
-		// see if an overlap exists in any of the axes
-    	for (float& angle : axis_angles) {
-    		if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
-    			return false;
-    		}
-    	}
-    	return true;
+    // radial boundary-based estimate
+    if (dist_squared < max_possible_collision_distance) {
+        std::cout << "Collision possible. Refining..." << std::endl;
+        // move points to their screen location
+        std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
+        for (vec2& point : m1_bounding_points) {
+            point += motion1.position;
+        }
+        std::array<vec2, 4> m2_bounding_points = get_bounding_points(motion2);
+        for (vec2& point : m2_bounding_points) {
+            point += motion2.position;
+        }
+        // define all axis angles (normals to edges)
+        float axis_angles[4];
+        axis_angles[0] = motion1.angle;
+        axis_angles[1] = M_PI_2 + motion1.angle;
+        axis_angles[2] = motion2.angle;
+        axis_angles[3] = M_PI_2 + motion2.angle;
+        // see if an overlap exists in any of the axes
+        for (float& angle : axis_angles) {
+            if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
+                std::cout << "No collision!" << std::endl;
+                return false;
+            }
+        }
+        std::cout << "Collision detected between motion with position (";
+        std::cout << motion1.position.x << ", " << motion1.position.y << ") ";
+        std::cout << "and motion with position ";
+        std::cout << motion2.position.x << ", " << motion2.position.y << ") " << std::endl;
+        return true;
     }
-	return false;
+    return false;
 }
 
 /**
