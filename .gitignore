@@ -3,3 +3,5 @@ cmake-build-release
 .idea
 .vscode
 ext/project_path.hpp
+out/
+.vs/
