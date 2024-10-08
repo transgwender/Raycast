@@ -163,18 +163,17 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
-            auto& zones = registry.zones.components;
+            auto& sources = registry.lightSources.entities;
             
-            for (int i = 0; i < zones.size(); i++) {
-                if (zones[i].type == ZONE_TYPE::START) {
-                    vec2 position = zones[i].position;
-                    float angle = zones[i].angle;
+            for (int i = 0; i < sources.size(); i++) {
+                Zone& zone = registry.zones.get(sources[i]);
+                vec2 position = zone.position;
+                float angle = registry.lightSources.components[i].angle;
 
-                    const auto entity = Entity();
-                    Entity e = createLight(entity, renderer, position,
-                                    vec2(cos(-angle * M_PI / 180) * speed,
-                                         sin(-angle * M_PI / 180) * speed));
-                }
+                const auto entity = Entity();
+                Entity e = createLight(entity, renderer, position,
+                                vec2(cos(-angle * M_PI / 180) * speed,
+                                     sin(-angle * M_PI / 180) * speed));
             }
         }
     }
@@ -302,8 +301,11 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                         registry.zones.insert(entity, c);
                     } else if (type == "level") {
                         isLevel = true;
-                  
-                    } 
+                    } else if (type == "light_source") {
+                        LightSource c{};
+                        data.get_to(c);
+                        registry.lightSources.insert(entity, c);
+                    }
                 }
             }
         } catch (...) {

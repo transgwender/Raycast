@@ -19,6 +19,10 @@
           ],
           "zone_type": 0,
           "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 30
         }
       ]
     },
