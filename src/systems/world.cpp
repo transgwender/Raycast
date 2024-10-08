@@ -155,6 +155,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    float speed = 80;
     if (isLevel) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
         if (registry.lightRays.components.size() <= 5 &&
@@ -167,10 +168,12 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             for (int i = 0; i < zones.size(); i++) {
                 if (zones[i].type == ZONE_TYPE::START) {
                     vec2 position = zones[i].position;
+                    float angle = zones[i].angle;
 
                     const auto entity = Entity();
                     Entity e = createLight(entity, renderer, position,
-                                           vec2(80.0, 0.0));
+                                    vec2(cos(-angle * M_PI / 180) * speed,
+                                         sin(-angle * M_PI / 180) * speed));
                 }
             }
         }

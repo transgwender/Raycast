@@ -33,6 +33,7 @@ struct Zone {
     ZONE_TYPE type;
 };
 
+
 struct Renderable {
     vec2 position = {0, 0};
     vec2 scale = {10, 10};
@@ -40,7 +41,7 @@ struct Renderable {
 };
 
 struct LightSource {
-
+    float angle = 0;
 };
 
 struct Light {
