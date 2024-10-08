@@ -19,6 +19,21 @@ Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position,
     return entity;
 }
 
+Entity createLight(const Entity &entity, RenderSystem* renderer, vec2 position, vec2 velocity) {
+
+    Entity light =
+        createSprite(entity, renderer, position, TEXTURE_ASSET_ID::LIGHT);
+
+    Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
+    registry.lightRays.emplace(light);
+
+    auto& motion = registry.motions.get(light);
+    motion.velocity = velocity;
+    motion.scale = vec2({50, 50});
+
+    return entity;
+}
+
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);
     zone.position = position;

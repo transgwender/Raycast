@@ -52,6 +52,9 @@ class WorldSystem {
     // OpenGL window handle
     GLFWwindow* window;
 
+    // time to fire
+    float next_light_spawn;
+
     // Game state
     Entity scene_state_entity;
     RenderSystem* renderer;

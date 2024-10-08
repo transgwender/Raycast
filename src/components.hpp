@@ -18,9 +18,14 @@ struct Scene {
     SCENE_ASSET_ID scene;
 };
 
+struct Level {
+
+};
+
 enum class ZONE_TYPE {
-    START,
-    END
+    START = 0,
+    END = 1,
+    ZONE_TYPE_COUNT
 };
 
 struct Zone {

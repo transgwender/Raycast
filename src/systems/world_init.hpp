@@ -5,4 +5,6 @@
 #include "render.hpp"
 
 Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position, TEXTURE_ASSET_ID texture);
+Entity createLight(const Entity& entity, RenderSystem* renderer, vec2 position,
+                   vec2 velocity);
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);

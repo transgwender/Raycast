@@ -16,8 +16,12 @@
 #include <fstream>
 #include <iostream>
 
+
+const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
+bool isLevel = false;
+
 // create the underwater world
-WorldSystem::WorldSystem() {
+WorldSystem::WorldSystem(): next_light_spawn(0.f) {
     // Seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -150,7 +154,29 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 }
 
 // Update our game world
-bool WorldSystem::step(float elapsed_ms_since_last_update) { return false; }
+bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    if (isLevel) {
+        next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+        if (registry.lightRays.components.size() <= 5 &&
+            next_light_spawn < 0.f) {
+            // reset timer
+            next_light_spawn = LIGHT_SPAWN_DELAY_MS;
+
+            auto& zones = registry.zones.components;
+            
+            for (int i = 0; i < zones.size(); i++) {
+                if (zones[i].type == ZONE_TYPE::START) {
+                    vec2 position = zones[i].position;
+
+                    const auto entity = Entity();
+                    Entity e = createLight(entity, renderer, position,
+                                           vec2(80.0, 0.0));
+                }
+            }
+        }
+    }
+    return true;
+}
 
 // Reset the world state to its initial state
 void WorldSystem::restart_game() {
@@ -234,6 +260,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 // Attempts to parse a specified scene. Returns true if successful. False if not.
 bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
+    isLevel = false;
     std::string filename = scene_paths[(int)scene];
     std::ifstream entity_file(filename);
 
@@ -266,7 +293,14 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                         BoundingBox c{};
                         data.get_to(c);
                         registry.boundingBoxes.insert(entity, c);
-                    }
+                    } else if (type == "zone") {
+                        Zone c{};
+                        data.get_to(c);
+                        registry.zones.insert(entity, c);
+                    } else if (type == "level") {
+                        isLevel = true;
+                  
+                    } 
                 }
             }
         } catch (...) {
