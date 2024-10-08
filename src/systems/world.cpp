@@ -115,7 +115,14 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // Set all states to default
     restart_game();
 
-    createSprite(renderer, vec2(0.0, 0.0), TEXTURE_ASSET_ID::START_ZONE);
+    vec2 startPos = vec2(0.0, 200.0);
+    vec2 endPos = vec2(700.0, 200.0);
+    Entity sz = createSprite(renderer, startPos, TEXTURE_ASSET_ID::START_ZONE);
+    setZone(sz, ZONE_TYPE::START, startPos);
+
+    Entity ez = createSprite(renderer, endPos, TEXTURE_ASSET_ID::END_ZONE);
+    setZone(ez, ZONE_TYPE::END, endPos);
+
     createSprite(renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 

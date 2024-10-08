@@ -19,3 +19,9 @@ Entity createSprite(RenderSystem* renderer, vec2 position, TEXTURE_ASSET_ID text
 
     return entity;
 }
+
+void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
+    Zone zone = registry.zones.emplace(entity);
+    zone.position = position;
+    zone.type = zType;
+}

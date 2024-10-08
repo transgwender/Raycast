@@ -71,6 +71,7 @@ struct Mesh {
 enum class TEXTURE_ASSET_ID {
     FISH,
     START_ZONE,
+    END_ZONE,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
