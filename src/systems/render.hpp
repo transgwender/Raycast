@@ -22,11 +22,18 @@ class RenderSystem {
 
     // Make sure these paths remain in sync with the associated enumerators.
     // Associated id with .obj path
-    const std::vector<std::pair<GEOMETRY_BUFFER_ID, std::string>> mesh_paths;
+    const std::vector<std::pair<GEOMETRY_BUFFER_ID, std::string>> mesh_paths = {
+      // Mesh example
+      // std::pair<GEOMETRY_BUFFER_ID, std::string>(GEOMETRY_BUFFER_ID::SALMON, mesh_path("salmon.obj"))
+    };
 
     // Make sure these paths remain in sync with the associated enumerators.
     const std::array<std::string, texture_count> texture_paths = {
-        textures_path("green_fish.png")};
+        textures_path("green_fish.png"),
+        textures_path("bubble_open.png"),
+        textures_path("bubble_closed.png"),
+        textures_path("button_rectangle_depth_border.png")
+    };
 
     std::array<GLuint, effect_count> effects;
     // Make sure these paths remain in sync with the associated enumerators.

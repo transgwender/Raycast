@@ -1,0 +1,35 @@
+{
+  "objList": [
+    {
+      "name": "play_button",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            500.0,
+            500.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "change_scene",
+          "scene": 0
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            500.0,
+            500.0
+          ],
+          "scale": [
+            384.0,
+            128.0
+          ]
+        }
+      ]
+    }
+  ]
+}
