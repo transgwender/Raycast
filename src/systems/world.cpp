@@ -250,6 +250,10 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                         BoundingBox c{};
                         data.get_to(c);
                         registry.boundingBoxes.insert(entity, c);
+                    } else if (type == "zone") {
+                        Zone c{};
+                        data.get_to(c);
+                        registry.zones.insert(entity, c);
                     }
                 }
             }

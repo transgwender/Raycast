@@ -1,0 +1,9 @@
+
+# Isosceles Triangle OBJ file
+
+v 0.0 0.0 0.0 1.0 1.0 1.0  # Vertex A with white color
+v 1.0 0.0 0.0 1.0 1.0 1.0  # Vertex B with white color
+v 0.5 1.0 0.0 1.0 1.0 1.0  # Vertex C with white color
+
+# Face defined by the three vertices
+f 1 2 3

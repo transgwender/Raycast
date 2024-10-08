@@ -8,6 +8,7 @@
 enum class SCENE_ASSET_ID {
     TEST = 0,
     MAIN_MENU = 1,
+    LEVEL_1 = 2,
     SCENE_COUNT,
 };
 constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
@@ -15,6 +16,22 @@ constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
 // Main data relevant to the level
 struct Scene {
     SCENE_ASSET_ID scene;
+};
+
+enum class ZONE_TYPE {
+    START = 0,
+    END = 1
+};
+
+struct Zone {
+    vec2 position = {0, 0};
+    ZONE_TYPE type;
+};
+
+struct Renderable {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    float angle = 0;
 };
 
 // All data relevant to the shape and motion of entities
@@ -80,6 +97,8 @@ struct BoundingBox {
 enum class TEXTURE_ASSET_ID {
     FISH = 0,
     PLAY_BUTTON = 1,
+    START_ZONE = 2,
+    END_ZONE = 3,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;

@@ -1,0 +1,46 @@
+{
+  "objList": [
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            0.0,
+            200.0
+          ],
+          "texture": 2
+        },
+        {
+          "type": "zone",
+          "position": [
+            0.0,
+            200.0
+          ],
+          "zone_type": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            700.0,
+            200.0
+          ],
+          "texture": 3
+        },
+        {
+          "type": "zone",
+          "position": [
+            700.0,
+            200.0
+          ],
+          "zone_type": 1
+        }
+      ]
+    }
+  ]
+}

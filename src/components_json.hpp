@@ -36,3 +36,15 @@ void from_json(const json& j, BoundingBox& c) {
     j.at("scale").at(0).get_to(c.scale.x);
     j.at("scale").at(1).get_to(c.scale.y);
 }
+
+void to_json(json& j, const Zone& c) {
+    j = json{ {"type", "zone"},
+             {"position", json::array({c.position.x, c.position.y})},
+             {"zone_type", (int)c.type} };
+}
+
+void from_json(const json& j, Zone& c) {
+    j.at("position").at(0).get_to(c.position.x);
+    j.at("position").at(1).get_to(c.position.y);
+    j.at("zone_type").get_to(c.type);
+}
