@@ -4,6 +4,22 @@
 #include <unordered_map>
 #include <vector>
 
+enum class ZONE_TYPE {
+    START,
+    END
+};
+
+struct Zone {
+    vec2 position = {0, 0};
+    ZONE_TYPE type;
+};
+
+struct Renderable {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    float angle = 0;
+};
+
 // All data relevant to the shape and motion of entities
 struct Motion {
     vec2 position = {0, 0};
@@ -54,6 +70,7 @@ struct Mesh {
 
 enum class TEXTURE_ASSET_ID {
     FISH,
+    START_ZONE,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;

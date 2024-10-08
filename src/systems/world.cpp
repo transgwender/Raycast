@@ -115,6 +115,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     // Set all states to default
     restart_game();
 
+    createSprite(renderer, vec2(0.0, 0.0), TEXTURE_ASSET_ID::START_ZONE);
     createSprite(renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 

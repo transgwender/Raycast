@@ -14,6 +14,8 @@ class ECSRegistry {
     ComponentContainer<Collision> collisions;
     ComponentContainer<Mesh*> meshPtrs;
     ComponentContainer<RenderRequest> renderRequests;
+    ComponentContainer<Renderable> renderables;
+    ComponentContainer<Zone> zones;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -22,6 +24,8 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         registry_list.push_back(&meshPtrs);
         registry_list.push_back(&renderRequests);
+        registry_list.push_back(&renderables);
+        registry_list.push_back(&zones);
     }
 
     void clear_all_components() {
