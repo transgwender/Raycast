@@ -4,6 +4,19 @@
 #include <unordered_map>
 #include <vector>
 
+// Scenes
+enum class SCENE_ASSET_ID {
+    TEST = 0,
+    MAIN_MENU = 1,
+    SCENE_COUNT,
+};
+constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
+
+// Main data relevant to the level
+struct Scene {
+    SCENE_ASSET_ID scene;
+};
+
 // All data relevant to the shape and motion of entities
 struct Motion {
     vec2 position = {0, 0};
@@ -43,6 +56,18 @@ struct Mesh {
     std::vector<uint16_t> vertex_indices;
 };
 
+struct Interactable {
+};
+
+struct ChangeScene {
+    SCENE_ASSET_ID scene;
+};
+
+struct BoundingBox {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+};
+
 /**
  * The following enumerators represent global identifiers referring to graphic
  * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture
@@ -53,7 +78,8 @@ struct Mesh {
  */
 
 enum class TEXTURE_ASSET_ID {
-    FISH,
+    FISH = 0,
+    PLAY_BUTTON = 1,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;

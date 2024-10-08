@@ -10,23 +10,33 @@ class ECSRegistry {
 
   public:
     // Manually created list of all components this game has
+    ComponentContainer<Scene> scenes;
     ComponentContainer<Motion> motions;
     ComponentContainer<Collision> collisions;
     ComponentContainer<Mesh*> meshPtrs;
     ComponentContainer<RenderRequest> renderRequests;
+    ComponentContainer<Interactable> interactables;
+    ComponentContainer<ChangeScene> changeScenes;
+    ComponentContainer<BoundingBox> boundingBoxes;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
     ECSRegistry() {
+        registry_list.push_back(&scenes);
         registry_list.push_back(&motions);
         registry_list.push_back(&collisions);
         registry_list.push_back(&meshPtrs);
         registry_list.push_back(&renderRequests);
+        registry_list.push_back(&interactables);
+        registry_list.push_back(&changeScenes);
+        registry_list.push_back(&boundingBoxes);
     }
 
     void clear_all_components() {
         for (ContainerInterface* reg : registry_list)
-            reg->clear();
+            if (reg != &scenes) {
+                reg->clear();
+            }
     }
 
     void list_all_components() const {

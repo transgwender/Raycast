@@ -41,14 +41,19 @@ class WorldSystem {
     // Input callback functions
     void on_key(int key, int, int action, int mod);
     void on_mouse_move(vec2 pos);
+    void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
 
     // restart level
     void restart_game();
+
+    // add entities
+    bool try_parse_scene(SCENE_ASSET_ID scene);
 
     // OpenGL window handle
     GLFWwindow* window;
 
     // Game state
+    Entity scene_state_entity;
     RenderSystem* renderer;
     float current_speed;
 
@@ -58,4 +63,10 @@ class WorldSystem {
     // C++ random number generator
     std::default_random_engine rng;
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
+
+    // Scenes of the game
+    const std::array<std::string, scene_count> scene_paths = {
+        scene_path("test.json"),
+        scene_path("mainmenu.json")
+    };
 };

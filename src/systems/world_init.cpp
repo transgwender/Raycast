@@ -1,8 +1,7 @@
 #include "world_init.hpp"
 #include "ecs/registry.hpp"
 
-Entity createSprite(RenderSystem* renderer, vec2 position, TEXTURE_ASSET_ID texture) {
-    const auto entity = Entity();
+Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position, TEXTURE_ASSET_ID texture) {
 
     // Store a reference to the potentially re-used mesh object
     Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);

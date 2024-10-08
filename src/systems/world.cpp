@@ -6,7 +6,15 @@
 #include <cassert>
 #include <sstream>
 
+// json
+#include "components_json.hpp"
+#include "json.hpp"
+
 #include "systems/physics.hpp"
+
+
+#include <fstream>
+#include <iostream>
 
 // create the underwater world
 WorldSystem::WorldSystem() {
@@ -79,8 +87,15 @@ GLFWwindow* WorldSystem::create_window() {
     auto cursor_pos_redirect = [](GLFWwindow* wnd, double _0, double _1) {
         ((WorldSystem*)glfwGetWindowUserPointer(wnd))->on_mouse_move({_0, _1});
     };
+    auto mouse_button_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2) {
+        double xpos, ypos;
+        glfwGetCursorPos(wnd, &xpos, &ypos);
+        ((WorldSystem*)glfwGetWindowUserPointer(wnd))
+            ->on_mouse_button(_0, _1, _2, xpos, ypos);
+    };
     glfwSetKeyCallback(window, key_redirect);
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
+    glfwSetMouseButtonCallback(window, mouse_button_redirect);
 
     //////////////////////////////////////
     // Loading music and sounds with SDL
@@ -107,6 +122,8 @@ GLFWwindow* WorldSystem::create_window() {
 }
 
 void WorldSystem::init(RenderSystem* renderer_arg) {
+    Scene& scene = registry.scenes.emplace(scene_state_entity);
+    scene.scene = SCENE_ASSET_ID::MAIN_MENU;
     this->renderer = renderer_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
@@ -114,8 +131,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // Set all states to default
     restart_game();
-
-    createSprite(renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 
 // Update our game world
@@ -131,11 +146,17 @@ void WorldSystem::restart_game() {
     current_speed = 1.f;
 
     // Remove all entities that we created
-    while (registry.motions.entities.size() > 0)
-        registry.remove_all_components_of(registry.motions.entities.back());
+    registry.clear_all_components();
 
     // Debugging for memory/component leaks
     registry.list_all_components();
+
+    // Parse scene file
+    if (registry.scenes.has(scene_state_entity)) {
+        try_parse_scene(registry.scenes.get(scene_state_entity).scene);
+    } else {
+        printf("ERROR: NO SCENE STATE ENTITY\n");
+    }
 }
 
 // Handle collisions between entities
@@ -171,3 +192,78 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {}
+
+void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
+    if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
+        printf("(%f, %f)\n", xpos, ypos);
+        for(Entity entity : registry.interactables.entities) {
+            if (registry.boundingBoxes.has(entity)) {
+                BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+                float xRight = boundingBox.position.x + boundingBox.scale.x/2;
+                float xLeft = boundingBox.position.x - boundingBox.scale.x/2;
+                float yUp = boundingBox.position.y - boundingBox.scale.y/2;
+                float yDown = boundingBox.position.y + boundingBox.scale.y/2;
+                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
+                    if (registry.changeScenes.has(entity)) {
+                        ChangeScene& changeScene = registry.changeScenes.get(entity);
+                        Scene& scene = registry.scenes.get(scene_state_entity);
+                        scene.scene = changeScene.scene;
+                        restart_game(); // TODO: Change to function for changing scene specifically
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Attempts to parse a specified scene. Returns true if successful. False if not.
+bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
+    std::string filename = scene_paths[(int)scene];
+    std::ifstream entity_file(filename);
+
+    if (entity_file.is_open())
+    {
+        nlohmann::json j;
+        entity_file >> j;
+
+        entity_file.close();
+
+        // Iterate through every entity specified, and add the component specified
+        try {
+            for(auto &array : j["objList"]) {
+                const auto entity = Entity();
+                for(auto &data : array["data"]) {
+                    std::string type = data["type"];
+                    if (type == "sprite") {
+                        vec2 position = {data["position"][0], data["position"][1]};
+                        TEXTURE_ASSET_ID texture = data["texture"];
+                        createSprite(entity, renderer, position, texture);
+                    } else if (type == "interactable") {
+                        Interactable c{};
+                        data.get_to(c);
+                        registry.interactables.insert(entity, c);
+                    } else if (type == "change_scene") {
+                        ChangeScene c{};
+                        data.get_to(c);
+                        registry.changeScenes.insert(entity, c);
+                    } else if (type == "bounding_box") {
+                        BoundingBox c{};
+                        data.get_to(c);
+                        registry.boundingBoxes.insert(entity, c);
+                    }
+                }
+            }
+        } catch (...) {
+            std::cout << "ERROR: issue with the formatting of the file: " << filename << std::endl;
+            return false;
+        }
+    }
+    else
+    {
+        std::cout << "ERROR: failed to open file: " << filename << std::endl;
+        return false;
+    }
+    return true;
+}
+
+
