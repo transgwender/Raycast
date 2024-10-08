@@ -8,6 +8,7 @@
 enum class SCENE_ASSET_ID {
     TEST = 0,
     MAIN_MENU = 1,
+    LEVEL1 = 2,
     SCENE_COUNT,
 };
 constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
@@ -31,6 +32,14 @@ struct Renderable {
     vec2 position = {0, 0};
     vec2 scale = {10, 10};
     float angle = 0;
+};
+
+struct LightSource {
+
+};
+
+struct Light {
+
 };
 
 // All data relevant to the shape and motion of entities
@@ -94,10 +103,11 @@ struct BoundingBox {
  */
 
 enum class TEXTURE_ASSET_ID {
-    FISH,
-    PLAY_BUTTON,
-    START_ZONE,
-    END_ZONE,
+    FISH = 0,
+    PLAY_BUTTON = 1,
+    START_ZONE = 2,
+    END_ZONE = 3,
+    LIGHT = 4,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;

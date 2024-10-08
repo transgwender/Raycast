@@ -140,13 +140,13 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     Entity ez;
     Entity fish;
 
-    createSprite(sz, renderer, startPos, TEXTURE_ASSET_ID::START_ZONE);
-    setZone(sz, ZONE_TYPE::START, startPos);
+    // createSprite(sz, renderer, startPos, TEXTURE_ASSET_ID::START_ZONE);
+    // setZone(sz, ZONE_TYPE::START, startPos);
 
-    createSprite(ez, renderer, endPos, TEXTURE_ASSET_ID::END_ZONE);
-    setZone(ez, ZONE_TYPE::END, endPos);
+    // createSprite(ez, renderer, endPos, TEXTURE_ASSET_ID::END_ZONE);
+    // setZone(ez, ZONE_TYPE::END, endPos);
 
-    createSprite(fish, renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
+    // createSprite(fish, renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 
 // Update our game world

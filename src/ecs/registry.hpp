@@ -20,6 +20,8 @@ class ECSRegistry {
     ComponentContainer<BoundingBox> boundingBoxes;
     ComponentContainer<Renderable> renderables;
     ComponentContainer<Zone> zones;
+    ComponentContainer<LightSource> lightSources;
+    ComponentContainer<Light> lightRays;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -32,6 +34,9 @@ class ECSRegistry {
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&boundingBoxes);
+        registry_list.push_back(&zones);
+        registry_list.push_back(&lightSources);
+        registry_list.push_back(&lightRays);
     }
 
     void clear_all_components() {

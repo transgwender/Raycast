@@ -67,6 +67,7 @@ class WorldSystem {
     // Scenes of the game
     const std::array<std::string, scene_count> scene_paths = {
         scene_path("test.json"),
-        scene_path("mainmenu.json")
+        scene_path("mainmenu.json"),
+        scene_path("level1.json"),
     };
 };

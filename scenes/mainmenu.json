@@ -16,7 +16,7 @@
         },
         {
           "type": "change_scene",
-          "scene": 0
+          "scene": 2
         },
         {
           "type": "bounding_box",
