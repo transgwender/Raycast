@@ -1,7 +1,8 @@
 // internal
 #include "physics.hpp"
-#include "../../../../../../Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/FixMath.h"
+// #include "../../../../../../Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/FixMath.h"
 #include "world_init.hpp"
+#include <climits>
 
 #include <iostream>
 
@@ -34,7 +35,7 @@ std::array<vec2, 4> get_bounding_points(const Motion& motion) {
 // projected onto an axis as a vec2
 vec2 get_projected_min_max(const std::array<vec2, 4>& bounding_points,
 						   const vec2 axis) {
-	vec2 min_max = {positiveInfinity, negativeInfinity};
+	vec2 min_max = {INT_MIN, INT_MAX};
 	for (const vec2& point : bounding_points) {
 		float projected = dot(point, axis);
 		min_max = {min(projected, min_max.x), max(projected, min_max.y)};
