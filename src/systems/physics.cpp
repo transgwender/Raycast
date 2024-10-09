@@ -103,5 +103,20 @@ bool collides(const Motion& motion1, const Motion& motion2) {
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
-    // TODO
+
+    auto& motion_registry = registry.motions;
+    float collectiveTime = 0;
+    for (uint i = 0; i < motion_registry.size(); i++) {
+
+        // motion.velocity
+        Motion& motion = motion_registry.components[i];
+        Entity entity = motion_registry.entities[i];
+        float step_seconds = elapsed_ms / 1000.f;
+
+        motion.position.x += step_seconds * motion.velocity.x;
+        motion.position.y += step_seconds * motion.velocity.y;
+
+        (void)elapsed_ms; // placeholder to silence unused warning until
+                          // implemented
+    }
 }

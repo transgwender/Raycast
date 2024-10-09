@@ -16,8 +16,12 @@
 #include <fstream>
 #include <iostream>
 
+
+const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
+bool isLevel = false;
+
 // create the underwater world
-WorldSystem::WorldSystem() {
+WorldSystem::WorldSystem(): next_light_spawn(0.f) {
     // Seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -131,10 +135,50 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // Set all states to default
     restart_game();
+
+    // Example values
+    vec2 startPos = vec2(0.0, 200.0);
+    vec2 endPos = vec2(700.0, 200.0);
+
+    Entity sz; 
+    Entity ez;
+    Entity fish;
+
+    // createSprite(sz, renderer, startPos, TEXTURE_ASSET_ID::START_ZONE);
+    // setZone(sz, ZONE_TYPE::START, startPos);
+
+    // createSprite(ez, renderer, endPos, TEXTURE_ASSET_ID::END_ZONE);
+    // setZone(ez, ZONE_TYPE::END, endPos);
+
+    // createSprite(fish, renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 
 // Update our game world
-bool WorldSystem::step(float elapsed_ms_since_last_update) { return false; }
+bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    float speed = 80;
+    if (isLevel) {
+        next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+        if (registry.lightRays.components.size() <= 5 &&
+            next_light_spawn < 0.f) {
+            // reset timer
+            next_light_spawn = LIGHT_SPAWN_DELAY_MS;
+
+            auto& sources = registry.lightSources.entities;
+            
+            for (int i = 0; i < sources.size(); i++) {
+                Zone& zone = registry.zones.get(sources[i]);
+                vec2 position = zone.position;
+                float angle = registry.lightSources.components[i].angle;
+
+                const auto entity = Entity();
+                Entity e = createLight(entity, renderer, position,
+                                vec2(cos(-angle * M_PI / 180) * speed,
+                                     sin(-angle * M_PI / 180) * speed));
+            }
+        }
+    }
+    return true;
+}
 
 // Reset the world state to its initial state
 void WorldSystem::restart_game() {
@@ -218,6 +262,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 // Attempts to parse a specified scene. Returns true if successful. False if not.
 bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
+    isLevel = false;
     std::string filename = scene_paths[(int)scene];
     std::ifstream entity_file(filename);
 
@@ -254,6 +299,12 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                         Zone c{};
                         data.get_to(c);
                         registry.zones.insert(entity, c);
+                    } else if (type == "level") {
+                        isLevel = true;
+                    } else if (type == "light_source") {
+                        LightSource c{};
+                        data.get_to(c);
+                        registry.lightSources.insert(entity, c);
                     }
                 }
             }

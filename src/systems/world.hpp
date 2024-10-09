@@ -52,6 +52,9 @@ class WorldSystem {
     // OpenGL window handle
     GLFWwindow* window;
 
+    // time to fire
+    float next_light_spawn;
+
     // Game state
     Entity scene_state_entity;
     RenderSystem* renderer;
@@ -68,6 +71,6 @@ class WorldSystem {
     const std::array<std::string, scene_count> scene_paths = {
         scene_path("test.json"),
         scene_path("mainmenu.json"),
-        scene_path("level1.json")
+        scene_path("level1.json"),
     };
 };

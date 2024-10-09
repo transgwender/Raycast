@@ -38,13 +38,24 @@ void from_json(const json& j, BoundingBox& c) {
 }
 
 void to_json(json& j, const Zone& c) {
-    j = json{ {"type", "zone"},
+    j = json{{"type", "zone"},
              {"position", json::array({c.position.x, c.position.y})},
-             {"zone_type", (int)c.type} };
+             {"zone_type", (ZONE_TYPE)c.type},
+    };
 }
 
 void from_json(const json& j, Zone& c) {
     j.at("position").at(0).get_to(c.position.x);
     j.at("position").at(1).get_to(c.position.y);
     j.at("zone_type").get_to(c.type);
+}
+
+
+void to_json(json& j, const LightSource& c) {
+    j = json{{"type", "light_source"},
+             {"angle", (float)c.angle}};
+}
+
+void from_json(const json& j, LightSource& c) {
+    j.at("angle").get_to(c.angle);
 }

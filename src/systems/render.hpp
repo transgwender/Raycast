@@ -33,6 +33,7 @@ class RenderSystem {
         textures_path("button_rectangle_depth_border.png"),
         textures_path("bubble_open.png"),
         textures_path("bubble_closed.png"),
+        textures_path("light.png")
     };
 
     std::array<GLuint, effect_count> effects;

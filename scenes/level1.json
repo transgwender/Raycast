@@ -6,18 +6,23 @@
         {
           "type": "sprite",
           "position": [
-            0.0,
-            200.0
+            100.0,
+            360.0
           ],
           "texture": 2
         },
         {
           "type": "zone",
           "position": [
-            0.0,
-            200.0
+            100.0,
+            360.0
           ],
-          "zone_type": 0
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 30
         }
       ]
     },
@@ -27,18 +32,22 @@
         {
           "type": "sprite",
           "position": [
-            700.0,
-            200.0
+            1180.0,
+            360.0
           ],
           "texture": 3
         },
         {
           "type": "zone",
           "position": [
-            700.0,
-            200.0
+            1180.0,
+            360.0
           ],
-          "zone_type": 1
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "level"
         }
       ]
     }
