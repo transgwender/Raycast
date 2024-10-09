@@ -5,4 +5,4 @@ cmake-build-release
 ext/project_path.hpp
 out/
 .vs/
-
+build

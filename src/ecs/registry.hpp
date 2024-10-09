@@ -34,6 +34,7 @@ class ECSRegistry {
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&boundingBoxes);
+        registry.list.push_back(&renderables);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
