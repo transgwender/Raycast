@@ -5,6 +5,29 @@ using json = nlohmann::json;
 
 // https://json.nlohmann.me/features/arbitrary_types/
 
+// Vec2 and Vec3
+template<> struct nlohmann::adl_serializer<vec2> {
+    static void to_json(json& j, const glm::vec2& c) {
+        j = json::array({c.x, c.y});
+    }
+    static void from_json(const json& j, glm::vec2& c) {
+        j.at(0).get_to(c.x);
+        j.at(1).get_to(c.y);
+    }
+};
+template<> struct nlohmann::adl_serializer<vec3> {
+    static void to_json(json& j, const glm::vec3& c) {
+        j = json::array({c.x, c.y, c.z});
+    }
+    static void from_json(const json& j, glm::vec3& c) {
+        j.at(0).get_to(c.x);
+        j.at(1).get_to(c.y);
+        j.at(2).get_to(c.z);
+    }
+};
+
+// Our own structs
+
 void to_json(json& j, const ChangeScene& c) {
     j = json{ {"type", "change_scene"}, {"scene", (int)c.scene} };
 }
@@ -26,27 +49,24 @@ void from_json(const json& j, Interactable& c) {
 
 void to_json(json& j, const BoundingBox& c) {
     j = json{ {"type", "bounding_box"},
-             {"position", json::array({c.position.x, c.position.y})},
-             {"scale", json::array({c.scale.x, c.scale.y})} };
+             {"position", c.position.x},
+             {"scale", c.scale} };
 }
 
 void from_json(const json& j, BoundingBox& c) {
-    j.at("position").at(0).get_to(c.position.x);
-    j.at("position").at(1).get_to(c.position.y);
-    j.at("scale").at(0).get_to(c.scale.x);
-    j.at("scale").at(1).get_to(c.scale.y);
+    j.at("position").get_to(c.position);
+    j.at("scale").get_to(c.scale);
 }
 
 void to_json(json& j, const Zone& c) {
     j = json{{"type", "zone"},
-             {"position", json::array({c.position.x, c.position.y})},
+             {"position", c.position},
              {"zone_type", (ZONE_TYPE)c.type},
     };
 }
 
 void from_json(const json& j, Zone& c) {
-    j.at("position").at(0).get_to(c.position.x);
-    j.at("position").at(1).get_to(c.position.y);
+    j.at("position").get_to(c.position);
     j.at("zone_type").get_to(c.type);
 }
 
