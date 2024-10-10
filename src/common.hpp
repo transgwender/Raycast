@@ -6,7 +6,9 @@
 #include <vector>
 
 // glfw (OpenGL)
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 // clang-format off
 #include <gl3w.h>
 #include <GLFW/glfw3.h>

@@ -1,10 +1,25 @@
 // internal
 #include "physics.hpp"
-// #include "../../../../../../Library/Developer/CommandLineTools/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/CoreServices.framework/Frameworks/CarbonCore.framework/Headers/FixMath.h"
 #include "world_init.hpp"
 #include <climits>
 
 #include <iostream>
+
+const float ONE_SECOND = 1000.f;
+
+/*
+    Linear interpolation algorithm
+
+    @param start: The starting value of the interpolation.
+    @param end: The ending value of the interpolation.
+    @param t: A float value between 0 and 1 representing the interpolation factor.
+              - 0 will return the start value.
+              - 1 will return the end value.
+              - Values between 0 and 1 will return intermediate values.
+*/
+float lerp(float start, float end, float t) {
+    return start * (1 - t) + (end * t);
+}
 
 // Returns the local bounding coordinates (bottom left and top right)
 // scaled by the current size of the entity
@@ -104,20 +119,14 @@ bool collides(const Motion& motion1, const Motion& motion2) {
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
-
     auto& motion_registry = registry.motions;
-    float collectiveTime = 0;
+
     for (uint i = 0; i < motion_registry.size(); i++) {
-
-        // motion.velocity
         Motion& motion = motion_registry.components[i];
-        Entity entity = motion_registry.entities[i];
-        float step_seconds = elapsed_ms / 1000.f;
 
-        motion.position.x += step_seconds * motion.velocity.x;
-        motion.position.y += step_seconds * motion.velocity.y;
+        float t = elapsed_ms / ONE_SECOND;  
 
-        (void)elapsed_ms; // placeholder to silence unused warning until
-                          // implemented
+        motion.position.x += t * motion.velocity.x;
+        motion.position.y += t * motion.velocity.y;
     }
 }

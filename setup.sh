@@ -1,3 +1,5 @@
+# TO BE USED FOR MAC
+
 mkdir -p build   # Create the build directory if it doesn't exist
 cd build         # Navigate into the build directory
 cmake ..         # Run CMake from the parent directory

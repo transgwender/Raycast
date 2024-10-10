@@ -127,7 +127,7 @@ GLFWwindow* WorldSystem::create_window() {
 
 void WorldSystem::init(RenderSystem* renderer_arg) {
     Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene = SCENE_ASSET_ID::MAIN_MENU;
+    scene.scene = SCENE_ASSET_ID::LEVEL1;
     this->renderer = renderer_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
@@ -135,22 +135,6 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // Set all states to default
     restart_game();
-
-    // Example values
-    vec2 startPos = vec2(0.0, 200.0);
-    vec2 endPos = vec2(700.0, 200.0);
-
-    Entity sz; 
-    Entity ez;
-    Entity fish;
-
-    // createSprite(sz, renderer, startPos, TEXTURE_ASSET_ID::START_ZONE);
-    // setZone(sz, ZONE_TYPE::START, startPos);
-
-    // createSprite(ez, renderer, endPos, TEXTURE_ASSET_ID::END_ZONE);
-    // setZone(ez, ZONE_TYPE::END, endPos);
-
-    // createSprite(fish, renderer, vec2(100.0, 100.0), TEXTURE_ASSET_ID::FISH);
 }
 
 // Update our game world
@@ -171,7 +155,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 float angle = registry.lightSources.components[i].angle;
 
                 const auto entity = Entity();
-                Entity e = createLight(entity, renderer, position,
+                createLight(entity, renderer, position,
                                 vec2(cos(-angle * M_PI / 180) * speed,
                                      sin(-angle * M_PI / 180) * speed));
             }

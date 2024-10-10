@@ -128,22 +128,31 @@ elseif (IS_OS_WINDOWS)
         "${SDL2MIXER_DLL}"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_mixer.dll")
 
-    target_compile_options(${PROJECT_NAME} PUBLIC
-        # increase warning level
-        "/W4"
+    if (MSVC)
+        target_compile_options(${PROJECT_NAME} PUBLIC
+            # increase warning level
+            "/W4"       
 
-        # Turn warning "not all control paths return a value" into an error
-        "/we4715"
+            # Turn warning "not all control paths return a value" into an error
+            "/we4715"          
 
-        # use sane exception handling, rather than trying to catch segfaults and allowing resource
-        # leaks and UB. Yup... See "Default exception handling behavior" at
-        # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
-        "/EHsc"
-
-        # turn warning C4239 (non-standard extension that allows temporaries to be bound to
-        # non-const references, yay microsoft) into an error
-        "/we4239"
-    )
+            # use sane exception handling, rather than trying to catch segfaults and allowing resource
+            # leaks and UB. Yup... See "Default exception handling behavior" at
+            # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
+            "/EHsc"       
+                   
+            # turn warning C4239 (non-standard extension that allows temporaries to be bound to
+            # non-const references, yay microsoft) into an error
+            "/we4239"            
+        )
+    else()
+        # Apply GCC/MinGW flags instead of MSVC
+        target_compile_options(${PROJECT_NAME} PUBLIC
+            "-Wall"              # all warnings
+            "-Wextra"            # extra warnings
+            "-Werror"            # treat warnings as errors
+        )
+    endif()
 endif()
 
 # Can't find the include and lib. Quit.
