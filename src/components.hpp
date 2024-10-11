@@ -4,18 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
-// Scenes
-enum class SCENE_ASSET_ID {
-    TEST = 0,
-    MAIN_MENU = 1,
-    LEVEL1 = 2,
-    SCENE_COUNT,
-};
-constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
-
 // Main data relevant to the level
 struct Scene {
-    SCENE_ASSET_ID scene;
+    std::string scene_tag;
 };
 
 struct Level {
@@ -91,7 +82,7 @@ struct Interactable {
 };
 
 struct ChangeScene {
-    SCENE_ASSET_ID scene;
+    std::string scene;
 };
 
 struct BoundingBox {

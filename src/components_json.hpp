@@ -1,3 +1,5 @@
+#pragma once
+
 #include "components.hpp"
 #include "json.hpp"
 
@@ -29,7 +31,7 @@ template<> struct nlohmann::adl_serializer<vec3> {
 // Our own structs
 
 void to_json(json& j, const ChangeScene& c) {
-    j = json{ {"type", "change_scene"}, {"scene", (int)c.scene} };
+    j = json{ {"type", "change_scene"}, {"scene", c.scene} };
 }
 
 void from_json(const json& j, ChangeScene& c) {
@@ -78,4 +80,14 @@ void to_json(json& j, const LightSource& c) {
 
 void from_json(const json& j, LightSource& c) {
     j.at("angle").get_to(c.angle);
+}
+
+void to_json(json& j, const Level& c) {
+    (void)c;
+    j = json{ {"type", "level"} };
+}
+
+void from_json(const json& j, Level& c) {
+    (void)j;
+    (void)c;
 }

@@ -6,19 +6,13 @@
 #include <cassert>
 #include <sstream>
 
-// json
-#include "components_json.hpp"
-#include "json.hpp"
-
 #include "systems/physics.hpp"
-
 
 #include <fstream>
 #include <iostream>
 
 
 const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
-bool isLevel = false;
 
 // create the underwater world
 WorldSystem::WorldSystem(): next_light_spawn(0.f) {
@@ -125,10 +119,11 @@ GLFWwindow* WorldSystem::create_window() {
     return window;
 }
 
-void WorldSystem::init(RenderSystem* renderer_arg) {
+void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene = SCENE_ASSET_ID::LEVEL1;
+    scene.scene_tag = "mainmenu";
     this->renderer = renderer_arg;
+    this->scenes = scene_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
     fprintf(stderr, "Loaded music\n");
@@ -140,7 +135,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     float speed = 80;
-    if (isLevel) {
+    if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
         if (registry.lightRays.components.size() <= 5 &&
             next_light_spawn < 0.f) {
@@ -181,10 +176,16 @@ void WorldSystem::restart_game() {
 
     // Parse scene file
     if (registry.scenes.has(scene_state_entity)) {
-        try_parse_scene(registry.scenes.get(scene_state_entity).scene);
+        scenes->try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
         printf("ERROR: NO SCENE STATE ENTITY\n");
     }
+}
+
+void WorldSystem::change_scene(std::string &scene_tag) {
+    Scene& scene = registry.scenes.get(scene_state_entity);
+    scene.scene_tag = scene_tag;
+    restart_game(); // TODO: Change to function for changing scene specifically
 }
 
 // Handle collisions between entities
@@ -234,75 +235,10 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
-                        Scene& scene = registry.scenes.get(scene_state_entity);
-                        scene.scene = changeScene.scene;
-                        restart_game(); // TODO: Change to function for changing scene specifically
+                        change_scene(changeScene.scene);
                     }
                 }
             }
         }
     }
 }
-
-// Attempts to parse a specified scene. Returns true if successful. False if not.
-bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
-    isLevel = false;
-    std::string filename = scene_paths[(int)scene];
-    std::ifstream entity_file(filename);
-
-    if (entity_file.is_open())
-    {
-        nlohmann::json j;
-        entity_file >> j;
-
-        entity_file.close();
-
-        // Iterate through every entity specified, and add the component specified
-        try {
-            for(auto &array : j["objList"]) {
-                const auto entity = Entity();
-                for(auto &data : array["data"]) {
-                    std::string type = data["type"];
-                    if (type == "sprite") {
-                        vec2 position = {data["position"][0], data["position"][1]};
-                        TEXTURE_ASSET_ID texture = data["texture"];
-                        createSprite(entity, renderer, position, texture);
-                    } else if (type == "interactable") {
-                        Interactable c{};
-                        data.get_to(c);
-                        registry.interactables.insert(entity, c);
-                    } else if (type == "change_scene") {
-                        ChangeScene c{};
-                        data.get_to(c);
-                        registry.changeScenes.insert(entity, c);
-                    } else if (type == "bounding_box") {
-                        BoundingBox c{};
-                        data.get_to(c);
-                        registry.boundingBoxes.insert(entity, c);
-                    } else if (type == "zone") {
-                        Zone c{};
-                        data.get_to(c);
-                        registry.zones.insert(entity, c);
-                    } else if (type == "level") {
-                        isLevel = true;
-                    } else if (type == "light_source") {
-                        LightSource c{};
-                        data.get_to(c);
-                        registry.lightSources.insert(entity, c);
-                    }
-                }
-            }
-        } catch (...) {
-            std::cout << "ERROR: issue with the formatting of the file: " << filename << std::endl;
-            return false;
-        }
-    }
-    else
-    {
-        std::cout << "ERROR: failed to open file: " << filename << std::endl;
-        return false;
-    }
-    return true;
-}
-
-

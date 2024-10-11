@@ -16,7 +16,7 @@
         },
         {
           "type": "change_scene",
-          "scene": 2
+          "scene": "level1"
         },
         {
           "type": "bounding_box",

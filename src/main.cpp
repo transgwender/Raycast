@@ -17,6 +17,7 @@ int main() {
     WorldSystem world;
     RenderSystem renderer;
     PhysicsSystem physics;
+    SceneSystem scenes;
 
     // Initializing window
     GLFWwindow* window = world.create_window();
@@ -29,7 +30,8 @@ int main() {
 
     // initialize the main systems
     renderer.init(window);
-    world.init(&renderer);
+    scenes.init(&renderer);
+    world.init(&renderer, &scenes);
 
     // variable time step loop
     auto t = Clock::now();
