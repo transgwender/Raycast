@@ -1,65 +1,11 @@
-#include "physics.hpp"
+#include "systems/physics.hpp"
 #include "logging/log.hpp"
 #include "world_init.hpp"
+#include "utils/math.hpp"
 #include <climits>
 #include <iostream>
 
 const float ONE_SECOND = 1000.f;
-
-/*
-    Linear interpolation algorithm
-
-    @param start: The starting value of the interpolation.
-    @param end: The ending value of the interpolation.
-    @param t: A float value between 0 and 1 representing the interpolation
-   factor.
-              - 0 will return the start value.
-              - 1 will return the end value.
-              - Values between 0 and 1 will return intermediate values.
-*/
-inline float lerp(float start, float end, float t) {
-    return start * (1 - t) + (end * t);
-}
-
-inline vec2 lerp(vec2 start, vec2 end, float t) {
-  return vec2(lerp(start.x, end.x, t), lerp(start.y, end.y, t));
-}
-
-inline bool approximatelyEqual(float a, float b, float epsilon)
-{
-    return fabs(a - b) <= ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
-}
-
-inline bool essentiallyEqual(float a, float b, float epsilon)
-{
-    return fabs(a - b) <= ( (fabs(a) > fabs(b) ? fabs(b) : fabs(a)) * epsilon);
-}
-
-inline bool definitelyGreaterThan(float a, float b, float epsilon)
-{
-    return (a - b) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
-}
-
-inline bool definitelyLessThan(float a, float b, float epsilon)
-{
-    return (b - a) > ( (fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
-}
-
-inline bool approximatelyEqual(float a, float b) {
-  return approximatelyEqual(a, b, std::numeric_limits<double>::epsilon());
-}
-
-bool essentiallyEqual(float a, float b) {
-  return essentiallyEqual(a, b, std::numeric_limits<double>::epsilon());
-}
-
-inline bool definitelyGreaterThan(float a, float b) {
-  return definitelyGreaterThan(a, b, std::numeric_limits<double>::epsilon());
-}
-
-inline bool definitelyLessThan(float a, float b) {
-  return definitelyLessThan(a, b, std::numeric_limits<double>::epsilon());
-}
 
 // Returns the local bounding coordinates (bottom left and top right)
 // scaled by the current size of the entity
@@ -171,21 +117,21 @@ void PhysicsSystem::step(float elapsed_ms) {
 
     auto& linear_rails_registry = registry.entitiesOnLinearRails;
     for (uint i = 0; i < motion_registry.size(); i++) {
-      auto e = linear_rails_registry.entities[i];
-      OnLinearRails& r = linear_rails_registry.components[i];
-      Motion& m = registry.motions.get(e);
-      LinearlyInterpolatable& lr = registry.linearlyInterpolatables.get(e);
-      float t = elapsed_ms / ONE_SECOND;
-      if (lr.should_switch_direction) {
-        lr.t += t * lr.t_step;
-      } else {
-        lr.t -= t * lr.t_step;
-      }
-      if (definitelyGreaterThan(lr.t, 1.0)) {
-        lr.should_switch_direction = false;
-      } else if (definitelyLessThan(lr.t, 0.0)) {
-        lr.should_switch_direction = true;
-      }
-      m.position = lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
+        auto e = linear_rails_registry.entities[i];
+        OnLinearRails& r = linear_rails_registry.components[i];
+        Motion& m = registry.motions.get(e);
+        LinearlyInterpolatable& lr = registry.linearlyInterpolatables.get(e);
+        float t = elapsed_ms / ONE_SECOND;
+        if (lr.should_switch_direction) {
+            lr.t += t * lr.t_step;
+        } else {
+            lr.t -= t * lr.t_step;
+        }
+        if (raycast::math::definitelyGreaterThan(lr.t, 1.0)) {
+            lr.should_switch_direction = false;
+        } else if (raycast::math::definitelyLessThan(lr.t, 0.0)) {
+            lr.should_switch_direction = true;
+        }
+        m.position = raycast::math::lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
     }
 }
