@@ -7,9 +7,10 @@
 // Scenes
 enum class SCENE_ASSET_ID {
     TEST = 0,
-    MAIN_MENU = 1,
-    LEVEL1 = 2,
-    SCENE_COUNT,
+    MAIN_MENU = TEST + 1,
+    LEVEL1 = MAIN_MENU + 1,
+    MIRRORS_TEST = LEVEL1 + 1,
+    SCENE_COUNT = MIRRORS_TEST + 1 
 };
 constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
 
@@ -99,6 +100,14 @@ struct BoundingBox {
     vec2 scale = {10, 10};
 };
 
+struct OnLinearRails {
+  float angle = 0;
+  float length = 100;
+  vec2 firstEndpoint = {0,0};
+  vec2 secondEndpoint = {0,0};
+  vec2 direction = {0,0};
+};
+
 /**
  * The following enumerators represent global identifiers referring to graphic
  * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture
@@ -110,11 +119,11 @@ struct BoundingBox {
 
 enum class TEXTURE_ASSET_ID {
     FISH = 0,
-    PLAY_BUTTON = 1,
-    START_ZONE = 2,
-    END_ZONE = 3,
-    LIGHT = 4,
-    TEXTURE_COUNT,
+    PLAY_BUTTON = FISH + 1,
+    START_ZONE = PLAY_BUTTON + 1,
+    END_ZONE = START_ZONE + 1,
+    LIGHT = END_ZONE + 1,
+    TEXTURE_COUNT = LIGHT + 1,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "spdlog/sinks/stdout_sinks.h"
 #include "spdlog/spdlog.h"
 
 #define RAYCAST_DEFAULT_LOGGER_NAME "RaycastLogger"
@@ -6,32 +7,38 @@
 #define LOG_TRACE(...)                                                         \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->trace(__VA_ARGS__);          \
+        SPDLOG_LOGGER_TRACE(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),          \
+                            __VA_ARGS__);                                      \
     }
 #define LOG_DEBUG(...)                                                         \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->debug(__VA_ARGS__);          \
+        SPDLOG_LOGGER_DEBUG(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),          \
+                            __VA_ARGS__);                                      \
     }
 #define LOG_INFO(...)                                                          \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->info(__VA_ARGS__);           \
+        SPDLOG_LOGGER_INFO(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),           \
+                           __VA_ARGS__);                                       \
     }
 #define LOG_WARN(...)                                                          \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->warn(__VA_ARGS__);           \
+        SPDLOG_LOGGER_WARN(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),           \
+                           __VA_ARGS__);                                       \
     }
 #define LOG_ERROR(...)                                                         \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->error(__VA_ARGS__);          \
+        SPDLOG_LOGGER_ERROR(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),          \
+                            __VA_ARGS__);                                      \
     }
 #define LOG_CRITICAL(...)                                                      \
                                                                                \
     if (spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME) != nullptr) {                 \
-        spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME)->critical(__VA_ARGS__);       \
+        SPDLOG_LOGGER_CRITICAL(spdlog::get(RAYCAST_DEFAULT_LOGGER_NAME),       \
+                               __VA_ARGS__);                                   \
     }
 #else
 #define LOG_TRACE(...) (void)0

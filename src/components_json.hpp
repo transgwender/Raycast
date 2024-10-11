@@ -27,6 +27,7 @@ template<> struct nlohmann::adl_serializer<vec3> {
 };
 
 // Our own structs
+// TODO: krarpit: include (de)serialzation code along with struct definitions (or find a way to derive these from the struct definitions)
 
 void to_json(json& j, const ChangeScene& c) {
     j = json{ {"type", "change_scene"}, {"scene", (int)c.scene} };
@@ -79,3 +80,15 @@ void to_json(json& j, const LightSource& c) {
 void from_json(const json& j, LightSource& c) {
     j.at("angle").get_to(c.angle);
 }
+
+void to_json(json& j, const OnLinearRails &r) {
+  j = json{{"type", "on_linear_rails"},
+    {"angle", (float)r.angle},
+    {"length"}, (float)r.length};
+}
+
+void from_json(const json& j, OnLinearRails &r) {
+  j.at("angle").get_to(r.angle);
+  j.at("length").get_to(r.length);
+}
+

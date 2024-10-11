@@ -1,10 +1,8 @@
 #include "components.hpp"
-#include "systems/render.hpp" // for gl_has_errors
+#include "systems/render.hpp"
 #include "logging/log.hpp"
 #define STB_IMAGE_IMPLEMENTATION
-#include "../ext/stb_image/stb_image.h"
-
-// stlib
+#include "stb_image.h"
 #include <iostream>
 #include <sstream>
 
@@ -28,9 +26,7 @@ bool Mesh::loadFromOBJFile(std::string obj_path,
 
     FILE* file = fopen(obj_path.c_str(), "r");
     if (file == NULL) {
-        std::cerr << "Impossible to open the file ! Are you in the right path "
-                     "? See Tutorial 1 for details"
-                  << std::endl;
+        LOG_ERROR("Impossible to open the file ! Are you in the right path? See Tutorial 1 for details");
         getchar();
         return false;
     }

@@ -144,7 +144,6 @@ void RenderSystem::initializeGlGeometryBuffers() {
     // Index and Vertex buffer data initialization.
     initializeGlMeshes();
 
-    //////////////////////////
     // Initialize sprite
     // The position corresponds to the center of the texture.
     std::vector<TexturedVertex> textured_vertices(4);
@@ -162,7 +161,6 @@ void RenderSystem::initializeGlGeometryBuffers() {
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SPRITE, textured_vertices,
                   textured_indices);
 
-    ///////////////////////////////////////////////////////
     // Initialize screen triangle (yes, triangle, not quad; its more efficient).
     std::vector<vec3> screen_vertices(3);
     screen_vertices[0] = {-1, -6, 0.f};

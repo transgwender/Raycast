@@ -72,5 +72,6 @@ class WorldSystem {
         scene_path("test.json"),
         scene_path("mainmenu.json"),
         scene_path("level1.json"),
+        scene_path("mirrortest.json")
     };
 };

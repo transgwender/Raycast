@@ -14,7 +14,7 @@ namespace logging {
  */
 void LogManager::Initialize() {
     auto consoleSink = std::make_shared<spdlog::sinks::stdout_color_sink_st>();
-    consoleSink->set_pattern("[%Y-%m-%d %H:%M:%S.%e %^%l%$] %v");
+    consoleSink->set_pattern("[%Y-%m-%d %H:%M:%S.%e %^%l%$][%s %!] %v");
     std::vector<spdlog::sink_ptr> sinks{consoleSink};
     auto logger = std::make_shared<spdlog::logger>(RAYCAST_DEFAULT_LOGGER_NAME,
                                                    sinks.begin(), sinks.end());
@@ -22,17 +22,21 @@ void LogManager::Initialize() {
     logger->flush_on(spdlog::level::trace);
     spdlog::register_logger(logger);
 
-    std::cout << R"(    ____  _____  ___________   ___________
-   / __ \/   \ \/ / ____/   | / ___/_  __/
-  / /_/ / /| |\  / /   / /| | \__ \ / /   
- / _, _/ ___ |/ / /___/ ___ |___/ // /    
-/_/ |_/_/  |_/_/\____/_/  |_/____//_/     
-                                          )"
-              << "\n"
-              << "A puzzle escape game about reflecting and bending light."
-              << "\n"
-              << "Developed by Lightbox Studios (Team 03)" << "\n"
-              << std::endl;
+    std::cout
+        << "\n"
+        << R"('########:::::'###::::'##:::'##::'######:::::'###:::::'######::'########:
+ ##.... ##:::'## ##:::. ##:'##::'##... ##:::'## ##:::'##... ##:... ##..::
+ ##:::: ##::'##:. ##:::. ####::: ##:::..:::'##:. ##:: ##:::..::::: ##::::
+ ########::'##:::. ##:::. ##:::: ##:::::::'##:::. ##:. ######::::: ##::::
+ ##.. ##::: #########:::: ##:::: ##::::::: #########::..... ##:::: ##::::
+ ##::. ##:: ##.... ##:::: ##:::: ##::: ##: ##.... ##:'##::: ##:::: ##::::
+ ##:::. ##: ##:::: ##:::: ##::::. ######:: ##:::: ##:. ######::::: ##::::
+..:::::..::..:::::..:::::..::::::......:::..:::::..:::......::::::..:::::)"
+        << "\n\n"
+        << "A puzzle escape game about reflecting and bending light."
+        << "\n"
+        << "Developed by Lightbox Studios (Team 03)" << "\n"
+        << std::endl;
 }
 
 /**

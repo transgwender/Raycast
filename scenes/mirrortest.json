@@ -1,0 +1,22 @@
+{
+  "objList": [
+    {
+      "name": "mirror",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            100.0,
+            360.0
+          ],
+          "texture": 3
+        },
+        {
+          "type": "on_linear_rails",
+          "angle": 0,
+          "length": 100
+        }
+      ]
+    }
+  ]
+}
