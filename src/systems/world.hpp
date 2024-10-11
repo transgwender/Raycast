@@ -1,16 +1,11 @@
 #pragma once
 
-// internal
 #include "common.hpp"
-
-// stlib
 #include <random>
 #include <vector>
-
 #define SDL_MAIN_HANDLED
 #include <SDL.h>
 #include <SDL_mixer.h>
-
 #include "systems/render.hpp"
 
 // Container for all our entities and game logic. Individual rendering / update
@@ -18,11 +13,9 @@
 class WorldSystem {
   public:
     WorldSystem();
-
-    // Creates a window
     GLFWwindow* create_window();
 
-    // starts the game
+    // Entrypoint to the game
     void init(RenderSystem* renderer);
 
     // Releases all associated resources
@@ -43,16 +36,16 @@ class WorldSystem {
     void on_mouse_move(vec2 pos);
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
 
-    // restart level
+    // Restart level
     void restart_game();
 
-    // add entities
+    // Add entities
     bool try_parse_scene(SCENE_ASSET_ID scene);
 
     // OpenGL window handle
     GLFWwindow* window;
 
-    // time to fire
+    // Time to fire
     float next_light_spawn;
 
     // Game state
@@ -60,7 +53,7 @@ class WorldSystem {
     RenderSystem* renderer;
     float current_speed;
 
-    // music references
+    // Music references
     Mix_Music* background_music;
 
     // C++ random number generator

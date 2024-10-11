@@ -1,7 +1,7 @@
 #include "systems/physics.hpp"
 #include "logging/log.hpp"
-#include "world_init.hpp"
 #include "utils/math.hpp"
+#include "world_init.hpp"
 #include <climits>
 #include <iostream>
 
@@ -132,6 +132,7 @@ void PhysicsSystem::step(float elapsed_ms) {
         } else if (raycast::math::definitelyLessThan(lr.t, 0.0)) {
             lr.should_switch_direction = true;
         }
-        m.position = raycast::math::lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
+        m.position =
+            raycast::math::lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
     }
 }

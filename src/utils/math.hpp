@@ -13,6 +13,14 @@ inline float lerp(float start, float end, float t) {
 inline vec2 lerp(vec2 start, vec2 end, float t) {
     return vec2(lerp(start.x, end.x, t), lerp(start.y, end.y, t));
 }
+
+///////////////////////////////////////////////////////////////////////////////////
+///
+/// The methods below help in making floating point comparisons more
+/// confidently. They are taken from "The Art of Computer Programming" by Knuth.
+///
+///////////////////////////////////////////////////////////////////////////////////
+
 inline bool approximatelyEqual(float a, float b, float epsilon) {
     return fabs(a - b) <= ((fabs(a) < fabs(b) ? fabs(b) : fabs(a)) * epsilon);
 }

@@ -1,11 +1,11 @@
 #define GL3W_IMPLEMENTATION
-#include <gl3w.h>
-#include <chrono>
+#include "logging/log.hpp"
+#include "logging/log_manager.hpp"
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/world.hpp"
-#include "logging/log_manager.hpp"
-#include "logging/log.hpp"
+#include <chrono>
+#include <gl3w.h>
 
 using Clock = std::chrono::high_resolution_clock;
 
@@ -15,7 +15,7 @@ int main() {
     RenderSystem renderer;
     PhysicsSystem physics;
 
-    // Initialize default logger 
+    // Initialize default logger
     raycast::logging::LogManager log_manager;
     log_manager.Initialize();
 
@@ -28,11 +28,11 @@ int main() {
         return EXIT_FAILURE;
     }
 
-    // initialize the main systems
+    // Initialize the main systems
     renderer.init(window);
     world.init(&renderer);
 
-    // variable time step loop
+    // Variable time step loop
     auto t = Clock::now();
     while (!world.is_over()) {
         // Processes system messages, if this wasn't present the window would
@@ -51,7 +51,6 @@ int main() {
         world.step(elapsed_ms);
         physics.step(elapsed_ms);
         world.handle_collisions();
-
         renderer.draw();
     }
 

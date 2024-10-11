@@ -1,6 +1,6 @@
 #include "components.hpp"
-#include "systems/render.hpp"
 #include "logging/log.hpp"
+#include "systems/render.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include <iostream>
@@ -26,7 +26,8 @@ bool Mesh::loadFromOBJFile(std::string obj_path,
 
     FILE* file = fopen(obj_path.c_str(), "r");
     if (file == NULL) {
-        LOG_ERROR("Impossible to open the file ! Are you in the right path? See Tutorial 1 for details");
+        LOG_ERROR("Impossible to open the file ! Are you in the right path? "
+                  "See Tutorial 1 for details");
         getchar();
         return false;
     }
@@ -79,7 +80,8 @@ bool Mesh::loadFromOBJFile(std::string obj_path,
                                &normalIndex[1], &vertexIndex[2], &uvIndex[2],
                                &normalIndex[2]);
                     if (matches != 8) {
-                        LOG_ERROR("File can't be read by our simple parser :-(. Try exporting with other options");
+                        LOG_ERROR("File can't be read by our simple parser "
+                                  ":-(. Try exporting with other options");
                         fclose(file);
                         return false;
                     }

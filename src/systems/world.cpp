@@ -9,7 +9,12 @@
 #include <iostream>
 #include <sstream>
 
-const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
+// NOTE: Expects the `data`, `registry` and `entity` identifiers to be in scope!
+#define PARSE_COMPONENT(ty, container)                                         \
+    ty __ty{};                                                                 \
+    data.get_to(__ty);                                                         \
+    (registry).container.insert(entity, __ty);
+
 bool isLevel = false;
 
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -19,7 +24,7 @@ WorldSystem::WorldSystem() : next_light_spawn(0.f) {
 
 WorldSystem::~WorldSystem() {
 
-    // destroy music components
+    // Destroy music components
     if (background_music != nullptr)
         Mix_FreeMusic(background_music);
 
@@ -198,7 +203,7 @@ void WorldSystem::restart_game() {
 // Handle collisions between entities
 void WorldSystem::handle_collisions() {}
 
-// Should the game be over ?
+// Should the game be over?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
@@ -256,8 +261,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
     }
 }
 
-// Attempts to parse a specified scene. Returns true if successful. False if
-// not.
+/**
+ * Attempts to parse a specified scene. Returns true if successful, false
+ * otherwise.
+ *
+ * @param scene     refers to a JSON representation of a scene
+ */
 bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
     isLevel = false;
     int scene_index = (int)scene;
@@ -269,55 +278,48 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
     std::string filename = scene_paths[(int)scene];
     LOG_INFO("Loading scene from file: {}", filename);
     std::ifstream entity_file(filename);
-
     if (entity_file.is_open()) {
         nlohmann::json j;
         entity_file >> j;
-
         entity_file.close();
-
-        // Iterate through every entity specified, and add the component
-        // specified
+        // Iterate through every entity specified, and add the components it
+        // specifies
         try {
             for (auto& array : j["objList"]) {
                 const auto entity = Entity();
                 for (auto& data : array["data"]) {
                     std::string type = data["type"];
+
                     if (type == "sprite") {
                         vec2 position = {data["position"][0],
                                          data["position"][1]};
                         TEXTURE_ASSET_ID texture = data["texture"];
                         createSprite(entity, renderer, position, texture);
+
                     } else if (type == "interactable") {
-                        Interactable c{};
-                        data.get_to(c);
-                        registry.interactables.insert(entity, c);
+                        PARSE_COMPONENT(Interactable, interactables);
+
                     } else if (type == "change_scene") {
-                        ChangeScene c{};
-                        data.get_to(c);
-                        registry.changeScenes.insert(entity, c);
+                        PARSE_COMPONENT(ChangeScene, changeScenes);
+
                     } else if (type == "bounding_box") {
-                        BoundingBox c{};
-                        data.get_to(c);
-                        registry.boundingBoxes.insert(entity, c);
+                        PARSE_COMPONENT(BoundingBox, boundingBoxes);
+
                     } else if (type == "zone") {
-                        Zone c{};
-                        data.get_to(c);
-                        registry.zones.insert(entity, c);
+                        PARSE_COMPONENT(Zone, zones);
+
                     } else if (type == "level") {
                         isLevel = true;
+
                     } else if (type == "light_source") {
-                        LightSource c{};
-                        data.get_to(c);
-                        registry.lightSources.insert(entity, c);
+                        PARSE_COMPONENT(LightSource, lightSources);
+
                     } else if (type == "on_linear_rails") {
-                        OnLinearRails r{};
-                        data.get_to(r);
-                        registry.entitiesOnLinearRails.insert(entity, r);
+                        PARSE_COMPONENT(OnLinearRails, entitiesOnLinearRails);
+
                     } else if (type == "linearly_interpolatable") {
-                        LinearlyInterpolatable lr{};
-                        data.get_to(lr);
-                        registry.linearlyInterpolatables.insert(entity, lr);
+                        PARSE_COMPONENT(LinearlyInterpolatable,
+                                        linearlyInterpolatables);
                     }
                 }
             }
