@@ -1,28 +1,29 @@
 #define GL3W_IMPLEMENTATION
 #include <gl3w.h>
-
-// stlib
 #include <chrono>
-
-// internal
 #include "systems/physics.hpp"
 #include "systems/render.hpp"
 #include "systems/world.hpp"
+#include "logging/log_manager.hpp"
+#include "logging/log.hpp"
 
 using Clock = std::chrono::high_resolution_clock;
 
-// Entry point
 int main() {
     // Global systems
     WorldSystem world;
     RenderSystem renderer;
     PhysicsSystem physics;
 
+    // Initialize default logger 
+    raycast::logging::LogManager log_manager;
+    log_manager.Initialize();
+
     // Initializing window
     GLFWwindow* window = world.create_window();
     if (!window) {
-        // Time to read the error message
-        printf("Press any key to exit");
+        LOG_ERROR("Failed to initialize GLFW window");
+        LOG_INFO("Press any key to exit");
         getchar();
         return EXIT_FAILURE;
     }

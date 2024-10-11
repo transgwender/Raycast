@@ -1,20 +1,13 @@
-// Header
 #include "world.hpp"
 #include "world_init.hpp"
-
-// stlib
 #include <cassert>
 #include <sstream>
-
-// json
 #include "components_json.hpp"
 #include "json.hpp"
-
 #include "systems/physics.hpp"
-
-
 #include <fstream>
 #include <iostream>
+#include "logging/log.hpp"
 
 
 const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
@@ -44,7 +37,7 @@ WorldSystem::~WorldSystem() {
 // Debugging
 namespace {
 void glfw_err_cb(int error, const char* desc) {
-    fprintf(stderr, "%d: %s", error, desc);
+    LOG_ERROR("{}: {}", error, desc);
 }
 } // namespace
 
@@ -56,7 +49,7 @@ GLFWwindow* WorldSystem::create_window() {
     // Initialize GLFW
     glfwSetErrorCallback(glfw_err_cb);
     if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW");
+        LOG_ERROR("Failed to initialize GLFW");
         return nullptr;
     }
 
@@ -77,7 +70,7 @@ GLFWwindow* WorldSystem::create_window() {
     window = glfwCreateWindow(window_width_px, window_height_px, "Raycast",
                               nullptr, nullptr);
     if (window == nullptr) {
-        fprintf(stderr, "Failed to glfwCreateWindow");
+        LOG_ERROR("Failed to glfwCreateWindow");
         return nullptr;
     }
 
@@ -104,19 +97,19 @@ GLFWwindow* WorldSystem::create_window() {
     //////////////////////////////////////
     // Loading music and sounds with SDL
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "Failed to initialize SDL Audio");
+        LOG_ERROR("Failed to initialize SDL Audio");
         return nullptr;
     }
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-        fprintf(stderr, "Failed to open audio device");
+        LOG_ERROR("Failed to open audio device");
         return nullptr;
     }
 
     background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
 
     if (background_music == nullptr) {
-        fprintf(stderr,
-                "Failed to load sounds\n %s make sure the data "
+        LOG_ERROR(
+                "Failed to load sounds. {} make sure the data "
                 "directory is present",
                 audio_path("music.wav").c_str());
         return nullptr;
@@ -131,7 +124,7 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     this->renderer = renderer_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
-    fprintf(stderr, "Loaded music\n");
+    LOG_INFO("Loaded music");
 
     // Set all states to default
     restart_game();
@@ -168,7 +161,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 void WorldSystem::restart_game() {
     // Debugging for memory/component leaks
     registry.list_all_components();
-    printf("Restarting\n");
+    LOG_INFO("Restarting game state");
 
     // Reset the game speed
     current_speed = 1.f;
@@ -183,7 +176,7 @@ void WorldSystem::restart_game() {
     if (registry.scenes.has(scene_state_entity)) {
         try_parse_scene(registry.scenes.get(scene_state_entity).scene);
     } else {
-        printf("ERROR: NO SCENE STATE ENTITY\n");
+        LOG_ERROR("ERROR: NO SCENE STATE ENTITY");
     }
 }
 
@@ -209,12 +202,12 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
         key == GLFW_KEY_COMMA) {
         current_speed -= 0.1f;
-        printf("Current speed = %f\n", current_speed);
+        LOG_INFO("Current speed = {}", current_speed);
     }
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
         key == GLFW_KEY_PERIOD) {
         current_speed += 0.1f;
-        printf("Current speed = %f\n", current_speed);
+        LOG_INFO("Current speed = {}", current_speed);
     }
     current_speed = fmax(0.f, current_speed);
 }
@@ -223,7 +216,7 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {}
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
     if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-        printf("(%f, %f)\n", xpos, ypos);
+        LOG_INFO("({}, {})", xpos, ypos);
         for(Entity entity : registry.interactables.entities) {
             if (registry.boundingBoxes.has(entity)) {
                 BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
@@ -293,13 +286,13 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                 }
             }
         } catch (...) {
-            std::cout << "ERROR: issue with the formatting of the file: " << filename << std::endl;
+            LOG_ERROR("ERROR: issue with the formatting of the file: {}", filename);
             return false;
         }
     }
     else
     {
-        std::cout << "ERROR: failed to open file: " << filename << std::endl;
+        LOG_ERROR("ERROR: failed to open file: {}", filename);
         return false;
     }
     return true;

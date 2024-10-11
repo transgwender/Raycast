@@ -1,6 +1,6 @@
 #include "components.hpp"
 #include "systems/render.hpp" // for gl_has_errors
-
+#include "logging/log.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "../ext/stb_image/stb_image.h"
 
@@ -19,7 +19,7 @@ bool Mesh::loadFromOBJFile(std::string obj_path,
 #pragma warning(disable : 4996)
 #endif
 
-    printf("Loading OBJ file %s...\n", obj_path.c_str());
+    LOG_INFO("Loading OBJ file {}...\n", obj_path.c_str());
     // Note, normal and UV indices are not loaded/used, but code is commented to
     // do so
     std::vector<uint16_t> out_uv_indices, out_normal_indices;
@@ -83,8 +83,7 @@ bool Mesh::loadFromOBJFile(std::string obj_path,
                                &normalIndex[1], &vertexIndex[2], &uvIndex[2],
                                &normalIndex[2]);
                     if (matches != 8) {
-                        printf("File can't be read by our simple parser :-( "
-                               "Try exporting with other options\n");
+                        LOG_ERROR("File can't be read by our simple parser :-(. Try exporting with other options");
                         fclose(file);
                         return false;
                     }

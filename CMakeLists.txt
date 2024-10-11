@@ -35,6 +35,8 @@ file(GLOB SOURCE_FILES
         src/systems/*.hpp
         src/ecs/*.cpp
         src/ecs/*.hpp
+        src/logging/*.hpp
+        src/logging/*.cpp
 )
 
 # external libraries will be installed into /usr/local/include and /usr/local/lib but that folder is not automatically included in the search on MACs
@@ -47,7 +49,7 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/ecs)
+target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/ecs src/logging)
 
 # Added this so policy CMP0065 doesn't scream
 set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
@@ -56,6 +58,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/stb_image/)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/gl3w)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/nlohmann)
+target_include_directories(${PROJECT_NAME} PUBLIC ext/spdlog)
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)

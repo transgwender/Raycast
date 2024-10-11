@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
-
 #include "components.hpp"
 #include "ecs.hpp"
+#include "logging/log.hpp"
 
 class ECSRegistry {
     // Callbacks to remove a particular or all entities in the system
@@ -48,18 +48,18 @@ class ECSRegistry {
     }
 
     void list_all_components() const {
-        printf("Debug info on all registry entries:\n");
+        LOG_INFO("Debug info on all registry entries:");
         for (ContainerInterface* reg : registry_list)
             if (reg->size() > 0)
-                printf("%4d components of type %s\n", (int)reg->size(),
+                LOG_INFO("{} components of type {}", (int)reg->size(),
                        typeid(*reg).name());
     }
 
     void list_all_components_of(Entity e) const {
-        printf("Debug info on components of entity %u:\n", (unsigned int)e);
+        LOG_INFO("Debug info on components of entity {}: ", (unsigned int)e);
         for (ContainerInterface* reg : registry_list)
             if (reg->has(e))
-                printf("type %s\n", typeid(*reg).name());
+                LOG_INFO("type {}", typeid(*reg).name());
     }
 
     void remove_all_components_of(Entity e) {
