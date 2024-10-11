@@ -126,6 +126,9 @@ struct LinearlyInterpolatable {
     float t_step = 0.01;
 };
 
+// Represents entities that can be rotated by the user
+struct Rotateable {};
+
 /**
  * The following enumerators represent global identifiers referring to graphic
  * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture

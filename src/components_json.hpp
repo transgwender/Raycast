@@ -103,3 +103,13 @@ void to_json(json& j, const LinearlyInterpolatable& lr) {
              {"should_switch_direction", lr.should_switch_direction},
              {"t_step", lr.t_step}};
 }
+
+// Rotateable
+void to_json(json& j, const Rotateable& c) {
+    (void)c;
+    j = json{{"type", "rotateable"}};
+}
+void from_json(const json& j, Rotateable& c) {
+    (void)j;
+    (void)c;
+}

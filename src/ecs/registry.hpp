@@ -24,6 +24,7 @@ class ECSRegistry {
     ComponentContainer<Light> lightRays;
     ComponentContainer<OnLinearRails> entitiesOnLinearRails;
     ComponentContainer<LinearlyInterpolatable> linearlyInterpolatables;
+    ComponentContainer<Rotateable> rotateables;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -42,6 +43,7 @@ class ECSRegistry {
         registry_list.push_back(&lightRays);
         registry_list.push_back(&entitiesOnLinearRails);
         registry_list.push_back(&linearlyInterpolatables);
+        registry_list.push_back(&rotateables);
     }
 
     void clear_all_components() {

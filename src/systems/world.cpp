@@ -9,7 +9,8 @@
 #include <iostream>
 #include <sstream>
 
-// NOTE: Expects the `data`, `registry` and `entity` identifiers to be in scope!
+// NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in
+// scope.
 #define PARSE_COMPONENT(ty, container)                                         \
     ty __ty{};                                                                 \
     data.get_to(__ty);                                                         \
@@ -23,7 +24,6 @@ WorldSystem::WorldSystem() : next_light_spawn(0.f) {
 }
 
 WorldSystem::~WorldSystem() {
-
     // Destroy music components
     if (background_music != nullptr)
         Mix_FreeMusic(background_music);
@@ -130,7 +130,8 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
     // Calculate the endpoints for all entities on rails
     auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
-    LOG_INFO("Calculating endpoints for everything on linear rails.");
+    LOG_INFO("Calculating endpoints for the {} entities on rails.",
+             entities_on_linear_rails.size());
     for (auto e : entities_on_linear_rails) {
         Motion& e_motion = registry.motions.get(e); // Pun unintended.
         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
@@ -147,6 +148,9 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
                  e_motion.position.x, e_motion.position.y, firstEndpoint.x,
                  firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
                  direction.x, direction.y);
+        // Finally, update the angle of the entity to make sure it is algined
+        // with the rail.
+        e_motion.angle = e_rails.angle;
     }
 }
 
@@ -159,14 +163,11 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
-
             auto& sources = registry.lightSources.entities;
-
             for (int i = 0; i < sources.size(); i++) {
                 Zone& zone = registry.zones.get(sources[i]);
                 vec2 position = zone.position;
                 float angle = registry.lightSources.components[i].angle;
-
                 const auto entity = Entity();
                 createLight(entity, renderer, position,
                             vec2(cos(-angle * M_PI / 180) * speed,
@@ -174,6 +175,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             }
         }
     }
+
     return true;
 }
 
@@ -198,6 +200,7 @@ void WorldSystem::restart_game() {
     } else {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
+    registry.list_all_components();
 }
 
 // Handle collisions between entities
@@ -247,6 +250,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown &&
                     ypos > yUp) {
+
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene =
                             registry.changeScenes.get(entity);
@@ -254,6 +258,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                         scene.scene = changeScene.scene;
                         restart_game(); // TODO: Change to function for changing
                                         // scene specifically
+
+                    } else if (registry.rotateables.has(entity)) {
+                        // Rotate the entity.
+                        LOG_INFO("Something should be rotating.")
+                        Motion& e_motion = registry.motions.get(entity);
+                        e_motion.angle += 5;
                     }
                 }
             }
@@ -262,10 +272,10 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
 }
 
 /**
- * Attempts to parse a specified scene. Returns true if successful, false
- * otherwise.
+ * Attempts to parse a specified scene. Returns true if successful, otherwise
+ * false.
  *
- * @param scene     refers to a JSON representation of a scene
+ * @param scene     refers to the JSON representation of a scene
  */
 bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
     isLevel = false;
@@ -282,20 +292,19 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
         nlohmann::json j;
         entity_file >> j;
         entity_file.close();
+
         // Iterate through every entity specified, and add the components it
-        // specifies
+        // specifies.
         try {
             for (auto& array : j["objList"]) {
                 const auto entity = Entity();
                 for (auto& data : array["data"]) {
                     std::string type = data["type"];
-
                     if (type == "sprite") {
                         vec2 position = {data["position"][0],
                                          data["position"][1]};
                         TEXTURE_ASSET_ID texture = data["texture"];
                         createSprite(entity, renderer, position, texture);
-
                     } else if (type == "interactable") {
                         PARSE_COMPONENT(Interactable, interactables);
 
@@ -320,6 +329,9 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                     } else if (type == "linearly_interpolatable") {
                         PARSE_COMPONENT(LinearlyInterpolatable,
                                         linearlyInterpolatables);
+
+                    } else if (type == "rotateable") {
+                        PARSE_COMPONENT(Rotateable, rotateables);
                     }
                 }
             }

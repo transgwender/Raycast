@@ -7,6 +7,7 @@
 #include <typeindex>
 #include <unordered_map>
 #include <vector>
+#include "logging/log.hpp"
 
 // Unique identifier for all entities
 class Entity {

@@ -115,8 +115,9 @@ void PhysicsSystem::step(float elapsed_ms) {
         motion.position.y += t * motion.velocity.y;
     }
 
+    // Step all entities on rails
     auto& linear_rails_registry = registry.entitiesOnLinearRails;
-    for (uint i = 0; i < motion_registry.size(); i++) {
+    for (uint i = 0; i < linear_rails_registry.size(); i++) {
         auto e = linear_rails_registry.entities[i];
         OnLinearRails& r = linear_rails_registry.components[i];
         Motion& m = registry.motions.get(e);
