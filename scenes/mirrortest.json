@@ -6,15 +6,21 @@
         {
           "type": "sprite",
           "position": [
-            100.0,
+            300.0,
             360.0
           ],
           "texture": 3
         },
         {
           "type": "on_linear_rails",
-          "angle": 0,
-          "length": 100
+          "angle": 100,
+          "length": 200
+        },
+        {
+          "type": "linearly_interpolatable",
+          "t": 0,
+          "should_switch_direction": true,
+          "t_step": 0.7
         }
       ]
     }

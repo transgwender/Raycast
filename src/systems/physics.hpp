@@ -12,3 +12,12 @@ class PhysicsSystem {
 
     PhysicsSystem() = default;
 };
+
+bool approximatelyEqual(float a, float b, float epsilon);
+bool essentiallyEqual(float a, float b, float epsilon);
+bool definitelyGreaterThan(float a, float b, float epsilon);
+bool definitelyLessThan(float a, float b, float epsilon);
+bool approximatelyEqual(float a, float b);
+bool essentiallyEqual(float a, float b);
+bool definitelyGreaterThan(float a, float b);
+bool definitelyLessThan(float a, float b);

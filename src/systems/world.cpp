@@ -129,9 +129,11 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
     for (auto e : entities_on_linear_rails) {
         Motion& e_motion = registry.motions.get(e); // Pun unintended.
         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
+        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
         auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
         vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
         vec2 secondEndpoint = e_motion.position - e_rails.length * direction;
+        e_lr.t = 0.5;
         e_rails.firstEndpoint = firstEndpoint;
         e_rails.secondEndpoint = secondEndpoint;
         e_rails.direction = direction;
@@ -312,11 +314,15 @@ bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
                         OnLinearRails r{};
                         data.get_to(r);
                         registry.entitiesOnLinearRails.insert(entity, r);
+                    } else if (type == "linearly_interpolatable") {
+                        LinearlyInterpolatable lr{};
+                        data.get_to(lr);
+                        registry.linearlyInterpolatables.insert(entity, lr);
                     }
                 }
             }
         } catch (...) {
-            LOG_ERROR("Issue with the formatting of the file: {}", filename);
+            LOG_ERROR("Parsing file failed for file; {}", filename);
             return false;
         }
     } else {

@@ -108,6 +108,12 @@ struct OnLinearRails {
   vec2 direction = {0,0};
 };
 
+struct LinearlyInterpolatable {
+  float t;
+  bool should_switch_direction;
+  float t_step = 0.01;
+};
+
 /**
  * The following enumerators represent global identifiers referring to graphic
  * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture
