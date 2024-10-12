@@ -4,7 +4,7 @@
 #include "json.hpp"
 #include "registry.hpp"
 #include "world_init.hpp"
-#include "common.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -17,8 +17,8 @@ void SceneSystem::init(RenderSystem* renderer_arg) {
 //  https://www.cppstories.com/2019/04/dir-iterate/
     fs::path folder = scene_path("levels");
     for (const auto& entry : fs::directory_iterator(folder)) {
+        const auto& path = entry.path();
         auto filename = entry.path().filename().replace_extension();
-        auto path = entry.path();
         levels.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
     }
 

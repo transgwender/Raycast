@@ -1,4 +1,3 @@
-#pragma once
 
 #include "components.hpp"
 #include "json.hpp"
@@ -37,36 +36,36 @@ template <> struct nlohmann::adl_serializer<vec3> {
 ////////////////////////////////////////////////////////////////
 
 // ChangeScene
-void to_json(json& j, const ChangeScene& c) {
+inline void to_json(json& j, const ChangeScene& c) {
     j = json{{"type", "change_scene"}, {"scene", c.scene}};
 }
 
-void from_json(const json& j, ChangeScene& c) { j.at("scene").get_to(c.scene); }
+inline void from_json(const json& j, ChangeScene& c) { j.at("scene").get_to(c.scene); }
 
 // Interactable
-void to_json(json& j, const Interactable& c) {
+inline void to_json(json& j, const Interactable& c) {
     (void)c;
     j = json{{"type", "interactable"}};
 }
 
-void from_json(const json& j, Interactable& c) {
+inline void from_json(const json& j, Interactable& c) {
     (void)j;
     (void)c;
 }
 
 // BoundingBox
-void to_json(json& j, const BoundingBox& c) {
+inline void to_json(json& j, const BoundingBox& c) {
     j = json{{"type", "bounding_box"},
              {"position", c.position.x},
              {"scale", c.scale}};
 }
-void from_json(const json& j, BoundingBox& c) {
+inline void from_json(const json& j, BoundingBox& c) {
     j.at("position").get_to(c.position);
     j.at("scale").get_to(c.scale);
 }
 
 // Zone
-void to_json(json& j, const Zone& c) {
+inline void to_json(json& j, const Zone& c) {
     j = json{
         {"type", "zone"},
         {"position", c.position},
@@ -74,68 +73,68 @@ void to_json(json& j, const Zone& c) {
     };
 }
 
-void from_json(const json& j, Zone& c) {
+inline void from_json(const json& j, Zone& c) {
     j.at("position").get_to(c.position);
     j.at("zone_type").get_to(c.type);
 }
 
 // LightSource
-void to_json(json& j, const LightSource& c) {
+inline void to_json(json& j, const LightSource& c) {
     j = json{{"type", "light_source"}, {"angle", (float)c.angle}};
 }
-void from_json(const json& j, LightSource& c) { j.at("angle").get_to(c.angle); }
+inline void from_json(const json& j, LightSource& c) { j.at("angle").get_to(c.angle); }
 
 // OnLinearRails
-void to_json(json& j, const OnLinearRails& r) {
+inline void to_json(json& j, const OnLinearRails& r) {
     j = json{{"type", "on_linear_rails"},
              {"angle", (float)r.angle},
              {"length"},
              (float)r.length};
 }
-void from_json(const json& j, OnLinearRails& r) {
+inline void from_json(const json& j, OnLinearRails& r) {
     j.at("angle").get_to(r.angle);
     j.at("length").get_to(r.length);
 }
 
 // LinearlyInterpolatable
-void from_json(const json& j, LinearlyInterpolatable& lr) {
+inline void from_json(const json& j, LinearlyInterpolatable& lr) {
     j.at("t").get_to(lr.t);
     j.at("should_switch_direction").get_to(lr.should_switch_direction);
     j.at("t_step").get_to(lr.t_step);
 }
-void to_json(json& j, const LinearlyInterpolatable& lr) {
+inline void to_json(json& j, const LinearlyInterpolatable& lr) {
     j = json{{"t", lr.t},
              {"should_switch_direction", lr.should_switch_direction},
              {"t_step", lr.t_step}};
 }
 
 // Rotateable
-void to_json(json& j, const Rotateable& c) {
+inline void to_json(json& j, const Rotateable& c) {
     (void)c;
     j = json{{"type", "rotateable"}};
 }
-void from_json(const json& j, Rotateable& c) {
+inline void from_json(const json& j, Rotateable& c) {
     (void)j;
     (void)c;
 }
 
 
-void to_json(json& j, const Level& c) {
+inline void to_json(json& j, const Level& c) {
     (void)c;
     j = json{ {"type", "level"} };
 }
 
-void from_json(const json& j, Level& c) {
+inline void from_json(const json& j, Level& c) {
     (void)j;
     (void)c;
 }
 
-void to_json(json& j, const Reflective& c) {
+inline void to_json(json& j, const Reflective& c) {
     (void)c;
     j = json{{"type", "light_source"}};
 }
 
-void from_json(const json& j, Reflective& c) {
+inline void from_json(const json& j, Reflective& c) {
     (void)j;
     (void)c;
 }

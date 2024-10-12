@@ -1,7 +1,6 @@
 #pragma once
-#include "../ext/stb_image/stb_image.h"
+
 #include "common.hpp"
-#include <unordered_map>
 #include <vector>
 
 // Main data relevant to the level

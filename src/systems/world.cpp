@@ -1,29 +1,21 @@
-// Header
 #include "world.hpp"
 #include "world_init.hpp"
 
-// stlib
 #include <cassert>
 #include <sstream>
 #include <fstream>
 #include <iostream>
+#include <SDL.h>
 
-// json
 #include "components_json.hpp"
-#include "json.hpp"
-
 #include "systems/physics.hpp"
 #include "logging/log.hpp"
 
-// NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in
-// scope.
+// NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in scope.
 #define PARSE_COMPONENT(ty, container)                                         \
     ty __ty{};                                                                 \
     data.get_to(__ty);                                                         \
     (registry).container.insert(entity, __ty);
-
-const size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
-const float DOUBLE_REFLECTION_TIMEOUT = 800.f;
 
 // create the light-maze world
 WorldSystem::WorldSystem(): next_light_spawn(0.f) {

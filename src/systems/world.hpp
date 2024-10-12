@@ -6,7 +6,6 @@
 // stlib
 #include <random>
 #include <vector>
-
 #define SDL_MAIN_HANDLED
 #include "registry.hpp"
 

@@ -31,10 +31,9 @@ Entity createSprite(const Entity& entity, RenderSystem* renderer, vec2 position,
 Entity createLight(const Entity& entity, RenderSystem* renderer, vec2 position,
                    vec2 velocity) {
 
-    Entity light =
-        createSprite(entity, renderer, position, TEXTURE_ASSET_ID::LIGHT);
+    Entity light = createSprite(entity, renderer, position, TEXTURE_ASSET_ID::LIGHT);
 
-    Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
+    // Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
     registry.lightRays.emplace(light);
 
     auto& motion = registry.motions.get(light);
