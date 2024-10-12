@@ -1,11 +1,19 @@
 #pragma once
 
+// internal
 #include "common.hpp"
+
+// stlib
 #include <random>
 #include <vector>
+
 #define SDL_MAIN_HANDLED
+#include "registry.hpp"
+
 #include <SDL.h>
 #include <SDL_mixer.h>
+
+#include "systems/scenes.hpp"
 #include "systems/render.hpp"
 
 // Container for all our entities and game logic. Individual rendering / update
@@ -16,7 +24,7 @@ class WorldSystem {
     GLFWwindow* create_window();
 
     // Entrypoint to the game
-    void init(RenderSystem* renderer);
+    void init(RenderSystem* renderer, SceneSystem* scenes);
 
     // Releases all associated resources
     ~WorldSystem();
@@ -36,11 +44,13 @@ class WorldSystem {
     void on_mouse_move(vec2 pos);
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
 
+    // Handle different collision cases
+    void handle_reflection(Entity& reflective, Entity& reflected);
+    void handle_non_reflection(Entity& collider, Entity& other);
+
     // Restart level
     void restart_game();
-
-    // Add entities
-    bool try_parse_scene(SCENE_ASSET_ID scene);
+    void change_scene(std::string &scene_tag);
 
     // OpenGL window handle
     GLFWwindow* window;
@@ -51,6 +61,7 @@ class WorldSystem {
     // Game state
     Entity scene_state_entity;
     RenderSystem* renderer;
+    SceneSystem* scenes;
     float current_speed;
 
     // Music references
@@ -59,12 +70,4 @@ class WorldSystem {
     // C++ random number generator
     std::default_random_engine rng;
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
-
-    // Scenes of the game
-    const std::array<std::string, scene_count> scene_paths = {
-        scene_path("test.json"),
-        scene_path("mainmenu.json"),
-        scene_path("level1.json"),
-        scene_path("mirrortest.json")
-    };
 };

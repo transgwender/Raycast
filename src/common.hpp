@@ -51,6 +51,7 @@ const int window_height_px = 720;
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
+#define M_PI_2 M_PI/2
 #endif
 
 // The 'Transform' component handles transformations passed to the Vertex shader

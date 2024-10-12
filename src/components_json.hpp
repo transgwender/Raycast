@@ -1,3 +1,5 @@
+#pragma once
+
 #include "components.hpp"
 #include "json.hpp"
 
@@ -36,8 +38,9 @@ template <> struct nlohmann::adl_serializer<vec3> {
 
 // ChangeScene
 void to_json(json& j, const ChangeScene& c) {
-    j = json{{"type", "change_scene"}, {"scene", (int)c.scene}};
+    j = json{{"type", "change_scene"}, {"scene", c.scene}};
 }
+
 void from_json(const json& j, ChangeScene& c) { j.at("scene").get_to(c.scene); }
 
 // Interactable
@@ -45,6 +48,7 @@ void to_json(json& j, const Interactable& c) {
     (void)c;
     j = json{{"type", "interactable"}};
 }
+
 void from_json(const json& j, Interactable& c) {
     (void)j;
     (void)c;
@@ -69,6 +73,7 @@ void to_json(json& j, const Zone& c) {
         {"zone_type", (ZONE_TYPE)c.type},
     };
 }
+
 void from_json(const json& j, Zone& c) {
     j.at("position").get_to(c.position);
     j.at("zone_type").get_to(c.type);
@@ -110,6 +115,27 @@ void to_json(json& j, const Rotateable& c) {
     j = json{{"type", "rotateable"}};
 }
 void from_json(const json& j, Rotateable& c) {
+    (void)j;
+    (void)c;
+}
+
+
+void to_json(json& j, const Level& c) {
+    (void)c;
+    j = json{ {"type", "level"} };
+}
+
+void from_json(const json& j, Level& c) {
+    (void)j;
+    (void)c;
+}
+
+void to_json(json& j, const Reflective& c) {
+    (void)c;
+    j = json{{"type", "light_source"}};
+}
+
+void from_json(const json& j, Reflective& c) {
     (void)j;
     (void)c;
 }

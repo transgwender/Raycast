@@ -22,6 +22,8 @@ class ECSRegistry {
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
+    ComponentContainer<Reflective> reflectives;
+    ComponentContainer<Level> levels;
     ComponentContainer<OnLinearRails> entitiesOnLinearRails;
     ComponentContainer<LinearlyInterpolatable> linearlyInterpolatables;
     ComponentContainer<Rotateable> rotateables;
@@ -41,6 +43,8 @@ class ECSRegistry {
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
+        registry_list.push_back(&reflectives);
+        registry_list.push_back(&levels);
         registry_list.push_back(&entitiesOnLinearRails);
         registry_list.push_back(&linearlyInterpolatables);
         registry_list.push_back(&rotateables);

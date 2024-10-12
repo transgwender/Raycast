@@ -55,7 +55,7 @@
         },
         {
           "type": "change_scene",
-          "scene": 1
+          "scene": "mainmenu"
         },
         {
           "type": "bounding_box",

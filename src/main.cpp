@@ -14,6 +14,7 @@ int main() {
     WorldSystem world;
     RenderSystem renderer;
     PhysicsSystem physics;
+    SceneSystem scenes;
 
     // Initialize default logger
     raycast::logging::LogManager log_manager;
@@ -30,7 +31,8 @@ int main() {
 
     // Initialize the main systems
     renderer.init(window);
-    world.init(&renderer);
+    scenes.init(&renderer);
+    world.init(&renderer, &scenes);
 
     // Variable time step loop
     auto t = Clock::now();

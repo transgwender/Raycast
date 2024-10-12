@@ -4,22 +4,9 @@
 #include <unordered_map>
 #include <vector>
 
-/**
- * Represents the various "scenes" in our game. Scenes refer to both playable
- * and non-playable screens. Scene assets are `.json` files stored in `./scenes`
- * that capture the starting state of each scene.
- */
-enum class SCENE_ASSET_ID {
-    TEST = 0,
-    MAIN_MENU = TEST + 1,
-    LEVEL1 = MAIN_MENU + 1,
-    MIRRORS_TEST = LEVEL1 + 1,
-    SCENE_COUNT = MIRRORS_TEST + 1
-};
-constexpr int scene_count = (int)SCENE_ASSET_ID::SCENE_COUNT;
-
+// Main data relevant to the level
 struct Scene {
-    SCENE_ASSET_ID scene;
+    std::string scene_tag;
 };
 
 // A level is also a scene, but it may store additional information.
@@ -51,8 +38,10 @@ struct LightSource {
     float angle = 0;
 };
 
-// Represents the light ray.
-struct Light {};
+struct Light {
+    Entity last_reflected;
+    float last_reflected_timeout;
+};
 
 // All data relevant to the shape and motion of entities
 struct Motion {
@@ -60,14 +49,18 @@ struct Motion {
     float angle = 0;
     vec2 velocity = {0, 0};
     vec2 scale = {10, 10};
+    bool collides = true;
 };
 
 // Stucture to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
     Entity other; // The second object involved in the collision.
-    Collision(Entity& other) { this->other = other; };
+    explicit Collision(Entity& other) { this->other = other; };
 };
+
+// Object is reflective
+struct Reflective {};
 
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl &
 // salmon.vs.glsl)
@@ -99,7 +92,7 @@ struct Interactable {};
 
 // Represents a transition to another scene.
 struct ChangeScene {
-    SCENE_ASSET_ID scene;
+    std::string scene;
 };
 
 // Represents the bounding box for the entity it is applied to -- used to detect
@@ -137,14 +130,13 @@ struct Rotateable {};
  * The final value in each enumeration is both a way to keep track of how many
  * enums there are, and as a default value to represent uninitialized fields.
  */
-
 enum class TEXTURE_ASSET_ID {
-    FISH = 0,
-    PLAY_BUTTON = FISH + 1,
-    START_ZONE = PLAY_BUTTON + 1,
-    END_ZONE = START_ZONE + 1,
-    LIGHT = END_ZONE + 1,
-    TEXTURE_COUNT = LIGHT + 1,
+    FISH,
+    PLAY_BUTTON,
+    START_ZONE,
+    END_ZONE,
+    LIGHT,
+    TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
 

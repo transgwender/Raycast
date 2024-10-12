@@ -1,13 +1,19 @@
+// Header
 #include "world.hpp"
-#include "components_json.hpp"
-#include "json.hpp"
-#include "logging/log.hpp"
-#include "systems/physics.hpp"
 #include "world_init.hpp"
+
+// stlib
 #include <cassert>
+#include <sstream>
 #include <fstream>
 #include <iostream>
-#include <sstream>
+
+// json
+#include "components_json.hpp"
+#include "json.hpp"
+
+#include "systems/physics.hpp"
+#include "logging/log.hpp"
 
 // NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in
 // scope.
@@ -16,9 +22,11 @@
     data.get_to(__ty);                                                         \
     (registry).container.insert(entity, __ty);
 
-bool isLevel = false;
+const size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
+const float DOUBLE_REFLECTION_TIMEOUT = 800.f;
 
-WorldSystem::WorldSystem() : next_light_spawn(0.f) {
+// create the light-maze world
+WorldSystem::WorldSystem(): next_light_spawn(0.f) {
     // Seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -117,10 +125,11 @@ GLFWwindow* WorldSystem::create_window() {
     return window;
 }
 
-void WorldSystem::init(RenderSystem* renderer_arg) {
+void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene = SCENE_ASSET_ID::MIRRORS_TEST;
+    scene.scene_tag = "mainmenu";
     this->renderer = renderer_arg;
+    this->scenes = scene_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
     LOG_INFO("Loaded music");
@@ -156,14 +165,21 @@ void WorldSystem::init(RenderSystem* renderer_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    float speed = 80;
-    if (isLevel) {
+    float speed = 280;
+    if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+        for (auto& light : registry.lightRays.components) {
+            if (light.last_reflected_timeout > 0)
+                light.last_reflected_timeout -= elapsed_ms_since_last_update;
+        }
+
         if (registry.lightRays.components.size() <= 5 &&
             next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
+
             auto& sources = registry.lightSources.entities;
+            
             for (int i = 0; i < sources.size(); i++) {
                 Zone& zone = registry.zones.get(sources[i]);
                 vec2 position = zone.position;
@@ -188,6 +204,9 @@ void WorldSystem::restart_game() {
     // Reset the game speed
     current_speed = 1.f;
 
+    // Reset light respawn timer
+    next_light_spawn = 0.f;
+
     // Remove all entities that we created
     registry.clear_all_components();
 
@@ -196,15 +215,96 @@ void WorldSystem::restart_game() {
 
     // Parse scene file
     if (registry.scenes.has(scene_state_entity)) {
-        try_parse_scene(registry.scenes.get(scene_state_entity).scene);
+        scenes->try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
-    registry.list_all_components();
+
+    // Why list? please delete if not needed
+    // registry.list_all_components();
+}
+
+void WorldSystem::change_scene(std::string &scene_tag) {
+    Scene& scene = registry.scenes.get(scene_state_entity);
+    scene.scene_tag = scene_tag;
+    restart_game(); // TODO: Change to function for changing scene specifically
 }
 
 // Handle collisions between entities
-void WorldSystem::handle_collisions() {}
+void WorldSystem::handle_collisions() {
+    // registry.collisions.emplace_with_duplicates(Entity(), Entity());
+    // Loop over all collisions detected by the physics system
+	auto& collisionsRegistry = registry.collisions;
+    for (int i = 0; i < collisionsRegistry.size(); i++) {
+        // for now, only handle collisions involving light ray as other object
+        if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
+            registry.lightRays.has(collisionsRegistry.entities[i])) continue;
+        if (registry.reflectives.has(collisionsRegistry.entities[i])) {
+            handle_reflection(collisionsRegistry.entities[i],
+                collisionsRegistry.components[i].other);
+        } else {
+            handle_non_reflection(collisionsRegistry.entities[i],
+                collisionsRegistry.components[i].other);
+        }
+    }
+    // Remove all collisions from this simulation step
+    registry.collisions.clear();
+}
+
+// When colliding entities to not reflect, if one of the entities
+// is a light ray and the other is an end zone, win the level
+// if the other entity is not an end-zone, destroy light ray
+// Invariant: other is a light ray
+void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
+    assert(registry.lightRays.has(other));
+    if (registry.zones.has(collider))
+    switch (registry.zones.get(collider).type) {
+        case ZONE_TYPE::END: {
+            std::cout << "Level beaten!";
+            std::string next_scene = "mainmenu";
+            change_scene(next_scene);
+            break;
+        }
+        case ZONE_TYPE::START: {
+            return;
+        }
+        default: {
+            std::cout << "Hit non-reflective object. Light ray fizzles out";
+            registry.remove_all_components_of(other);
+            break;
+        }
+    }
+}
+
+// Reflect light ray based on collision normal
+// Invariant: other is a light ray
+void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
+    assert(registry.lightRays.has(reflected));
+    Light& light = registry.lightRays.get(reflected);
+    // don't reflect off of same mirror twice
+    // due to being inside
+    if (light.last_reflected == reflective && light.last_reflected_timeout > 0) {
+        return;
+    }
+
+    Motion& light_motion = registry.motions.get(reflected);
+    Motion& reflective_surface_motion = registry.motions.get(reflective);
+    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + M_PI_2),
+                                        sin(reflective_surface_motion.angle + M_PI_2)};
+    float angle_between = atan2(reflective_surface_normal.y,
+                                reflective_surface_normal.x)
+                        - atan2(light_motion.velocity.y,
+                                light_motion.velocity.x);
+    std::cout << angle_between * 180.f / M_PI << std::endl;
+    vec2 reflected_velocity = -light_motion.velocity
+        + 2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
+    light_motion.velocity = reflected_velocity;
+    light.last_reflected = reflective;
+    light.last_reflected_timeout = DOUBLE_REFLECTION_TIMEOUT;
+    angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) - atan2(light_motion.velocity.y, light_motion.velocity.x);
+    light_motion.angle -= 2 * angle_between;
+    std::cout << angle_between * 180.f / M_PI << std::endl;
+}
 
 // Should the game be over?
 bool WorldSystem::is_over() const {
@@ -235,6 +335,10 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     current_speed = fmax(0.f, current_speed);
 }
 
+void move_mirror(vec2 position) {
+    registry.motions.get(registry.reflectives.entities[0]).position = position;
+}
+
 void WorldSystem::on_mouse_move(vec2 mouse_position) {}
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
@@ -252,13 +356,8 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                     ypos > yUp) {
 
                     if (registry.changeScenes.has(entity)) {
-                        ChangeScene& changeScene =
-                            registry.changeScenes.get(entity);
-                        Scene& scene = registry.scenes.get(scene_state_entity);
-                        scene.scene = changeScene.scene;
-                        restart_game(); // TODO: Change to function for changing
-                                        // scene specifically
-
+                        ChangeScene& changeScene = registry.changeScenes.get(entity);
+                        change_scene(changeScene.scene);
                     } else if (registry.rotateables.has(entity)) {
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
@@ -269,80 +368,4 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
             }
         }
     }
-}
-
-/**
- * Attempts to parse a specified scene. Returns true if successful, otherwise
- * false.
- *
- * @param scene     refers to the JSON representation of a scene
- */
-bool WorldSystem::try_parse_scene(SCENE_ASSET_ID scene) {
-    isLevel = false;
-    int scene_index = (int)scene;
-    if (scene_index >= scene_paths.size()) {
-        LOG_ERROR("Scene index: {} is greater than the length of the scene "
-                  "paths array, you probably forgot to update scene paths.");
-        return false;
-    }
-    std::string filename = scene_paths[(int)scene];
-    LOG_INFO("Loading scene from file: {}", filename);
-    std::ifstream entity_file(filename);
-    if (entity_file.is_open()) {
-        nlohmann::json j;
-        entity_file >> j;
-        entity_file.close();
-
-        // Iterate through every entity specified, and add the components it
-        // specifies.
-        try {
-            for (auto& array : j["objList"]) {
-                const auto entity = Entity();
-                for (auto& data : array["data"]) {
-                    std::string type = data["type"];
-                    if (type == "sprite") {
-                        vec2 position = {data["position"][0],
-                                         data["position"][1]};
-                        TEXTURE_ASSET_ID texture = data["texture"];
-                        createSprite(entity, renderer, position, texture);
-                    } else if (type == "interactable") {
-                        PARSE_COMPONENT(Interactable, interactables);
-
-                    } else if (type == "change_scene") {
-                        PARSE_COMPONENT(ChangeScene, changeScenes);
-
-                    } else if (type == "bounding_box") {
-                        PARSE_COMPONENT(BoundingBox, boundingBoxes);
-
-                    } else if (type == "zone") {
-                        PARSE_COMPONENT(Zone, zones);
-
-                    } else if (type == "level") {
-                        isLevel = true;
-
-                    } else if (type == "light_source") {
-                        PARSE_COMPONENT(LightSource, lightSources);
-
-                    } else if (type == "on_linear_rails") {
-                        PARSE_COMPONENT(OnLinearRails, entitiesOnLinearRails);
-
-                    } else if (type == "linearly_interpolatable") {
-                        PARSE_COMPONENT(LinearlyInterpolatable,
-                                        linearlyInterpolatables);
-
-                    } else if (type == "rotateable") {
-                        PARSE_COMPONENT(Rotateable, rotateables);
-                    }
-                }
-            }
-        } catch (...) {
-            LOG_ERROR("Parsing file failed for file; {}", filename);
-            return false;
-        }
-    } else {
-        LOG_ERROR("Failed to open file: {}", filename);
-        return false;
-    }
-    LOG_INFO("Successfully loaded scene")
-    return true;
 }
