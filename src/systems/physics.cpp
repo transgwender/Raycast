@@ -50,7 +50,7 @@ std::array<vec2, 4> get_bounding_points(const Motion& motion) {
 // projected onto an axis as a vec2
 vec2 get_projected_min_max(const std::array<vec2, 4>& bounding_points,
 						   const vec2 axis) {
-	vec2 min_max = {INT_MIN, INT_MAX};
+	vec2 min_max = {INT_MAX, INT_MIN};
 	for (const vec2& point : bounding_points) {
 		float projected = dot(point, axis);
 		min_max = {min(projected, min_max.x), max(projected, min_max.y)};
@@ -75,44 +75,44 @@ bool no_overlap(std::array<vec2, 4> m1_bounding_points,
 // Returns true if motion1 and motion2 are overlapping using a coarse
 // step with radial boundaries and a fine step with the separating axis theorem
 bool collides(const Motion& motion1, const Motion& motion2) {
-    // see if the distance between centre points of motion1 and motion2
-    // are within the maximum possible distance for them to be touching
-    vec2 dp = motion1.position - motion2.position;
-    float dist_squared = dot(dp, dp);
-    float max_possible_collision_distance = (dot(motion1.scale, motion1.scale) +
-                                             dot(motion2.scale, motion2.scale)) / 2.f;
-    // radial boundary-based estimate
-    if (dist_squared < max_possible_collision_distance) {
-        std::cout << "Collision possible. Refining..." << std::endl;
-        // move points to their screen location
-        std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
-        for (vec2& point : m1_bounding_points) {
-            point += motion1.position;
-        }
-        std::array<vec2, 4> m2_bounding_points = get_bounding_points(motion2);
-        for (vec2& point : m2_bounding_points) {
-            point += motion2.position;
-        }
-        // define all axis angles (normals to edges)
-        float axis_angles[4];
-        axis_angles[0] = motion1.angle;
-        axis_angles[1] = M_PI_2 + motion1.angle;
-        axis_angles[2] = motion2.angle;
-        axis_angles[3] = M_PI_2 + motion2.angle;
-        // see if an overlap exists in any of the axes
-        for (float& angle : axis_angles) {
-            if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
-                std::cout << "No collision!" << std::endl;
-                return false;
-            }
-        }
-        std::cout << "Collision detected between motion with position (";
-        std::cout << motion1.position.x << ", " << motion1.position.y << ") ";
-        std::cout << "and motion with position ";
-        std::cout << motion2.position.x << ", " << motion2.position.y << ") " << std::endl;
-        return true;
-    }
-    return false;
+	// see if the distance between centre points of motion1 and motion2
+	// are within the maximum possible distance for them to be touching
+	vec2 dp = motion1.position - motion2.position;
+	float dist_squared = dot(dp, dp);
+	float max_possible_collision_distance = (dot(motion1.scale, motion1.scale) +
+											 dot(motion2.scale, motion2.scale)) / 2.f;
+	// radial boundary-based estimate
+	if (dist_squared < max_possible_collision_distance) {
+		// std::cout << "Collision possible. Refining..." << std::endl;
+		// move points to their screen location
+		std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
+		for (vec2& point : m1_bounding_points) {
+			point += motion1.position;
+		}
+		std::array<vec2, 4> m2_bounding_points = get_bounding_points(motion2);
+		for (vec2& point : m2_bounding_points) {
+			point += motion2.position;
+		}
+		// define all axis angles (normals to edges)
+		float axis_angles[4];
+		axis_angles[0] = motion1.angle;
+		axis_angles[1] = M_PI_2 + motion1.angle;
+		axis_angles[2] = motion2.angle;
+		axis_angles[3] = M_PI_2 + motion2.angle;
+		// see if an overlap exists in any of the axes
+		for (float& angle : axis_angles) {
+			if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
+				// std::cout << "No collision!" << std::endl;
+				return false;
+			}
+		}
+		// std::cout << "Collision detected between motion with position (";
+		// std::cout << motion1.position.x << ", " << motion1.position.y << ") ";
+		// std::cout << "and motion with position ";
+		// std::cout << motion2.position.x << ", " << motion2.position.y << ") " << std::endl;
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -128,5 +128,30 @@ void PhysicsSystem::step(float elapsed_ms) {
 
         motion.position.x += t * motion.velocity.x;
         motion.position.y += t * motion.velocity.y;
+    }
+
+    // check for collisions between entities that collide
+    ComponentContainer<Motion> &motion_container = registry.motions;
+    for(uint i = 0; i<motion_container.components.size(); i++)
+    {
+        Motion& motion_i = motion_container.components[i];
+        Entity entity_i = motion_container.entities[i];
+		if (motion_i.collides) {
+		    // start collision detection from next entity (to avoid self-, repeated-comparisons)
+		    for(uint j = i+1; j<motion_container.components.size(); j++) {
+		        Motion& motion_j = motion_container.components[j];
+		        if (motion_j.collides && collides(motion_i, motion_j))
+		        {
+		            Entity entity_j = motion_container.entities[j];
+		            // create a collisions event for each entity colliding with other
+		            // (to ensure both orders exist for later collision handling)
+		             // NOTE: stubbed with REFLECTIVE collisions for now
+                    std::cout << "COLLISION!" << std::endl;
+		            std::cout <<entity_i << ", " << entity_j << std::endl;
+		            registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+		            registry.collisions.emplace_with_duplicates(entity_j, entity_i);
+		        }
+		    }
+		}
     }
 }

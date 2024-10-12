@@ -72,6 +72,10 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                         LightSource c{};
                         data.get_to(c);
                         registry.lightSources.insert(entity, c);
+                    } else if (type == "reflective") {
+                        Reflective c{};
+                        data.get_to(c);
+                        registry.reflectives.insert(entity, c);
                     }
                 }
             }

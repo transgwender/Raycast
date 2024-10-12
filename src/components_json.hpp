@@ -91,3 +91,13 @@ void from_json(const json& j, Level& c) {
     (void)j;
     (void)c;
 }
+
+void to_json(json& j, const Reflective& c) {
+    (void)c;
+    j = json{{"type", "light_source"}};
+}
+
+void from_json(const json& j, Reflective& c) {
+    (void)j;
+    (void)c;
+}
