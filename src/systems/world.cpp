@@ -263,7 +263,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
                         Motion& e_motion = registry.motions.get(entity);
-                        e_motion.angle += 5;
+                        e_motion.angle += 5 * (M_PI / 180);
                     }
                 }
             }
