@@ -120,3 +120,12 @@ void from_json(const json& j, Sprite& c) {
         c.angle = 0;
     }
 }
+
+void to_json(json& j, const Mirror& c) {
+    j = json{ {"type", "mirror"}, {"position", c.position}, {"angle", c.angle} };
+}
+
+void from_json(const json& j, Mirror& c) {
+    j.at("position").get_to(c.position);
+    j.at("angle").get_to(c.angle);
+}

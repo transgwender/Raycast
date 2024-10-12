@@ -4,19 +4,11 @@
       "name": "mirror",
       "data": [
         {
-        "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             204.0,
             267.0
           ],
-          "texture": 6,
-          "scale": [
-            20.0,
-            200.0
-          ],
           "angle": 6875.49354
         }
       ]
@@ -25,19 +17,11 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             424.0,
             567.0
           ],
-          "texture": 6,
-          "scale": [
-            20.0,
-            200.0
-          ],
           "angle": 6875.49354
         }
       ]
@@ -46,19 +30,11 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             654.0,
             367.0
           ],
-          "texture": 6,
-          "scale": [
-            20.0,
-            200.0
-          ],
           "angle": 6875.49354
         }
       ]
@@ -67,18 +43,10 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             804.0,
             547.0
-          ],
-          "texture": 6,
-          "scale": [
-            20.0,
-            200.0
           ],
           "angle": 6875.49354
         }

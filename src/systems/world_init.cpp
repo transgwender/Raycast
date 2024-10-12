@@ -34,6 +34,13 @@ Entity createLight(const Entity &entity, RenderSystem* renderer, vec2 position, 
     return entity;
 }
 
+Entity createMirror(const Entity& entity, RenderSystem* renderer, vec2 position, float angle) {
+    vec2 scale = vec2({20, 200});
+    createSprite(entity, renderer, position, scale, angle, TEXTURE_ASSET_ID::MIRROR);
+    registry.reflectives.emplace(entity);
+    return entity;
+}
+
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);
     zone.position = position;

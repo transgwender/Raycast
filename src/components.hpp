@@ -151,3 +151,8 @@ struct Sprite {
     float angle = 0;
     TEXTURE_ASSET_ID texture;
 };
+
+struct Mirror {
+    vec2 position = {0, 0};
+    float angle = 0;
+};
