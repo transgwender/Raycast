@@ -12,9 +12,11 @@
 #include <iostream>
 
 
-const size_t LIGHT_SPAWN_DELAY_MS = 2000 * 3;
+const size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
+const float DOUBLE_REFLECTION_TIMEOUT = 800.f;
+// bool isLevel = false;
 
-// create the underwater world
+// create the light-maze world
 WorldSystem::WorldSystem(): next_light_spawn(0.f) {
     // Seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
@@ -134,9 +136,13 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    float speed = 80;
+    float speed = 280;
     if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+        for (auto& light : registry.lightRays.components) {
+            if (light.last_reflected_timeout > 0)
+                light.last_reflected_timeout -= elapsed_ms_since_last_update;
+        }
         if (registry.lightRays.components.size() <= 5 &&
             next_light_spawn < 0.f) {
             // reset timer
@@ -168,6 +174,9 @@ void WorldSystem::restart_game() {
     // Reset the game speed
     current_speed = 1.f;
 
+    // Reset light respawn timer
+    next_light_spawn = 0.f;
+
     // Remove all entities that we created
     registry.clear_all_components();
 
@@ -189,7 +198,80 @@ void WorldSystem::change_scene(std::string &scene_tag) {
 }
 
 // Handle collisions between entities
-void WorldSystem::handle_collisions() {}
+void WorldSystem::handle_collisions() {
+    // registry.collisions.emplace_with_duplicates(Entity(), Entity());
+    // Loop over all collisions detected by the physics system
+	auto& collisionsRegistry = registry.collisions;
+    for (int i = 0; i < collisionsRegistry.size(); i++) {
+        // for now, only handle collisions involving light ray as other object
+        if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
+            registry.lightRays.has(collisionsRegistry.entities[i])) continue;
+        if (registry.reflectives.has(collisionsRegistry.entities[i])) {
+            handle_reflection(collisionsRegistry.entities[i],
+                collisionsRegistry.components[i].other);
+        } else {
+            handle_non_reflection(collisionsRegistry.entities[i],
+                collisionsRegistry.components[i].other);
+        }
+    }
+    // Remove all collisions from this simulation step
+    registry.collisions.clear();
+}
+
+// When colliding entities to not reflect, if one of the entities
+// is a light ray and the other is an end zone, win the level
+// if the other entity is not an end-zone, destroy light ray
+// Invariant: other is a light ray
+void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
+    assert(registry.lightRays.has(other));
+    if (registry.zones.has(collider))
+    switch (registry.zones.get(collider).type) {
+        case ZONE_TYPE::END: {
+            std::cout << "Level beaten!";
+            std::string next_scene = "mainmenu";
+            change_scene(next_scene);
+            break;
+        }
+        case ZONE_TYPE::START: {
+            return;
+        }
+        default: {
+            std::cout << "Hit non-reflective object. Light ray fizzles out";
+            registry.remove_all_components_of(other);
+            break;
+        }
+    }
+}
+
+// Reflect light ray based on collision normal
+// Invariant: other is a light ray
+void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
+    assert(registry.lightRays.has(reflected));
+    Light& light = registry.lightRays.get(reflected);
+    // don't reflect off of same mirror twice
+    // due to being inside
+    if (light.last_reflected == reflective && light.last_reflected_timeout > 0) {
+        return;
+    }
+
+    Motion& light_motion = registry.motions.get(reflected);
+    Motion& reflective_surface_motion = registry.motions.get(reflective);
+    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + M_PI_2),
+                                        sin(reflective_surface_motion.angle + M_PI_2)};
+    float angle_between = atan2(reflective_surface_normal.y,
+                                reflective_surface_normal.x)
+                        - atan2(light_motion.velocity.y,
+                                light_motion.velocity.x);
+    std::cout << angle_between * 180.f / M_PI << std::endl;
+    vec2 reflected_velocity = -light_motion.velocity
+        + 2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
+    light_motion.velocity = reflected_velocity;
+    light.last_reflected = reflective;
+    light.last_reflected_timeout = DOUBLE_REFLECTION_TIMEOUT;
+    angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) - atan2(light_motion.velocity.y, light_motion.velocity.x);
+    light_motion.angle -= 2 * angle_between;
+    std::cout << angle_between * 180.f / M_PI << std::endl;
+}
 
 // Should the game be over ?
 bool WorldSystem::is_over() const {
@@ -218,6 +300,10 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         printf("Current speed = %f\n", current_speed);
     }
     current_speed = fmax(0.f, current_speed);
+}
+
+void move_mirror(vec2 position) {
+    registry.motions.get(registry.reflectives.entities[0]).position = position;
 }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {}

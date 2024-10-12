@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.1)
 project(raycast)
 
-# Set c++11
+# Set c++17
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)

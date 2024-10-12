@@ -8,6 +8,8 @@
 #include <vector>
 
 #define SDL_MAIN_HANDLED
+#include "registry.hpp"
+
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -43,6 +45,10 @@ class WorldSystem {
     void on_key(int key, int, int action, int mod);
     void on_mouse_move(vec2 pos);
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
+
+    // Handle different collision cases
+    void handle_reflection(Entity& reflective, Entity& reflected);
+    void handle_non_reflection(Entity& collider, Entity& other);
 
     // restart level
     void restart_game();

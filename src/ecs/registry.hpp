@@ -22,6 +22,7 @@ class ECSRegistry {
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
+    ComponentContainer<Reflective> reflectives;
     ComponentContainer<Level> levels;
 
     // constructor that adds all containers for looping over them
@@ -39,6 +40,7 @@ class ECSRegistry {
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
+        registry_list.push_back(&reflectives);
         registry_list.push_back(&levels);
     }
 

@@ -36,7 +36,8 @@ struct LightSource {
 };
 
 struct Light {
-
+    Entity last_reflected;
+    float last_reflected_timeout;
 };
 
 // All data relevant to the shape and motion of entities
@@ -45,14 +46,20 @@ struct Motion {
     float angle = 0;
     vec2 velocity = {0, 0};
     vec2 scale = {10, 10};
+    bool collides = true;
 };
 
 // Stucture to store collision information
 struct Collision {
     // Note, the first object is stored in the ECS container.entities
     Entity other; // the second object involved in the collision
-    Collision(Entity& other) { this->other = other; };
+    Collision(Entity& other) {
+        this->other = other;
+    };
 };
+
+// Object is reflective
+struct Reflective {};
 
 // Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl &
 // salmon.vs.glsl)
@@ -98,7 +105,6 @@ struct BoundingBox {
  * The final value in each enumeration is both a way to keep track of how many
  * enums there are, and as a default value to represent uninitialized fields.
  */
-
 enum class TEXTURE_ASSET_ID {
     FISH = 0,
     PLAY_BUTTON = 1,
