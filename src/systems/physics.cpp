@@ -7,20 +7,6 @@
 
 const float ONE_SECOND = 1000.f;
 
-/*
-    Linear interpolation algorithm
-
-    @param start: The starting value of the interpolation.
-    @param end: The ending value of the interpolation.
-    @param t: A float value between 0 and 1 representing the interpolation factor.
-              - 0 will return the start value.
-              - 1 will return the end value.
-              - Values between 0 and 1 will return intermediate values.
-*/
-float lerp(float start, float end, float t) {
-    return start * (1 - t) + (end * t);
-}
-
 // Returns the local bounding coordinates (bottom left and top right)
 // scaled by the current size of the entity
 // rotated by the entity's current rotation, relative to the origin
