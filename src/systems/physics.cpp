@@ -94,10 +94,10 @@ bool collides(const Motion& motion1, const Motion& motion2) {
                 return false;
             }
         }
-        LOG_INFO("Collision detected between motion with position ({}, {}) and "
-                 "motion with position ({}, {})",
-                 motion1.position.x, motion1.position.y, motion2.position.x,
-                 motion2.position.y);
+        // LOG_INFO("Collision detected between motion with position ({}, {}) and "
+        //          "motion with position ({}, {})",
+        //          motion1.position.x, motion1.position.y, motion2.position.x,
+        //          motion2.position.y);
         return true;
     }
     return false;
@@ -153,9 +153,9 @@ void PhysicsSystem::step(float elapsed_ms) {
 		            Entity entity_j = motion_container.entities[j];
 		            // create a collisions event for each entity colliding with other
 		            // (to ensure both orders exist for later collision handling)
-		             // NOTE: stubbed with REFLECTIVE collisions for now
-                    std::cout << "COLLISION!" << std::endl;
-		            std::cout <<entity_i << ", " << entity_j << std::endl;
+		            // NOTE: stubbed with REFLECTIVE collisions for now
+                    // std::cout << "COLLISION!" << std::endl;
+		            // std::cout <<entity_i << ", " << entity_j << std::endl;
 		            registry.collisions.emplace_with_duplicates(entity_i, entity_j);
 		            registry.collisions.emplace_with_duplicates(entity_j, entity_i);
 		        }

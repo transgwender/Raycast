@@ -97,7 +97,6 @@ GLFWwindow* WorldSystem::create_window() {
     }
 
     reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
-    reflection_sfx->volume = MIX_MAX_VOLUME * 0.3;
 
     click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
     click_sfx->volume = MIX_MAX_VOLUME * 0.5;
@@ -134,7 +133,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     this->scenes = scene_arg;
 
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.5 * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(0 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -267,20 +266,20 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     assert(registry.lightRays.has(other));
     if (registry.zones.has(collider))
         switch (registry.zones.get(collider).type) {
-        case ZONE_TYPE::END: {
-            std::cout << "Level beaten!";
-            std::string next_scene = "gamefinish";
-            change_scene(next_scene);
-            break;
-        }
-        case ZONE_TYPE::START: {
-            return;
-        }
-        default: {
-            std::cout << "Hit non-reflective object. Light ray fizzles out";
-            registry.remove_all_components_of(other);
-            break;
-        }
+            case ZONE_TYPE::END: {
+                std::string next_scene = "gamefinish";
+                change_scene(next_scene);
+                break;
+            }
+            case ZONE_TYPE::START: {
+                return;
+            }
+            default: {
+                // TODO: should be different noise from reflection
+                Mix_PlayChannel(2, reflection_sfx, 0);
+                registry.remove_all_components_of(other);
+                break;
+            }
         }
 }
 
