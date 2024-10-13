@@ -85,7 +85,7 @@ bool collides(const Motion& motion1, const Motion& motion2) {
         2.f;
     // radial boundary-based estimate
     if (dist_squared < max_possible_collision_distance) {
-        LOG_INFO("Collision possible. Refining...");
+        // LOG_INFO("Collision possible. Refining...");
         // move points to their screen location
         std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
         for (vec2& point : m1_bounding_points) {
@@ -104,7 +104,7 @@ bool collides(const Motion& motion1, const Motion& motion2) {
         // see if an overlap exists in any of the axes
         for (float& angle : axis_angles) {
             if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
-                LOG_INFO("No collision!");
+                // LOG_INFO("No collision!");
                 return false;
             }
         }

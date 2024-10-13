@@ -1,6 +1,15 @@
 {
   "objList": [
     {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
       "name": "mirror",
       "data": [
         {
@@ -49,7 +58,7 @@
       ]
     },
     {
-      "name": "mirror",
+      "name": "rotate-mirror",
       "data": [
         {
           "type": "reflective"
@@ -57,19 +66,27 @@
         {
           "type": "sprite",
           "position": [
-            804.0,
-            547.0
+            800.0,
+            650.0
           ],
           "texture": 1
-        }
-      ]
-    },
-    {
-      "name": "level_id",
-      "data": [
+        },
         {
-          "type": "level",
-          "id": 1
+          "type": "interactable"
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            800.0,
+            650.0
+          ],
+          "scale": [
+            100.0,
+            100.0
+          ]
+        },
+        {
+          "type": "rotateable"
         }
       ]
     },

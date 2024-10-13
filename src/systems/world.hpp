@@ -12,8 +12,12 @@
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-#include "systems/scenes.hpp"
 #include "systems/render.hpp"
+#include "systems/scenes.hpp"
+
+constexpr size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
+constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
+constexpr size_t MAX_LIGHT_ON_SCREEN = 5;
 
 // Container for all our entities and game logic. Individual rendering / update
 // is deferred to the relative update() methods

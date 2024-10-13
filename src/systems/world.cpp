@@ -11,12 +11,6 @@
 #include "systems/physics.hpp"
 #include "logging/log.hpp"
 
-// NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in scope.
-#define PARSE_COMPONENT(ty, container)                                         \
-    ty __ty{};                                                                 \
-    data.get_to(__ty);                                                         \
-    (registry).container.insert(entity, __ty);
-
 // create the light-maze world
 WorldSystem::WorldSystem(): next_light_spawn(0.f) {
     // Seeding rng with random device
@@ -134,12 +128,14 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     LOG_INFO("Calculating endpoints for the {} entities on rails.",
              entities_on_linear_rails.size());
     for (auto e : entities_on_linear_rails) {
-        Motion& e_motion = registry.motions.get(e); // Pun unintended.
+        Motion& e_motion = registry.motions.get(e);
         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
         LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
+
         auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
         vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
         vec2 secondEndpoint = e_motion.position - e_rails.length * direction;
+
         e_lr.t = 0.5;
         e_rails.firstEndpoint = firstEndpoint;
         e_rails.secondEndpoint = secondEndpoint;
@@ -149,7 +145,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
                  e_motion.position.x, e_motion.position.y, firstEndpoint.x,
                  firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
                  direction.x, direction.y);
-        // Finally, update the angle of the entity to make sure it is algined
+        // Finally, update the angle of the entity to make sure it is aligned
         // with the rail.
         e_motion.angle = e_rails.angle;
     }
@@ -158,6 +154,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     float speed = 280;
+
     if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
         for (auto& light : registry.lightRays.components) {
@@ -165,8 +162,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
         }
 
-        if (registry.lightRays.components.size() <= 5 &&
-            next_light_spawn < 0.f) {
+        if (registry.lightRays.components.size() <= MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
@@ -176,6 +172,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 Zone& zone = registry.zones.get(sources[i]);
                 vec2 position = zone.position;
                 float angle = registry.lightSources.components[i].angle;
+
                 const auto entity = Entity();
                 createLight(entity, renderer, position,
                             vec2(cos(-angle * M_PI / 180) * speed,
@@ -354,6 +351,8 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
                         Motion& e_motion = registry.motions.get(entity);
+
+                        // TODO: use lerp too smoothly rotate
                         e_motion.angle += 5 * (M_PI / 180);
                     }
                 }
