@@ -8,9 +8,9 @@
 #include <sstream>
 
 #include "components_json.hpp"
+#include "logging/log.hpp"
 #include "systems/physics.hpp"
 #include "systems/rails.hpp"
-#include "logging/log.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -338,70 +338,66 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
     }
 }
 
-void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
-    double ypos) {
-    
-  if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-    LOG_INFO("({}, {})", xpos, ypos);
-    for (Entity entity : registry.interactables.entities) {
-      if (registry.boundingBoxes.has(entity)) {
-        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
-        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
-        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
-        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
-        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
-            ypos > yUp) {
-          Mix_PlayChannel(1, click_sfx, 0);
-    
-          if (registry.changeScenes.has(entity)) {
-            LOG_INFO("Changing scene");
-            ChangeScene& changeScene = registry.changeScenes.get(entity);
-            change_scene(changeScene.scene);
-          
-          } else if (registry.rotateables.has(entity)) {
-            // Rotate the entity.
-            LOG_INFO("Something should be rotating.")
-              Motion& e_motion = registry.motions.get(entity);
+void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
 
-            // TODO: use lerp too smoothly rotate
-            e_motion.angle += 5 * (M_PI / 180);
-          } else if (registry.entitiesOnLinearRails.has(entity)) {
-            LOG_INFO("Moving entity linear rail.");
-            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
-            e_lr.t_step = 0;
-          }
-        }
-      }
-    }
-  }
-if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
-    LOG_INFO("({}, {})", xpos, ypos);
-    for (Entity entity : registry.interactables.entities) {
-      if (registry.boundingBoxes.has(entity)) {
-        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
-        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
-        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
-        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
-        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
-            ypos > yUp) {
-          Mix_PlayChannel(1, click_sfx, 0);
+    if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
+        LOG_INFO("({}, {})", xpos, ypos);
+        for (Entity entity : registry.interactables.entities) {
+            if (registry.boundingBoxes.has(entity)) {
+                BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+                float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+                float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+                float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+                float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
+                    Mix_PlayChannel(1, click_sfx, 0);
 
-          if (registry.entitiesOnLinearRails.has(entity)) {
-            LOG_INFO("Moving entity on linear rail.");
-            OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
-            int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
-            if (which_direction > 0) {
-              e_lr.t_step = -0.2;
-            } else if (which_direction < 0) {
-              e_lr.t_step = 0.2;
+                    if (registry.changeScenes.has(entity)) {
+                        LOG_INFO("Changing scene");
+                        ChangeScene& changeScene = registry.changeScenes.get(entity);
+                        change_scene(changeScene.scene);
+
+                    } else if (registry.rotateables.has(entity)) {
+                        // Rotate the entity.
+                        LOG_INFO("Something should be rotating.")
+                        Motion& e_motion = registry.motions.get(entity);
+
+                        // TODO: use lerp too smoothly rotate
+                        e_motion.angle += 5 * (M_PI / 180);
+                    } else if (registry.entitiesOnLinearRails.has(entity)) {
+                        LOG_INFO("Moving entity linear rail.");
+                        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+                        e_lr.t_step = 0;
+                    }
+                }
             }
-          }
         }
-      }
     }
-  }
+    if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+        LOG_INFO("({}, {})", xpos, ypos);
+        for (Entity entity : registry.interactables.entities) {
+            if (registry.boundingBoxes.has(entity)) {
+                BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+                float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+                float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+                float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+                float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
+                    Mix_PlayChannel(1, click_sfx, 0);
 
+                    if (registry.entitiesOnLinearRails.has(entity)) {
+                        LOG_INFO("Moving entity on linear rail.");
+                        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+                        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+                        int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
+                        if (which_direction > 0) {
+                            e_lr.t_step = -0.2;
+                        } else if (which_direction < 0) {
+                            e_lr.t_step = 0.2;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
