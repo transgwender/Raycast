@@ -13,8 +13,6 @@ body:
     attributes:
       label: Describe the issue
       description: Also tell us, what did you expect to happen?
-      placeholder: Tell us what you see!
-      value: "🐛"
     validations:
       required: true
   - type: dropdown
@@ -23,8 +21,8 @@ body:
       label: Problem Area
       description: What aspect of the player experience does this bug affect?
       options:
-        - Graphics
         - Smooth Gameplay
+        - Graphics
         - Physics
         - Development
       default: 0
