@@ -2,7 +2,7 @@ name: Feature
 description: File a bug report.
 title: "[Bug]: "
 labels: ["bug"]
-projects: ["Team03/Raycast"]
+projects: ["CPSC427-2024W-T1/11"]
 body:
   - type: markdown
     attributes:
