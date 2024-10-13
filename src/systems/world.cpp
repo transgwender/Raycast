@@ -341,6 +341,9 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
 
     if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
+        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
+        xpos = world_pos.x;
+        ypos = world_pos.y;
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
             if (registry.boundingBoxes.has(entity)) {
@@ -351,12 +354,9 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
                     Mix_PlayChannel(1, click_sfx, 0);
-
                     if (registry.changeScenes.has(entity)) {
-                        LOG_INFO("Changing scene");
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
                         change_scene(changeScene.scene);
-
                     } else if (registry.rotateables.has(entity)) {
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
@@ -364,10 +364,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
                         // TODO: use lerp too smoothly rotate
                         e_motion.angle += 5 * (M_PI / 180);
-                    } else if (registry.entitiesOnLinearRails.has(entity)) {
-                        LOG_INFO("Moving entity linear rail.");
-                        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
-                        e_lr.t_step = 0;
                     }
                 }
             }
