@@ -1,7 +1,7 @@
 name: Feature Ticket
 description: Add a feature ticket.
 labels: ["feature"]
-projects: ["CPSC427-2024W-T1/Raycast"]
+projects: ["CPSC427-2024W-T1/11"]
 body:
   - type: textarea
     id: describe-feature
