@@ -13,9 +13,6 @@
       "name": "mirror",
       "data": [
         {
-        "type": "reflective"
-        },
-        {
           "type": "mirror",
           "position": [
             204.0,
@@ -29,14 +26,11 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
           "type": "mirror",
           "position": [
             424.0,
             567.0
-          ]
+          ],
           "angle": 6875.49354
         }
       ]
@@ -44,9 +38,6 @@
     {
       "name": "mirror",
       "data": [
-        {
-          "type": "reflective"
-        },
         {
           "type": "mirror",
           "position": [
@@ -60,9 +51,6 @@
     {
       "name": "rotate-mirror",
       "data": [
-        {
-          "type": "reflective"
-        },
         {
           "type": "mirror",
           "position": [
