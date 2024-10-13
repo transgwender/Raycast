@@ -1,8 +1,8 @@
-name: Feature
+name: Bug Report
 description: File a bug report.
 title: "[Bug]: "
 labels: ["bug"]
-projects: ["Team03/Raycast"]
+projects: ["CPSC427-2024W-T1/Raycast"]
 body:
   - type: markdown
     attributes:
