@@ -1,20 +1,15 @@
-// Header
 #include "world.hpp"
 #include "world_init.hpp"
 
-// stlib
 #include <cassert>
 #include <sstream>
-
-#include "systems/physics.hpp"
-
 #include <fstream>
 #include <iostream>
+#include <SDL.h>
 
-
-const size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
-const float DOUBLE_REFLECTION_TIMEOUT = 800.f;
-// bool isLevel = false;
+#include "components_json.hpp"
+#include "systems/physics.hpp"
+#include "logging/log.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem(): next_light_spawn(0.f) {
@@ -23,8 +18,7 @@ WorldSystem::WorldSystem(): next_light_spawn(0.f) {
 }
 
 WorldSystem::~WorldSystem() {
-
-    // destroy music components
+    // Destroy music components
     if (background_music != nullptr)
         Mix_FreeMusic(background_music);
 
@@ -40,7 +34,7 @@ WorldSystem::~WorldSystem() {
 // Debugging
 namespace {
 void glfw_err_cb(int error, const char* desc) {
-    fprintf(stderr, "%d: %s", error, desc);
+    LOG_ERROR("{}: {}", error, desc);
 }
 } // namespace
 
@@ -48,15 +42,13 @@ void glfw_err_cb(int error, const char* desc) {
 // Note, this has a lot of OpenGL specific things, could be moved to the
 // renderer
 GLFWwindow* WorldSystem::create_window() {
-    ///////////////////////////////////////
     // Initialize GLFW
     glfwSetErrorCallback(glfw_err_cb);
     if (!glfwInit()) {
-        fprintf(stderr, "Failed to initialize GLFW");
+        LOG_ERROR("Failed to initialize GLFW");
         return nullptr;
     }
 
-    //-------------------------------------------------------------------------
     // If you are on Linux or Windows, you can change these 2 numbers to 4 and 3
     // and enable the glDebugMessageCallback to have OpenGL catch your mistakes
     // for you. GLFW / OGL Initialization
@@ -73,7 +65,7 @@ GLFWwindow* WorldSystem::create_window() {
     window = glfwCreateWindow(window_width_px, window_height_px, "Raycast",
                               nullptr, nullptr);
     if (window == nullptr) {
-        fprintf(stderr, "Failed to glfwCreateWindow");
+        LOG_ERROR("Failed to glfwCreateWindow");
         return nullptr;
     }
 
@@ -97,24 +89,22 @@ GLFWwindow* WorldSystem::create_window() {
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
 
-    //////////////////////////////////////
     // Loading music and sounds with SDL
     if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        fprintf(stderr, "Failed to initialize SDL Audio");
+        LOG_ERROR("Failed to initialize SDL Audio");
         return nullptr;
     }
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-        fprintf(stderr, "Failed to open audio device");
+        LOG_ERROR("Failed to open audio device");
         return nullptr;
     }
 
     background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
 
     if (background_music == nullptr) {
-        fprintf(stderr,
-                "Failed to load sounds\n %s make sure the data "
-                "directory is present",
-                audio_path("music.wav").c_str());
+        LOG_ERROR("Failed to load sounds. {} make sure the data "
+                  "directory is present",
+                  audio_path("music.wav").c_str());
         return nullptr;
     }
 
@@ -128,23 +118,51 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     this->scenes = scene_arg;
     // Playing background music indefinitely
     Mix_PlayMusic(background_music, -1);
-    fprintf(stderr, "Loaded music\n");
+    LOG_INFO("Loaded music");
 
     // Set all states to default
     restart_game();
+
+    // Calculate the endpoints for all entities on rails
+    auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
+    LOG_INFO("Calculating endpoints for the {} entities on rails.",
+             entities_on_linear_rails.size());
+    for (auto e : entities_on_linear_rails) {
+        Motion& e_motion = registry.motions.get(e);
+        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
+        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
+
+        auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
+        vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
+        vec2 secondEndpoint = e_motion.position - e_rails.length * direction;
+
+        e_lr.t = 0.5;
+        e_rails.firstEndpoint = firstEndpoint;
+        e_rails.secondEndpoint = secondEndpoint;
+        e_rails.direction = direction;
+        LOG_INFO("Entity with position: ({}, {}) on a linear rail has "
+                 "endpoints: ({},{}) ({}, {}) with a direction: ({},{})",
+                 e_motion.position.x, e_motion.position.y, firstEndpoint.x,
+                 firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
+                 direction.x, direction.y);
+        // Finally, update the angle of the entity to make sure it is aligned
+        // with the rail.
+        e_motion.angle = e_rails.angle;
+    }
 }
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     float speed = 280;
+
     if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
         for (auto& light : registry.lightRays.components) {
             if (light.last_reflected_timeout > 0)
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
         }
-        if (registry.lightRays.components.size() <= 5 &&
-            next_light_spawn < 0.f) {
+
+        if (registry.lightRays.components.size() <= MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
@@ -157,11 +175,12 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 
                 const auto entity = Entity();
                 createLight(entity, renderer, position,
-                                vec2(cos(-angle * M_PI / 180) * speed,
-                                     sin(-angle * M_PI / 180) * speed));
+                            vec2(cos(-angle * M_PI / 180) * speed,
+                                 sin(-angle * M_PI / 180) * speed));
             }
         }
     }
+
     return true;
 }
 
@@ -169,7 +188,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 void WorldSystem::restart_game() {
     // Debugging for memory/component leaks
     registry.list_all_components();
-    printf("Restarting\n");
+    LOG_INFO("Restarting game state");
 
     // Reset the game speed
     current_speed = 1.f;
@@ -187,8 +206,11 @@ void WorldSystem::restart_game() {
     if (registry.scenes.has(scene_state_entity)) {
         scenes->try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
-        printf("ERROR: NO SCENE STATE ENTITY\n");
+        LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
+
+    // Why list? please delete if not needed
+    // registry.list_all_components();
 }
 
 void WorldSystem::change_scene(std::string &scene_tag) {
@@ -273,7 +295,7 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
     std::cout << angle_between * 180.f / M_PI << std::endl;
 }
 
-// Should the game be over ?
+// Should the game be over?
 bool WorldSystem::is_over() const {
     return bool(glfwWindowShouldClose(window));
 }
@@ -292,12 +314,12 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
         key == GLFW_KEY_COMMA) {
         current_speed -= 0.1f;
-        printf("Current speed = %f\n", current_speed);
+        LOG_INFO("Current speed = {}", current_speed);
     }
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
         key == GLFW_KEY_PERIOD) {
         current_speed += 0.1f;
-        printf("Current speed = %f\n", current_speed);
+        LOG_INFO("Current speed = {}", current_speed);
     }
     current_speed = fmax(0.f, current_speed);
 }
@@ -308,20 +330,30 @@ void move_mirror(vec2 position) {
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {}
 
-void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
+void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
+                                  double ypos) {
     if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-        printf("(%f, %f)\n", xpos, ypos);
-        for(Entity entity : registry.interactables.entities) {
+        LOG_INFO("({}, {})", xpos, ypos);
+        for (Entity entity : registry.interactables.entities) {
             if (registry.boundingBoxes.has(entity)) {
                 BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
-                float xRight = boundingBox.position.x + boundingBox.scale.x/2;
-                float xLeft = boundingBox.position.x - boundingBox.scale.x/2;
-                float yUp = boundingBox.position.y - boundingBox.scale.y/2;
-                float yDown = boundingBox.position.y + boundingBox.scale.y/2;
-                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
+                float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+                float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+                float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+                float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+                if (xpos < xRight && xpos > xLeft && ypos < yDown &&
+                    ypos > yUp) {
+
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
                         change_scene(changeScene.scene);
+                    } else if (registry.rotateables.has(entity)) {
+                        // Rotate the entity.
+                        LOG_INFO("Something should be rotating.")
+                        Motion& e_motion = registry.motions.get(entity);
+
+                        // TODO: use lerp too smoothly rotate
+                        e_motion.angle += 5 * (M_PI / 180);
                     }
                 }
             }

@@ -3,12 +3,11 @@
 // internal
 #include "common.hpp"
 #include "render.hpp"
-#include <array>
 #include <map>
 
 class SceneSystem {
   public:
-    void init(RenderSystem* renderer);
+    void init(RenderSystem* renderer_arg);
 
     // add entities
     bool try_parse_scene(std::string &scene_tag);

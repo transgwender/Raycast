@@ -5,7 +5,6 @@ Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position,
     // Store a reference to the potentially re-used mesh object
     Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
     registry.meshPtrs.emplace(entity, &mesh);
-
     auto& motion = registry.motions.emplace(entity);
     motion.position = position;
     motion.scale = scale;
@@ -21,10 +20,10 @@ Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position,
 Entity createLight(const Entity &entity, RenderSystem* renderer, vec2 position, vec2 velocity) {
     vec2 scale = vec2({20, 80});
     float angle = M_PI_2 + atan2(velocity.y, velocity.x);
-    Entity light =
-        createSprite(entity, renderer, position, scale, angle, TEXTURE_ASSET_ID::LIGHT);
 
-    Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
+    Entity light = createSprite(entity, renderer, position, scale, angle, TEXTURE_ASSET_ID::LIGHT);
+
+    // Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
     registry.lightRays.emplace(light);
 
     auto& motion = registry.motions.get(light);

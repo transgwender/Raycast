@@ -1,15 +1,12 @@
-// internal
 #include "render.hpp"
-
 #include <array>
 #include <fstream>
-
 #include "../ext/stb_image/stb_image.h"
+#include "logging/log.hpp"
 
 // This creates circular header inclusion, that is quite bad.
 #include "ecs/registry.hpp"
 
-// stlib
 #include <iostream>
 #include <sstream>
 
@@ -38,13 +35,13 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
         &frame_buffer_height_px); // Note, this will be 2x the resolution given
                                   // to glfwCreateWindow on retina displays
     if (frame_buffer_width_px != window_width_px) {
-        printf("WARNING: retina display! "
+        LOG_WARN("retina display! "
                "https://stackoverflow.com/questions/36672935/"
                "why-retina-screen-coordinate-value-is-twice-the-value-of-pixel-"
-               "value\n");
-        printf("OpenGL Frame Buffer Size = %d,%d\n", frame_buffer_width_px,
+               "value");
+        LOG_INFO("OpenGL Frame Buffer Size = {}, {}", frame_buffer_width_px,
                frame_buffer_height_px);
-        printf("Window Dimensions = %d,%d\n", window_width_px,
+        LOG_INFO("Window Dimensions = {}, {}", window_width_px,
                window_height_px);
     }
 
@@ -83,7 +80,7 @@ void RenderSystem::initializeGlTextures() {
 
         if (data == NULL) {
             const std::string message = "Could not load the file " + path + ".";
-            fprintf(stderr, "%s", message.c_str());
+            LOG_INFO("{}", message.c_str());
             assert(false);
         }
         glBindTexture(GL_TEXTURE_2D, texture_gl_handles[i]);
@@ -147,7 +144,6 @@ void RenderSystem::initializeGlGeometryBuffers() {
     // Index and Vertex buffer data initialization.
     initializeGlMeshes();
 
-    //////////////////////////
     // Initialize sprite
     // The position corresponds to the center of the texture.
     std::vector<TexturedVertex> textured_vertices(4);
@@ -165,7 +161,6 @@ void RenderSystem::initializeGlGeometryBuffers() {
     bindVBOandIBO(GEOMETRY_BUFFER_ID::SPRITE, textured_vertices,
                   textured_indices);
 
-    ///////////////////////////////////////////////////////
     // Initialize screen triangle (yes, triangle, not quad; its more efficient).
     std::vector<vec3> screen_vertices(3);
     screen_vertices[0] = {-1, -6, 0.f};
@@ -247,7 +242,7 @@ bool gl_compile_shader(GLuint shader) {
 
         gl_has_errors();
 
-        fprintf(stderr, "GLSL: %s", log.data());
+        LOG_INFO("GLSL: {}", log.data());
         return false;
     }
 
@@ -260,7 +255,7 @@ bool loadEffectFromFile(const std::string& vs_path, const std::string& fs_path,
     std::ifstream vs_is(vs_path);
     std::ifstream fs_is(fs_path);
     if (!vs_is.good() || !fs_is.good()) {
-        fprintf(stderr, "Failed to load shader files %s, %s", vs_path.c_str(),
+        LOG_ERROR("Failed to load shader files {}, {}", vs_path.c_str(),
                 fs_path.c_str());
         assert(false);
         return false;
@@ -285,12 +280,12 @@ bool loadEffectFromFile(const std::string& vs_path, const std::string& fs_path,
 
     // Compiling
     if (!gl_compile_shader(vertex)) {
-        fprintf(stderr, "Vertex compilation failed");
+        LOG_ERROR("Vertex compilation failed");
         assert(false);
         return false;
     }
     if (!gl_compile_shader(fragment)) {
-        fprintf(stderr, "Vertex compilation failed");
+        LOG_ERROR("Vertex compilation failed");
         assert(false);
         return false;
     }
@@ -312,7 +307,7 @@ bool loadEffectFromFile(const std::string& vs_path, const std::string& fs_path,
             glGetProgramInfoLog(out_program, log_len, &log_len, log.data());
             gl_has_errors();
 
-            fprintf(stderr, "Link error: %s", log.data());
+            LOG_ERROR("Link error: {}", log.data());
             assert(false);
             return false;
         }

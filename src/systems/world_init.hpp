@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common.hpp"
+#include "common.hpp"
 #include "ecs/ecs.hpp"
 #include "render.hpp"
 
