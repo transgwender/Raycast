@@ -9,6 +9,7 @@
 
 #include "components_json.hpp"
 #include "systems/physics.hpp"
+#include "systems/rails.hpp"
 #include "logging/log.hpp"
 
 // create the light-maze world
@@ -143,33 +144,6 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 
     // Set all states to default
     restart_game();
-
-    // Calculate the endpoints for all entities on rails
-    auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
-    LOG_INFO("Calculating endpoints for the {} entities on rails.",
-             entities_on_linear_rails.size());
-    for (auto e : entities_on_linear_rails) {
-        Motion& e_motion = registry.motions.get(e);
-        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
-        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
-
-        auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
-        vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
-        vec2 secondEndpoint = e_motion.position - e_rails.length * direction;
-
-        e_lr.t = 0.5;
-        e_rails.firstEndpoint = firstEndpoint;
-        e_rails.secondEndpoint = secondEndpoint;
-        e_rails.direction = direction;
-        LOG_INFO("Entity with position: ({}, {}) on a linear rail has "
-                 "endpoints: ({},{}) ({}, {}) with a direction: ({},{})",
-                 e_motion.position.x, e_motion.position.y, firstEndpoint.x,
-                 firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
-                 direction.x, direction.y);
-        // Finally, update the angle of the entity to make sure it is aligned
-        // with the rail.
-        e_motion.angle = e_rails.angle;
-    }
 }
 
 // Update our game world
@@ -238,8 +212,7 @@ void WorldSystem::restart_game() {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    // Why list? please delete if not needed
-    // registry.list_all_components();
+    raycast::rails::init();
 }
 
 void WorldSystem::change_scene(std::string &scene_tag) {
@@ -381,32 +354,65 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 }
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
-                                  double ypos) {
-    if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-        LOG_INFO("({}, {})", xpos, ypos);
-        for (Entity entity : registry.interactables.entities) {
-            if (registry.boundingBoxes.has(entity)) {
-                BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
-                float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
-                float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
-                float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
-                float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-                if (xpos < xRight && xpos > xLeft && ypos < yDown &&
-                    ypos > yUp) {
-                    Mix_PlayChannel(1, click_sfx, 0);
-                    if (registry.changeScenes.has(entity)) {
-                        ChangeScene& changeScene = registry.changeScenes.get(entity);
-                        change_scene(changeScene.scene);
-                    } else if (registry.rotateables.has(entity)) {
-                        // Rotate the entity.
-                        LOG_INFO("Something should be rotating.")
-                        Motion& e_motion = registry.motions.get(entity);
+    double ypos) {
+  if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+    LOG_INFO("({}, {})", xpos, ypos);
+    for (Entity entity : registry.interactables.entities) {
+      if (registry.boundingBoxes.has(entity)) {
+        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
+            ypos > yUp) {
+          Mix_PlayChannel(1, click_sfx, 0);
 
-                        // TODO: use lerp too smoothly rotate
-                        e_motion.angle += 5 * (M_PI / 180);
-                    }
-                }
+          if (registry.entitiesOnLinearRails.has(entity)) {
+            LOG_INFO("Moving entity linear rail.");
+            OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+            int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
+            if (which_direction > 0) {
+              e_lr.t_step = -0.2;
+            } else if (which_direction < 0) {
+              e_lr.t_step = 0.2;
             }
+          }
         }
+      }
     }
+
+  }
+  if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
+    LOG_INFO("({}, {})", xpos, ypos);
+    for (Entity entity : registry.interactables.entities) {
+      if (registry.boundingBoxes.has(entity)) {
+        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
+            ypos > yUp) {
+          Mix_PlayChannel(1, click_sfx, 0);
+          if (registry.changeScenes.has(entity)) {
+            ChangeScene& changeScene = registry.changeScenes.get(entity);
+            change_scene(changeScene.scene);
+          } else if (registry.rotateables.has(entity)) {
+            // Rotate the entity.
+            LOG_INFO("Something should be rotating.")
+              Motion& e_motion = registry.motions.get(entity);
+
+            // TODO: use lerp too smoothly rotate
+            e_motion.angle += 5 * (M_PI / 180);
+          } else if (registry.entitiesOnLinearRails.has(entity)) {
+            LOG_INFO("Moving entity linear rail.");
+            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+            e_lr.t_step = 0;
+          }
+        }
+      }
+    }
+  }
 }

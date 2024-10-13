@@ -3,6 +3,6 @@
 namespace raycast {
   namespace rails {
     void init();
-    void step();
+    void step(float);
   }
 }

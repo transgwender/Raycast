@@ -32,7 +32,21 @@
           "type": "linearly_interpolatable",
           "t": 0,
           "should_switch_direction": true,
-          "t_step": 0.2
+          "t_step": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            300.0,
+            360.0
+          ],
+          "scale": [
+            400.0,
+            400.0
+          ]
         }
       ]
     },

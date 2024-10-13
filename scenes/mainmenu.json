@@ -37,7 +37,7 @@
         },
         {
           "type": "change_scene",
-          "scene": "mirror_reflection_test"
+          "scene": "mirror_movement_test"
         },
         {
           "type": "bounding_box",

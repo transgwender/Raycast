@@ -3,6 +3,7 @@
 
 namespace raycast {
   namespace rails {
+    const float ONE_SECOND = 1000.f;
     void init() {
       // Calculate the endpoints for all entities on rails
       auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
@@ -32,7 +33,7 @@ namespace raycast {
       }
     }
 
-    void step() {
+    void step(float elapsed_ms) {
       // Step all entities on rails
       auto& linear_rails_registry = registry.entitiesOnLinearRails;
       for (uint i = 0; i < linear_rails_registry.size(); i++) {
@@ -46,11 +47,7 @@ namespace raycast {
         } else {
           lr.t -= t * lr.t_step;
         }
-        if (raycast::math::definitelyGreaterThan(lr.t, 1.0)) {
-          lr.should_switch_direction = false;
-        } else if (raycast::math::definitelyLessThan(lr.t, 0.0)) {
-          lr.should_switch_direction = true;
-        }
+        lr.t = raycast::math::clamp(0.0, 1.0, lr.t);
         m.position =
           raycast::math::lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
       }
