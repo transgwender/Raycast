@@ -69,6 +69,8 @@ class WorldSystem {
 
     // Music references
     Mix_Music* background_music;
+    Mix_Chunk* reflection_sfx;
+    Mix_Chunk* click_sfx;
 
     // C++ random number generator
     std::default_random_engine rng;

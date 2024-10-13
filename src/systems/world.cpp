@@ -100,12 +100,31 @@ GLFWwindow* WorldSystem::create_window() {
         return nullptr;
     }
 
+    reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
+    reflection_sfx->volume = MIX_MAX_VOLUME * 0.3;
+
+    click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
+    click_sfx->volume = MIX_MAX_VOLUME * 0.5;
     background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
 
     if (background_music == nullptr) {
         LOG_ERROR("Failed to load sounds. {} make sure the data "
                   "directory is present",
                   audio_path("8BitCave.wav").c_str());
+        return nullptr;
+    }
+
+    if (reflection_sfx == nullptr) {
+        LOG_ERROR("Failed to load sounds. {} make sure the data "
+                  "directory is present",
+                  audio_path("light-ping.wav").c_str());
+        return nullptr;
+    }
+
+    if (click_sfx == nullptr) {
+        LOG_ERROR("Failed to load sounds. {} make sure the data "
+                  "directory is present",
+                  audio_path("click.wav").c_str());
         return nullptr;
     }
 
@@ -117,8 +136,9 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     scene.scene_tag = "mainmenu";
     this->renderer = renderer_arg;
     this->scenes = scene_arg;
-    // Playing background music indefinitely
+
     Mix_PlayMusic(background_music, -1);
+    Mix_VolumeMusic(0.5 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -277,6 +297,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
 // Reflect light ray based on collision normal
 // Invariant: other is a light ray
 void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
+    Mix_PlayChannel(2, reflection_sfx, 0);
     assert(registry.lightRays.has(reflected));
     Light& light = registry.lightRays.get(reflected);
     // don't reflect off of same mirror twice
@@ -372,7 +393,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown &&
                     ypos > yUp) {
-
+                    Mix_PlayChannel(1, click_sfx, 0);
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
                         change_scene(changeScene.scene);
