@@ -104,7 +104,7 @@ GLFWwindow* WorldSystem::create_window() {
     if (background_music == nullptr) {
         LOG_ERROR("Failed to load sounds. {} make sure the data "
                   "directory is present",
-                  audio_path("music.wav").c_str());
+                  audio_path("8BitCave.wav").c_str());
         return nullptr;
     }
 
