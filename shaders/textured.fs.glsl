@@ -16,7 +16,7 @@ void main()
 	vec4 baseColor = vec4(fcolor, 1.0) * texture(sampler0, vec2(texcoord.x, texcoord.y));
 
     if (highlight) {
-        baseColor.rgb += vec3(0.1);
+        baseColor.rgb += vec3(0.18);
     }
 
     color = baseColor;
