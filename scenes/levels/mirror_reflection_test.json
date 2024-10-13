@@ -1,6 +1,261 @@
 {
   "objList": [
     {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [
+            320,
+            180
+          ],
+          "texture": "background"
+        }
+      ]
+    },
+    {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            100.0,
+            100.0
+          ],
+          "scale": [
+            59,
+            152
+          ],
+          "texture": "tree0"
+        }
+      ]
+    },
+    {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            200.0,
+            100.0
+          ],
+          "scale": [
+            59,
+            152
+          ],
+          "texture": "tree1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            0,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            32,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            64,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            96,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            128,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            192,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            224,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            256,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            288,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            320,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "leaves",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            25.0
+          ],
+          "scale": [
+            320,
+            54
+          ],
+          "texture": "leaves0"
+        }
+      ]
+    },
+    {
       "name": "level_id",
       "data": [
         {
@@ -15,10 +270,10 @@
         {
           "type": "mirror",
           "position": [
-            204.0,
-            267.0
+            51.0,
+            66.75
           ],
-          "angle": 6875.49354
+          "angle": 1.688
         }
       ]
     },
@@ -28,10 +283,10 @@
         {
           "type": "mirror",
           "position": [
-            424.0,
-            567.0
+            106.0,
+            141.75
           ],
-          "angle": 6875.49354
+          "angle": 1.688
         }
       ]
     },
@@ -41,10 +296,10 @@
         {
           "type": "mirror",
           "position": [
-            654.0,
-            367.0
+            183.5,
+            91.75
           ],
-          "angle": 6875.49354
+          "angle": 1.688
         }
       ]
     },
@@ -54,10 +309,10 @@
         {
           "type": "mirror",
           "position": [
-            800.0,
-            650.0
+            240.0,
+            162.5
           ],
-          "angle": 6875.49354
+          "angle": 1.688
         },
         {
           "type": "interactable"
@@ -65,12 +320,12 @@
         {
           "type": "bounding_box",
           "position": [
-            800.0,
-            650.0
+            240.0,
+            162.5
           ],
           "scale": [
-            100.0,
-            100.0
+            25.0,
+            25.0
           ]
         },
         {
@@ -97,8 +352,8 @@
         {
           "type": "zone",
           "position": [
-            100.0,
-            360.0
+            25.0,
+            90.0
           ],
           "zone_type": 0,
           "angle": 30
@@ -106,13 +361,13 @@
         {
           "type": "sprite",
           "position": [
-            100.0,
-            360.0
+            25.0,
+            90.0
           ],
-          "texture": 2,
+          "texture": "bubble_open",
           "scale": [
-            128.0,
-            128.0
+            12.0,
+            12.0
           ],
           "angle": 0.785398163
         },
@@ -128,8 +383,8 @@
         {
           "type": "zone",
           "position": [
-            1180.0,
-            360.0
+            310.0,
+            90.0
           ],
           "zone_type": 1,
           "angle": 0
@@ -137,13 +392,13 @@
         {
           "type": "sprite",
           "position": [
-            1100.0,
-            260.0
+            300.0,
+            80.0
           ],
-          "texture": 3,
+          "texture": "bubble_closed",
           "scale": [
-            128.0,
-            128.0
+            12.0,
+            12.0
           ],
           "angle": 0.785398163
         }

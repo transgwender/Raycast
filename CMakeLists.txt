@@ -33,11 +33,13 @@ file(GLOB SOURCE_FILES
         src/*.hpp
         src/systems/*.cpp
         src/systems/*.hpp
+        src/systems/render/*.cpp
+        src/systems/render/*.hpp
         src/ecs/*.cpp
         src/ecs/*.hpp
         src/logging/*.cpp
         src/logging/*.hpp
-        src/utils/*.cpp 
+        src/utils/*.cpp
         src/utils/*.hpp
 )
 
@@ -51,7 +53,7 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/ecs src/logging src/utils)
+target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/systems/render src/ecs src/logging src/utils)
 
 # Added this so policy CMP0065 doesn't scream
 set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)

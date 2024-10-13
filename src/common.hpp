@@ -49,6 +49,9 @@ inline std::string scene_path(const std::string& name) {
 const int window_width_px = 1280;
 const int window_height_px = 720;
 
+static int native_width = 320;
+static int native_height = 180;
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
 #define M_PI_2 M_PI/2
@@ -67,4 +70,4 @@ struct Transform {
     void translate(vec2 offset);
 };
 
-bool gl_has_errors();
+bool checkGlErrors();

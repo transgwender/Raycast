@@ -13,3 +13,6 @@ The world has fallen into darkness, and nearly all life has disappeared. The las
 
 [WIP]
 
+**Attribution**
+
+Forest by Arcade Island https://arcadeisland.itch.io/forest

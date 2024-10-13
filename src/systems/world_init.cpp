@@ -1,41 +1,42 @@
 #include "world_init.hpp"
 #include "ecs/registry.hpp"
 
-Entity createSprite(const Entity &entity, RenderSystem* renderer, vec2 position, vec2 scale, float angle, TEXTURE_ASSET_ID texture) {
-    // Store a reference to the potentially re-used mesh object
-    Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
-    registry.meshPtrs.emplace(entity, &mesh);
+Entity createSprite(const Entity& entity, const vec2 position, const vec2 scale, float angle,
+                    const std::string& textureName,
+                    const std::string& shaderName) {
     auto& motion = registry.motions.emplace(entity);
     motion.position = position;
     motion.scale = scale;
     motion.angle = angle;
 
-    registry.renderRequests.insert(entity, {texture,
-                                            EFFECT_ASSET_ID::TEXTURED,
-                                            GEOMETRY_BUFFER_ID::SPRITE});
+    registry.materials.insert(entity, {textureName, shaderName});
 
     return entity;
 }
 
-Entity createLight(const Entity &entity, RenderSystem* renderer, vec2 position, vec2 velocity) {
-    vec2 scale = vec2({20, 80});
+Entity createLight(const Entity &entity, vec2 position, vec2 velocity) {
+    vec2 scale = vec2({8, 8});
     float angle = M_PI_2 + atan2(velocity.y, velocity.x);
 
-    Entity light = createSprite(entity, renderer, position, scale, angle, TEXTURE_ASSET_ID::LIGHT);
+    Entity light = createSprite(entity, position, scale, angle, "light");
 
-    // Mesh& mesh = renderer->getMesh(GEOMETRY_BUFFER_ID::SPRITE);
     registry.lightRays.emplace(light);
 
     auto& motion = registry.motions.get(light);
     motion.velocity = velocity;
     motion.collides = true;
 
+    PointLight& point_light = registry.pointLights.emplace(light);
+    point_light.diffuse = 6.0f * vec3(255, 233, 87);
+    point_light.linear = 0.045f;
+    point_light.quadratic = 0.0075;
+
     return entity;
 }
 
-Entity createMirror(const Entity& entity, RenderSystem* renderer, vec2 position, float angle) {
-    vec2 scale = vec2({20, 200});
-    createSprite(entity, renderer, position, scale, angle, TEXTURE_ASSET_ID::MIRROR);
+Entity createMirror(const Entity& entity, vec2 position, float angle) {
+    vec2 scale = vec2({5, 40});
+    createSprite(entity, position, scale, angle, "mirror");
     registry.reflectives.emplace(entity);
     return entity;
 }
