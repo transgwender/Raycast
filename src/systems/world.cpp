@@ -94,17 +94,18 @@ GLFWwindow* WorldSystem::create_window() {
         LOG_ERROR("Failed to initialize SDL Audio");
         return nullptr;
     }
+
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
         LOG_ERROR("Failed to open audio device");
         return nullptr;
     }
 
-    background_music = Mix_LoadMUS(audio_path("8BitCave.mp3").c_str());
+    background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
 
     if (background_music == nullptr) {
         LOG_ERROR("Failed to load sounds. {} make sure the data "
                   "directory is present",
-                  audio_path("8BitCave.mp3").c_str());
+                  audio_path("8BitCave.wav").c_str());
         return nullptr;
     }
 
