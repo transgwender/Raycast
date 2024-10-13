@@ -133,8 +133,8 @@ void PhysicsSystem::step(float elapsed_ms) {
           // create a collisions event for each entity colliding with other
           // (to ensure both orders exist for later collision handling)
           // NOTE: stubbed with REFLECTIVE collisions for now
-          std::cout << "COLLISION!" << std::endl;
-          std::cout <<entity_i << ", " << entity_j << std::endl;
+          // std::cout << "COLLISION!" << std::endl;
+          // std::cout <<entity_i << ", " << entity_j << std::endl;
           registry.collisions.emplace_with_duplicates(entity_i, entity_j);
           registry.collisions.emplace_with_duplicates(entity_j, entity_i);
         }

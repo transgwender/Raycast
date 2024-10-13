@@ -27,9 +27,7 @@ namespace raycast {
             e_motion.position.x, e_motion.position.y, firstEndpoint.x,
             firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
             direction.x, direction.y);
-        // Finally, update the angle of the entity to make sure it is aligned
-        // with the rail.
-        e_motion.angle = e_rails.angle;
+
       }
     }
 

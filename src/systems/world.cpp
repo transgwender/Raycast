@@ -371,9 +371,18 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         }
     }
     if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
+        xpos = world_pos.x;
+        ypos = world_pos.y;
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
             if (registry.boundingBoxes.has(entity)) {
+                // calculate rotation matrix
+                Motion& motion = registry.motions.get(entity);
+                float cos = ::cos(motion.angle);
+                float sin = ::sin(motion.angle);
+                mat2 rotation_matrix = mat2(cos, sin, -sin, cos);
+
                 BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
                 float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
                 float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
@@ -381,7 +390,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
                     Mix_PlayChannel(1, click_sfx, 0);
-
                     if (registry.entitiesOnLinearRails.has(entity)) {
                         LOG_INFO("Moving entity on linear rail.");
                         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);

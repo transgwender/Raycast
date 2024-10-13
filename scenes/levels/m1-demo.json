@@ -308,21 +308,21 @@
       ]
     },
     {
-      "name": "top-rotate-mirror",
+      "name": "move-mirror",
       "data": [
         {
           "type": "mirror",
           "position": [
             60.0,
-            20.0
+            30.0
           ],
-          "angle": 1.57
+          "angle": 0.785
         },
         {
           "type": "bounding_box",
           "position": [
             60.0,
-            20.0
+            30.0
           ],
           "scale": [
             25.0,
@@ -333,7 +333,15 @@
           "type": "interactable"
         },
         {
-          "type": "rotateable"
+          "type": "on_linear_rails",
+          "angle": 0,
+          "length": 12.5
+        },
+        {
+          "type": "linearly_interpolatable",
+          "should_switch_direction" : false,
+          "t": 0,
+          "t_step": 0
         },
         {
           "type": "highlightable",
