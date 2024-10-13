@@ -10,6 +10,7 @@
 #include "components_json.hpp"
 #include "logging/log.hpp"
 #include "systems/physics.hpp"
+#include "systems/rails.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -138,31 +139,6 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 
     // Set all states to default
     restart_game();
-
-    // Calculate the endpoints for all entities on rails
-    auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
-    LOG_INFO("Calculating endpoints for the {} entities on rails.", entities_on_linear_rails.size());
-    for (auto e : entities_on_linear_rails) {
-        Motion& e_motion = registry.motions.get(e);
-        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
-        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
-
-        auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
-        vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
-        vec2 secondEndpoint = e_motion.position - e_rails.length * direction;
-
-        e_lr.t = 0.5;
-        e_rails.firstEndpoint = firstEndpoint;
-        e_rails.secondEndpoint = secondEndpoint;
-        e_rails.direction = direction;
-        LOG_INFO("Entity with position: ({}, {}) on a linear rail has "
-                 "endpoints: ({},{}) ({}, {}) with a direction: ({},{})",
-                 e_motion.position.x, e_motion.position.y, firstEndpoint.x, firstEndpoint.y, secondEndpoint.x,
-                 secondEndpoint.y, direction.x, direction.y);
-        // Finally, update the angle of the entity to make sure it is aligned
-        // with the rail.
-        e_motion.angle = e_rails.angle;
-    }
 }
 
 // Update our game world
@@ -228,8 +204,7 @@ void WorldSystem::restart_game() {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    // Why list? please delete if not needed
-    // registry.list_all_components();
+    raycast::rails::init();
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -266,20 +241,22 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     assert(registry.lightRays.has(other));
     if (registry.zones.has(collider))
         switch (registry.zones.get(collider).type) {
-            case ZONE_TYPE::END: {
-                std::string next_scene = "gamefinish";
-                change_scene(next_scene);
-                break;
-            }
-            case ZONE_TYPE::START: {
-                return;
-            }
-            default: {
-                // TODO: should be different noise from reflection
-                Mix_PlayChannel(2, reflection_sfx, 0);
-                registry.remove_all_components_of(other);
-                break;
-            }
+        case ZONE_TYPE::END: {
+            LOG_INFO("Level beaten!");
+            std::string next_scene = "gamefinish";
+            change_scene(next_scene);
+            break;
+        }
+        case ZONE_TYPE::START: {
+            return;
+        }
+        default: {
+            // TODO: should be different noise from reflection
+            Mix_PlayChannel(2, reflection_sfx, 0);
+            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            registry.remove_all_components_of(other);
+            break;
+        }
         }
 }
 
@@ -388,6 +365,33 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
                         // TODO: use lerp too smoothly rotate
                         e_motion.angle += 5 * (M_PI / 180);
+                    }
+                }
+            }
+        }
+    }
+    if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+        LOG_INFO("({}, {})", xpos, ypos);
+        for (Entity entity : registry.interactables.entities) {
+            if (registry.boundingBoxes.has(entity)) {
+                BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+                float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+                float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+                float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+                float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
+                    Mix_PlayChannel(1, click_sfx, 0);
+
+                    if (registry.entitiesOnLinearRails.has(entity)) {
+                        LOG_INFO("Moving entity on linear rail.");
+                        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+                        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+                        int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
+                        if (which_direction > 0) {
+                            e_lr.t_step = -0.2;
+                        } else if (which_direction < 0) {
+                            e_lr.t_step = 0.2;
+                        }
                     }
                 }
             }
