@@ -99,7 +99,7 @@ GLFWwindow* WorldSystem::create_window() {
         return nullptr;
     }
 
-    background_music = Mix_LoadMUS(audio_path("music.wav").c_str());
+    background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
 
     if (background_music == nullptr) {
         LOG_ERROR("Failed to load sounds. {} make sure the data "
