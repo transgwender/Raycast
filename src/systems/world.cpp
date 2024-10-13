@@ -157,9 +157,17 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 
     if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
-        for (auto& light : registry.lightRays.components) {
+
+        for (int i = 0; i < registry.lightRays.components.size(); i++) {
+            auto& lightEntity = registry.lightRays.entities[i];
+            auto& light = registry.lightRays.components[i];
             if (light.last_reflected_timeout > 0)
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
+            Motion& motion = registry.motions.get(lightEntity);
+            if (motion.position.x < 0 || motion.position.x > window_width_px || motion.position.y < 0 ||
+                motion.position.y > window_height_px) {
+                registry.remove_all_components_of(lightEntity);
+            }
         }
 
         if (registry.lightRays.components.size() <= MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
