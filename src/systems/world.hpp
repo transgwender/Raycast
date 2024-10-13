@@ -6,26 +6,27 @@
 // stlib
 #include <random>
 #include <vector>
-
 #define SDL_MAIN_HANDLED
 #include "registry.hpp"
 
 #include <SDL.h>
 #include <SDL_mixer.h>
 
-#include "systems/scenes.hpp"
 #include "systems/render.hpp"
+#include "systems/scenes.hpp"
+
+constexpr size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
+constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
+constexpr size_t MAX_LIGHT_ON_SCREEN = 20;
 
 // Container for all our entities and game logic. Individual rendering / update
 // is deferred to the relative update() methods
 class WorldSystem {
   public:
     WorldSystem();
-
-    // Creates a window
     GLFWwindow* create_window();
 
-    // starts the game
+    // Entrypoint to the game
     void init(RenderSystem* renderer, SceneSystem* scenes);
 
     // Releases all associated resources
@@ -50,14 +51,14 @@ class WorldSystem {
     void handle_reflection(Entity& reflective, Entity& reflected);
     void handle_non_reflection(Entity& collider, Entity& other);
 
-    // restart level
+    // Restart level
     void restart_game();
     void change_scene(std::string &scene_tag);
 
     // OpenGL window handle
     GLFWwindow* window;
 
-    // time to fire
+    // Time to fire
     float next_light_spawn;
 
     // Game state
@@ -66,7 +67,7 @@ class WorldSystem {
     SceneSystem* scenes;
     float current_speed;
 
-    // music references
+    // Music references
     Mix_Music* background_music;
 
     // C++ random number generator

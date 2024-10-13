@@ -4,10 +4,16 @@
 #include "json.hpp"
 #include "registry.hpp"
 #include "world_init.hpp"
-#include "common.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <iostream>
+
+// NOTE: Expects the `data`, `entity`, and `registry` identifiers to be in scope.
+#define PARSE_COMPONENT(ty, container)                                         \
+ty __ty{};                                                                     \
+data.get_to(__ty);                                                             \
+(registry).container.insert(entity, __ty);
 
 namespace fs = std::filesystem;
 
@@ -17,8 +23,8 @@ void SceneSystem::init(RenderSystem* renderer_arg) {
 //  https://www.cppstories.com/2019/04/dir-iterate/
     fs::path folder = scene_path("levels");
     for (const auto& entry : fs::directory_iterator(folder)) {
+        const auto& path = entry.path();
         auto filename = entry.path().filename().replace_extension();
-        auto path = entry.path();
         levels.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
     }
 
@@ -49,45 +55,39 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                         TEXTURE_ASSET_ID texture = data["texture"];
                         createSprite(entity, renderer, position, texture);
                     } else if (type == "interactable") {
-                        Interactable c{};
-                        data.get_to(c);
-                        registry.interactables.insert(entity, c);
+                        PARSE_COMPONENT(Interactable, interactables);
                     } else if (type == "change_scene") {
-                        ChangeScene c{};
-                        data.get_to(c);
-                        registry.changeScenes.insert(entity, c);
+                        PARSE_COMPONENT(ChangeScene, changeScenes);
                     } else if (type == "bounding_box") {
-                        BoundingBox c{};
-                        data.get_to(c);
-                        registry.boundingBoxes.insert(entity, c);
+                        PARSE_COMPONENT(BoundingBox, boundingBoxes);
                     } else if (type == "zone") {
-                        Zone c{};
-                        data.get_to(c);
-                        registry.zones.insert(entity, c);
-                    } else if (type == "level") {
-                        Level c{};
-                        data.get_to(c);
-                        registry.levels.insert(entity, c);
+                        PARSE_COMPONENT(Zone, zones);
                     } else if (type == "light_source") {
-                        LightSource c{};
-                        data.get_to(c);
-                        registry.lightSources.insert(entity, c);
+                        PARSE_COMPONENT(LightSource, lightSources);
+                    } else if (type == "on_linear_rails") {
+                        PARSE_COMPONENT(OnLinearRails, entitiesOnLinearRails);
+                    } else if (type == "linearly_interpolatable") {
+                        PARSE_COMPONENT(LinearlyInterpolatable, linearlyInterpolatables);
+                    } else if (type == "rotateable") {
+                        PARSE_COMPONENT(Rotateable, rotateables);
                     } else if (type == "reflective") {
-                        Reflective c{};
-                        data.get_to(c);
-                        registry.reflectives.insert(entity, c);
+                        PARSE_COMPONENT(Reflective, reflectives);
+                    } else if (type == "level") {
+                        PARSE_COMPONENT(Level, levels);
                     }
                 }
             }
         } catch (...) {
-            std::cout << "ERROR: issue with the formatting of the file: " << filename << std::endl;
+            LOG_ERROR("Parsing file failed for file; {}", filename);
             return false;
         }
     }
     else
     {
-        std::cout << "ERROR: failed to open file: " << filename << std::endl;
+        LOG_ERROR("Failed to open file: {}", filename);
         return false;
     }
+
+    LOG_INFO("Successfully loaded scene")
     return true;
 }
