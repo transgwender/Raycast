@@ -1,0 +1,38 @@
+name: Bug Report
+description: File a bug report.
+title: "[Bug]: "
+labels: ["bug"]
+projects: ["Team03/Raycast"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: describe-issue
+    attributes:
+      label: Describe the issue
+      description: Also tell us, what did you expect to happen?
+      placeholder: Tell us what you see!
+      value: "🐛"
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: Problem Area
+      description: What aspect of the player experience does this bug affect?
+      options:
+        - Graphics
+        - Smooth Gameplay
+        - Physics
+        - Development
+      default: 0
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output
+      render: shell
