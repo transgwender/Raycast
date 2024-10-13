@@ -1,12 +1,8 @@
 name: Feature Ticket
-description: File a bug report.
+description: Add a feature ticket.
 labels: ["feature"]
 projects: ["CPSC427-2024W-T1/Raycast"]
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thanks for taking the time to fill out this bug report!
   - type: textarea
     id: describe-feature
     attributes:
