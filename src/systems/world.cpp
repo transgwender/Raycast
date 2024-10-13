@@ -8,13 +8,9 @@
 #include <sstream>
 
 #include "components_json.hpp"
-<<<<<<< HEAD
 #include "systems/physics.hpp"
 #include "systems/rails.hpp"
-=======
->>>>>>> origin/develop
 #include "logging/log.hpp"
-#include "systems/physics.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -134,7 +130,7 @@ GLFWwindow* WorldSystem::create_window() {
 
 void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene_tag = "mainmenu";
+    scene.scene_tag = "mirror_movement_test";
     this->renderer = renderer_arg;
     this->scenes = scene_arg;
 
