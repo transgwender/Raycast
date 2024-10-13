@@ -75,6 +75,10 @@
         },
         {
           "type": "rotateable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
         }
       ]
     },

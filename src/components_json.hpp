@@ -166,3 +166,11 @@ inline void from_json(const json& j, Mirror& c) {
     j.at("position").get_to(c.position);
     j.at("angle").get_to(c.angle);
 }
+
+inline void to_json(json& j, const Highlightable& c) {
+    j = json{{"type", "highlightable"}, {"isHighlighted", c.isHighlighted}};
+}
+
+inline void from_json(const json& j, Highlightable& c) {
+    j.at("isHighlighted").get_to(c.isHighlighted);
+}
