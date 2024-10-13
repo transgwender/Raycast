@@ -130,7 +130,7 @@ GLFWwindow* WorldSystem::create_window() {
 
 void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene_tag = "mirror_movement_test";
+    scene.scene_tag = "mainmenu";
     this->renderer = renderer_arg;
     this->scenes = scene_arg;
 
@@ -243,7 +243,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     if (registry.zones.has(collider))
         switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
-            std::cout << "Level beaten!";
+            LOG_INFO("Level beaten!");
             std::string next_scene = "gamefinish";
             change_scene(next_scene);
             break;
@@ -252,7 +252,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             return;
         }
         default: {
-            std::cout << "Hit non-reflective object. Light ray fizzles out";
+            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
             break;
         }
@@ -340,35 +340,7 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
     double ypos) {
-  if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
-    LOG_INFO("({}, {})", xpos, ypos);
-    for (Entity entity : registry.interactables.entities) {
-      if (registry.boundingBoxes.has(entity)) {
-        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
-        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
-        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
-        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
-        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
-            ypos > yUp) {
-          Mix_PlayChannel(1, click_sfx, 0);
-
-          if (registry.entitiesOnLinearRails.has(entity)) {
-            LOG_INFO("Moving entity linear rail.");
-            OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
-            int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
-            if (which_direction > 0) {
-              e_lr.t_step = -0.2;
-            } else if (which_direction < 0) {
-              e_lr.t_step = 0.2;
-            }
-          }
-        }
-      }
-    }
-
-  }
+    
   if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
     LOG_INFO("({}, {})", xpos, ypos);
     for (Entity entity : registry.interactables.entities) {
@@ -381,9 +353,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
         if (xpos < xRight && xpos > xLeft && ypos < yDown &&
             ypos > yUp) {
           Mix_PlayChannel(1, click_sfx, 0);
+    
           if (registry.changeScenes.has(entity)) {
+            LOG_INFO("Changing scene");
             ChangeScene& changeScene = registry.changeScenes.get(entity);
             change_scene(changeScene.scene);
+          
           } else if (registry.rotateables.has(entity)) {
             // Rotate the entity.
             LOG_INFO("Something should be rotating.")
@@ -400,4 +375,33 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
       }
     }
   }
+if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
+    LOG_INFO("({}, {})", xpos, ypos);
+    for (Entity entity : registry.interactables.entities) {
+      if (registry.boundingBoxes.has(entity)) {
+        BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+        float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+        float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+        float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+        float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+        if (xpos < xRight && xpos > xLeft && ypos < yDown &&
+            ypos > yUp) {
+          Mix_PlayChannel(1, click_sfx, 0);
+
+          if (registry.entitiesOnLinearRails.has(entity)) {
+            LOG_INFO("Moving entity on linear rail.");
+            OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+            LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(entity);
+            int which_direction = dot(vec2(xpos, ypos), e_rails.direction);
+            if (which_direction > 0) {
+              e_lr.t_step = -0.2;
+            } else if (which_direction < 0) {
+              e_lr.t_step = 0.2;
+            }
+          }
+        }
+      }
+    }
+  }
+
 }
