@@ -308,6 +308,74 @@
       ]
     },
     {
+      "name": "top-rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            60.0,
+            20.0
+          ],
+          "angle": 1.57
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            60.0,
+            20.0
+          ],
+          "scale": [
+            25.0,
+            25.0
+          ]
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "rotateable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "far-rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            295.0,
+            20.0
+          ],
+          "angle": 1.57
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            295.0,
+            20.0
+          ],
+          "scale": [
+            25.0,
+            25.0
+          ]
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "rotateable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
       "name": "level_id",
       "data": [
         {
@@ -323,7 +391,7 @@
           "type": "zone",
           "position": [
             20.0,
-            150.0
+            140.0
           ],
           "zone_type": 0,
           "angle": 30
@@ -332,7 +400,7 @@
           "type": "sprite",
           "position": [
             20.0,
-            150.0
+            140.0
           ],
           "texture": "bubble_open",
           "scale": [

@@ -133,7 +133,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     this->scenes = scene_arg;
 
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0 * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(0.5 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -286,7 +286,6 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
 // Reflect light ray based on collision normal
 // Invariant: other is a light ray
 void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
-    Mix_PlayChannel(2, reflection_sfx, 0);
     assert(registry.lightRays.has(reflected));
     Light& light = registry.lightRays.get(reflected);
     // don't reflect off of same mirror twice
@@ -294,6 +293,8 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
     if (light.last_reflected == reflective && light.last_reflected_timeout > 0) {
         return;
     }
+
+    Mix_PlayChannel(2, reflection_sfx, 0);
 
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
