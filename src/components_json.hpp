@@ -138,3 +138,31 @@ inline void from_json(const json& j, Reflective& c) {
     (void)j;
     (void)c;
 }
+
+inline void to_json(json& j, const Sprite& c) {
+    j = json{ {"type", "sprite"}, {"position", c.position}, {"scale", c.scale}, {"angle", c.angle}, {"texture", c.texture} };
+}
+
+inline void from_json(const json& j, Sprite& c) {
+    j.at("position").get_to(c.position);
+    j.at("texture").get_to(c.texture);
+    if(j.contains("scale")) {
+        j.at("scale").get_to(c.scale);
+    } else {
+        c.scale = vec2({200, 200});
+    }
+    if (j.contains("angle")) {
+        j.at("angle").get_to(c.angle);
+    } else {
+        c.angle = 0;
+    }
+}
+
+inline void to_json(json& j, const Mirror& c) {
+    j = json{ {"type", "mirror"}, {"position", c.position}, {"angle", c.angle} };
+}
+
+inline void from_json(const json& j, Mirror& c) {
+    j.at("position").get_to(c.position);
+    j.at("angle").get_to(c.angle);
+}

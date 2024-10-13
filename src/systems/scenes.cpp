@@ -51,9 +51,9 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                 for(auto &data : array["data"]) {
                     std::string type = data["type"];
                     if (type == "sprite") {
-                        vec2 position = {data["position"][0], data["position"][1]};
-                        TEXTURE_ASSET_ID texture = data["texture"];
-                        createSprite(entity, renderer, position, texture);
+                        Sprite c{};
+                        data.get_to(c);
+                        createSprite(entity, renderer, c.position, c.scale, c.angle, c.texture);
                     } else if (type == "interactable") {
                         PARSE_COMPONENT(Interactable, interactables);
                     } else if (type == "change_scene") {
@@ -74,6 +74,10 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                         PARSE_COMPONENT(Reflective, reflectives);
                     } else if (type == "level") {
                         PARSE_COMPONENT(Level, levels);
+                    } else if (type == "mirror") {
+                        Mirror c{};
+                        data.get_to(c);
+                        createMirror(entity, renderer, c.position, c.angle);
                     }
                 }
             }

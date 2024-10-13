@@ -30,10 +30,14 @@ class RenderSystem {
     // Make sure these paths remain in sync with the associated enumerators.
     const std::array<std::string, texture_count> texture_paths = {
         textures_path("green_fish.png"),
-        textures_path("button_rectangle_depth_border.png"),
+        textures_path("button_start.png"),
         textures_path("yellow_portal.png"),
         textures_path("blue_portal.png"),
-        textures_path("light_ray.png")
+        textures_path("light_ray.png"),
+        textures_path("logo.png"),
+        textures_path("button_rectangle_depth_border.png"),
+        textures_path("button_main_menu.png"),
+        textures_path("win.png")
     };
 
     std::array<GLuint, effect_count> effects;

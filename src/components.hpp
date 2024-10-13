@@ -130,11 +130,15 @@ struct Rotateable {};
  * enums there are, and as a default value to represent uninitialized fields.
  */
 enum class TEXTURE_ASSET_ID {
-    FISH,
-    PLAY_BUTTON,
-    START_ZONE,
-    END_ZONE,
-    LIGHT,
+    FISH = 0,
+    PLAY_BUTTON = 1,
+    START_ZONE = 2,
+    END_ZONE = 3,
+    LIGHT = 4,
+    LOGO = 5,
+    MIRROR = 6,
+    MAIN_MENU_BUTTON = 7,
+    WIN = 8,
     TEXTURE_COUNT,
 };
 constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
@@ -157,4 +161,22 @@ struct RenderRequest {
     TEXTURE_ASSET_ID used_texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
     EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
     GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
+};
+
+/**
+ * This is used more as a general purpose helper for constructing more complex objects like sprites.
+ * Not a component in its own right.
+ * TODO: Move to its own file
+ */
+
+struct Sprite {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    float angle = 0;
+    TEXTURE_ASSET_ID texture;
+};
+
+struct Mirror {
+    vec2 position = {0, 0};
+    float angle = 0;
 };

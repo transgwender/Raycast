@@ -13,15 +13,12 @@
       "name": "mirror",
       "data": [
         {
-        "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             204.0,
             267.0
           ],
-          "texture": 1
+          "angle": 6875.49354
         }
       ]
     },
@@ -29,15 +26,12 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             424.0,
             567.0
           ],
-          "texture": 1
+          "angle": 6875.49354
         }
       ]
     },
@@ -45,15 +39,12 @@
       "name": "mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             654.0,
             367.0
           ],
-          "texture": 1
+          "angle": 6875.49354
         }
       ]
     },
@@ -61,15 +52,12 @@
       "name": "rotate-mirror",
       "data": [
         {
-          "type": "reflective"
-        },
-        {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
             800.0,
             650.0
           ],
-          "texture": 1
+          "angle": 6875.49354
         },
         {
           "type": "interactable"
@@ -91,6 +79,15 @@
       ]
     },
     {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
       "name": "start_zone",
       "data": [
         {
@@ -108,7 +105,12 @@
             100.0,
             360.0
           ],
-          "texture": 2
+          "texture": 2,
+          "scale": [
+            128.0,
+            128.0
+          ],
+          "angle": 0.785398163
         },
         {
           "type": "light_source",
@@ -134,7 +136,12 @@
             1100.0,
             260.0
           ],
-          "texture": 3
+          "texture": 3,
+          "scale": [
+            128.0,
+            128.0
+          ],
+          "angle": 0.785398163
         }
       ]
     }

@@ -1,24 +1,24 @@
 {
   "objList": [
     {
-      "name": "logo",
+      "name": "win",
       "data": [
         {
           "type": "sprite",
           "position": [
             650.0,
-            100.0
+            150.0
           ],
-          "texture": 5,
+          "texture": 8,
           "scale": [
-            620.0,
-            170.0
+            318.0,
+            230.0
           ]
         }
       ]
     },
     {
-      "name": "play_button",
+      "name": "main_menu_button",
       "data": [
         {
           "type": "sprite",
@@ -26,7 +26,7 @@
             650.0,
             500.0
           ],
-          "texture": 1,
+          "texture": 7,
           "scale": [
             384.0,
             128.0
@@ -37,7 +37,7 @@
         },
         {
           "type": "change_scene",
-          "scene": "mirror_reflection_test"
+          "scene": "mainmenu"
         },
         {
           "type": "bounding_box",

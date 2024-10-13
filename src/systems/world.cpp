@@ -258,7 +258,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
             std::cout << "Level beaten!";
-            std::string next_scene = "mainmenu";
+            std::string next_scene = "gamefinish";
             change_scene(next_scene);
             break;
         }
