@@ -58,6 +58,10 @@ struct Collision {
     explicit Collision(Entity& other) { this->other = other; };
 };
 
+struct Highlightable {
+    bool isHighlighted = false;
+};
+
 // Object is reflective
 struct Reflective {};
 

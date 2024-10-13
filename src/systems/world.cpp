@@ -336,7 +336,27 @@ void move_mirror(vec2 position) {
     registry.motions.get(registry.reflectives.entities[0]).position = position;
 }
 
-void WorldSystem::on_mouse_move(vec2 mouse_position) {}
+void WorldSystem::on_mouse_move(vec2 mouse_position) {
+    for (Entity entity : registry.interactables.entities) {
+        if (registry.boundingBoxes.has(entity)) {
+            BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
+            float xRight = boundingBox.position.x + boundingBox.scale.x / 2;
+            float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
+            float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
+            float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
+            if (mouse_position.x < xRight && mouse_position.x > xLeft && mouse_position.y < yDown &&
+                mouse_position.y > yUp) {
+                if (registry.highlightables.has(entity)) {
+                    registry.highlightables.get(entity).isHighlighted = true;
+                }
+            } else {
+                if (registry.highlightables.has(entity)) {
+                    registry.highlightables.get(entity).isHighlighted = false;
+                }
+            }
+        }
+    }
+}
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                                   double ypos) {

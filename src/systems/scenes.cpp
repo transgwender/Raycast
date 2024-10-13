@@ -78,6 +78,9 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                         Mirror c{};
                         data.get_to(c);
                         createMirror(entity, renderer, c.position, c.angle);
+                    } else if (type == "highlightable") {
+                        PARSE_COMPONENT(Highlightable, highlightables);
+                    
                     }
                 }
             }
