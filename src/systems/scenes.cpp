@@ -1,5 +1,6 @@
 #include "scenes.hpp"
 
+#include "common.hpp"
 #include "components_json.hpp"
 #include "json.hpp"
 #include "registry.hpp"
@@ -20,7 +21,7 @@ namespace fs = std::filesystem;
 void SceneSystem::init(RenderSystem* renderer_arg) {
     this->renderer = renderer_arg;
 
-//  https://www.cppstories.com/2019/04/dir-iterate/
+    //  https://www.cppstories.com/2019/04/dir-iterate/
     fs::path folder = scene_path("levels");
     for (const auto& entry : fs::directory_iterator(folder)) {
         const auto& path = entry.path();
@@ -33,27 +34,27 @@ void SceneSystem::init(RenderSystem* renderer_arg) {
 
 // Attempts to parse a specified scene. Returns true if successful. False if
 // not.
-bool SceneSystem::try_parse_scene(std::string &scene_tag) {
+bool SceneSystem::try_parse_scene(std::string& scene_tag) {
     std::string filename = scene_paths.at(scene_tag);
     std::ifstream entity_file(filename);
 
-    if (entity_file.is_open())
-    {
+    if (entity_file.is_open()) {
         nlohmann::json j;
         entity_file >> j;
 
         entity_file.close();
 
-        // Iterate through every entity specified, and add the component specified
+        // Iterate through every entity specified, and add the component
+        // specified
         try {
-            for(auto &array : j["objList"]) {
+            for (auto& array : j["objList"]) {
                 const auto entity = Entity();
-                for(auto &data : array["data"]) {
+                for (auto& data : array["data"]) {
                     std::string type = data["type"];
                     if (type == "sprite") {
                         Sprite c{};
                         data.get_to(c);
-                        createSprite(entity, renderer, c.position, c.scale, c.angle, c.texture);
+                        createSprite(entity, c.position, c.scale, c.angle, c.texture);
                     } else if (type == "interactable") {
                         PARSE_COMPONENT(Interactable, interactables);
                     } else if (type == "change_scene") {
@@ -77,24 +78,23 @@ bool SceneSystem::try_parse_scene(std::string &scene_tag) {
                     } else if (type == "mirror") {
                         Mirror c{};
                         data.get_to(c);
-                        createMirror(entity, renderer, c.position, c.angle);
+                        createMirror(entity, c.position, c.angle);
                     } else if (type == "highlightable") {
                         PARSE_COMPONENT(Highlightable, highlightables);
-                    
                     }
                 }
             }
         } catch (...) {
             LOG_ERROR("Parsing file failed for file; {}", filename);
+            std::cout << "ERROR: issue with the formatting of the file: "
+                      << filename << std::endl;
             return false;
         }
     }
-    else
-    {
+    else {
         LOG_ERROR("Failed to open file: {}", filename);
-        return false;
     }
+    return true;
 
     LOG_INFO("Successfully loaded scene")
-    return true;
 }

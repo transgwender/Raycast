@@ -13,8 +13,6 @@ class ECSRegistry {
     ComponentContainer<Scene> scenes;
     ComponentContainer<Motion> motions;
     ComponentContainer<Collision> collisions;
-    ComponentContainer<Mesh*> meshPtrs;
-    ComponentContainer<RenderRequest> renderRequests;
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
     ComponentContainer<BoundingBox> boundingBoxes;
@@ -22,6 +20,8 @@ class ECSRegistry {
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
+    ComponentContainer<Material> materials;
+    ComponentContainer<PointLight> pointLights;
     ComponentContainer<Reflective> reflectives;
     ComponentContainer<Level> levels;
     ComponentContainer<OnLinearRails> entitiesOnLinearRails;
@@ -35,8 +35,6 @@ class ECSRegistry {
         registry_list.push_back(&scenes);
         registry_list.push_back(&motions);
         registry_list.push_back(&collisions);
-        registry_list.push_back(&meshPtrs);
-        registry_list.push_back(&renderRequests);
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&boundingBoxes);
@@ -44,6 +42,8 @@ class ECSRegistry {
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
+        registry_list.push_back(&materials);
+        registry_list.push_back(&pointLights);
         registry_list.push_back(&reflectives);
         registry_list.push_back(&levels);
         registry_list.push_back(&entitiesOnLinearRails);

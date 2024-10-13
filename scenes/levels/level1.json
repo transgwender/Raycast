@@ -15,8 +15,8 @@
         {
           "type": "sprite",
           "position": [
-            100.0,
-            360.0
+            10.0,
+            90.0
           ],
           "texture": 2,
           "scale": [
@@ -28,8 +28,8 @@
         {
           "type": "zone",
           "position": [
-            100.0,
-            360.0
+            10.0,
+            90.0
           ],
           "zone_type": 0,
           "angle": 30
@@ -46,8 +46,8 @@
         {
           "type": "sprite",
           "position": [
-            1180.0,
-            360.0
+            300.0,
+            90.0
           ],
           "texture": 3,
           "scale": [
@@ -59,8 +59,8 @@
         {
           "type": "zone",
           "position": [
-            1180.0,
-            360.0
+            300.0,
+            90.0
           ],
           "zone_type": 1,
           "angle": 0

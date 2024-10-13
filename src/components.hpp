@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include <vector>
 
 // Main data relevant to the level
 struct Scene {
@@ -51,7 +50,7 @@ struct Motion {
     bool collides = true;
 };
 
-// Stucture to store collision information
+// Structure to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
     Entity other; // The second object involved in the collision.
@@ -65,32 +64,6 @@ struct Highlightable {
 // Object is reflective
 struct Reflective {};
 
-// Single Vertex Buffer element for non-textured meshes (coloured.vs.glsl &
-// salmon.vs.glsl)
-struct ColoredVertex {
-    vec3 position;
-    vec3 color;
-};
-
-// Single Vertex Buffer element for textured sprites (textured.vs.glsl)
-struct TexturedVertex {
-    vec3 position;
-    vec2 texcoord;
-};
-
-// Mesh datastructure for storing vertex and index buffers
-struct Mesh {
-    static bool loadFromOBJFile(std::string obj_path,
-                                std::vector<ColoredVertex>& out_vertices,
-                                std::vector<uint16_t>& out_vertex_indices,
-                                vec2& out_size);
-    vec2 original_size = {1, 1};
-    std::vector<ColoredVertex> vertices;
-    std::vector<uint16_t> vertex_indices;
-};
-
-// Entities that are interactable are acted upon by user interaction (such as
-// keyboard input, mouse clicks).
 struct Interactable {};
 
 // Represents a transition to another scene.
@@ -105,6 +78,20 @@ struct BoundingBox {
     vec2 scale = {10, 10};
 };
 
+/**
+ * Single Vertex Buffer element for textured sprites (textured.vs.glsl)
+ */
+struct TexturedVertex {
+    vec3 position;
+    vec2 texcoord;
+};
+
+/**
+ * Represents a material for a renderable entity.
+ * `texture` is the name of the base texture found in the textures folder.
+ * The normal map texture can then be derived from the base texture name by
+ * adding "_n" to the end of the base texture name.
+ */
 // Entities that are mounted on linear rails can move along a straight line.
 struct OnLinearRails {
     float angle = 0;
@@ -125,46 +112,23 @@ struct LinearlyInterpolatable {
 // Represents entities that can be rotated by the user
 struct Rotateable {};
 
+struct Material {
+    std::string texture;
+    std::string shader = "textured";
+};
+
 /**
- * The following enumerators represent global identifiers referring to graphic
- * assets. For example TEXTURE_ASSET_ID are the identifiers of each texture
- * currently supported by the system.
- *
- * The final value in each enumeration is both a way to keep track of how many
- * enums there are, and as a default value to represent uninitialized fields.
+ * Represents a point light in space. An entity with this component should also
+ * have a position. Uses a quadratic light attenuation equation, see
+ * https://wiki.ogre3d.org/tiki-index.php?page=-Point+Light+Attenuation
+ * Control the colour of the light using the diffuse property, its colour
+ * channels should be in the range [0, 255].
  */
-enum class TEXTURE_ASSET_ID {
-    FISH = 0,
-    PLAY_BUTTON = 1,
-    START_ZONE = 2,
-    END_ZONE = 3,
-    LIGHT = 4,
-    LOGO = 5,
-    MIRROR = 6,
-    MAIN_MENU_BUTTON = 7,
-    WIN = 8,
-    TEXTURE_COUNT,
-};
-constexpr int texture_count = (int)TEXTURE_ASSET_ID::TEXTURE_COUNT;
-
-enum class EFFECT_ASSET_ID {
-    TEXTURED,
-    SCREEN,
-    EFFECT_COUNT,
-};
-constexpr int effect_count = (int)EFFECT_ASSET_ID::EFFECT_COUNT;
-
-enum class GEOMETRY_BUFFER_ID {
-    SPRITE,
-    SCREEN_TRIANGLE,
-    GEOMETRY_COUNT,
-};
-constexpr int geometry_count = (int)GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
-
-struct RenderRequest {
-    TEXTURE_ASSET_ID used_texture = TEXTURE_ASSET_ID::TEXTURE_COUNT;
-    EFFECT_ASSET_ID used_effect = EFFECT_ASSET_ID::EFFECT_COUNT;
-    GEOMETRY_BUFFER_ID used_geometry = GEOMETRY_BUFFER_ID::GEOMETRY_COUNT;
+struct PointLight {
+    vec3 diffuse;
+    float linear;
+    float quadratic;
+    float constant = 1.0;
 };
 
 /**
@@ -172,12 +136,11 @@ struct RenderRequest {
  * Not a component in its own right.
  * TODO: Move to its own file
  */
-
 struct Sprite {
     vec2 position = {0, 0};
     vec2 scale = {10, 10};
     float angle = 0;
-    TEXTURE_ASSET_ID texture;
+    std::string texture;
 };
 
 struct Mirror {

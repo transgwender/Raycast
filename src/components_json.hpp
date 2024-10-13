@@ -1,3 +1,4 @@
+#pragma once
 
 #include "components.hpp"
 #include "json.hpp"
@@ -165,6 +166,23 @@ inline void to_json(json& j, const Mirror& c) {
 inline void from_json(const json& j, Mirror& c) {
     j.at("position").get_to(c.position);
     j.at("angle").get_to(c.angle);
+}
+
+inline void to_json(json& j, const PointLight& c) {
+    j = json{
+        {"type", "point_light"},
+        {"diffuse", c.diffuse},
+        {"linear", c.linear},
+        {"quadratic", c.quadratic},
+        {"constant", c.constant},
+    };
+}
+
+inline void from_json(const json& j, PointLight& c) {
+    j.at("diffuse")[0].get_to(c.diffuse);
+    j.at("linear")[0].get_to(c.linear);
+    j.at("quadratic")[0].get_to(c.quadratic);
+    j.at("constant")[0].get_to(c.constant);
 }
 
 inline void to_json(json& j, const Highlightable& c) {

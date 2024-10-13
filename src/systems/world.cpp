@@ -1,18 +1,18 @@
 #include "world.hpp"
 #include "world_init.hpp"
 
+#include <SDL.h>
 #include <cassert>
-#include <sstream>
 #include <fstream>
 #include <iostream>
-#include <SDL.h>
+#include <sstream>
 
 #include "components_json.hpp"
-#include "systems/physics.hpp"
 #include "logging/log.hpp"
+#include "systems/physics.hpp"
 
 // create the light-maze world
-WorldSystem::WorldSystem(): next_light_spawn(0.f) {
+WorldSystem::WorldSystem() : next_light_spawn(0.f) {
     // Seeding rng with random device
     rng = std::default_random_engine(std::random_device()());
 }
@@ -33,9 +33,7 @@ WorldSystem::~WorldSystem() {
 
 // Debugging
 namespace {
-void glfw_err_cb(int error, const char* desc) {
-    LOG_ERROR("{}: {}", error, desc);
-}
+void glfw_err_cb(int error, const char* desc) { LOG_ERROR("{}: {}", error, desc); }
 } // namespace
 
 // World initialization
@@ -62,8 +60,7 @@ GLFWwindow* WorldSystem::create_window() {
     glfwWindowHint(GLFW_RESIZABLE, 0);
 
     // Create the main window (for rendering, keyboard, and mouse input)
-    window = glfwCreateWindow(window_width_px, window_height_px, "Raycast",
-                              nullptr, nullptr);
+    window = glfwCreateWindow(window_width_px, window_height_px, "Raycast", nullptr, nullptr);
     if (window == nullptr) {
         LOG_ERROR("Failed to glfwCreateWindow");
         return nullptr;
@@ -82,8 +79,7 @@ GLFWwindow* WorldSystem::create_window() {
     auto mouse_button_redirect = [](GLFWwindow* wnd, int _0, int _1, int _2) {
         double xpos, ypos;
         glfwGetCursorPos(wnd, &xpos, &ypos);
-        ((WorldSystem*)glfwGetWindowUserPointer(wnd))
-            ->on_mouse_button(_0, _1, _2, xpos, ypos);
+        ((WorldSystem*)glfwGetWindowUserPointer(wnd))->on_mouse_button(_0, _1, _2, xpos, ypos);
     };
     glfwSetKeyCallback(window, key_redirect);
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
@@ -146,8 +142,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 
     // Calculate the endpoints for all entities on rails
     auto& entities_on_linear_rails = registry.entitiesOnLinearRails.entities;
-    LOG_INFO("Calculating endpoints for the {} entities on rails.",
-             entities_on_linear_rails.size());
+    LOG_INFO("Calculating endpoints for the {} entities on rails.", entities_on_linear_rails.size());
     for (auto e : entities_on_linear_rails) {
         Motion& e_motion = registry.motions.get(e);
         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
@@ -163,9 +158,8 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
         e_rails.direction = direction;
         LOG_INFO("Entity with position: ({}, {}) on a linear rail has "
                  "endpoints: ({},{}) ({}, {}) with a direction: ({},{})",
-                 e_motion.position.x, e_motion.position.y, firstEndpoint.x,
-                 firstEndpoint.y, secondEndpoint.x, secondEndpoint.y,
-                 direction.x, direction.y);
+                 e_motion.position.x, e_motion.position.y, firstEndpoint.x, firstEndpoint.y, secondEndpoint.x,
+                 secondEndpoint.y, direction.x, direction.y);
         // Finally, update the angle of the entity to make sure it is aligned
         // with the rail.
         e_motion.angle = e_rails.angle;
@@ -174,8 +168,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    float speed = 280;
-
+    float speed = 100;
     if (!registry.levels.components.empty()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
 
@@ -196,16 +189,14 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
             auto& sources = registry.lightSources.entities;
-            
+
             for (int i = 0; i < sources.size(); i++) {
                 Zone& zone = registry.zones.get(sources[i]);
                 vec2 position = zone.position;
                 float angle = registry.lightSources.components[i].angle;
 
                 const auto entity = Entity();
-                createLight(entity, renderer, position,
-                            vec2(cos(-angle * M_PI / 180) * speed,
-                                 sin(-angle * M_PI / 180) * speed));
+                createLight(entity, position, vec2(cos(-angle * M_PI / 180) * speed, sin(-angle * M_PI / 180) * speed));
             }
         }
     }
@@ -242,7 +233,7 @@ void WorldSystem::restart_game() {
     // registry.list_all_components();
 }
 
-void WorldSystem::change_scene(std::string &scene_tag) {
+void WorldSystem::change_scene(std::string& scene_tag) {
     Scene& scene = registry.scenes.get(scene_state_entity);
     scene.scene_tag = scene_tag;
     restart_game(); // TODO: Change to function for changing scene specifically
@@ -252,17 +243,16 @@ void WorldSystem::change_scene(std::string &scene_tag) {
 void WorldSystem::handle_collisions() {
     // registry.collisions.emplace_with_duplicates(Entity(), Entity());
     // Loop over all collisions detected by the physics system
-	auto& collisionsRegistry = registry.collisions;
+    auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
-            registry.lightRays.has(collisionsRegistry.entities[i])) continue;
+            registry.lightRays.has(collisionsRegistry.entities[i]))
+            continue;
         if (registry.reflectives.has(collisionsRegistry.entities[i])) {
-            handle_reflection(collisionsRegistry.entities[i],
-                collisionsRegistry.components[i].other);
+            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         } else {
-            handle_non_reflection(collisionsRegistry.entities[i],
-                collisionsRegistry.components[i].other);
+            handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
     }
     // Remove all collisions from this simulation step
@@ -276,7 +266,7 @@ void WorldSystem::handle_collisions() {
 void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     assert(registry.lightRays.has(other));
     if (registry.zones.has(collider))
-    switch (registry.zones.get(collider).type) {
+        switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
             std::cout << "Level beaten!";
             std::string next_scene = "gamefinish";
@@ -291,7 +281,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             registry.remove_all_components_of(other);
             break;
         }
-    }
+        }
 }
 
 // Reflect light ray based on collision normal
@@ -309,26 +299,23 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
     vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + M_PI_2),
-                                        sin(reflective_surface_motion.angle + M_PI_2)};
-    float angle_between = atan2(reflective_surface_normal.y,
-                                reflective_surface_normal.x)
-                        - atan2(light_motion.velocity.y,
-                                light_motion.velocity.x);
+                                      sin(reflective_surface_motion.angle + M_PI_2)};
+    float angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
+                          atan2(light_motion.velocity.y, light_motion.velocity.x);
     std::cout << angle_between * 180.f / M_PI << std::endl;
-    vec2 reflected_velocity = -light_motion.velocity
-        + 2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
+    vec2 reflected_velocity = -light_motion.velocity +
+                              2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
     light_motion.velocity = reflected_velocity;
     light.last_reflected = reflective;
     light.last_reflected_timeout = DOUBLE_REFLECTION_TIMEOUT;
-    angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) - atan2(light_motion.velocity.y, light_motion.velocity.x);
+    angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
+                    atan2(light_motion.velocity.y, light_motion.velocity.x);
     light_motion.angle -= 2 * angle_between;
     std::cout << angle_between * 180.f / M_PI << std::endl;
 }
 
 // Should the game be over?
-bool WorldSystem::is_over() const {
-    return bool(glfwWindowShouldClose(window));
-}
+bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); }
 
 // On key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
@@ -341,24 +328,21 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     }
 
     // Control the current speed with `<` `>`
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
-        key == GLFW_KEY_COMMA) {
+    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA) {
         current_speed -= 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) &&
-        key == GLFW_KEY_PERIOD) {
+    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD) {
         current_speed += 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
     current_speed = fmax(0.f, current_speed);
 }
 
-void move_mirror(vec2 position) {
-    registry.motions.get(registry.reflectives.entities[0]).position = position;
-}
+void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.entities[0]).position = position; }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
+    vec2 world_pos = screenToWorld(mouse_position);
     for (Entity entity : registry.interactables.entities) {
         if (registry.boundingBoxes.has(entity)) {
             BoundingBox& boundingBox = registry.boundingBoxes.get(entity);
@@ -366,8 +350,7 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
             float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
             float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
             float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-            if (mouse_position.x < xRight && mouse_position.x > xLeft && mouse_position.y < yDown &&
-                mouse_position.y > yUp) {
+            if (world_pos.x < xRight && world_pos.x > xLeft && world_pos.y < yDown && world_pos.y > yUp) {
                 if (registry.highlightables.has(entity)) {
                     registry.highlightables.get(entity).isHighlighted = true;
                 }
@@ -380,9 +363,11 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
     }
 }
 
-void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
-                                  double ypos) {
+void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
     if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
+        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
+        xpos = world_pos.x;
+        ypos = world_pos.y;
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
             if (registry.boundingBoxes.has(entity)) {
@@ -391,8 +376,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos,
                 float xLeft = boundingBox.position.x - boundingBox.scale.x / 2;
                 float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
-                if (xpos < xRight && xpos > xLeft && ypos < yDown &&
-                    ypos > yUp) {
+                if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
                     Mix_PlayChannel(1, click_sfx, 0);
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
