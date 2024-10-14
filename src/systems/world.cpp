@@ -134,7 +134,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     this->scenes = scene_arg;
 
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.5 * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(0.25 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -252,7 +252,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         }
         default: {
             // TODO: should be different noise from reflection
-            Mix_PlayChannel(2, reflection_sfx, 0);
+            Mix_PlayChannel(-1, reflection_sfx, 0);
             LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
             break;
@@ -271,7 +271,7 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
         return;
     }
 
-    Mix_PlayChannel(2, reflection_sfx, 0);
+    Mix_PlayChannel(-1, reflection_sfx, 0);
 
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
@@ -354,7 +354,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
-                    Mix_PlayChannel(1, click_sfx, 0);
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
                         change_scene(changeScene.scene);
@@ -389,7 +388,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 float yUp = boundingBox.position.y - boundingBox.scale.y / 2;
                 float yDown = boundingBox.position.y + boundingBox.scale.y / 2;
                 if (xpos < xRight && xpos > xLeft && ypos < yDown && ypos > yUp) {
-                    Mix_PlayChannel(1, click_sfx, 0);
+                    Mix_PlayChannel(-1, click_sfx, 0);
                     if (registry.entitiesOnLinearRails.has(entity)) {
                         LOG_INFO("Moving entity on linear rail.");
                         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
