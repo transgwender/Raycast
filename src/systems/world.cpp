@@ -346,7 +346,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 Motion& motion = registry.motions.get(entity);
             if (dot(world_pos - motion.position, world_pos - motion.position)
                     < dot(motion.scale, motion.scale)) {
-                    Mix_PlayChannel(1, click_sfx, 0);
                     if (registry.changeScenes.has(entity)) {
                         ChangeScene& changeScene = registry.changeScenes.get(entity);
                         change_scene(changeScene.scene);
@@ -376,7 +375,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 Motion& motion = registry.motions.get(entity);;
             if (dot(world_pos - motion.position, world_pos - motion.position)
                     < dot(motion.scale, motion.scale)) {
-                    Mix_PlayChannel(1, click_sfx, 0);
+                    Mix_PlayChannel(-1, click_sfx, 0);
                     if (registry.entitiesOnLinearRails.has(entity)) {
                         LOG_INFO("Moving entity on linear rail.");
                         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
