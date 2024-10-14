@@ -103,7 +103,7 @@ struct OnLinearRails {
 
 // Entities that are linearly interpolatable can make use of linear
 // interpolation to perform smoothening of animations.
-struct LinearlyInterpolatable {
+struct Lerpable {
     float t;
     bool should_switch_direction;
     float t_step = 0.01;

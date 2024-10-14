@@ -14,6 +14,7 @@ inline vec2 lerp(vec2 start, vec2 end, float t) {
     return vec2(lerp(start.x, end.x, t), lerp(start.y, end.y, t));
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////////
 ///
 /// The methods below help in making floating point comparisons more
@@ -45,5 +46,13 @@ inline bool definitelyGreaterThan(float a, float b) {
 inline bool definitelyLessThan(float a, float b) {
     return definitelyLessThan(a, b, std::numeric_limits<double>::epsilon());
 }
+
+ inline float clamp(float start, float end, float t) {
+  if (definitelyLessThan(t, start)) return start;
+  if (definitelyGreaterThan(t, end)) return end;
+  return t;
+}
+
+
 } // namespace math
 } // namespace raycast

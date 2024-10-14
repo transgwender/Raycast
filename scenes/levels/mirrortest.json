@@ -1,20 +1,8 @@
 {
   "objList": [
     {
-      "name": "level_id",
+      "name": "mirror",
       "data": [
-        {
-          "type": "level",
-          "id": 1
-        }
-      ]
-    },
-    {
-      "name": "rail-mirror",
-      "data": [
-        {
-          "type": "reflective"
-        },
         {
           "type": "sprite",
           "position": [
@@ -26,10 +14,10 @@
         {
           "type": "on_linear_rails",
           "angle": 100,
-          "length": 100
+          "length": 200
         },
         {
-          "type": "linearly_interpolatable",
+          "type": "lerpable",
           "t": 0,
           "should_switch_direction": true,
           "t_step": 0.2
@@ -37,11 +25,8 @@
       ]
     },
     {
-      "name": "rotateable-mirror",
+      "name": "another-mirror",
       "data": [
-        {
-          "type": "reflective"
-        },
         {
           "type": "sprite",
           "position": [
@@ -60,12 +45,36 @@
             100.0
           ],
           "scale": [
-            400.0,
-            400.0
+            324.0,
+            128.0
           ]
         },
         {
           "type": "rotateable"
+        }
+      ]
+    },
+    {
+      "name": "yet-another-one",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            1000.0,
+            600.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "on_linear_rails",
+          "angle": 0,
+          "length": 200
+        },
+        {
+          "type": "lerpable",
+          "t": 0,
+          "should_switch_direction": true,
+          "t_step": 0.4
         }
       ]
     }

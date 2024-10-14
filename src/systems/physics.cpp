@@ -2,6 +2,7 @@
 #include "logging/log.hpp"
 #include "utils/math.hpp"
 #include "world_init.hpp"
+#include "systems/rails.hpp"
 #include <climits>
 #include <iostream>
 
@@ -94,10 +95,10 @@ bool collides(const Motion& motion1, const Motion& motion2) {
                 return false;
             }
         }
-        LOG_INFO("Collision detected between motion with position ({}, {}) and "
-                 "motion with position ({}, {})",
-                 motion1.position.x, motion1.position.y, motion2.position.x,
-                 motion2.position.y);
+        // LOG_INFO("Collision detected between motion with position ({}, {}) and "
+        //          "motion with position ({}, {})",
+        //          motion1.position.x, motion1.position.y, motion2.position.x,
+        //          motion2.position.y);
         return true;
     }
     return false;
@@ -107,59 +108,38 @@ bool collides(const Motion& motion1, const Motion& motion2) {
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
-    auto& motion_registry = registry.motions;
+  auto& motion_registry = registry.motions;
 
-    for (uint i = 0; i < motion_registry.size(); i++) {
-        Motion& motion = motion_registry.components[i];
-        float t = elapsed_ms / ONE_SECOND;
-        motion.position.x += t * motion.velocity.x;
-        motion.position.y += t * motion.velocity.y;
-    }
+  for (uint i = 0; i < motion_registry.size(); i++) {
+    Motion& motion = motion_registry.components[i];
+    float t = elapsed_ms / ONE_SECOND;
+    motion.position.x += t * motion.velocity.x;
+    motion.position.y += t * motion.velocity.y;
+  }
 
-    // Step all entities on rails
-    auto& linear_rails_registry = registry.entitiesOnLinearRails;
-    for (uint i = 0; i < linear_rails_registry.size(); i++) {
-        auto e = linear_rails_registry.entities[i];
-        OnLinearRails& r = linear_rails_registry.components[i];
-        Motion& m = registry.motions.get(e);
-        LinearlyInterpolatable& lr = registry.linearlyInterpolatables.get(e);
-        float t = elapsed_ms / ONE_SECOND;
-        if (lr.should_switch_direction) {
-            lr.t += t * lr.t_step;
-        } else {
-            lr.t -= t * lr.t_step;
+  // check for collisions between entities that collide
+  ComponentContainer<Motion> &motion_container = registry.motions;
+  for(uint i = 0; i<motion_container.components.size(); i++)
+  {
+    Motion& motion_i = motion_container.components[i];
+    Entity entity_i = motion_container.entities[i];
+    if (motion_i.collides) {
+      // start collision detection from next entity (to avoid self-, repeated-comparisons)
+      for(uint j = i+1; j<motion_container.components.size(); j++) {
+        Motion& motion_j = motion_container.components[j];
+        if (motion_j.collides && collides(motion_i, motion_j))
+        {
+          Entity entity_j = motion_container.entities[j];
+          // create a collisions event for each entity colliding with other
+          // (to ensure both orders exist for later collision handling)
+          // NOTE: stubbed with REFLECTIVE collisions for now
+          // std::cout << "COLLISION!" << std::endl;
+          // std::cout <<entity_i << ", " << entity_j << std::endl;
+          registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+          registry.collisions.emplace_with_duplicates(entity_j, entity_i);
         }
-        if (raycast::math::definitelyGreaterThan(lr.t, 1.0)) {
-            lr.should_switch_direction = false;
-        } else if (raycast::math::definitelyLessThan(lr.t, 0.0)) {
-            lr.should_switch_direction = true;
-        }
-        m.position =
-            raycast::math::lerp(r.firstEndpoint, r.secondEndpoint, lr.t);
+      }
     }
-
-    // check for collisions between entities that collide
-    ComponentContainer<Motion> &motion_container = registry.motions;
-    for(uint i = 0; i<motion_container.components.size(); i++)
-    {
-        Motion& motion_i = motion_container.components[i];
-        Entity entity_i = motion_container.entities[i];
-		if (motion_i.collides) {
-		    // start collision detection from next entity (to avoid self-, repeated-comparisons)
-		    for(uint j = i+1; j<motion_container.components.size(); j++) {
-		        Motion& motion_j = motion_container.components[j];
-		        if (motion_j.collides && collides(motion_i, motion_j))
-		        {
-		            Entity entity_j = motion_container.entities[j];
-		            // create a collisions event for each entity colliding with other
-		            // (to ensure both orders exist for later collision handling)
-		             // NOTE: stubbed with REFLECTIVE collisions for now
-                    std::cout << "COLLISION!" << std::endl;
-		            std::cout <<entity_i << ", " << entity_j << std::endl;
-		            registry.collisions.emplace_with_duplicates(entity_i, entity_j);
-		            registry.collisions.emplace_with_duplicates(entity_j, entity_i);
-		        }
-		    }
-		}
-    }
+    raycast::rails::step(elapsed_ms);
+  }
 }
