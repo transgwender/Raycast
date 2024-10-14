@@ -356,7 +356,7 @@
           "length": 12.5
         },
         {
-          "type": "linearly_interpolatable",
+          "type": "lerpable",
           "should_switch_direction" : false,
           "t": 0,
           "t_step": 0

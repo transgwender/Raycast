@@ -98,12 +98,12 @@ inline void from_json(const json& j, OnLinearRails& r) {
 }
 
 // LinearlyInterpolatable
-inline void from_json(const json& j, LinearlyInterpolatable& lr) {
+inline void from_json(const json& j, Lerpable& lr) {
     j.at("t").get_to(lr.t);
     j.at("should_switch_direction").get_to(lr.should_switch_direction);
     j.at("t_step").get_to(lr.t_step);
 }
-inline void to_json(json& j, const LinearlyInterpolatable& lr) {
+inline void to_json(json& j, const Lerpable& lr) {
     j = json{{"t", lr.t},
              {"should_switch_direction", lr.should_switch_direction},
              {"t_step", lr.t_step}};

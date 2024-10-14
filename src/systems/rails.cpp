@@ -12,7 +12,7 @@ namespace raycast {
       for (auto e : entities_on_linear_rails) {
         Motion& e_motion = registry.motions.get(e);
         OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(e);
-        LinearlyInterpolatable& e_lr = registry.linearlyInterpolatables.get(e);
+        Lerpable& e_lr = registry.lerpables.get(e);
 
         auto direction = vec2(cos(e_rails.angle), sin(e_rails.angle));
         vec2 firstEndpoint = e_motion.position + e_rails.length * direction;
@@ -38,7 +38,7 @@ namespace raycast {
         auto e = linear_rails_registry.entities[i];
         OnLinearRails& r = linear_rails_registry.components[i];
         Motion& m = registry.motions.get(e);
-        LinearlyInterpolatable& lr = registry.linearlyInterpolatables.get(e);
+        Lerpable& lr = registry.lerpables.get(e);
         float t = elapsed_ms / ONE_SECOND;
         if (lr.should_switch_direction) {
           lr.t += t * lr.t_step;
