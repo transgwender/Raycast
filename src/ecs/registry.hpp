@@ -25,7 +25,7 @@ class ECSRegistry {
     ComponentContainer<Reflective> reflectives;
     ComponentContainer<Level> levels;
     ComponentContainer<OnLinearRails> entitiesOnLinearRails;
-    ComponentContainer<LinearlyInterpolatable> linearlyInterpolatables;
+    ComponentContainer<Lerpable> lerpables;
     ComponentContainer<Rotateable> rotateables;
     ComponentContainer<Highlightable> highlightables;
 
@@ -47,7 +47,7 @@ class ECSRegistry {
         registry_list.push_back(&reflectives);
         registry_list.push_back(&levels);
         registry_list.push_back(&entitiesOnLinearRails);
-        registry_list.push_back(&linearlyInterpolatables);
+        registry_list.push_back(&lerpables);
         registry_list.push_back(&rotateables);
         registry_list.push_back(&highlightables);
     }
