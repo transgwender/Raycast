@@ -313,11 +313,11 @@
         {
           "type": "sprite",
           "position": [
-            60.0,
+            75.0,
             30.0
           ],
           "scale": [
-            25,
+            40,
             2
           ],
           "angle": 0,
@@ -331,7 +331,7 @@
         {
           "type": "mirror",
           "position": [
-            60.0,
+            75.0,
             30.0
           ],
           "angle": 0.785
@@ -353,7 +353,7 @@
         {
           "type": "on_linear_rails",
           "angle": 0,
-          "length": 12.5
+          "length": 20
         },
         {
           "type": "lerpable",
