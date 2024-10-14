@@ -308,6 +308,24 @@
       ]
     },
     {
+      "name": "rail-1",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            60.0,
+            30.0
+          ],
+          "scale": [
+            25,
+            2
+          ],
+          "angle": 0,
+          "texture": "mirror"
+        }
+      ]
+    },
+    {
       "name": "move-mirror",
       "data": [
         {
