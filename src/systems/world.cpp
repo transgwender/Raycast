@@ -100,7 +100,7 @@ GLFWwindow* WorldSystem::create_window() {
     reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
 
     click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
-    click_sfx->volume = MIX_MAX_VOLUME * 0.5;
+    click_sfx->volume = MIX_MAX_VOLUME * 0.3;
     background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
 
     if (background_music == nullptr) {
@@ -134,7 +134,7 @@ void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
     this->scenes = scene_arg;
 
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.25 * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(0.2 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -367,6 +367,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
             if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
                     < dot(motion.scale/2.f, motion.scale/2.f)) {
                     if (registry.rotateables.has(entity)) {
+
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
                         Motion& e_motion = registry.motions.get(entity);
