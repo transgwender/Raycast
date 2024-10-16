@@ -18,8 +18,9 @@ data.get_to(__ty);                                                             \
 
 namespace fs = std::filesystem;
 
-void SceneSystem::init(RenderSystem* renderer_arg) {
-    this->renderer = renderer_arg;
+void SceneSystem::init(Entity &scene_state_entity) {
+    Scene& scene = registry.scenes.emplace(scene_state_entity);
+    scene.scene_tag = "mainmenu";
 
     //  https://www.cppstories.com/2019/04/dir-iterate/
     fs::path folder = scene_path("levels");
@@ -96,5 +97,5 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
     }
     return true;
 
-    LOG_INFO("Successfully loaded scene")
+    LOG_INFO("Successfully loaded scene");
 }

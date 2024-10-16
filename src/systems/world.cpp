@@ -127,11 +127,8 @@ GLFWwindow* WorldSystem::create_window() {
     return window;
 }
 
-void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
-    Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene_tag = "mainmenu";
-    this->renderer = renderer_arg;
-    this->scenes = scene_arg;
+void WorldSystem::init() {
+    scenes.init(scene_state_entity);
 
     Mix_PlayMusic(background_music, -1);
     Mix_VolumeMusic(0.2 * MIX_MAX_VOLUME);
@@ -176,6 +173,8 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         }
     }
 
+    rails.step(elapsed_ms_since_last_update);
+
     return true;
 }
 
@@ -199,12 +198,12 @@ void WorldSystem::restart_game() {
 
     // Parse scene file
     if (registry.scenes.has(scene_state_entity)) {
-        scenes->try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
+        scenes.try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    raycast::rails::init();
+    rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -398,9 +397,9 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                     Lerpable& e_lr = registry.lerpables.get(entity);
                     int which_direction = dot(motion.position - world_pos, e_rails.direction);
                     if (which_direction > 0) {
-                        e_lr.t_step = -0.2;
+                        e_lr.t_step = -0.5;
                     } else if (which_direction < 0) {
-                        e_lr.t_step = 0.2;
+                        e_lr.t_step = 0.5;
                     }
                 }
             }
