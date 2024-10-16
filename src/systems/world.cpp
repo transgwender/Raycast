@@ -100,7 +100,7 @@ GLFWwindow* WorldSystem::create_window() {
     reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
 
     click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
-    click_sfx->volume = MIX_MAX_VOLUME * 0.5;
+    click_sfx->volume = MIX_MAX_VOLUME * 0.3;
     background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
 
     if (background_music == nullptr) {
@@ -127,14 +127,11 @@ GLFWwindow* WorldSystem::create_window() {
     return window;
 }
 
-void WorldSystem::init(RenderSystem* renderer_arg, SceneSystem* scene_arg) {
-    Scene& scene = registry.scenes.emplace(scene_state_entity);
-    scene.scene_tag = "mainmenu";
-    this->renderer = renderer_arg;
-    this->scenes = scene_arg;
+void WorldSystem::init() {
+    scenes.init(scene_state_entity);
 
     Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.25 * MIX_MAX_VOLUME);
+    Mix_VolumeMusic(0.2 * MIX_MAX_VOLUME);
     LOG_INFO("Loaded music");
 
     // Set all states to default
@@ -176,6 +173,8 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         }
     }
 
+    rails.step(elapsed_ms_since_last_update);
+
     return true;
 }
 
@@ -199,12 +198,12 @@ void WorldSystem::restart_game() {
 
     // Parse scene file
     if (registry.scenes.has(scene_state_entity)) {
-        scenes->try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
+        scenes.try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    raycast::rails::init();
+    rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -321,17 +320,26 @@ void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.enti
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
     vec2 world_pos = screenToWorld(mouse_position);
     for (Entity entity : registry.interactables.entities) {
-        if (registry.boundingBoxes.has(entity)) {
-            Motion& motion = registry.motions.get(entity);
-            if (dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale, motion.scale)) {
-                if (registry.highlightables.has(entity)) {
-                    registry.highlightables.get(entity).isHighlighted = true;
-                }
-            } else {
-                if (registry.highlightables.has(entity)) {
-                    registry.highlightables.get(entity).isHighlighted = false;
-                }
+        Motion& motion = registry.motions.get(entity);
+        // Handle buttons separately — just keep piling on jank!
+        if (registry.changeScenes.has(entity) &&
+            (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
+            (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
+            (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
+            (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
+            if (registry.highlightables.has(entity)) {
+                registry.highlightables.get(entity).isHighlighted = true;
+            }
+            return;
+        }
+        if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
+                < dot(motion.scale/2.f, motion.scale/2.f)) {
+            if (registry.highlightables.has(entity)) {
+                registry.highlightables.get(entity).isHighlighted = true;
+            }
+        } else {
+            if (registry.highlightables.has(entity)) {
+                registry.highlightables.get(entity).isHighlighted = false;
             }
         }
     }
@@ -342,14 +350,23 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         vec2 world_pos = screenToWorld(vec2(xpos, ypos));
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
-            if (registry.boundingBoxes.has(entity)) {
-                Motion& motion = registry.motions.get(entity);
-            if (dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale, motion.scale)) {
-                    if (registry.changeScenes.has(entity)) {
-                        ChangeScene& changeScene = registry.changeScenes.get(entity);
-                        change_scene(changeScene.scene);
-                    } else if (registry.rotateables.has(entity)) {
+            assert(registry.motions.has(entity));
+            Motion& motion = registry.motions.get(entity);
+            // Handle buttons separately — just keep piling on jank!
+            if (registry.changeScenes.has(entity) &&
+                (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
+                (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
+                (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
+                (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
+                Mix_PlayChannel(1, click_sfx, 0);
+                ChangeScene& changeScene = registry.changeScenes.get(entity);
+                change_scene(changeScene.scene);
+                return;
+                }
+            if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
+                    < dot(motion.scale/2.f, motion.scale/2.f)) {
+                    if (registry.rotateables.has(entity)) {
+
                         // Rotate the entity.
                         LOG_INFO("Something should be rotating.")
                         Motion& e_motion = registry.motions.get(entity);
@@ -364,28 +381,25 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                         e_lr.t_step = 0;
                     }
                 }
-            }
         }
     }
     if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
         vec2 world_pos = screenToWorld(vec2(xpos, ypos));
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
-            if (registry.boundingBoxes.has(entity)) {
-                Motion& motion = registry.motions.get(entity);;
+            Motion& motion = registry.motions.get(entity);
             if (dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale, motion.scale)) {
-                    Mix_PlayChannel(-1, click_sfx, 0);
-                    if (registry.entitiesOnLinearRails.has(entity)) {
-                        LOG_INFO("Moving entity on linear rail.");
-                        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-                        Lerpable& e_lr = registry.lerpables.get(entity);
-                        int which_direction = dot(motion.position - world_pos, e_rails.direction);
-                        if (which_direction > 0) {
-                            e_lr.t_step = -0.2;
-                        } else if (which_direction < 0) {
-                            e_lr.t_step = 0.2;
-                        }
+                    < dot(motion.scale/2.f, motion.scale/2.f)) {
+                Mix_PlayChannel(1, click_sfx, 0);
+                if (registry.entitiesOnLinearRails.has(entity)) {
+                    LOG_INFO("Moving entity on linear rail.");
+                    OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+                    Lerpable& e_lr = registry.lerpables.get(entity);
+                    int which_direction = dot(motion.position - world_pos, e_rails.direction);
+                    if (which_direction > 0) {
+                        e_lr.t_step = -0.5;
+                    } else if (which_direction < 0) {
+                        e_lr.t_step = 0.5;
                     }
                 }
             }

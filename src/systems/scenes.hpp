@@ -7,14 +7,12 @@
 
 class SceneSystem {
   public:
-    void init(RenderSystem* renderer_arg);
+    void init(Entity &scene_state_entity);
 
     // add entities
     bool try_parse_scene(std::string &scene_tag);
 
   private:
-    RenderSystem* renderer;
-
     std::map<std::string, std::string> levels {
         // dynamically allocated
     };

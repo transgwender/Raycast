@@ -140,6 +140,5 @@ void PhysicsSystem::step(float elapsed_ms) {
         }
       }
     }
-    raycast::rails::step(elapsed_ms);
   }
 }

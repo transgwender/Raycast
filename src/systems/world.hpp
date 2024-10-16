@@ -15,6 +15,7 @@
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 2000.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
 constexpr size_t MAX_LIGHT_ON_SCREEN = 20;
+#include "rails.hpp"
 #include "render/render.hpp"
 #include "systems/scenes.hpp"
 
@@ -26,7 +27,7 @@ class WorldSystem {
     GLFWwindow* create_window();
 
     // Entrypoint to the game
-    void init(RenderSystem* renderer, SceneSystem* scenes);
+    void init();
 
     // Releases all associated resources
     ~WorldSystem();
@@ -62,9 +63,11 @@ class WorldSystem {
 
     // Game state
     Entity scene_state_entity;
-    RenderSystem* renderer;
-    SceneSystem* scenes;
+    SceneSystem scenes;
     float current_speed;
+
+    // Game systems
+    RailSystem rails;
 
     // Music references
     Mix_Music* background_music;

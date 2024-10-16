@@ -1,8 +1,8 @@
 #pragma once
 
-namespace raycast {
-  namespace rails {
+
+class RailSystem {
+  public:
     void init();
     void step(float);
-  }
-}
+};

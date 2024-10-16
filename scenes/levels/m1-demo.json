@@ -27,6 +27,24 @@
       ]
     },
     {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            55.0,
+            100.0
+          ],
+          "scale": [
+            59,
+            152
+          ],
+          "texture": "tree0"
+        }
+      ]
+    },
+    {
+
       "name": "leaves",
       "data": [
         {
@@ -161,7 +179,7 @@
           "type": "sprite",
           "position": [
             128,
-            180.0
+            180
           ],
           "scale": [
             32,
@@ -313,11 +331,11 @@
         {
           "type": "sprite",
           "position": [
-            60.0,
+            40.0,
             30.0
           ],
           "scale": [
-            25,
+            50,
             2
           ],
           "angle": 0,
@@ -331,7 +349,7 @@
         {
           "type": "mirror",
           "position": [
-            60.0,
+            40.0,
             30.0
           ],
           "angle": 0.785
@@ -339,7 +357,7 @@
         {
           "type": "bounding_box",
           "position": [
-            60.0,
+            40.0,
             30.0
           ],
           "scale": [
@@ -353,7 +371,7 @@
         {
           "type": "on_linear_rails",
           "angle": 0,
-          "length": 12.5
+          "length": 25
         },
         {
           "type": "lerpable",
@@ -374,7 +392,7 @@
           "type": "mirror",
           "position": [
             295.0,
-            20.0
+            30.0
           ],
           "angle": 1.57
         },
@@ -382,7 +400,7 @@
           "type": "bounding_box",
           "position": [
             295.0,
-            20.0
+            30.0
           ],
           "scale": [
             25.0,
@@ -448,7 +466,7 @@
           "type": "zone",
           "position": [
             300.0,
-            90.0
+            140.0
           ],
           "zone_type": 1,
           "angle": 0
@@ -457,7 +475,7 @@
           "type": "sprite",
           "position": [
             300.0,
-            90.0
+            140.0
           ],
           "texture": "bubble_closed",
           "scale": [
