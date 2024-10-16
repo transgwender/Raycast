@@ -20,14 +20,19 @@ void Transform::translate(vec2 offset) {
     mat = mat * T;
 }
 
-bool gl_has_errors() {
+/**
+ * Check GL error state for any errors.
+ * Returns `false` if there were no errors.
+ * Otherwise, prints
+ */
+bool checkGlErrors() {
     GLenum error = glGetError();
 
-    if (error == GL_NO_ERROR)
-        return false;
+    bool encounteredError = false;
 
     while (error != GL_NO_ERROR) {
-        const char* error_str = "";
+        encounteredError = true;
+        auto error_str = "";
         switch (error) {
         case GL_INVALID_OPERATION:
             error_str = "INVALID_OPERATION";
@@ -44,12 +49,11 @@ bool gl_has_errors() {
         case GL_INVALID_FRAMEBUFFER_OPERATION:
             error_str = "INVALID_FRAMEBUFFER_OPERATION";
             break;
+        default:;
         }
-
         std::cerr << "OpenGL: " << error_str << std::endl;
         error = glGetError();
-        assert(false);
     }
 
-    return true;
+    return encounteredError;
 }

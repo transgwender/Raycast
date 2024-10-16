@@ -13,3 +13,8 @@ The world has fallen into darkness, and nearly all life has disappeared. The las
 
 [WIP]
 
+**Attribution**
+
+Forest by Arcade Island https://arcadeisland.itch.io/forest
+
+Castle Brick Tileset by Jordon Games https://jordon-games.itch.io/castle-stone-tileset

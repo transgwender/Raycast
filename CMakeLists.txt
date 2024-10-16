@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.1)
 project(raycast)
 
-# Set c++11
+# Set c++17
 # https://stackoverflow.com/questions/10851247/how-to-activate-c-11-in-cmake
 if (POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
 endif ()
-set (CMAKE_CXX_STANDARD 14)
+set (CMAKE_CXX_STANDARD 17)
 
 # nice hierarchical structure in MSVC
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
@@ -33,8 +33,14 @@ file(GLOB SOURCE_FILES
         src/*.hpp
         src/systems/*.cpp
         src/systems/*.hpp
+        src/systems/render/*.cpp
+        src/systems/render/*.hpp
         src/ecs/*.cpp
         src/ecs/*.hpp
+        src/logging/*.cpp
+        src/logging/*.hpp
+        src/utils/*.cpp
+        src/utils/*.hpp
 )
 
 # external libraries will be installed into /usr/local/include and /usr/local/lib but that folder is not automatically included in the search on MACs
@@ -47,7 +53,7 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/ecs)
+target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/systems/render src/ecs src/logging src/utils)
 
 # Added this so policy CMP0065 doesn't scream
 set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
@@ -55,6 +61,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
 # External header-only libraries in the ext/
 target_include_directories(${PROJECT_NAME} PUBLIC ext/stb_image/)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/gl3w)
+target_include_directories(${PROJECT_NAME} PUBLIC ext/nlohmann)
+target_include_directories(${PROJECT_NAME} PUBLIC ext/spdlog)
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
@@ -127,22 +135,31 @@ elseif (IS_OS_WINDOWS)
         "${SDL2MIXER_DLL}"
         "$<TARGET_FILE_DIR:${PROJECT_NAME}>/SDL2_mixer.dll")
 
-    target_compile_options(${PROJECT_NAME} PUBLIC
-        # increase warning level
-        "/W4"
+    if (MSVC)
+        target_compile_options(${PROJECT_NAME} PUBLIC
+            # increase warning level
+            "/W4"       
 
-        # Turn warning "not all control paths return a value" into an error
-        "/we4715"
+            # Turn warning "not all control paths return a value" into an error
+            "/we4715"          
 
-        # use sane exception handling, rather than trying to catch segfaults and allowing resource
-        # leaks and UB. Yup... See "Default exception handling behavior" at
-        # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
-        "/EHsc"
-
-        # turn warning C4239 (non-standard extension that allows temporaries to be bound to
-        # non-const references, yay microsoft) into an error
-        "/we4239"
-    )
+            # use sane exception handling, rather than trying to catch segfaults and allowing resource
+            # leaks and UB. Yup... See "Default exception handling behavior" at
+            # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
+            "/EHsc"       
+                   
+            # turn warning C4239 (non-standard extension that allows temporaries to be bound to
+            # non-const references, yay microsoft) into an error
+            "/we4239"            
+        )
+    else()
+        # Apply GCC/MinGW flags instead of MSVC
+        target_compile_options(${PROJECT_NAME} PUBLIC
+            "-Wall"              # all warnings
+            "-Wextra"            # extra warnings
+            "-Werror"            # treat warnings as errors
+        )
+    endif()
 endif()
 
 # Can't find the include and lib. Quit.

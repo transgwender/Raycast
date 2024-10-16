@@ -1,0 +1,60 @@
+{
+  "objList": [
+    {
+      "name": "logo",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            60.0
+          ],
+          "texture": "logo",
+          "scale": [
+            155.0,
+            43.0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "play_button",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            120.0
+          ],
+          "texture": "button_start",
+          "scale": [
+            96.0,
+            32.0
+          ]
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "change_scene",
+          "scene": "m1-demo"
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            160.0,
+            120.0
+          ],
+          "scale": [
+            96.0,
+            32.0
+          ]
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": true
+        }
+      ]
+    }
+  ]
+}

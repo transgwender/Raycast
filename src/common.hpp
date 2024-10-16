@@ -6,7 +6,9 @@
 #include <vector>
 
 // glfw (OpenGL)
+#ifndef NOMINMAX
 #define NOMINMAX
+#endif
 // clang-format off
 #include <gl3w.h>
 #include <GLFW/glfw3.h>
@@ -40,12 +42,19 @@ inline std::string audio_path(const std::string& name) {
 inline std::string mesh_path(const std::string& name) {
     return data_path() + "/meshes/" + std::string(name);
 };
+inline std::string scene_path(const std::string& name) {
+    return std::string(PROJECT_SOURCE_DIR) + "/scenes/" + name;
+}
 
 const int window_width_px = 1280;
 const int window_height_px = 720;
 
+static int native_width = 320;
+static int native_height = 180;
+
 #ifndef M_PI
 #define M_PI 3.14159265358979323846f
+#define M_PI_2 M_PI/2
 #endif
 
 // The 'Transform' component handles transformations passed to the Vertex shader
@@ -61,4 +70,4 @@ struct Transform {
     void translate(vec2 offset);
 };
 
-bool gl_has_errors();
+bool checkGlErrors();

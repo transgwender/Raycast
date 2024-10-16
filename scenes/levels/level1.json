@@ -1,0 +1,71 @@
+{
+  "objList": [
+    {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            10.0,
+            90.0
+          ],
+          "texture": 2,
+          "scale": [
+            128.0,
+            128.0
+          ],
+          "angle": 0.785398163
+        },
+        {
+          "type": "zone",
+          "position": [
+            10.0,
+            90.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 30
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            90.0
+          ],
+          "texture": 3,
+          "scale": [
+            20.0,
+            200.0
+          ],
+          "angle": 0.785398163
+        },
+        {
+          "type": "zone",
+          "position": [
+            300.0,
+            90.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        }
+      ]
+    }
+  ]
+}
