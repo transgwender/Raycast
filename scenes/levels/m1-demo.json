@@ -88,9 +88,6 @@
           ]
         },
         {
-          "type": "interactable"
-        },
-        {
           "type": "zone",
           "position": [
             180.0,

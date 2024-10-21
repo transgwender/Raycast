@@ -33,18 +33,24 @@ inline std::string data_path() {
 inline std::string shader_path(const std::string& name) {
     return std::string(PROJECT_SOURCE_DIR) + "/shaders/" + name;
 };
+inline std::string scene_path(const std::string& name) {
+    return std::string(PROJECT_SOURCE_DIR) + "/scenes/" + name;
+}
 inline std::string textures_path(const std::string& name) {
     return data_path() + "/textures/" + std::string(name);
 };
-inline std::string audio_path(const std::string& name) {
-    return data_path() + "/audio/" + std::string(name);
+inline std::string music_path(const std::string& name) {
+    return data_path() + "/audio/music/" + std::string(name);
+};
+inline std::string sfx_path(const std::string& name) {
+    return data_path() + "/audio/sfx/" + std::string(name);
+};
+inline std::string sfx_dir_path() {
+    return data_path() + "/audio/sfx/";
 };
 inline std::string mesh_path(const std::string& name) {
     return data_path() + "/meshes/" + std::string(name);
 };
-inline std::string scene_path(const std::string& name) {
-    return std::string(PROJECT_SOURCE_DIR) + "/scenes/" + name;
-}
 
 const int window_width_px = 1280;
 const int window_height_px = 720;

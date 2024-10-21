@@ -5,12 +5,9 @@
 #include <cassert>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include "components_json.hpp"
 #include "logging/log.hpp"
-#include "systems/physics.hpp"
-#include "systems/rails.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -20,10 +17,7 @@ WorldSystem::WorldSystem() : next_light_spawn(0.f) {
 
 WorldSystem::~WorldSystem() {
     // Destroy music components
-    if (background_music != nullptr)
-        Mix_FreeMusic(background_music);
-
-    Mix_CloseAudio();
+    sounds.free_sounds();
 
     // Destroy all created components
     registry.clear_all_components();
@@ -86,53 +80,14 @@ GLFWwindow* WorldSystem::create_window() {
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
 
-    // Loading music and sounds with SDL
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        LOG_ERROR("Failed to initialize SDL Audio");
-        return nullptr;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-        LOG_ERROR("Failed to open audio device");
-        return nullptr;
-    }
-
-    reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
-
-    click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
-    click_sfx->volume = MIX_MAX_VOLUME * 0.3;
-    background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
-
-    if (background_music == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("8BitCave.wav").c_str());
-        return nullptr;
-    }
-
-    if (reflection_sfx == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("light-ping.wav").c_str());
-        return nullptr;
-    }
-
-    if (click_sfx == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("click.wav").c_str());
-        return nullptr;
-    }
+    SoundSystem::init();
 
     return window;
 }
 
 void WorldSystem::init() {
     scenes.init(scene_state_entity);
-
-    Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.2 * MIX_MAX_VOLUME);
-    LOG_INFO("Loaded music");
+    sounds.load_all_sounds();
 
     // Set all states to default
     restart_game();
@@ -250,8 +205,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             return;
         }
         default: {
-            // TODO: should be different noise from reflection
-            Mix_PlayChannel(-1, reflection_sfx, 0);
+            sounds.play_sound("light-collision.wav");
             LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
             break;
@@ -270,7 +224,7 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
         return;
     }
 
-    Mix_PlayChannel(-1, reflection_sfx, 0);
+    sounds.play_sound("light-collision.wav");
 
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
@@ -358,7 +312,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
                 (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
                 (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-                Mix_PlayChannel(1, click_sfx, 0);
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
                 return;
@@ -390,7 +343,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
             Motion& motion = registry.motions.get(entity);
             if (dot(world_pos - motion.position, world_pos - motion.position)
                     < dot(motion.scale/2.f, motion.scale/2.f)) {
-                Mix_PlayChannel(1, click_sfx, 0);
                 if (registry.entitiesOnLinearRails.has(entity)) {
                     LOG_INFO("Moving entity on linear rail.");
                     OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
