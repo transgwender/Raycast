@@ -12,6 +12,10 @@ class SceneSystem {
     // add entities
     bool try_parse_scene(std::string &scene_tag);
 
+    size_t level_count() {
+        return levels.size();
+    }
+
   private:
     std::map<std::string, std::string> levels {
         // dynamically allocated
@@ -19,7 +23,6 @@ class SceneSystem {
 
     // Scenes of the game
     std::map<std::string, std::string> scene_paths {
-        {"test", scene_path("test.json")},
         {"mainmenu", scene_path("mainmenu.json")},
         {"levelmenu", scene_path("levelmenu.json")},
         {"gamefinish", scene_path("gamefinish.json")}

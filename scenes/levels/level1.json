@@ -13,30 +13,30 @@
       "name": "start_zone",
       "data": [
         {
-          "type": "sprite",
+          "type": "zone",
           "position": [
-            10.0,
+            25.0,
             90.0
           ],
-          "texture": 2,
+          "zone_type": 0,
+          "angle": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            25.0,
+            90.0
+          ],
+          "texture": "bubble_open",
           "scale": [
-            128.0,
-            128.0
+            12.0,
+            12.0
           ],
           "angle": 0.785398163
         },
         {
-          "type": "zone",
-          "position": [
-            10.0,
-            90.0
-          ],
-          "zone_type": 0,
-          "angle": 30
-        },
-        {
           "type": "light_source",
-          "angle": 30
+          "angle": 0
         }
       ]
     },
@@ -44,25 +44,25 @@
       "name": "end_zone",
       "data": [
         {
-          "type": "sprite",
-          "position": [
-            300.0,
-            90.0
-          ],
-          "texture": 3,
-          "scale": [
-            20.0,
-            200.0
-          ],
-          "angle": 0.785398163
-        },
-        {
           "type": "zone",
           "position": [
-            300.0,
+            310.0,
             90.0
           ],
           "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            80.0
+          ],
+          "texture": "bubble_closed",
+          "scale": [
+            12.0,
+            12.0
+          ],
           "angle": 0
         }
       ]

@@ -1,0 +1,12 @@
+{
+  "objList": [
+    {
+      "name": "level select buttons",
+      "data": [
+        {
+          "type": "level_select"
+        }
+      ]
+    }
+  ]
+}

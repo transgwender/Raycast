@@ -8,6 +8,9 @@
 
 #include "components_json.hpp"
 #include "logging/log.hpp"
+#include "systems/menu.hpp"
+#include "systems/physics.hpp"
+#include "systems/rails.hpp"
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -93,10 +96,22 @@ void WorldSystem::init() {
     restart_game();
 }
 
+bool WorldSystem::isInLevel() {
+    assert(registry.levels.size() <= 1);
+    return !registry.levels.components.empty();
+}
+
+bool WorldSystem::shouldStep() {
+    if (menus.is_menu_open()) {
+        return registry.menus.components.front().shouldPauseSteps;
+    }
+    return true;
+}
+
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     float speed = 100;
-    if (!registry.levels.components.empty()) {
+    if (isInLevel() && shouldStep()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
 
         for (int i = 0; i < registry.lightRays.components.size(); i++) {
@@ -126,9 +141,9 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 createLight(entity, position, vec2(cos(-angle * M_PI / 180) * speed, sin(-angle * M_PI / 180) * speed));
             }
         }
-    }
 
-    rails.step(elapsed_ms_since_last_update);
+        rails.step(elapsed_ms_since_last_update);
+    }
 
     return true;
 }
@@ -156,6 +171,10 @@ void WorldSystem::restart_game() {
         scenes.try_parse_scene(registry.scenes.get(scene_state_entity).scene_tag);
     } else {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
+    }
+
+    if(!registry.levelSelects.components.empty()) {
+        menus.generate_level_select_buttons((int) scenes.level_count());
     }
 
     rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
@@ -197,8 +216,13 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
             LOG_INFO("Level beaten!");
-            std::string next_scene = "gamefinish";
-            change_scene(next_scene);
+//            std::string next_scene = "gamefinish";
+//            change_scene(next_scene);
+            assert(registry.levels.size() == 1);
+            Level& level = registry.levels.components.front();
+            if (registry.menus.components.empty()) {
+                menus.generate_level_win_popup(level.id, (int) scenes.level_count());
+            }
             break;
         }
         case ZONE_TYPE::START: {

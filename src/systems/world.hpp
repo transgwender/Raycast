@@ -14,6 +14,7 @@
 #include "rails.hpp"
 #include "sounds.hpp"
 #include "scenes.hpp"
+#include "menu.hpp"
 
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
@@ -64,6 +65,7 @@ class WorldSystem {
     // Game state
     Entity scene_state_entity;
     SceneSystem scenes;
+    MenuSystem menus;
     float current_speed;
 
     // Game systems
@@ -75,4 +77,7 @@ class WorldSystem {
     // C++ random number generator
     std::default_random_engine rng;
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
+
+    bool shouldStep();
+    bool isInLevel();
 };

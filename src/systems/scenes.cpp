@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "components_json.hpp"
 #include "json.hpp"
+#include "menu.hpp"
 #include "registry.hpp"
 #include "world_init.hpp"
 
@@ -31,6 +32,13 @@ void SceneSystem::init(Entity &scene_state_entity) {
     }
 
     scene_paths.insert(levels.begin(), levels.end());
+
+    folder = scene_path("test");
+    for (const auto& entry : fs::directory_iterator(folder)) {
+        const auto& path = entry.path();
+        auto filename = entry.path().filename().replace_extension();
+        scene_paths.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
+    }
 }
 
 // Attempts to parse a specified scene. Returns true if successful. False if
@@ -82,6 +90,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         createMirror(entity, c.position, c.angle);
                     } else if (type == "highlightable") {
                         PARSE_COMPONENT(Highlightable, highlightables);
+                    } else if (type == "level_select") {
+                        PARSE_COMPONENT(LevelSelect, levelSelects);
                     }
                 }
             }
