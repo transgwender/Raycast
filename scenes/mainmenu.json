@@ -37,7 +37,7 @@
         },
         {
           "type": "change_scene",
-          "scene": "m1-demo"
+          "scene": "levelmenu"
         },
         {
           "type": "bounding_box",

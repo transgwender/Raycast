@@ -121,13 +121,11 @@ inline void from_json(const json& j, Rotateable& c) {
 
 
 inline void to_json(json& j, const Level& c) {
-    (void)c;
-    j = json{ {"type", "level"} };
+    j = json{ {"type", "level"}, {"id", c.id} };
 }
 
 inline void from_json(const json& j, Level& c) {
-    (void)j;
-    (void)c;
+    j.at("id").get_to(c.id);
 }
 
 inline void to_json(json& j, const Reflective& c) {
@@ -136,6 +134,17 @@ inline void to_json(json& j, const Reflective& c) {
 }
 
 inline void from_json(const json& j, Reflective& c) {
+    (void)j;
+    (void)c;
+}
+
+
+inline void to_json(json& j, const LevelSelect& c) {
+    (void)c;
+    j = json{{"type", "level_select"}};
+}
+
+inline void from_json(const json& j, LevelSelect& c) {
     (void)j;
     (void)c;
 }

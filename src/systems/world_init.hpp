@@ -9,4 +9,6 @@ Entity createMirror(const Entity& entity, vec2 position, float angle);
 
 Entity createLight(const Entity& entity, vec2 position, vec2 velocity);
 
+Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& nextScene);
+
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);

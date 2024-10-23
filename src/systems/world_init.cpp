@@ -41,6 +41,27 @@ Entity createMirror(const Entity& entity, vec2 position, float angle) {
     return entity;
 }
 
+Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label) {
+    createSprite(entity, position, scale, 0, "button");
+    registry.interactables.emplace(entity);
+    BoundingBox boundingBox;
+    boundingBox.scale = scale;
+    boundingBox.position = position;
+    registry.boundingBoxes.insert(entity, boundingBox);
+    registry.highlightables.emplace(entity);
+    return entity;
+}
+
+Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label,
+                               const std::string& nextScene) {
+    createEmptyButton(entity, position, scale, label);
+    ChangeScene changeScene;
+    changeScene.scene = nextScene;
+    registry.changeScenes.insert(entity, changeScene);
+    return entity;
+}
+
+
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);
     zone.position = position;

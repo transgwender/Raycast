@@ -8,7 +8,20 @@ struct Scene {
 };
 
 // A level is also a scene, but it may store additional information.
-struct Level {};
+struct Level {
+    int id = 1;
+};
+
+// Scene should generate buttons
+struct LevelSelect {};
+
+// Is a menu currently open?
+struct Menu {
+    bool canClose = false;
+    bool shouldPauseSteps = false;
+};
+
+struct MenuItem {};
 
 ////////////////////////////////////////////////////////////////
 ///
