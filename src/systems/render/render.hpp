@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shader.hpp"
+#include "text.hpp"
 #include "texture.hpp"
 #include "util.hpp"
 
@@ -22,6 +23,9 @@ constexpr int geometry_count = (int)GEOMETRY_BUFFER::GEOMETRY_COUNT;
 class RenderSystem {
     TextureManager texture_manager;
     ShaderManager shader_manager;
+    TextSystem text;
+    GLuint base_vao;
+
     mat3 projection = createProjectionMatrix();
 
     std::array<GLuint, geometry_count> vertex_buffers = {};
@@ -45,6 +49,8 @@ class RenderSystem {
     // shader
     bool initScreenTexture();
 
+    void initializeText();
+
     // Destroy resources associated to one or all entities created by the system
     ~RenderSystem();
 
@@ -53,9 +59,10 @@ class RenderSystem {
 
   private:
     // Internal drawing functions for each entity type
-    void activeTexturedShader(const Entity entity, const std::string& texture, GLuint program) const;
+    void activeTexturedShader(Entity entity, const std::string& texture, GLuint program) const;
     void drawTexturedMesh(Entity entity) const;
     void drawToScreen() const;
+    void drawText();
 
     // Window handle
     GLFWwindow* window = nullptr;

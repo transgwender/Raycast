@@ -7,21 +7,18 @@
 
 #include <iostream>
 
-void RenderSystem::activeTexturedShader(const Entity entity, const std::string& texture,
-                                        const GLuint program) const {
+void RenderSystem::activeTexturedShader(const Entity entity, const std::string& texture, const GLuint program) const {
     GLint in_position_loc = glGetAttribLocation(program, "in_position");
     GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
     checkGlErrors();
     assert(in_texcoord_loc >= 0);
 
     glEnableVertexAttribArray(in_position_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(TexturedVertex), (void*)nullptr);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)nullptr);
     checkGlErrors();
 
     glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(TexturedVertex), (void*)sizeof(vec3));
+    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
     // set uniforms
     auto albedoTexLocation = glGetUniformLocation(program, "albedo_tex");
@@ -46,23 +43,16 @@ void RenderSystem::activeTexturedShader(const Entity entity, const std::string& 
         Motion& motion = registry.motions.get(point_light);
 
         const int i = pointLightsCount++;
-        const std::string prefix = std::string("point_lights[") +
-                                   std::to_string(i) + std::string("].");
+        const std::string prefix = std::string("point_lights[") + std::to_string(i) + std::string("].");
 
-        setUniformFloatVec3(program, (prefix + std::string("position")).c_str(),
-                            vec3(motion.position, 10.0f));
-        setUniformFloatVec3(program, (prefix + std::string("diffuse")).c_str(),
-                            pl.diffuse / 255.0f);
-        setUniformFloat(program, (prefix + std::string("constant")).c_str(),
-                        pl.constant);
-        setUniformFloat(program, (prefix + std::string("linear")).c_str(),
-                        pl.linear);
-        setUniformFloat(program, (prefix + std::string("quadratic")).c_str(),
-                        pl.quadratic);
+        setUniformFloatVec3(program, (prefix + std::string("position")).c_str(), vec3(motion.position, 10.0f));
+        setUniformFloatVec3(program, (prefix + std::string("diffuse")).c_str(), pl.diffuse / 255.0f);
+        setUniformFloat(program, (prefix + std::string("constant")).c_str(), pl.constant);
+        setUniformFloat(program, (prefix + std::string("linear")).c_str(), pl.linear);
+        setUniformFloat(program, (prefix + std::string("quadratic")).c_str(), pl.quadratic);
     }
 
-    auto pointLightsCountLocation =
-        glGetUniformLocation(program, "point_lights_count");
+    auto pointLightsCountLocation = glGetUniformLocation(program, "point_lights_count");
     glUniform1i(pointLightsCountLocation, pointLightsCount);
 
     // Enabling and binding texture to slot 0 and 1
@@ -77,8 +67,7 @@ void RenderSystem::activeTexturedShader(const Entity entity, const std::string& 
 }
 
 void RenderSystem::drawTexturedMesh(const Entity entity) const {
-    const auto& [position, angle, velocity, scale, collides] =
-        registry.motions.get(entity);
+    const auto& [position, angle, velocity, scale, collides] = registry.motions.get(entity);
     const auto& [texture, shader] = registry.materials.get(entity);
 
     Transform transform;
@@ -92,6 +81,7 @@ void RenderSystem::drawTexturedMesh(const Entity entity) const {
     glUseProgram(program);
     checkGlErrors();
 
+    glBindVertexArray(base_vao);
     const GLuint vbo = vertex_buffers[(GLuint)GEOMETRY_BUFFER::SPRITE];
     const GLuint ibo = index_buffers[(GLuint)GEOMETRY_BUFFER::SPRITE];
 
@@ -151,10 +141,9 @@ void RenderSystem::drawToScreen() const {
     glDisable(GL_DEPTH_TEST);
 
     // Draw the screen texture on the quad geometry
-    glBindBuffer(GL_ARRAY_BUFFER,
-                 vertex_buffers[(GLuint)GEOMETRY_BUFFER::SCREEN_TRIANGLE]);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,
-                 index_buffers[(GLuint)GEOMETRY_BUFFER::SCREEN_TRIANGLE]);
+    glBindVertexArray(base_vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[(GLuint)GEOMETRY_BUFFER::SCREEN_TRIANGLE]);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffers[(GLuint)GEOMETRY_BUFFER::SCREEN_TRIANGLE]);
     checkGlErrors();
     const GLuint screen_program = shader_manager.get("screen");
     // Set clock
@@ -165,8 +154,7 @@ void RenderSystem::drawToScreen() const {
     // the same VBO)
     GLint in_position_loc = glGetAttribLocation(screen_program, "in_position");
     glEnableVertexAttribArray(in_position_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(vec3),
-                          (void*)nullptr);
+    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)nullptr);
     checkGlErrors();
 
     // Bind our texture in Texture Unit 0
@@ -177,6 +165,14 @@ void RenderSystem::drawToScreen() const {
     // Draw
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
     checkGlErrors();
+
+    glBindVertexArray(0);
+    glUseProgram(0);
+}
+
+void RenderSystem::drawText() {
+    const auto program = shader_manager.get("text");
+    text.renderText(program, "hello", 100.0, 100.0, 1.0, vec3(1.0, 1.0, 1.0));
 }
 
 // Render our game world
@@ -193,9 +189,8 @@ void RenderSystem::draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glDisable(GL_DEPTH_TEST); // native OpenGL does not work with a depth buffer
-                              // and alpha blending, one would have to sort
-                              // sprites back to front
+    glDisable(GL_DEPTH_TEST);
+
     checkGlErrors();
     // Draw all textured meshes that have a position and size component
     for (const Entity entity : registry.materials.entities) {
@@ -204,6 +199,8 @@ void RenderSystem::draw() {
 
     // Truly render to the screen
     drawToScreen();
+
+    drawText();
 
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);

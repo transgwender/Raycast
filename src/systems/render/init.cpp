@@ -34,14 +34,14 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
 
     // We are not really using VAOs but without at least one bound we will
     // crash in some systems.
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
+    glGenVertexArrays(1, &base_vao);
+    glBindVertexArray(base_vao);
     checkGlErrors();
 
     initScreenTexture();
     texture_manager.init();
     shader_manager.init();
+    text.init();
     initializeGlGeometryBuffers();
 
     return true;
@@ -49,17 +49,13 @@ bool RenderSystem::init(GLFWwindow* window_arg) {
 
 // One could merge the following two functions as a template function...
 template <class T>
-void RenderSystem::bindVBOAndIBO(GEOMETRY_BUFFER gid,
-                                 std::vector<T> vertices,
-                                 std::vector<uint16_t> indices) {
+void RenderSystem::bindVBOAndIBO(GEOMETRY_BUFFER gid, std::vector<T> vertices, std::vector<uint16_t> indices) {
     glBindBuffer(GL_ARRAY_BUFFER, vertex_buffers[(uint)gid]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(),
-                 vertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0]) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
     checkGlErrors();
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffers[(uint)gid]);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(),
-                 indices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices[0]) * indices.size(), indices.data(), GL_STATIC_DRAW);
     checkGlErrors();
 }
 
@@ -84,8 +80,7 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Counterclockwise as it's the default opengl front winding direction.
     const std::vector<uint16_t> textured_indices = {0, 3, 1, 1, 3, 2};
-    bindVBOAndIBO(GEOMETRY_BUFFER::SPRITE, textured_vertices,
-                  textured_indices);
+    bindVBOAndIBO(GEOMETRY_BUFFER::SPRITE, textured_vertices, textured_indices);
 
     // Initialize screen triangle (yes, triangle, not quad; its more efficient).
     std::vector<vec3> screen_vertices(3);
@@ -95,8 +90,7 @@ void RenderSystem::initializeGlGeometryBuffers() {
 
     // Counterclockwise as it's the default opengl front winding direction.
     const std::vector<uint16_t> screen_indices = {0, 1, 2};
-    bindVBOAndIBO(GEOMETRY_BUFFER::SCREEN_TRIANGLE, screen_vertices,
-                  screen_indices);
+    bindVBOAndIBO(GEOMETRY_BUFFER::SCREEN_TRIANGLE, screen_vertices, screen_indices);
 }
 
 RenderSystem::~RenderSystem() {
@@ -114,29 +108,24 @@ RenderSystem::~RenderSystem() {
 
     // remove all entities created by the render system
     while (!registry.renderables.entities.empty())
-        registry.remove_all_components_of(
-            registry.renderables.entities.back());
+        registry.remove_all_components_of(registry.renderables.entities.back());
 }
 
 // Initialize the screen texture from a standard sprite
 bool RenderSystem::initScreenTexture() {
     glGenTextures(1, &off_screen_render_buffer_color);
     glBindTexture(GL_TEXTURE_2D, off_screen_render_buffer_color);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0,
-                 GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     checkGlErrors();
 
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                           off_screen_render_buffer_color, 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, off_screen_render_buffer_color, 0);
 
     glGenRenderbuffers(1, &off_screen_render_buffer_depth);
     glBindRenderbuffer(GL_RENDERBUFFER, off_screen_render_buffer_depth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, native_width,
-                          native_height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER, off_screen_render_buffer_depth);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, native_width, native_height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, off_screen_render_buffer_depth);
     checkGlErrors();
 
     assert(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
@@ -145,4 +134,3 @@ bool RenderSystem::initScreenTexture() {
 
     return true;
 }
-
