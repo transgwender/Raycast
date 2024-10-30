@@ -385,4 +385,35 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 void WorldSystem::updateDash() {
 
+    int dashSpeed = 100;
+
+    for (Entity dashEntity : registry.turtles.entities) {
+        DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
+        Entity ray = registry.turtles.get(dashEntity).closestLightRay;
+        if (dash_state == DASH_STATES::WALK) {
+            Motion& rm = registry.motions.get(ray);
+            Motion& dm = registry.motions.get(dashEntity);
+            vec2 displacement = {(dm.position.x - rm.position.x), (dm.position.y - rm.position.y)};
+            // TODO: Update the turtle sprite
+            if (displacement.x > 0) {
+                dm.velocity.x = -dashSpeed;
+            } else if (displacement.x < 0) {
+                dm.velocity.x = dashSpeed;
+            }
+
+        } else if (dash_state == DASH_STATES::STARE) {
+            Motion& rm = registry.motions.get(ray);
+            Motion& dm = registry.motions.get(dashEntity);
+            dm.velocity = {0, 0};
+            // TODO: Update the turtle sprite
+        
+        } else if (dash_state == DASH_STATES::IDLE) {
+            Motion& rm = registry.motions.get(ray);
+            Motion& dm = registry.motions.get(dashEntity);
+            dm.velocity = {0, 0};
+            // TODO: Update the turtle sprite
+
+        }
+    }
+
 }

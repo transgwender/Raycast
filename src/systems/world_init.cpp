@@ -61,6 +61,20 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
     return entity;
 }
 
+Entity createDashTheTurtle(const Entity& entity, vec2 position) { 
+    Entity dash = createSprite(entity, position, {100, 100}, 0, "button");
+    
+    auto& motion = registry.motions.get(dash);
+    motion.velocity = {0, 0};
+    motion.collides = false;
+
+    DashTheTurtle dashComponent;
+    dashComponent.behavior = DASH_STATES::IDLE;
+
+    return entity;
+
+}
+
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);

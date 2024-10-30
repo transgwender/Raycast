@@ -31,10 +31,13 @@ void AISystem::updateDash() {
 
         if (minimumDistance <= walk_react_distance) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::WALK;
+            registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         } else if (minimumDistance <= look_react_distance) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::STARE;
+            registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         } else {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
+            // registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         }
     }
 }

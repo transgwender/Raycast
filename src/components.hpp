@@ -166,4 +166,5 @@ enum class DASH_STATES { WALK = 0, IDLE = 1, STARE = 2, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
     Entity closestLightRay;
+
 };
