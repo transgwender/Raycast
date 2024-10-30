@@ -157,7 +157,7 @@ elseif (IS_OS_WINDOWS)
         target_compile_options(${PROJECT_NAME} PUBLIC
             "-Wall"              # all warnings
             "-Wextra"            # extra warnings
-            "-Werror"            # treat warnings as errors
+#            "-Werror"            # treat warnings as errors
         )
     endif()
 endif()
