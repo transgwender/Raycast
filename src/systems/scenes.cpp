@@ -92,6 +92,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Highlightable, highlightables);
                     } else if (type == "level_select") {
                         PARSE_COMPONENT(LevelSelect, levelSelects);
+                    } else if (type == "button") {
+                        ButtonHelper c{};
+                        data.get_to(c);
+                        createEmptyButton(entity, c.position, c.scale, c.label);
                     }
                 }
             }

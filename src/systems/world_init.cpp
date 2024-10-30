@@ -42,22 +42,38 @@ Entity createMirror(const Entity& entity, vec2 position, float angle) {
 }
 
 Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label) {
-    createSprite(entity, position, scale, 0, "button");
+    return createEmptyButton(entity, position, scale, label, "button");
+}
+
+Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
+    createSprite(entity, position, scale, 0, textureName);
     registry.interactables.emplace(entity);
     BoundingBox boundingBox;
     boundingBox.scale = scale;
     boundingBox.position = position;
     registry.boundingBoxes.insert(entity, boundingBox);
     registry.highlightables.emplace(entity);
+    registry.buttons.emplace(entity);
+    Text text;
+    text.fontSize = 16;
+    text.position = position;
+    text.text = label;
+    registry.texts.insert(entity, text);
     return entity;
 }
 
-Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label,
+Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName,
                                const std::string& nextScene) {
-    createEmptyButton(entity, position, scale, label);
+    createEmptyButton(entity, position, scale, label, textureName);
     ChangeScene changeScene;
     changeScene.scene = nextScene;
     registry.changeScenes.insert(entity, changeScene);
+    return entity;
+}
+
+Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
+    createEmptyButton(entity, position, scale, label, textureName);
+    registry.resumeGames.emplace(entity);
     return entity;
 }
 

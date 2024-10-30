@@ -201,3 +201,13 @@ inline void to_json(json& j, const Highlightable& c) {
 inline void from_json(const json& j, Highlightable& c) {
     j.at("isHighlighted").get_to(c.isHighlighted);
 }
+
+inline void to_json(json& j, const ButtonHelper& c) {
+    j = json{{"type", "button"}, {"position", c.position}, {"scale", c.scale}, {"label", c.label}};
+}
+
+inline void from_json(const json& j, ButtonHelper& c) {
+    j.at("position").get_to(c.position);
+    j.at("scale").get_to(c.scale);
+    j.at("label").get_to(c.label);
+}

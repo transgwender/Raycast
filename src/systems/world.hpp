@@ -80,4 +80,5 @@ class WorldSystem {
 
     bool shouldStep();
     bool isInLevel();
+    bool shouldAllowInput();
 };

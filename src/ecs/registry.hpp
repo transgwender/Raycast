@@ -15,6 +15,7 @@ class ECSRegistry {
     ComponentContainer<Collision> collisions;
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
+    ComponentContainer<ResumeGame> resumeGames;
     ComponentContainer<BoundingBox> boundingBoxes;
     ComponentContainer<Renderable> renderables;
     ComponentContainer<Zone> zones;
@@ -31,6 +32,8 @@ class ECSRegistry {
     ComponentContainer<Menu> menus;
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
+    ComponentContainer<Button> buttons;
+    ComponentContainer<Text> texts;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -40,6 +43,7 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
+        registry_list.push_back(&resumeGames);
         registry_list.push_back(&boundingBoxes);
         registry_list.push_back(&renderables);
         registry_list.push_back(&zones);
@@ -56,6 +60,8 @@ class ECSRegistry {
         registry_list.push_back(&menus);
         registry_list.push_back(&menuItems);
         registry_list.push_back(&levelSelects);
+        registry_list.push_back(&buttons);
+        registry_list.push_back(&texts);
     }
 
     void clear_all_components() {
