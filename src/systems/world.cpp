@@ -382,3 +382,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         }
     }
 }
+
+void WorldSystem::updateDash() {
+
+}
