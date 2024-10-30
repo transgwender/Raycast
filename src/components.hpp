@@ -160,3 +160,11 @@ struct Mirror {
     vec2 position = {0, 0};
     float angle = 0;
 };
+
+struct SpriteSheet {
+    vec2 position = {0, 0};
+    uint sheetWidth;
+    uint sheetHeight;
+    uint cellWidth;
+    uint cellHeight;
+};

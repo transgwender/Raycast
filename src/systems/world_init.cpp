@@ -61,6 +61,39 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
     return entity;
 }
 
+/**
+    - load entire sprite sheet as 1 SDL_Surface
+    - create SDL_Rect for given sprite sheet frame
+    - draw frame with SDL_RenderCopy()
+
+    create sprite sheet
+
+    when drawing
+    - draw a section of it, what is the offset?
+    - which animation are we drawing?
+    - how do we know which anim to draw?
+    - at each tick, how to draw 'next' frame?
+
+    if == spirte sheet:
+    play_animation
+    - frames
+    - offset w,h
+    - cell w,h
+
+    frames has to be hard coded
+*
+*/
+Entity createSpriteSheet(const Entity& entity, vec2 position, uint sheetWidth, uint sheetHeight, uint cellWidth,
+                         uint cellHeight) {
+    SpriteSheet ss;
+    ss.position = position;
+    ss.sheetWidth = sheetWidth;
+    ss.sheetHeight = sheetHeight;
+    ss.cellWidth = cellWidth;
+    ss.cellHeight = cellHeight;
+
+    return entity;
+}
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);

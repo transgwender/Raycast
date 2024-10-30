@@ -31,6 +31,7 @@ class ECSRegistry {
     ComponentContainer<Menu> menus;
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
+    ComponentContainer<SpriteSheet> spriteSheets;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -56,6 +57,7 @@ class ECSRegistry {
         registry_list.push_back(&menus);
         registry_list.push_back(&menuItems);
         registry_list.push_back(&levelSelects);
+        registry_list.push_back(&spriteSheets);
     }
 
     void clear_all_components() {

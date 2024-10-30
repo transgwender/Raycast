@@ -92,6 +92,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Highlightable, highlightables);
                     } else if (type == "level_select") {
                         PARSE_COMPONENT(LevelSelect, levelSelects);
+                    } else if (type == "sprite_sheet") {
+                        SpriteSheet ss{};
+                        data.get_to(ss);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight);
                     }
                 }
             }
