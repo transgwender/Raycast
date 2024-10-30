@@ -167,4 +167,5 @@ struct SpriteSheet {
     uint sheetHeight;
     uint cellWidth;
     uint cellHeight;
+    uint currFrame = 0;
 };

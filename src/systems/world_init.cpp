@@ -66,21 +66,27 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
     - create SDL_Rect for given sprite sheet frame
     - draw frame with SDL_RenderCopy()
 
-    create sprite sheet
+    in drawTexturedMesh():
+        if == entity is type sprite sheet:
+            figure out which cell of sheet to draw
+                - what info is DIFF for walk and idle?
+                    - max # frames
+                    - row offset
+                - what info is SAME for walk and idle?
+                    - sheet size
+                    - cell size
 
-    when drawing
-    - draw a section of it, what is the offset?
-    - which animation are we drawing?
-    - how do we know which anim to draw?
-    - at each tick, how to draw 'next' frame?
+    when drawing a frame:
+    - how do we know which animation set of frames to draw?
+        - will need state info NOTE: does not need to be handled here.
+        - what state are we in? -> for now we are always in idle
+            - idle -> go to idle row offset
+            - walk -> go to walk row offset
+        - what frame are we in?
+            - start at 0, increment curr frame and draw offset (curr + offset)
+            - once we hit the last frame, reset currFrame
 
-    if == spirte sheet:
-    play_animation
-    - frames
-    - offset w,h
-    - cell w,h
-
-    frames has to be hard coded
+    ***frames has to be hard coded
 *
 */
 Entity createSpriteSheet(const Entity& entity, vec2 position, uint sheetWidth, uint sheetHeight, uint cellWidth,
