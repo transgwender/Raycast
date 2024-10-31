@@ -70,6 +70,7 @@ Entity createDashTheTurtle(const Entity& entity, vec2 position) {
 
     DashTheTurtle dashComponent;
     dashComponent.behavior = DASH_STATES::IDLE;
+    dashComponent.nearestLightRayDirection = {1000000000, 1000000000};
 
     return entity;
 

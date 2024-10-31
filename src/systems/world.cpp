@@ -126,7 +126,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             }
         }
 
-        if (registry.lightRays.components.size() <= MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
+        if (registry.lightRays.components.size() < MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
@@ -143,6 +143,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         }
 
         rails.step(elapsed_ms_since_last_update);
+        updateDash();
     }
 
     return true;
@@ -385,30 +386,32 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 void WorldSystem::updateDash() {
 
-    int dashSpeed = 100;
+    int dashSpeed = 60;
 
     for (Entity dashEntity : registry.turtles.entities) {
         DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
-        Entity ray = registry.turtles.get(dashEntity).closestLightRay;
+        vec2 ray = registry.turtles.get(dashEntity).nearestLightRayDirection;
         if (dash_state == DASH_STATES::WALK) {
-            Motion& rm = registry.motions.get(ray);
             Motion& dm = registry.motions.get(dashEntity);
-            vec2 displacement = {(dm.position.x - rm.position.x), (dm.position.y - rm.position.y)};
+            // vec2 displacement = {(dm.position.x - ray.x), (dm.position.y - ray.y)};
             // TODO: Update the turtle sprite
-            if (displacement.x > 0) {
+            if (ray.x > 0) {
                 dm.velocity.x = -dashSpeed;
-            } else if (displacement.x < 0) {
+            } else if (ray.x < 0) {
                 dm.velocity.x = dashSpeed;
             }
 
+            //if (dm.position.x < 100) {
+            //    int w = 0;
+            //    w++;
+            //}
+
         } else if (dash_state == DASH_STATES::STARE) {
-            Motion& rm = registry.motions.get(ray);
             Motion& dm = registry.motions.get(dashEntity);
             dm.velocity = {0, 0};
             // TODO: Update the turtle sprite
         
         } else if (dash_state == DASH_STATES::IDLE) {
-            Motion& rm = registry.motions.get(ray);
             Motion& dm = registry.motions.get(dashEntity);
             dm.velocity = {0, 0};
             // TODO: Update the turtle sprite

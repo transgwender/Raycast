@@ -56,7 +56,9 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
         // Iterate through every entity specified, and add the component
         // specified
         try {
+            int i = 1;
             for (auto& array : j["objList"]) {
+
                 const auto entity = Entity();
                 for (auto& data : array["data"]) {
                     std::string type = data["type"];
@@ -92,6 +94,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Highlightable, highlightables);
                     } else if (type == "level_select") {
                         PARSE_COMPONENT(LevelSelect, levelSelects);
+                    } else if (type == "dash_the_turtle") {
+                        PARSE_COMPONENT(DashTheTurtle, turtles);
+                        // int x = registry.motions.has(entity);
+                        // printf("Your boolean variable is: %s\n", x ? "true" : "false");
                     }
                 }
             }

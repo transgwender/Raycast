@@ -16,25 +16,29 @@ void AISystem::updateDash() {
     for (Entity dashEntity : registry.turtles.entities) {
         Motion& dashMotion = registry.motions.get(dashEntity);
         float minimumDistance = std::numeric_limits<float>::max();
-        Entity minimumLightEntity;
+        //Entity minimumLightEntity;
+        vec2 minimumDisplacement = vec2(0, 0);
 
         for (Entity lightEntity : registry.lightRays.entities) {
             Motion& lightMotion = registry.motions.get(lightEntity);
-            float dx = abs(dashMotion.position.x - lightMotion.position.x);
-            float dy = abs(dashMotion.position.y - lightMotion.position.y);
+            float dx = dashMotion.position.x - lightMotion.position.x;
+            float dy = dashMotion.position.y - lightMotion.position.y;
             float distance = sqrt(dx * dx + dy * dy);
             if (distance < minimumDistance) {
                 minimumDistance = distance;
-                minimumLightEntity = lightEntity;
+                //minimumLightEntity = lightEntity;
+                minimumDisplacement = vec2(dx, dy);
             }
         }
 
         if (minimumDistance <= walk_react_distance) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::WALK;
-            registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
+            registry.turtles.get(dashEntity).nearestLightRayDirection = minimumDisplacement;
+            //registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         } else if (minimumDistance <= look_react_distance) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::STARE;
-            registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
+            registry.turtles.get(dashEntity).nearestLightRayDirection = minimumDisplacement;
+            //registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         } else {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
             // registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
