@@ -138,19 +138,19 @@ elseif (IS_OS_WINDOWS)
     if (MSVC)
         target_compile_options(${PROJECT_NAME} PUBLIC
             # increase warning level
-            "/W4"       
+            "/W4"
 
             # Turn warning "not all control paths return a value" into an error
-            "/we4715"          
+            "/we4715"
 
             # use sane exception handling, rather than trying to catch segfaults and allowing resource
             # leaks and UB. Yup... See "Default exception handling behavior" at
             # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
-            "/EHsc"       
-                   
+            "/EHsc"
+
             # turn warning C4239 (non-standard extension that allows temporaries to be bound to
             # non-const references, yay microsoft) into an error
-            "/we4239"            
+            "/we4239"
         )
     else()
         # Apply GCC/MinGW flags instead of MSVC

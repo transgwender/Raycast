@@ -35,6 +35,10 @@
             55.0,
             100.0
           ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
           "texture": "turtle_sprite_sheet"
         }
       ]
