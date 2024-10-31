@@ -2,7 +2,6 @@
 #include "render.hpp"
 #include "common.hpp"
 #include <SDL.h>
-#include <SDL_image.h>
 
 #include "ecs/registry.hpp"
 
@@ -15,14 +14,49 @@ void RenderSystem::activeTexturedShader(const Entity entity, const std::string& 
     checkGlErrors();
     assert(in_texcoord_loc >= 0);
 
-    glEnableVertexAttribArray(in_position_loc);
-    glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE,
-                          sizeof(TexturedVertex), (void*)nullptr);
-    checkGlErrors();
+    if (registry.spriteSheets.has(entity)) {
+        float posX = 0;
+        float posY = 0;
+        float spriteWidth = 32;
+        float spriteHeight = 32;
+        float texWidth = 384;
+        float texHeight = 192;
+        int frameIndex = 0;
+        const float verts[] = {
+            posX, posY,
+            posX + spriteWidth, posY,
+            posX + spriteWidth, posY + spriteHeight,
+            posX, posY + spriteHeight
+        };
+        const float tw = float(spriteWidth) / texWidth;
+        const float th = float(spriteHeight) / texHeight;
+        const int numPerRow = texWidth / spriteWidth;
+        const float tx = (frameIndex % numPerRow) * tw;
+        const float ty = (frameIndex / numPerRow + 1) * th;
+        const float texVerts[] = {
+            tx, ty,
+            tx + tw, ty,
+            tx + tw, ty + th,
+            tx, ty + th
+        };
 
-    glEnableVertexAttribArray(in_texcoord_loc);
-    glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE,
-                          sizeof(TexturedVertex), (void*)sizeof(vec3));
+        // ... Bind the texture, enable the proper arrays
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 2, GL_FLOAT, GL_FALSE, 0, verts);
+        checkGlErrors();
+
+        glEnableVertexAttribArray(in_texcoord_loc);
+        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, 0, texVerts);
+        checkGlErrors();
+    } else {
+        glEnableVertexAttribArray(in_position_loc);
+        glVertexAttribPointer(in_position_loc, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)nullptr);
+        checkGlErrors();
+
+        glEnableVertexAttribArray(in_texcoord_loc);
+        glVertexAttribPointer(in_texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+        checkGlErrors();
+    }
 
     // set uniforms
     auto albedoTexLocation = glGetUniformLocation(program, "albedo_tex");
@@ -92,36 +126,6 @@ void RenderSystem::drawTexturedMesh(const Entity entity) const {
     // Setting shaders
     glUseProgram(program);
     checkGlErrors();
-
-    if (registry.spriteSheets.has(entity)) {
-        float posX = 0;
-        float posY = 0;
-        float spriteWidth = 32;
-        float spriteHeight = 32;
-        float texWidth = 384;
-        float texHeight = 192;
-        int frameIndex = 0;
-        const float verts[] = {
-            posX, posY,
-            posX + spriteWidth, posY,
-            posX + spriteWidth, posY + spriteHeight,
-            posX, posY + spriteHeight
-        };
-        const float tw = float(spriteWidth) / texWidth;
-        const float th = float(spriteHeight) / texHeight;
-        const int numPerRow = texWidth / spriteWidth;
-        const float tx = (frameIndex % numPerRow) * tw;
-        const float ty = (frameIndex / numPerRow + 1) * th;
-        const float texVerts[] = {
-            tx, ty,
-            tx + tw, ty,
-            tx + tw, ty + th,
-            tx, ty + th
-        };
-
-        // ... Bind the texture, enable the proper arrays
-
-    }
 
     const GLuint vbo = vertex_buffers[(GLuint)GEOMETRY_BUFFER::SPRITE];
     const GLuint ibo = index_buffers[(GLuint)GEOMETRY_BUFFER::SPRITE];

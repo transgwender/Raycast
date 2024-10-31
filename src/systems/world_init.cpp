@@ -99,7 +99,7 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, uint sheetWidth, u
     ss.cellWidth = cellWidth;
     ss.cellHeight = cellHeight;
     // TODO HANDLE SCALE
-    createSprite(entity, position, vec2(320, 320), 0, "turtle_sprite_sheet");
+    createSprite(entity, position, vec2(32, 32), 0, "turtle_sprite_sheet");
     registry.spriteSheets.emplace(entity);
     return entity;
 }

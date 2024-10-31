@@ -105,11 +105,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                       << filename << std::endl;
             return false;
         }
-    }
-    else {
+    } else {
         LOG_ERROR("Failed to open file: {}", filename);
     }
-    return true;
 
     LOG_INFO("Successfully loaded scene");
+    return true;
 }
