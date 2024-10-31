@@ -1,6 +1,6 @@
 #pragma once
-#include "common.hpp"
-#include "shader.hpp"
+#include "../../../common.hpp"
+#include "../shader.hpp"
 
 struct Character {
     unsigned int texture;
@@ -9,8 +9,8 @@ struct Character {
     unsigned int advance;
 };
 
-class TextSystem {
-    std::unordered_map<char, Character> characters;
+class TextStage {
+    std::unordered_map<uint32_t, Character> characters;
     FT_Face face = nullptr;
     unsigned int vao;
     unsigned int vbo;

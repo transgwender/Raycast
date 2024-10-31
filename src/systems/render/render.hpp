@@ -1,7 +1,7 @@
 #pragma once
 
 #include "shader.hpp"
-#include "text.hpp"
+#include "stages/text.hpp"
 #include "texture.hpp"
 #include "util.hpp"
 
@@ -18,12 +18,13 @@ enum class GEOMETRY_BUFFER {
 };
 constexpr int geometry_count = (int)GEOMETRY_BUFFER::GEOMETRY_COUNT;
 
+extern TextureManager texture_manager;
+extern ShaderManager shader_manager;
+
 // System responsible for setting up OpenGL and for rendering all the
 // visual entities in the game
 class RenderSystem {
-    TextureManager texture_manager;
-    ShaderManager shader_manager;
-    TextSystem text;
+    TextStage text;
     GLuint base_vao;
 
     mat3 projection = createProjectionMatrix();

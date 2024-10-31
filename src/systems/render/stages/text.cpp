@@ -1,12 +1,14 @@
 #include "text.hpp"
 
-#include "common.hpp"
-#include "shader.hpp"
+#include "../../../common.hpp"
+#include "../shader.hpp"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <iostream>
 
 // text rendering code adapted from https://learnopengl.com/In-Practice/Text-Rendering
 
-bool TextSystem::init() {
+bool TextStage::init() {
     FT_Library library;
     if (FT_Init_FreeType(&library) != 0) {
         LOG_ERROR("Failed to initialize FreeType");
@@ -33,11 +35,11 @@ bool TextSystem::init() {
     glBindVertexArray(0);
 }
 
-void TextSystem::initCharacters() {
+void TextStage::initCharacters() {
     // disable byte alignment requirement
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    for (unsigned char c = 0; c < 128; c++) {
+    for (uint32_t c = 0; c < 128; c++) {
         // load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
             LOG_ERROR("Failed to load glyph");
@@ -61,11 +63,11 @@ void TextSystem::initCharacters() {
         Character character = {texture, ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                                ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
                                static_cast<unsigned int>(face->glyph->advance.x)};
-        characters.insert(std::pair<char, Character>(c, character));
+        characters.insert(std::pair<uint32_t, Character>(c, character));
     }
 }
 
-void TextSystem::renderText(ShaderHandle shader, const std::string& text, float x, float y, float scale, vec3 color) {
+void TextStage::renderText(ShaderHandle shader, const std::string& text, float x, float y, float scale, vec3 color) {
     glUseProgram(shader);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);

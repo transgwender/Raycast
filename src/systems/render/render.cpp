@@ -7,6 +7,9 @@
 
 #include <iostream>
 
+TextureManager texture_manager;
+ShaderManager shader_manager;
+
 void RenderSystem::activeTexturedShader(const Entity entity, const std::string& texture, const GLuint program) const {
     GLint in_position_loc = glGetAttribLocation(program, "in_position");
     GLint in_texcoord_loc = glGetAttribLocation(program, "in_texcoord");
