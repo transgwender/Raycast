@@ -2,25 +2,28 @@
 
 #include "../../../common.hpp"
 #include "../shader.hpp"
+#include "render.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
 // text rendering code adapted from https://learnopengl.com/In-Practice/Text-Rendering
 
-bool TextStage::init() {
+void TextStage::init() {
     FT_Library library;
     if (FT_Init_FreeType(&library) != 0) {
         LOG_ERROR("Failed to initialize FreeType");
-        return false;
+        return;
     }
 
     if (FT_New_Face(library, font_path("Silver.ttf").c_str(), 0, &face) != 0) {
         LOG_ERROR("Failed to load font");
-        return false;
+        return;
     }
 
     FT_Set_Pixel_Sizes(face, 0, 200);
+
+    text_shader = shader_manager.get("text");
 
     initCharacters();
 
@@ -67,17 +70,17 @@ void TextStage::initCharacters() {
     }
 }
 
-void TextStage::renderText(ShaderHandle shader, const std::string& text, float x, float y, float scale, vec3 color) {
-    glUseProgram(shader);
+void TextStage::renderText(const std::string& text, float x, float y, float scale, vec3 color) {
+    glUseProgram(text_shader);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, window_width_px, window_height_px);
     mat4 projection = ortho(0.0f, (float)window_width_px, 0.0f, (float)window_height_px);
 
-    auto color_loc = glGetUniformLocation(shader, "textColor");
+    auto color_loc = glGetUniformLocation(text_shader, "textColor");
     glUniform3f(color_loc, color.x, color.y, color.z);
-    GLuint projection_loc = glGetUniformLocation(shader, "projection");
+    GLuint projection_loc = glGetUniformLocation(text_shader, "projection");
     glUniformMatrix4fv(projection_loc, 1, GL_FALSE, (float*)&projection);
 
     glActiveTexture(GL_TEXTURE0);
@@ -85,20 +88,20 @@ void TextStage::renderText(ShaderHandle shader, const std::string& text, float x
     checkGlErrors();
 
     // iterate through all characters
-    for (char c : text) {
-        Character ch = characters[c];
+    for (const char c : text) {
+        auto [texture, size, bearing, advance] = characters[c];
 
-        float xpos = x + ch.bearing.x * scale;
-        float ypos = y - (ch.size.y - ch.bearing.y) * scale;
+        float xpos = x + bearing.x * scale;
+        float ypos = y - (size.y - bearing.y) * scale;
 
-        float w = ch.size.x * scale;
-        float h = ch.size.y * scale;
+        float w = size.x * scale;
+        float h = size.y * scale;
         // update VBO for each character
         float vertices[6][4] = {{xpos, ypos + h, 0.0f, 0.0f}, {xpos, ypos, 0.0f, 1.0f},
                                 {xpos + w, ypos, 1.0f, 1.0f}, {xpos, ypos + h, 0.0f, 0.0f},
                                 {xpos + w, ypos, 1.0f, 1.0f}, {xpos + w, ypos + h, 1.0f, 0.0f}};
         // render glyph texture over quad
-        glBindTexture(GL_TEXTURE_2D, ch.texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
         // update content of VBO memory
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
@@ -106,8 +109,16 @@ void TextStage::renderText(ShaderHandle shader, const std::string& text, float x
         // render quad
         glDrawArrays(GL_TRIANGLES, 0, 6);
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (ch.advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+        x += (advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
     }
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 }
+
+void TextStage::draw() { renderText("hello", 100.0, 100.0, 1.0, vec3(1.0, 1.0, 1.0)); }
+
+ TextStage::~TextStage() {
+    glDeleteBuffers(1, &vbo);
+    glDeleteVertexArrays(1, &vao);
+}
+

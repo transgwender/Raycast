@@ -7,6 +7,7 @@
 typedef GLuint TextureHandle;
 
 class TextureManager {
+    bool initialized = false;
     std::unordered_map<std::string, TextureHandle> textures;
 
     void addFromPath(const std::filesystem::path& path);
@@ -15,6 +16,8 @@ class TextureManager {
     /**
      * Initialize the texture system. This loads all textures in the textures
      * folder.
+     *
+     * Using this class without calling `init` first will lead to undefined behaviour.
      */
     void init();
 

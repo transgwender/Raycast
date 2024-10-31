@@ -2,14 +2,16 @@
 
 #include <filesystem>
 #include <iostream>
-#include <stb_image.h>
 #include <string>
+
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
 
 void TextureManager::addFromPath(const std::filesystem::path& path) {
     ivec2 dimensions;
     stbi_uc* data = stbi_load(path.string().c_str(), &dimensions.x, &dimensions.y, nullptr, 4);
     if (data == nullptr) {
-        LOG_ERROR("Failed to read file {}", path.string());
+        LOG_WARN("Failed to read file {}", path.string());
         return;
     }
 
@@ -25,6 +27,8 @@ void TextureManager::addFromPath(const std::filesystem::path& path) {
 }
 
 void TextureManager::init() {
+    if (initialized) return;
+
     for (const auto& entry : std::filesystem::directory_iterator(textures_path("/albedo"))) {
         addFromPath(entry.path());
     }
@@ -32,6 +36,8 @@ void TextureManager::init() {
     for (const auto& entry : std::filesystem::directory_iterator(textures_path("/normal"))) {
         addFromPath(entry.path());
     }
+
+    initialized = true;
 }
 
 TextureHandle TextureManager::get(const std::string& name) const {

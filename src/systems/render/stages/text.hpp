@@ -1,6 +1,6 @@
 #pragma once
-#include "../../../common.hpp"
 #include "../shader.hpp"
+#include "common.hpp"
 
 struct Character {
     unsigned int texture;
@@ -11,20 +11,27 @@ struct Character {
 
 class TextStage {
     std::unordered_map<uint32_t, Character> characters;
+
     FT_Face face = nullptr;
-    unsigned int vao;
-    unsigned int vbo;
+
+    GLuint vao = 0;
+    GLuint vbo = 0;
+
+    ShaderHandle text_shader = 0;
 
     void initCharacters();
 
-  public:
+    void renderText(const std::string& text, float x, float y, float scale, vec3 color);
 
+  public:
     /**
      * Initialize the text rendering system.
      *
      * Returns true if everything was initialized properly, false otherwise.
      */
-    bool init();
+    void init();
 
-    void renderText(ShaderHandle shader, const std::string& text, float x, float y, float scale, vec3 color);
+    void draw();
+
+    ~TextStage();
 };
