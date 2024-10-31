@@ -120,8 +120,8 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             if (light.last_reflected_timeout > 0)
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
             Motion& motion = registry.motions.get(lightEntity);
-            if (motion.position.x < 0 || motion.position.x > window_width_px || motion.position.y < 0 ||
-                motion.position.y > window_height_px) {
+            if (motion.position.x < -15 || motion.position.x > native_width + 15 || motion.position.y < -15 ||
+                motion.position.y > native_height + 15) {
                 registry.remove_all_components_of(lightEntity);
             }
         }
@@ -386,7 +386,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 void WorldSystem::updateDash() {
 
-    int dashSpeed = 60;
+    int dashSpeed = 30;
 
     for (Entity dashEntity : registry.turtles.entities) {
         DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;

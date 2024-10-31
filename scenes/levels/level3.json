@@ -72,7 +72,7 @@
       "data": [
         {
           "type": "sprite",
-          "position": [ 200, 150 ],
+          "position": [ 250, 150 ],
           "texture": "button_start",
           "scale": [ 15.0, 15.0 ],
           "angle": 0

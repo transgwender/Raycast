@@ -1,7 +1,7 @@
 // internal
 #include "ai.hpp"
 
-float walk_react_distance = 400.0f;
+float walk_react_distance = 100.0f;
 float look_react_distance = 800.0f;
 
 void AISystem::step(float elapsed_ms) { 
@@ -42,6 +42,12 @@ void AISystem::updateDash() {
         } else {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
             // registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
+        }
+
+        printf("%d\n", registry.lightRays.entities.size());
+
+        if (registry.lightRays.entities.size() == 0) {
+            registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
         }
     }
 }
