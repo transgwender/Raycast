@@ -1,7 +1,8 @@
 #include "text.hpp"
 
-#include "../../../common.hpp"
 #include "../shader.hpp"
+#include "common.hpp"
+#include "registry.hpp"
 #include "render.hpp"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -66,7 +67,7 @@ void TextStage::initCharacters() {
         Character character = {texture, ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                                ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
                                static_cast<unsigned int>(face->glyph->advance.x)};
-        characters.insert(std::pair<uint32_t, Character>(c, character));
+        characters.insert(std::pair(c, character));
     }
 }
 
@@ -76,12 +77,9 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, window_width_px, window_height_px);
-    mat4 projection = ortho(0.0f, (float)window_width_px, 0.0f, (float)window_height_px);
 
-    auto color_loc = glGetUniformLocation(text_shader, "textColor");
-    glUniform3f(color_loc, color.x, color.y, color.z);
-    GLuint projection_loc = glGetUniformLocation(text_shader, "projection");
-    glUniformMatrix4fv(projection_loc, 1, GL_FALSE, (float*)&projection);
+    setUniformFloatVec3(text_shader, "textColor", color / 255.0f);
+    setUniformFloatMat4(text_shader, "projection", projection_matrix);
 
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(vao);
@@ -111,14 +109,26 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         x += (advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
     }
+
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
+
+    checkGlErrors();
 }
 
-void TextStage::draw() { renderText("hello", 100.0, 100.0, 1.0, vec3(1.0, 1.0, 1.0)); }
+void TextStage::draw() {
+    projection_matrix = ortho(0.0f, (float)window_width_px, 0.0f, (float)window_height_px);
+    auto world_width = static_cast<float>(native_width);
+    auto world_height = static_cast<float>(native_height);
 
- TextStage::~TextStage() {
+    for (const Text& text : registry.texts.components) {
+        float x = (text.position.x / world_width) * window_width_px;
+        float y = (text.position.y / world_height) * window_height_px;
+        renderText(text.text, x, y, 1.0, text.color);
+    }
+}
+
+TextStage::~TextStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
 }
-

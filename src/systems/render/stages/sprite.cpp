@@ -93,6 +93,10 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
     glUniform1i(glGetUniformLocation(shader, "highlight"), isHighlighted ? 1 : 0);
 }
 
+/**
+ * Prepare for drawing by setting various OpenGL flags, setting and clearing the framebuffer,
+ * and updating the viewport.
+ */
 void SpriteStage::prepareDraw() const {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glViewport(0, 0, native_width, native_height);
@@ -106,6 +110,10 @@ void SpriteStage::prepareDraw() const {
     checkGlErrors();
 }
 
+/**
+ * Draw a given Entity which has a `Motion` and `Material`.
+ * @param entity The sprite to render
+ */
 void SpriteStage::drawSprite(const Entity entity) const {
     const auto& [position, angle, velocity, scale, collides] = registry.motions.get(entity);
     const auto& [texture, shader] = registry.materials.get(entity);
@@ -144,7 +152,7 @@ void SpriteStage::drawSprite(const Entity entity) const {
 GLuint SpriteStage::draw() const {
     prepareDraw();
 
-    // Draw all textured meshes that have a position and size component
+    // Draw all textured meshes that have a material and motion component
     for (const Entity entity : registry.materials.entities) {
         drawSprite(entity);
     }

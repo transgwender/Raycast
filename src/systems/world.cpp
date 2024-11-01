@@ -186,6 +186,8 @@ void WorldSystem::restart_game() {
     }
 
     rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
+
+    registry.texts.insert(Entity(), {"hello", vec2(300, 160), 200});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {

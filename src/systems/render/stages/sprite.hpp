@@ -2,7 +2,6 @@
 #include "common.hpp"
 #include "components.hpp"
 #include "shader.hpp"
-#include "texture.hpp"
 #include "util.hpp"
 
 class SpriteStage {
@@ -49,7 +48,7 @@ class SpriteStage {
      * Draw all renderable sprites onto the screen.
      * @return A texture id containing the rendered frame.
      */
-    GLuint draw() const;
+    [[nodiscard]] GLuint draw() const;
 
     ~SpriteStage();
 };

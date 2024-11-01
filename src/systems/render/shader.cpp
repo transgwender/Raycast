@@ -153,3 +153,8 @@ void setUniformFloatMat3(const GLuint program, const char* name, const mat3 valu
     const GLint location = glGetUniformLocation(program, name);
     glUniformMatrix3fv(location, 1, GL_FALSE, (float*)&value);
 }
+
+void setUniformFloatMat4(const GLuint program, const char* name, const mat4 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, (float*)&value);
+}

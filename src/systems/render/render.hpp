@@ -1,11 +1,11 @@
 #pragma once
 
-#include "post_processing.hpp"
+#include "common.hpp"
+#include "composite.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
 #include "stages/text.hpp"
 #include "texture.hpp"
-#include "common.hpp"
 
 /**
  * Global texture manager. There should only be one instance of this.
@@ -23,7 +23,7 @@ extern ShaderManager shader_manager;
  */
 class RenderSystem {
     SpriteStage sprite_stage;
-    PostProcessingStage post_processing_stage;
+    CompositeStage composite_stage;
     TextStage text_stage;
 
     /** Window handle */

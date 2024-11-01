@@ -156,6 +156,17 @@ struct Text {
 };
 
 /**
+* Component for displaying text on screen.
+*/
+struct Text {
+    std::string text;
+    vec2 position;
+    float size;
+    /** Color channel values are in range [0, 255] */
+    vec3 color = vec3(255, 255, 255);
+};
+
+/**
  * This is used more as a general purpose helper for constructing more complex objects like sprites.
  * Not a component in its own right.
  * TODO: Move to its own file

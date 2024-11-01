@@ -19,6 +19,10 @@ class TextStage {
 
     ShaderHandle text_shader = 0;
 
+    mat4 projection_matrix = {};
+
+    GLFWwindow* window = nullptr;
+
     void initCharacters();
 
     void renderText(const std::string& text, float x, float y, float scale, vec3 color);

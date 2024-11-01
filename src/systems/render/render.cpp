@@ -27,7 +27,7 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     shader_manager.init();
 
     sprite_stage.init();
-    post_processing_stage.init();
+    composite_stage.init(window);
     text_stage.init();
 }
 
@@ -42,8 +42,8 @@ RenderSystem::~RenderSystem() {
  * http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
  */
 void RenderSystem::draw() {
-    GLuint sprite_stage_result = sprite_stage.draw();
-    post_processing_stage.draw(window, sprite_stage_result);
+    const GLuint sprite_stage_result = sprite_stage.draw();
+    composite_stage.draw(sprite_stage_result);
     text_stage.draw();
 
     // flicker-free display with a double buffer

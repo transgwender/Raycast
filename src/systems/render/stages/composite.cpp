@@ -1,8 +1,8 @@
-#include "post_processing.hpp"
+#include "composite.hpp"
 
 #include "render.hpp"
 
-void PostProcessingStage::createVertexAndIndexBuffers() {
+void CompositeStage::createVertexAndIndexBuffers() {
     // vertex and index buffer for the screen triangle
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
@@ -18,7 +18,8 @@ void PostProcessingStage::createVertexAndIndexBuffers() {
     checkGlErrors();
 }
 
-void PostProcessingStage::init() {
+void CompositeStage::init(GLFWwindow* window_arg) {
+    window = window_arg;
     createVertexAndIndexBuffers();
     screen_shader = shader_manager.get("screen");
 
@@ -26,7 +27,7 @@ void PostProcessingStage::init() {
     glGenVertexArrays(1, &vao);
 }
 
-void PostProcessingStage::draw(GLFWwindow* window, const GLuint frame_texture) const {
+void CompositeStage::draw(const GLuint frame_texture) const {
     glUseProgram(screen_shader);
 
     int w, h;
@@ -47,13 +48,11 @@ void PostProcessingStage::draw(GLFWwindow* window, const GLuint frame_texture) c
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-    const GLuint screen_program = shader_manager.get("screen");
-
     // Set clock
-    setUniformFloat(screen_program, "time", static_cast<float>(glfwGetTime() * 10.0f));
+    setUniformFloat(screen_shader, "time", static_cast<float>(glfwGetTime() * 10.0f));
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)
-    GLint position_location = glGetAttribLocation(screen_program, "in_position");
+    GLint position_location = glGetAttribLocation(screen_shader, "in_position");
     glEnableVertexAttribArray(position_location);
     glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)nullptr);
 
@@ -70,7 +69,7 @@ void PostProcessingStage::draw(GLFWwindow* window, const GLuint frame_texture) c
     glUseProgram(0);
 }
 
-PostProcessingStage::~PostProcessingStage() {
+CompositeStage::~CompositeStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ibo);
 
