@@ -25,9 +25,9 @@ void TextStage::init() {
     glGenBuffers(1, &vbo);
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices, GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
@@ -129,24 +129,29 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
         float xpos = x + bearing.x * scale;
         float ypos = y - (size.y - bearing.y) * scale;
 
-        float w = size.x * scale;
-        float h = size.y * scale;
-        // update VBO for each character
-        float vertices[6][4] = {{xpos, ypos + h, 0.0f, 0.0f}, {xpos, ypos, 0.0f, 1.0f},
-                                {xpos + w, ypos, 1.0f, 1.0f}, {xpos, ypos + h, 0.0f, 0.0f},
-                                {xpos + w, ypos, 1.0f, 1.0f}, {xpos + w, ypos + h, 1.0f, 0.0f}};
+        float scale_x = size.x * scale;
+        float scale_y = size.y * scale;
+
+        auto transform = mat4(1.0f);
+        transform *= translate(mat4(1.0f), vec3(xpos, ypos, 0.0f));
+        transform *= glm::scale(mat4(1.0f), vec3(scale_x, scale_y, 0.0f));
+
+        setUniformFloatMat4(text_shader, "transform", transform);
+
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, texture);
+
         // update content of VBO memory
         glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
         // render quad
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
         x += (advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
     }
 
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
 

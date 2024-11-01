@@ -31,6 +31,13 @@ class TextStage {
 
     mat4 projection_matrix = {};
 
+    GLfloat quad_vertices[4][4] = {
+        {0.0f, 1.0f, 0.0f, 0.0f},
+        {0.0f, 0.0f, 0.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 0.0f},
+        {1.0f, 0.0f, 1.0f, 1.0f}
+    };
+
     void initFont();
 
     /**
