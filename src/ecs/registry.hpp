@@ -17,7 +17,6 @@ class ECSRegistry {
     ComponentContainer<ChangeScene> changeScenes;
     ComponentContainer<ResumeGame> resumeGames;
     ComponentContainer<BoundingBox> boundingBoxes;
-    ComponentContainer<Renderable> renderables;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
@@ -46,7 +45,6 @@ class ECSRegistry {
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&resumeGames);
         registry_list.push_back(&boundingBoxes);
-        registry_list.push_back(&renderables);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);

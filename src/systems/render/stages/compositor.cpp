@@ -1,8 +1,8 @@
-#include "composite.hpp"
+#include "compositor.hpp"
 
 #include "render.hpp"
 
-void CompositeStage::createVertexAndIndexBuffers() {
+void CompositorStage::createVertexAndIndexBuffers() {
     // vertex and index buffer for the screen triangle
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
@@ -18,16 +18,20 @@ void CompositeStage::createVertexAndIndexBuffers() {
     checkGlErrors();
 }
 
-void CompositeStage::init(GLFWwindow* window_arg) {
+void CompositorStage::init(GLFWwindow* window_arg) {
     window = window_arg;
     createVertexAndIndexBuffers();
     screen_shader = shader_manager.get("screen");
+
+    // get a reference to the frame textures from the other pipeline stages.
+    sprite_stage_texture = texture_manager.get("$sprite_stage");
+    text_stage_texture = texture_manager.get("$text_stage");
 
     // create vao
     glGenVertexArrays(1, &vao);
 }
 
-void CompositeStage::draw(const GLuint frame_texture) const {
+void CompositorStage::draw() const {
     glUseProgram(screen_shader);
 
     int w, h;
@@ -38,7 +42,6 @@ void CompositeStage::draw(const GLuint frame_texture) const {
     glClearColor(1.f, 0, 0, 1.0);
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    checkGlErrors();
     // Enabling alpha channel for textures
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
@@ -58,7 +61,7 @@ void CompositeStage::draw(const GLuint frame_texture) const {
 
     // Bind our texture in Texture Unit 0
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, frame_texture);
+    glBindTexture(GL_TEXTURE_2D, sprite_stage_texture);
 
     // Draw
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
@@ -69,7 +72,7 @@ void CompositeStage::draw(const GLuint frame_texture) const {
     glUseProgram(0);
 }
 
-CompositeStage::~CompositeStage() {
+CompositorStage::~CompositorStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ibo);
 

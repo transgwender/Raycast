@@ -1,7 +1,7 @@
 #pragma once
 
 #include "common.hpp"
-#include "composite.hpp"
+#include "compositor.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
 #include "stages/text.hpp"
@@ -23,7 +23,7 @@ extern ShaderManager shader_manager;
  */
 class RenderSystem {
     SpriteStage sprite_stage;
-    CompositeStage composite_stage;
+    CompositorStage composite_stage;
     TextStage text_stage;
 
     /** Window handle */
@@ -35,7 +35,4 @@ class RenderSystem {
 
     /** Draw all visible, renderable entities. */
     void draw();
-
-    /** Destroy resources associated to one or all entities created by the system. */
-    ~RenderSystem();
 };

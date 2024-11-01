@@ -27,14 +27,10 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     shader_manager.init();
 
     sprite_stage.init();
-    composite_stage.init(window);
     text_stage.init();
-}
+    composite_stage.init(window);
 
-RenderSystem::~RenderSystem() {
-    // remove all entities created by the render system
-    while (!registry.renderables.entities.empty())
-        registry.remove_all_components_of(registry.renderables.entities.back());
+    checkGlErrors();
 }
 
 /**
@@ -42,9 +38,9 @@ RenderSystem::~RenderSystem() {
  * http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
  */
 void RenderSystem::draw() {
-    const GLuint sprite_stage_result = sprite_stage.draw();
-    composite_stage.draw(sprite_stage_result);
+    sprite_stage.draw();
     text_stage.draw();
+    composite_stage.draw();
 
     // flicker-free display with a double buffer
     glfwSwapBuffers(window);

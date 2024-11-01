@@ -1,11 +1,15 @@
 #pragma once
 #include "common.hpp"
+
 #include <unordered_map>
 
 #include <filesystem>
 
 typedef GLuint TextureHandle;
 
+/**
+ * Handles all the OpenGL textures for the renderer during the lifetime of the program.
+ */
 class TextureManager {
     bool initialized = false;
     std::unordered_map<std::string, TextureHandle> textures;
@@ -28,4 +32,11 @@ class TextureManager {
      * If no map exists, returns a default flat normal map.
      */
     [[nodiscard]] TextureHandle getNormal(const std::string& name) const;
+
+    /**
+     * Manually add an internal texture with an associated name.
+     * @param name The texture name
+     * @param texture Renderer texture ID
+     */
+    void add(const std::string& name, const TextureHandle& texture);
 };

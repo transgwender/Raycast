@@ -46,9 +46,8 @@ class SpriteStage {
 
     /**
      * Draw all renderable sprites onto the screen.
-     * @return A texture id containing the rendered frame.
      */
-    [[nodiscard]] GLuint draw() const;
+    void draw() const;
 
     ~SpriteStage();
 };

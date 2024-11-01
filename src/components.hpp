@@ -37,13 +37,6 @@ struct Zone {
     ZONE_TYPE type;
 };
 
-// Entities that are `renderable` are visible in scenes.
-struct Renderable {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-    float angle = 0;
-};
-
 // Light source captures the characteristics of a source of light, such as the
 // angle the light is shot at and the time interval between firing.
 struct LightSource {

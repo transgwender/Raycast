@@ -11,6 +11,27 @@
 // text rendering code adapted from https://learnopengl.com/In-Practice/Text-Rendering
 
 void TextStage::init() {
+    text_shader = shader_manager.get("text");
+
+    initFont();
+    initFrame();
+    initCharacters();
+
+    glGenVertexArrays(1, &vao);
+    glGenBuffers(1, &vbo);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+
+    // add this stage's frame texture to the texture manager
+    texture_manager.add("$text_stage", frame_texture);
+}
+
+void TextStage::initFont() {
     FT_Library library;
     if (FT_Init_FreeType(&library) != 0) {
         LOG_ERROR("Failed to initialize FreeType");
@@ -23,21 +44,25 @@ void TextStage::init() {
     }
 
     FT_Set_Pixel_Sizes(face, 0, 200);
-
-    text_shader = shader_manager.get("text");
-
-    initCharacters();
-
-    glGenVertexArrays(1, &vao);
-    glGenBuffers(1, &vbo);
-    glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 6 * 4, nullptr, GL_DYNAMIC_DRAW);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 }
+
+void TextStage::initFrame() {
+    // create a new framebuffer to render to
+    glGenFramebuffers(1, &frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+    // create a new screen texture and bind it to our new framebuffer
+    glGenTextures(1, &frame_texture);
+    glBindTexture(GL_TEXTURE_2D, frame_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, window_width_px, window_height_px, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
+
+    // go back to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 void TextStage::initCharacters() {
     // disable byte alignment requirement
@@ -71,11 +96,8 @@ void TextStage::initCharacters() {
     }
 }
 
-void TextStage::renderText(const std::string& text, float x, float y, float scale, vec3 color) {
+void TextStage::renderText(const std::string& text, float x, float y, float scale, const vec3 color) {
     glUseProgram(text_shader);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, window_width_px, window_height_px);
 
     setUniformFloatVec3(text_shader, "textColor", color / 255.0f);
@@ -116,14 +138,24 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
     checkGlErrors();
 }
 
+void TextStage::prepareDraw() {
+    projection_matrix = ortho(0.0f, static_cast<float>(window_width_px), 0.0f, static_cast<float>(window_height_px));
+
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    glViewport(0, 0, window_width_px, window_height_px);
+}
+
 void TextStage::draw() {
-    projection_matrix = ortho(0.0f, (float)window_width_px, 0.0f, (float)window_height_px);
-    auto world_width = static_cast<float>(native_width);
-    auto world_height = static_cast<float>(native_height);
+    prepareDraw();
+
+    const auto world_width = static_cast<float>(native_width);
+    const auto world_height = static_cast<float>(native_height);
 
     for (const Text& text : registry.texts.components) {
-        float x = (text.position.x / world_width) * window_width_px;
-        float y = (text.position.y / world_height) * window_height_px;
+        const float x = (text.position.x / world_width) * window_width_px;
+        const float y = (text.position.y / world_height) * window_height_px;
         renderText(text.text, x, y, 1.0, text.color);
     }
 }

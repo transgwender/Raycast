@@ -26,6 +26,9 @@ void SpriteStage::init() {
     shader = shader_manager.get("textured");
 
     createVertexAndIndexBuffers();
+
+    // add this stage's frame texture to the texture manager
+    texture_manager.add("$sprite_stage", frame_texture);
 }
 
 void SpriteStage::createVertexAndIndexBuffers() {
@@ -149,15 +152,13 @@ void SpriteStage::drawSprite(const Entity entity) const {
     checkGlErrors();
 }
 
-GLuint SpriteStage::draw() const {
+void SpriteStage::draw() const {
     prepareDraw();
 
     // Draw all textured meshes that have a material and motion component
     for (const Entity entity : registry.materials.entities) {
         drawSprite(entity);
     }
-
-    return frame_texture;
 }
 
 SpriteStage::~SpriteStage() {

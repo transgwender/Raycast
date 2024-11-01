@@ -17,13 +17,24 @@ class TextStage {
     GLuint vao = 0;
     GLuint vbo = 0;
 
+    GLuint frame_buffer = 0;
+    GLuint frame_texture = 0;
+
     ShaderHandle text_shader = 0;
 
     mat4 projection_matrix = {};
 
-    GLFWwindow* window = nullptr;
+    void initFont();
+
+    /**
+     * Initialize the frame buffer and associated texture that this stage
+     * will render to.
+     */
+    void initFrame();
 
     void initCharacters();
+
+    void prepareDraw();
 
     void renderText(const std::string& text, float x, float y, float scale, vec3 color);
 

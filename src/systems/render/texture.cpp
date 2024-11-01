@@ -8,6 +8,14 @@
 #include <stb_image.h>
 
 void TextureManager::addFromPath(const std::filesystem::path& path) {
+    const std::string texture_name = path.stem().string();
+    if (texture_name.rfind('$', 0) == 0) {
+        LOG_ERROR("Texture with name {} in the textures folder starts with reserved prefix character '$'. Please "
+                  "rename the texture to something else.",
+                  texture_name);
+        assert(false);
+    }
+
     ivec2 dimensions;
     stbi_uc* data = stbi_load(path.string().c_str(), &dimensions.x, &dimensions.y, nullptr, 4);
     if (data == nullptr) {
@@ -23,11 +31,12 @@ void TextureManager::addFromPath(const std::filesystem::path& path) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     checkGlErrors();
     stbi_image_free(data);
-    textures[path.stem().string()] = texture;
+    textures[texture_name] = texture;
 }
 
 void TextureManager::init() {
-    if (initialized) return;
+    if (initialized)
+        return;
 
     for (const auto& entry : std::filesystem::directory_iterator(textures_path("/albedo"))) {
         addFromPath(entry.path());
@@ -56,4 +65,11 @@ TextureHandle TextureManager::getNormal(const std::string& name) const {
         return textures.at("default_n");
     }
     return textures.at(normal_name);
+}
+
+void TextureManager::add(const std::string& name, const TextureHandle& texture) {
+    if (textures.find(name) != textures.end()) {
+        LOG_WARN("Texture with name '{}' already exists. Adding it again will overwrite the texture ID.", name);
+    }
+    textures[name] = texture;
 }
