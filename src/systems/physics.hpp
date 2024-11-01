@@ -11,5 +11,8 @@ class PhysicsSystem {
     void step(float elapsed_ms);
 
     PhysicsSystem() = default;
+  private:
+
+    bool shouldStep();
 };
 

@@ -228,4 +228,13 @@ inline void from_json(const json& j, Motion& c) {
     j.at("scale").get_to(c.scale);
     j.at("angle").get_to(c.angle);
     //j.at("collides").get_to(c.collides);
+
+inline void to_json(json& j, const ButtonHelper& c) {
+    j = json{{"type", "button"}, {"position", c.position}, {"scale", c.scale}, {"label", c.label}};
+}
+
+inline void from_json(const json& j, ButtonHelper& c) {
+    j.at("position").get_to(c.position);
+    j.at("scale").get_to(c.scale);
+    j.at("label").get_to(c.label);
 }

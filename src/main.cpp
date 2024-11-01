@@ -5,10 +5,22 @@
 #include "systems/render/render.hpp"
 #include "systems/world.hpp"
 #include "systems/ai.hpp"
+#include "utils.h"
 #include <chrono>
 #include <gl3w.h>
+#include <iostream>
 
 using Clock = std::chrono::high_resolution_clock;
+
+// write fps to title bar
+void fps_counter(GLFWwindow* window, float elapsed_ms) {
+    // TODO: toggle on F press
+    int fps = Utils::fps(elapsed_ms);
+    glfwSetWindowTitle(window,
+                       ("Raycast   FPS: "
+                           + (std::string)((fps < 100) ? " " : "")
+                           + std::to_string(fps)).c_str());
+}
 
 int main() {
     // Global systems
@@ -49,7 +61,7 @@ int main() {
                     .count()) /
             1000;
         t = now;
-
+        fps_counter(window, elapsed_ms);
         world.step(elapsed_ms);
         physics.step(elapsed_ms);
         ai.step(elapsed_ms);

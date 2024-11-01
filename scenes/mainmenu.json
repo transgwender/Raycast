@@ -21,38 +21,20 @@
       "name": "play_button",
       "data": [
         {
-          "type": "sprite",
+          "type": "button",
           "position": [
             160.0,
             120.0
           ],
-          "texture": "button_start",
+          "label": "Start",
           "scale": [
             96.0,
             32.0
           ]
-        },
-        {
-          "type": "interactable"
         },
         {
           "type": "change_scene",
           "scene": "levelmenu"
-        },
-        {
-          "type": "bounding_box",
-          "position": [
-            160.0,
-            120.0
-          ],
-          "scale": [
-            96.0,
-            32.0
-          ]
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": true
         }
       ]
     }
