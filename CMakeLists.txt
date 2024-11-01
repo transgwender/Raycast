@@ -52,7 +52,7 @@ if (IS_OS_MAC)
   link_directories(/opt/homebrew/lib)
 endif()
 
-add_executable(${PROJECT_NAME} ${SOURCE_FILES} "src/systems/ai.cpp")
+add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/systems/render src/ecs src/logging src/utils)
 
 # Added this so policy CMP0065 doesn't scream
