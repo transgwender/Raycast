@@ -202,6 +202,34 @@ inline void from_json(const json& j, Highlightable& c) {
     j.at("isHighlighted").get_to(c.isHighlighted);
 }
 
+
+inline void to_json(json& j, const DashTheTurtle& c) {
+    j = json{{"type", "dashTheTurtle"}, {"behavior", c.behavior}, {"minimumDisplacement", c.nearestLightRayDirection}};
+}
+
+inline void from_json(const json& j, DashTheTurtle& c) {
+
+    j.at("behavior").get_to(c.behavior);
+    j.at("minimumDisplacement").get_to(c.nearestLightRayDirection);
+}
+
+inline void to_json(json& j, const Motion& c) {
+    j = json{{"type", "motion"},
+             {"position", c.position},
+             {"velocity", c.velocity},
+             {"scale", c.scale},
+             {"angle", c.angle}}; //, {"collides", c.collides}};
+}
+
+inline void from_json(const json& j, Motion& c) {
+
+    j.at("position").get_to(c.position);
+    j.at("velocity").get_to(c.velocity);
+    j.at("scale").get_to(c.scale);
+    j.at("angle").get_to(c.angle);
+    // j.at("collides").get_to(c.collides);
+}
+
 inline void to_json(json& j, const ButtonHelper& c) {
     j = json{{"type", "button"}, {"position", c.position}, {"scale", c.scale}, {"label", c.label}};
 }

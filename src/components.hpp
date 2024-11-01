@@ -172,6 +172,7 @@ struct Mirror {
     float angle = 0;
 };
 
+
 struct ButtonHelper {
     vec2 position = {0, 0};
     vec2 scale = {10, 10};
@@ -181,4 +182,5 @@ struct ButtonHelper {
 enum class DASH_STATES { WALK = 0, IDLE = 1, STARE = 2, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
+    vec2 nearestLightRayDirection;
 };

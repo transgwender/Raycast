@@ -32,6 +32,7 @@ class ECSRegistry {
     ComponentContainer<Menu> menus;
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
+    ComponentContainer<DashTheTurtle> turtles;
     ComponentContainer<Button> buttons;
     ComponentContainer<Text> texts;
 
@@ -60,6 +61,7 @@ class ECSRegistry {
         registry_list.push_back(&menus);
         registry_list.push_back(&menuItems);
         registry_list.push_back(&levelSelects);
+        registry_list.push_back(&turtles);
         registry_list.push_back(&buttons);
         registry_list.push_back(&texts);
     }

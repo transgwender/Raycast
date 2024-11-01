@@ -1,0 +1,89 @@
+{
+  "objList": [
+    {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            25.0,
+            90.0
+          ],
+          "zone_type": 0,
+          "angle": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            25.0,
+            90.0
+          ],
+          "texture": "bubble_open",
+          "scale": [
+            12.0,
+            12.0
+          ],
+          "angle": 0.785398163
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            310.0,
+            30.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            30.0
+          ],
+          "texture": "bubble_closed",
+          "scale": [
+            12.0,
+            12.0
+          ],
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "dashie",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [ 250, 150 ],
+          "texture": "button_start",
+          "scale": [ 15.0, 15.0 ],
+          "angle": 0
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 1,
+          "minimumDisplacement": [10000, 10000]
+        }
+
+      ]
+    }
+  ]
+}

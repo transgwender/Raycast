@@ -4,6 +4,7 @@
 #include "systems/physics.hpp"
 #include "systems/render/render.hpp"
 #include "systems/world.hpp"
+#include "systems/ai.hpp"
 #include "utils.h"
 #include <chrono>
 #include <gl3w.h>
@@ -26,6 +27,7 @@ int main() {
     WorldSystem world;
     RenderSystem renderer;
     PhysicsSystem physics;
+    AISystem ai;
 
     // Initialize default logger
     raycast::logging::LogManager log_manager;
@@ -62,8 +64,10 @@ int main() {
         fps_counter(window, elapsed_ms);
         world.step(elapsed_ms);
         physics.step(elapsed_ms);
+        ai.step(elapsed_ms);
         world.handle_collisions();
         renderer.draw();
+        
     }
 
     return EXIT_SUCCESS;
