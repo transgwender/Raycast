@@ -71,9 +71,9 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
     return entity;
 }
 
-Entity createDashTheTurtle(const Entity& entity, vec2 position) { 
+Entity createDashTheTurtle(const Entity& entity, vec2 position) {
     Entity dash = createSprite(entity, position, {100, 100}, 0, "button");
-    
+
     auto& motion = registry.motions.get(dash);
     motion.velocity = {0, 0};
     motion.collides = false;
@@ -83,6 +83,7 @@ Entity createDashTheTurtle(const Entity& entity, vec2 position) {
     dashComponent.nearestLightRayDirection = {1000000000, 1000000000};
 
     return entity;
+}
 
 Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
     createEmptyButton(entity, position, scale, label, textureName);
