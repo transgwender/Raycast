@@ -10,7 +10,9 @@ struct Character {
 };
 
 class TextStage {
-    std::unordered_map<uint32_t, Character> characters;
+    /** Maps from a font size to a character set. */
+    std::unordered_map<unsigned int, Character[128]> character_sets;
+    Character characters[128] = {};
 
     FT_Face face = nullptr;
 
@@ -19,6 +21,11 @@ class TextStage {
 
     GLuint frame_buffer = 0;
     GLuint frame_texture = 0;
+
+    // render text at this specific resolution.
+    // this is much higher than 320x180, so the text will look sharper
+    const int frame_width = 1280;
+    const int frame_height = 720;
 
     ShaderHandle text_shader = 0;
 

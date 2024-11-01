@@ -187,7 +187,7 @@ void WorldSystem::restart_game() {
 
     rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
 
-    registry.texts.insert(Entity(), {"hello!", vec2(160, 90), 100, {255, 255, 255}});
+    registry.texts.insert(Entity(), {"Raycast but it's a\ntext rendering demo", vec2(160, 90), 100, {255, 255, 255}});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
