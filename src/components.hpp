@@ -73,7 +73,7 @@ struct Reflective {};
 
 struct Interactable {};
 
-struct Button {}; // Indicates it's a button, menu
+struct ButtonFlag {}; // Indicates it's a button, menu
 
 // Represents a transition to another scene.
 struct ChangeScene {
@@ -140,12 +140,6 @@ struct PointLight {
     float linear;
     float quadratic;
     float constant = 1.0;
-};
-
-struct Text {
-    std::string text;
-    vec2 position;
-    int fontSize;
 };
 
 /**

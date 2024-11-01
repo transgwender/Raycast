@@ -178,6 +178,8 @@ void TextStage::prepareDraw() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glViewport(0, 0, frame_width, frame_height);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void TextStage::draw() {

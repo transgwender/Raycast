@@ -32,7 +32,7 @@ class ECSRegistry {
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
     ComponentContainer<DashTheTurtle> turtles;
-    ComponentContainer<Button> buttons;
+    ComponentContainer<ButtonFlag> buttons;
     ComponentContainer<Text> texts;
 
     // constructor that adds all containers for looping over them
