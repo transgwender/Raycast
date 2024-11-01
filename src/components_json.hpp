@@ -202,7 +202,6 @@ inline void from_json(const json& j, Highlightable& c) {
     j.at("isHighlighted").get_to(c.isHighlighted);
 }
 
-
 inline void to_json(json& j, const DashTheTurtle& c) {
     j = json{{"type", "dashTheTurtle"}, {"behavior", c.behavior}, {"minimumDisplacement", c.nearestLightRayDirection}};
 }
@@ -222,7 +221,6 @@ inline void to_json(json& j, const Motion& c) {
 }
 
 inline void from_json(const json& j, Motion& c) {
-
     j.at("position").get_to(c.position);
     j.at("velocity").get_to(c.velocity);
     j.at("scale").get_to(c.scale);
