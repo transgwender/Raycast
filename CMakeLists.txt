@@ -35,6 +35,8 @@ file(GLOB SOURCE_FILES
         src/systems/*.hpp
         src/systems/render/*.cpp
         src/systems/render/*.hpp
+        src/systems/render/stages/*.cpp
+        src/systems/render/stages/*.hpp
         src/ecs/*.cpp
         src/ecs/*.hpp
         src/logging/*.cpp
@@ -53,7 +55,7 @@ if (IS_OS_MAC)
 endif()
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
-target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/systems/render src/ecs src/logging src/utils)
+target_include_directories(${PROJECT_NAME} PUBLIC src/ src/systems src/systems/render src/systems/render/stages src/ecs src/logging src/utils)
 
 # Added this so policy CMP0065 doesn't scream
 set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
@@ -82,6 +84,8 @@ if (IS_OS_LINUX OR IS_OS_MAC)
     find_package(PkgConfig REQUIRED)
 
     pkg_search_module(GLFW REQUIRED glfw3)
+
+    find_package(Freetype REQUIRED)
 
     pkg_search_module(SDL2 REQUIRED sdl2)
     pkg_search_module(SDL2MIXER REQUIRED SDL2_mixer)
@@ -138,25 +142,26 @@ elseif (IS_OS_WINDOWS)
     if (MSVC)
         target_compile_options(${PROJECT_NAME} PUBLIC
             # increase warning level
-            "/W4"
+            "/W4"       
 
             # Turn warning "not all control paths return a value" into an error
-            "/we4715"
+            "/we4715"          
 
             # use sane exception handling, rather than trying to catch segfaults and allowing resource
             # leaks and UB. Yup... See "Default exception handling behavior" at
             # https://docs.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=vs-2019
-            "/EHsc"
-
+            "/EHsc"       
+                   
             # turn warning C4239 (non-standard extension that allows temporaries to be bound to
             # non-const references, yay microsoft) into an error
-            "/we4239"
+            "/we4239"            
         )
     else()
         # Apply GCC/MinGW flags instead of MSVC
         target_compile_options(${PROJECT_NAME} PUBLIC
             "-Wall"              # all warnings
             "-Wextra"            # extra warnings
+#            "-Werror"            # treat warnings as errors
         )
     endif()
 endif()
@@ -173,7 +178,7 @@ endif()
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES} glm::glm)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES} glm::glm Freetype::Freetype)
 
 # Needed to add this
 if(IS_OS_LINUX)

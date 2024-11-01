@@ -104,10 +104,22 @@ bool collides(const Motion& motion1, const Motion& motion2) {
     return false;
 }
 
+
+bool PhysicsSystem::shouldStep() {
+    assert(registry.menus.size() <= 1);
+    if (!registry.menus.components.empty()) {
+        return !registry.menus.components.front().shouldBlockSteps;
+    }
+    return true;
+}
+
 /**
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
+
+    if(!shouldStep()) return;
+
     auto& motion_registry = registry.motions;
     const float t = elapsed_ms / ONE_SECOND;
 

@@ -80,4 +80,8 @@ class WorldSystem {
 
     bool shouldStep();
     bool isInLevel();
+
+    void updateDash();
+
+    bool shouldAllowInput();
 };

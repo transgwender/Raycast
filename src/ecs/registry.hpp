@@ -15,8 +15,8 @@ class ECSRegistry {
     ComponentContainer<Collision> collisions;
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
+    ComponentContainer<ResumeGame> resumeGames;
     ComponentContainer<BoundingBox> boundingBoxes;
-    ComponentContainer<Renderable> renderables;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
@@ -31,6 +31,9 @@ class ECSRegistry {
     ComponentContainer<Menu> menus;
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
+    ComponentContainer<DashTheTurtle> turtles;
+    ComponentContainer<ButtonFlag> buttons;
+    ComponentContainer<Text> texts;
     ComponentContainer<SpriteSheet> spriteSheets;
 
     // constructor that adds all containers for looping over them
@@ -41,8 +44,8 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
+        registry_list.push_back(&resumeGames);
         registry_list.push_back(&boundingBoxes);
-        registry_list.push_back(&renderables);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
@@ -57,6 +60,9 @@ class ECSRegistry {
         registry_list.push_back(&menus);
         registry_list.push_back(&menuItems);
         registry_list.push_back(&levelSelects);
+        registry_list.push_back(&turtles);
+        registry_list.push_back(&buttons);
+        registry_list.push_back(&texts);
         registry_list.push_back(&spriteSheets);
     }
 

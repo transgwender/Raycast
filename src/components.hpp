@@ -18,7 +18,8 @@ struct LevelSelect {};
 // Is a menu currently open?
 struct Menu {
     bool canClose = false;
-    bool shouldPauseSteps = false;
+    bool shouldBlockSteps = false;
+    bool shouldBlockInput = false;
 };
 
 struct MenuItem {};
@@ -34,13 +35,6 @@ enum class ZONE_TYPE { START = 0, END = 1, ZONE_TYPE_COUNT };
 struct Zone {
     vec2 position = {0, 0};
     ZONE_TYPE type;
-};
-
-// Entities that are `renderable` are visible in scenes.
-struct Renderable {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-    float angle = 0;
 };
 
 // Light source captures the characteristics of a source of light, such as the
@@ -79,10 +73,14 @@ struct Reflective {};
 
 struct Interactable {};
 
+struct ButtonFlag {}; // Indicates it's a button, menu
+
 // Represents a transition to another scene.
 struct ChangeScene {
     std::string scene;
 };
+
+struct ResumeGame {};
 
 // Represents the bounding box for the entity it is applied to -- used to detect
 // collisions.
@@ -145,6 +143,18 @@ struct PointLight {
 };
 
 /**
+ * Component for displaying text on screen.
+ */
+struct Text {
+    std::string text;
+    /** Position of the text. The position is based in the bottom left corner of the first character of the text. */
+    vec2 position;
+    unsigned int size;
+    /** Color channel values are in range [0, 255] */
+    vec3 color = vec3(255, 255, 255);
+};
+
+/**
  * This is used more as a general purpose helper for constructing more complex objects like sprites.
  * Not a component in its own right.
  * TODO: Move to its own file
@@ -161,6 +171,18 @@ struct Mirror {
     float angle = 0;
 };
 
+
+struct ButtonHelper {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    std::string label;
+};
+
+enum class DASH_STATES { WALK = 0, IDLE = 1, STARE = 2, DASH_ACTIONS_COUNT };
+struct DashTheTurtle {
+    DASH_STATES behavior;
+    vec2 nearestLightRayDirection;
+};
 struct SpriteSheet {
     vec2 position = {0, 0};
     uint sheetWidth;

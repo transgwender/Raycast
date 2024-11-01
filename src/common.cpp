@@ -51,7 +51,7 @@ bool checkGlErrors() {
             break;
         default:;
         }
-        std::cerr << "OpenGL: " << error_str << std::endl;
+        LOG_ERROR("[OpenGL]: {}", error_str);
         error = glGetError();
     }
 
