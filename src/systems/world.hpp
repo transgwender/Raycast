@@ -82,4 +82,6 @@ class WorldSystem {
     bool isInLevel();
 
     void updateDash();
+
+    bool shouldAllowInput();
 };

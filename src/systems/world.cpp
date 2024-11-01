@@ -103,7 +103,14 @@ bool WorldSystem::isInLevel() {
 
 bool WorldSystem::shouldStep() {
     if (menus.is_menu_open()) {
-        return registry.menus.components.front().shouldPauseSteps;
+        return !registry.menus.components.front().shouldBlockSteps;
+    }
+    return true;
+}
+
+bool WorldSystem::shouldAllowInput() {
+    if (menus.is_menu_open()) {
+        return !registry.menus.components.front().shouldBlockInput;
     }
     return true;
 }
@@ -224,6 +231,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             if (registry.menus.components.empty()) {
                 menus.generate_level_win_popup(level.id, (int) scenes.level_count());
             }
+//            registry.remove_all_components_of(other);
             break;
         }
         case ZONE_TYPE::START: {
@@ -282,6 +290,23 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         restart_game();
     }
 
+    // Pausing
+    if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
+        assert(registry.menus.size() <= 1);
+        if (registry.menus.size() == 0) {
+            assert(registry.menus.size() <= 1);
+            if (registry.levels.size() > 0) {
+                Level &level = registry.levels.components.front();
+                menus.generate_pause_popup(level.id);
+            }
+        } else {
+            Menu &menu = registry.menus.components.front();
+            if (menu.canClose) {
+                menus.try_close_menu();
+            }
+        }
+    }
+
     // Control the current speed with `<` `>`
     if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA) {
         current_speed -= 0.1f;
@@ -300,18 +325,23 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
     vec2 world_pos = screenToWorld(mouse_position);
     for (Entity entity : registry.interactables.entities) {
         Motion& motion = registry.motions.get(entity);
-        // Handle buttons separately — just keep piling on jank!
-        if (registry.changeScenes.has(entity) &&
-            (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
-            (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
-            (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
-            (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-            if (registry.highlightables.has(entity)) {
-                registry.highlightables.get(entity).isHighlighted = true;
+        if (registry.buttons.has(entity)) {
+            // Handle buttons separately — just keep piling on jank!
+            if ((motion.position + abs(motion.scale / 2.f)).y > world_pos.y &&
+                (motion.position + abs(motion.scale / 2.f)).x > world_pos.x &&
+                (motion.position - abs(motion.scale / 2.f)).x < world_pos.x &&
+                (motion.position - abs(motion.scale / 2.f)).y < world_pos.y) {
+                if (registry.highlightables.has(entity)) {
+                    registry.highlightables.get(entity).isHighlighted = true;
+                }
+                return;
+            } else {
+                if (registry.highlightables.has(entity)) {
+                    registry.highlightables.get(entity).isHighlighted = false;
+                }
             }
-            return;
         }
-        if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
+        if (dot(world_pos - motion.position, world_pos - motion.position)
                 < dot(motion.scale/2.f, motion.scale/2.f)) {
             if (registry.highlightables.has(entity)) {
                 registry.highlightables.get(entity).isHighlighted = true;
@@ -331,52 +361,64 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         for (Entity entity : registry.interactables.entities) {
             assert(registry.motions.has(entity));
             Motion& motion = registry.motions.get(entity);
-            // Handle buttons separately — just keep piling on jank!
-            if (registry.changeScenes.has(entity) &&
-                (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
-                (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
-                (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
-                (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-                ChangeScene& changeScene = registry.changeScenes.get(entity);
-                change_scene(changeScene.scene);
-                return;
-                }
-            if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale/2.f, motion.scale/2.f)) {
-                    if (registry.rotateables.has(entity)) {
-
-                        // Rotate the entity.
-                        LOG_INFO("Something should be rotating.")
-                        Motion& e_motion = registry.motions.get(entity);
-
-                        // TODO: use lerp too smoothly rotate
-                        float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
-                        e_motion.angle += motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
-                    }
-
-                    if (registry.lerpables.has(entity)) {
-                        Lerpable& e_lr = registry.lerpables.get(entity);
-                        e_lr.t_step = 0;
+            if (registry.buttons.has(entity)) {
+                if ((motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
+                    (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
+                    (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
+                    (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
+                    // Handle buttons separately — just keep piling on jank!
+                    if (registry.changeScenes.has(entity)) {
+                        ChangeScene& changeScene = registry.changeScenes.get(entity);
+                        change_scene(changeScene.scene);
+                        return;
+                    } else if (registry.resumeGames.has(entity)) {
+                        menus.try_close_menu();
+                        return;
                     }
                 }
+            } else {
+                if (shouldAllowInput()) {
+                    if (dot(world_pos - motion.position, world_pos - motion.position)
+                        < dot(motion.scale/2.f, motion.scale/2.f)) {
+                        if (registry.rotateables.has(entity)) {
+
+                            // Rotate the entity.
+                            LOG_INFO("Something should be rotating.")
+                            Motion& e_motion = registry.motions.get(entity);
+
+                            // TODO: use lerp too smoothly rotate
+                            float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
+                            e_motion.angle += motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
+                        }
+
+                        if (registry.lerpables.has(entity)) {
+                            Lerpable& e_lr = registry.lerpables.get(entity);
+                            e_lr.t_step = 0;
+                        }
+                    }
+                }
+            }
         }
     }
     if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
         vec2 world_pos = screenToWorld(vec2(xpos, ypos));
         LOG_INFO("({}, {})", xpos, ypos);
         for (Entity entity : registry.interactables.entities) {
-            Motion& motion = registry.motions.get(entity);
-            if (dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale/2.f, motion.scale/2.f)) {
-                if (registry.entitiesOnLinearRails.has(entity)) {
-                    LOG_INFO("Moving entity on linear rail.");
-                    OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-                    Lerpable& e_lr = registry.lerpables.get(entity);
-                    int which_direction = dot(motion.position - world_pos, e_rails.direction);
-                    if (which_direction > 0) {
-                        e_lr.t_step = -0.5;
-                    } else if (which_direction < 0) {
-                        e_lr.t_step = 0.5;
+            if (shouldAllowInput()) {
+                Motion& motion = registry.motions.get(entity);
+
+                if (dot(world_pos - motion.position, world_pos - motion.position) <
+                    dot(motion.scale / 2.f, motion.scale / 2.f)) {
+                    if (registry.entitiesOnLinearRails.has(entity)) {
+                        LOG_INFO("Moving entity on linear rail.");
+                        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+                        Lerpable& e_lr = registry.lerpables.get(entity);
+                        int which_direction = dot(motion.position - world_pos, e_rails.direction);
+                        if (which_direction > 0) {
+                            e_lr.t_step = -0.5;
+                        } else if (which_direction < 0) {
+                            e_lr.t_step = 0.5;
+                        }
                     }
                 }
             }

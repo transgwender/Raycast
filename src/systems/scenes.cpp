@@ -98,6 +98,11 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(DashTheTurtle, turtles);
                         // int x = registry.motions.has(entity);
                         // printf("Your boolean variable is: %s\n", x ? "true" : "false");
+
+                    } else if (type == "button") {
+                        ButtonHelper c{};
+                        data.get_to(c);
+                        createEmptyButton(entity, c.position, c.scale, c.label);
                     }
                 }
             }

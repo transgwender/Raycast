@@ -18,7 +18,8 @@ struct LevelSelect {};
 // Is a menu currently open?
 struct Menu {
     bool canClose = false;
-    bool shouldPauseSteps = false;
+    bool shouldBlockSteps = false;
+    bool shouldBlockInput = false;
 };
 
 struct MenuItem {};
@@ -79,10 +80,14 @@ struct Reflective {};
 
 struct Interactable {};
 
+struct Button {}; // Indicates it's a button, menu
+
 // Represents a transition to another scene.
 struct ChangeScene {
     std::string scene;
 };
+
+struct ResumeGame {};
 
 // Represents the bounding box for the entity it is applied to -- used to detect
 // collisions.
@@ -144,6 +149,12 @@ struct PointLight {
     float constant = 1.0;
 };
 
+struct Text {
+    std::string text;
+    vec2 position;
+    int fontSize;
+};
+
 /**
  * This is used more as a general purpose helper for constructing more complex objects like sprites.
  * Not a component in its own right.
@@ -162,9 +173,14 @@ struct Mirror {
 };
 
 
+struct ButtonHelper {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    std::string label;
+};
+
 enum class DASH_STATES { WALK = 0, IDLE = 1, STARE = 2, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
     vec2 nearestLightRayDirection;
-
 };
