@@ -19,7 +19,6 @@ void TextStage::init() {
 
     initFont();
     initFrame();
-    initCharacters();
 
     glGenVertexArrays(1, &vao);
     glGenBuffers(1, &vbo);
@@ -42,12 +41,10 @@ void TextStage::initFont() {
         return;
     }
 
-    if (FT_New_Face(library, font_path("Silver.ttf").c_str(), 0, &face) != 0) {
+    if (FT_New_Face(library, font_path(font_name).c_str(), 0, &face) != 0) {
         LOG_ERROR("Failed to load font");
         return;
     }
-
-    FT_Set_Pixel_Sizes(face, 0, 48);
 }
 
 void TextStage::initFrame() {
@@ -67,14 +64,18 @@ void TextStage::initFrame() {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void TextStage::initCharacters() {
+void TextStage::createCharacterSet(const unsigned int size) {
     // disable byte alignment requirement
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    FT_Set_Pixel_Sizes(face, 0, size);
+
+    std::vector<Character> characters;
 
     for (unsigned char c = 0; c < 128; c++) {
         // load character glyph
         if (FT_Load_Char(face, c, FT_LOAD_RENDER)) {
-            LOG_ERROR("Failed to load glyph");
+            LOG_ERROR("Failed to load glyph for character {}", c);
             continue;
         }
 
@@ -95,11 +96,20 @@ void TextStage::initCharacters() {
         const Character character = {texture, ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
                                      ivec2(face->glyph->bitmap_left, face->glyph->bitmap_top),
                                      static_cast<unsigned int>(face->glyph->advance.x)};
-        characters[c] = character;
+        characters.push_back(character);
     }
+    character_sets[size] = characters;
 }
 
-void TextStage::renderText(const std::string& text, float x, float y, float scale, const vec3 color) {
+std::vector<Character>& TextStage::getCharacterSet(const unsigned int size) {
+    if (character_sets.find(size) == character_sets.end()) {
+        LOG_INFO("Creating font map of size {}", size);
+        createCharacterSet(size);
+    }
+    return character_sets[size];
+}
+
+void TextStage::renderText(const std::string& text, float x, float y, const unsigned int size, const vec3 color) {
     const float start_pos = x;
 
     glUseProgram(text_shader);
@@ -112,28 +122,31 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
     glBindVertexArray(vao);
     checkGlErrors();
 
+    auto characters = getCharacterSet(size);
+
     // iterate through all characters
     for (const unsigned char c : text) {
+        const float scale = 1.0;
         auto [texture, size, bearing, advance] = characters[c];
 
         if (c == '\n') {
-            y -= static_cast<float>(size.y) * scale;
+            y += static_cast<float>(size.y) * scale;
             x = start_pos;
             continue;
         }
         if (c == ' ') {
-            x += (advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+            x += static_cast<float>(advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
             continue;
         }
 
-        float xpos = x + bearing.x * scale;
-        float ypos = y - (size.y - bearing.y) * scale;
+        const float pos_x = x + static_cast<float>(bearing.x) * scale;
+        const float pos_y = static_cast<float>(frame_height) - y - static_cast<float>(size.y - bearing.y) * scale;
 
-        float scale_x = size.x * scale;
-        float scale_y = size.y * scale;
+        const float scale_x = static_cast<float>(size.x) * scale;
+        const float scale_y = static_cast<float>(size.y) * scale;
 
         auto transform = mat4(1.0f);
-        transform *= translate(mat4(1.0f), vec3(xpos, ypos, 0.0f));
+        transform *= translate(mat4(1.0f), vec3(pos_x, pos_y, 0.0f));
         transform *= glm::scale(mat4(1.0f), vec3(scale_x, scale_y, 0.0f));
 
         setUniformFloatMat4(text_shader, "transform", transform);
@@ -148,7 +161,7 @@ void TextStage::renderText(const std::string& text, float x, float y, float scal
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
         // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += (advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+        x += static_cast<float>(advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
     }
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -176,7 +189,7 @@ void TextStage::draw() {
     for (const Text& text : registry.texts.components) {
         const float x = (text.position.x / world_width) * static_cast<float>(frame_width);
         const float y = (text.position.y / world_height) * static_cast<float>(frame_height);
-        renderText(text.text, x, y, 1.0, text.color);
+        renderText(text.text, x, y, text.size, text.color);
     }
 }
 

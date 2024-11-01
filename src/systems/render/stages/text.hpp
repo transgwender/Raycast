@@ -10,9 +10,10 @@ struct Character {
 };
 
 class TextStage {
+    const std::string font_name = "Silver.ttf";
+
     /** Maps from a font size to a character set. */
-    std::unordered_map<unsigned int, Character[128]> character_sets;
-    Character characters[128] = {};
+    std::unordered_map<unsigned int, std::vector<Character>> character_sets;
 
     FT_Face face = nullptr;
 
@@ -46,11 +47,13 @@ class TextStage {
      */
     void initFrame();
 
-    void initCharacters();
+    void createCharacterSet(unsigned int size);
+
+    std::vector<Character>& getCharacterSet(unsigned int size);
 
     void prepareDraw();
 
-    void renderText(const std::string& text, float x, float y, float scale, vec3 color);
+    void renderText(const std::string& text, float x, float y, unsigned int size, vec3 color);
 
   public:
     /**

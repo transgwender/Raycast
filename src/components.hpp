@@ -149,12 +149,13 @@ struct Text {
 };
 
 /**
-* Component for displaying text on screen.
-*/
+ * Component for displaying text on screen.
+ */
 struct Text {
     std::string text;
+    /** Position of the text. The position is based in the bottom left corner of the first character of the text. */
     vec2 position;
-    float size;
+    unsigned int size;
     /** Color channel values are in range [0, 255] */
     vec3 color = vec3(255, 255, 255);
 };
