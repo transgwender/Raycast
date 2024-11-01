@@ -22,11 +22,13 @@ class CompositorStage {
     GLuint sprite_stage_texture = 0;
     GLuint text_stage_texture = 0;
 
-    ShaderHandle screen_shader = 0;
+    ShaderHandle compositor_shader = 0;
 
     GLFWwindow* window = nullptr;
 
     void createVertexAndIndexBuffers();
+
+    void setupTextures() const;
 
   public:
     /**

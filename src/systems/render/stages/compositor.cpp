@@ -8,11 +8,11 @@ void CompositorStage::createVertexAndIndexBuffers() {
     glGenBuffers(1, &ibo);
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(screen_vertices[0]) * std::size(screen_vertices), screen_vertices,
+    glBufferData(GL_ARRAY_BUFFER, sizeof(screen_vertices), screen_vertices,
                  GL_STATIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(screen_indices[0]) * std::size(screen_indices), screen_indices,
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(screen_indices), screen_indices,
                  GL_STATIC_DRAW);
 
     checkGlErrors();
@@ -21,7 +21,7 @@ void CompositorStage::createVertexAndIndexBuffers() {
 void CompositorStage::init(GLFWwindow* window_arg) {
     window = window_arg;
     createVertexAndIndexBuffers();
-    screen_shader = shader_manager.get("screen");
+    compositor_shader = shader_manager.get("compositor");
 
     // get a reference to the frame textures from the other pipeline stages.
     sprite_stage_texture = texture_manager.get("$sprite_stage");
@@ -31,8 +31,28 @@ void CompositorStage::init(GLFWwindow* window_arg) {
     glGenVertexArrays(1, &vao);
 }
 
+void CompositorStage::setupTextures() const {
+    static const char* texture_names[] = {
+        "sprite_stage_tex",
+        "text_stage_tex",
+    };
+
+    static GLuint textures[] = {
+        sprite_stage_texture,
+        text_stage_texture,
+    };
+
+    for (int i = 0; i < std::size(texture_names); i++) {
+        const auto location = glGetUniformLocation(compositor_shader, texture_names[i]);
+        glUniform1i(location, i);
+
+        glActiveTexture(GL_TEXTURE0 + i);
+        glBindTexture(GL_TEXTURE_2D, textures[i]);
+    }
+}
+
 void CompositorStage::draw() const {
-    glUseProgram(screen_shader);
+    glUseProgram(compositor_shader);
 
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
@@ -52,16 +72,14 @@ void CompositorStage::draw() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
     // Set clock
-    setUniformFloat(screen_shader, "time", static_cast<float>(glfwGetTime() * 10.0f));
+    setUniformFloat(compositor_shader, "time", static_cast<float>(glfwGetTime() * 10.0f));
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)
-    GLint position_location = glGetAttribLocation(screen_shader, "in_position");
+    GLint position_location = glGetAttribLocation(compositor_shader, "in_position");
     glEnableVertexAttribArray(position_location);
     glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)nullptr);
 
-    // Bind our texture in Texture Unit 0
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, sprite_stage_texture);
+    setupTextures();
 
     // Draw
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
