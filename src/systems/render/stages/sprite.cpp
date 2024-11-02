@@ -94,9 +94,6 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
 
     bool is_highlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
     glUniform1i(glGetUniformLocation(shader, "highlight"), is_highlighted ? 1 : 0);
-
-    bool is_spritesheet = registry.spriteSheets.has(entity);
-    glUniform1i(glGetUniformLocation(shader, "is_spritesheet"), is_spritesheet ? 1 : 0);
 }
 
 /**
@@ -167,20 +164,24 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
         // Update animation frame
         ss.timeElapsed += elapsed_ms;
         if (ss.timeElapsed >= animation_speed) {
-            printf("%lu", ss.animationFrames.size());
             ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
             ss.timeElapsed = 0.f;
         }
 
         // OPTION 2: calculate UV coord offset
-        float h_offset = ss.cellHeight * ss.currState;
-        float v_offset = ss.cellWidth * ss.currFrame;
+        float h_offset = ss.cellHeight * ss.currState / ss.sheetHeight;
+        float v_offset = ss.cellWidth * ss.currFrame / ss.sheetWidth;
+        vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
 
-        GLint h_offset_uloc = glGetUniformLocation(shader, "horizontal_offset");
-        GLint v_offset_uloc = glGetUniformLocation(shader, "vertical_offset");
-
-        glUniform1f(h_offset_uloc, h_offset);
-        glUniform1f(v_offset_uloc, v_offset);
+        setUniformFloat(shader, "horizontal_offset", h_offset);
+        setUniformFloat(shader, "vertical_offset", v_offset);
+        setUniformFloatVec2(shader, "cell_size", cell_size);
+        checkGlErrors();
+    } else {
+        // Default texture coordinates
+        setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
+        setUniformFloat(shader, "horizontal_offset", 0);
+        setUniformFloat(shader, "vertical_offset", 0);
         checkGlErrors();
     }
 
