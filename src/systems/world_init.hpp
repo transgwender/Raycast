@@ -13,6 +13,6 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
 Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName, const std::string& nextScene);
 Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName);
 Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& nextScene);
-Entity createSpriteSheet(const Entity& entity, vec2 position, unsigned int sheetWidth, unsigned int sheetHeight, unsigned int cellWidth, unsigned int cellHeight, const std::vector<unsigned int>& animationFrames);
+Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames);
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);

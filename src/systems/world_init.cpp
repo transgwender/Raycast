@@ -121,8 +121,8 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
     * scale flip sprite via -x
 *
 */
-Entity createSpriteSheet(const Entity& entity, vec2 position, unsigned int sheetWidth, unsigned int sheetHeight,
-    unsigned int cellWidth, unsigned int cellHeight, const std::vector<unsigned int>& animationFrames) {
+Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight,
+    float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
@@ -132,7 +132,7 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, unsigned int sheet
     ss.animationFrames = animationFrames;
 
     // TODO: add scale handling to flip direction of turtle when moving
-    createSprite(entity, position, vec2(sheetWidth, sheetHeight), 0, "turtle_sprite_sheet");
+    createSprite(entity, position, vec2(cellWidth, cellHeight), 0, "turtle_sprite_sheet");
     registry.spriteSheets.insert(entity, ss);
     return entity;
 }

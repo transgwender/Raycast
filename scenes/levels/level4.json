@@ -51,7 +51,7 @@
           "type": "sprite",
           "position": [
             180.0,
-            120.0
+            190.0
           ],
           "scale": [
             180,
@@ -465,8 +465,8 @@
         {
           "type": "sprite_sheet",
           "position": [
-            160.0,
-            80.0
+            230.0,
+            114.0
           ],
           "sheetWidth": 384,
           "sheetHeight": 192,
@@ -477,7 +477,7 @@
         },
         {
           "type": "dash_the_turtle",
-          "behavior": 1,
+          "behavior": 3,
           "minimumDisplacement": [10000, 10000]
         }
       ]

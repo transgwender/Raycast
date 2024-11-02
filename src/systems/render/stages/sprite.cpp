@@ -151,9 +151,9 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
             ss.timeElapsed = 0.f;
         }
 
-        // OPTION 2: calculate UV coord offset
-        float h_offset = static_cast<float>(ss.cellHeight) * ss.currState / ss.sheetHeight;
-        float v_offset = static_cast<float>(ss.cellWidth) * ss.currFrame / ss.sheetWidth;
+        // Calculate UV coord offset
+        float h_offset = ss.cellHeight * static_cast<float>(ss.currFrame) / ss.sheetWidth;
+        float v_offset = ss.cellWidth * static_cast<float>(ss.currState) / ss.sheetHeight;
         vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
 
         setUniformFloat(shader, "horizontal_offset", h_offset);

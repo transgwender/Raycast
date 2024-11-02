@@ -186,10 +186,10 @@ struct DashTheTurtle {
 
 struct SpriteSheet {
     vec2 position = {0, 0};
-    unsigned int sheetWidth;
-    unsigned int sheetHeight;
-    unsigned int cellWidth;
-    unsigned int cellHeight;
+    float sheetWidth;
+    float sheetHeight;
+    float cellWidth;
+    float cellHeight;
     unsigned int currFrame = 0;
     unsigned int currState = 0;
     float timeElapsed = 0.f;

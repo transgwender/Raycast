@@ -19,7 +19,7 @@ class SpriteStage {
 
     mat3 projection_matrix = createProjectionMatrix();
 
-    float animation_speed = 200.f;
+    float animation_speed = 240.f;
 
     /**
      * Vertex data for a textured quad. Each vertex contains position and UV coordinates
