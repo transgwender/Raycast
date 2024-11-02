@@ -14,10 +14,13 @@ class SpriteStage {
     GLuint vbo = 0;
     GLuint ibo = 0;
     GLuint vao = 0;
+    GLuint vbo_sheet = 0;
 
     ShaderHandle shader = 0;
 
     mat3 projection_matrix = createProjectionMatrix();
+
+    float animation_speed = 10.f;
 
     /**
      * Vertex data for a textured quad. Each vertex contains position and UV coordinates
@@ -39,7 +42,7 @@ class SpriteStage {
 
     void activateShader(Entity entity, const std::string& texture) const;
 
-    void drawSprite(Entity entity) const;
+    void drawSprite(Entity entity, float elapsed_ms);
 
   public:
     void init();
@@ -47,7 +50,7 @@ class SpriteStage {
     /**
      * Draw all renderable sprites onto the screen.
      */
-    void draw() const;
+    void draw(float elapsed_ms);
 
     ~SpriteStage();
 };

@@ -117,16 +117,16 @@ void SpriteStage::prepareDraw() const {
  * Draw a given Entity which has a `Motion` and `Material`.
  * @param entity The sprite to render
  */
-void SpriteStage::drawSprite(const Entity entity) const {
+void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     const auto& [position, angle, velocity, scale, collides] = registry.motions.get(entity);
-    const auto& [texture, shader] = registry.materials.get(entity);
+    const auto& [texture, sprite_shader] = registry.materials.get(entity);
 
     Transform transform;
     transform.translate(position);
     transform.rotate(angle);
     transform.scale(scale);
 
-    const auto program = shader_manager.get(shader);
+    const auto program = shader_manager.get(sprite_shader);
     glUseProgram(program);
 
     glBindVertexArray(vao);
@@ -141,6 +141,43 @@ void SpriteStage::drawSprite(const Entity entity) const {
     setUniformFloatMat3(program, "transform", transform.mat);
     setUniformFloatMat3(program, "projection", projection_matrix);
 
+    // TODO: handle sprite sheet
+    if (registry.spriteSheets.has(entity)) {
+
+        // Select Cell
+        SpriteSheet& ss = registry.spriteSheets.get(entity);
+        TexturedVertex sheet_vertex[4] = {
+            {{-1.f / 2, +1.f / 2, 0.f}, {0.f, ss.cellHeight}},
+            {{+1.f / 2, +1.f / 2, 0.f}, {ss.cellWidth, ss.cellHeight}},
+            {{+1.f / 2, -1.f / 2, 0.f}, {ss.cellWidth, 0.f}},
+            {{-1.f / 2, -1.f / 2, 0.f}, {0.f, 0.f}},
+        };
+
+        glGenBuffers(1, &vbo_sheet);
+        glBindBuffer(GL_ARRAY_BUFFER, vbo_sheet);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(sheet_vertex[0]) * std::size(sheet_vertex), sheet_vertex,
+                 GL_STATIC_DRAW);
+        checkGlErrors();
+
+        // Update animation frame
+        // ss.timeElapsed += elapsed_ms;
+        // if (ss.timeElapsed >= animation_speed) {
+        //     printf("%lu", ss.animationFrames.size());
+        //     ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
+        //     ss.timeElapsed = 0.f;
+        // }
+
+        float h_offset = ss.cellHeight * ss.currState;
+        float v_offset = ss.cellWidth * ss.currFrame;
+
+        GLint h_offset_uloc = glGetUniformLocation(shader, "horizontal_offset");
+        GLint v_offset_uloc = glGetUniformLocation(shader, "vertical_offset");
+
+        glUniform1f(h_offset_uloc, h_offset);
+        glUniform1f(v_offset_uloc, v_offset);
+        checkGlErrors();
+    }
+
     // Get number of indices from index buffer, which has elements uint16_t
     GLint size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
@@ -152,12 +189,12 @@ void SpriteStage::drawSprite(const Entity entity) const {
     checkGlErrors();
 }
 
-void SpriteStage::draw() const {
+void SpriteStage::draw(float elapsed_ms) {
     prepareDraw();
 
     // Draw all textured meshes that have a material and motion component
     for (const Entity entity : registry.materials.entities) {
-        drawSprite(entity);
+        drawSprite(entity, elapsed_ms);
     }
 }
 

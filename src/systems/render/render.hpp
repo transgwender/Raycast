@@ -34,5 +34,5 @@ class RenderSystem {
     void init(GLFWwindow* window);
 
     /** Draw all visible, renderable entities. */
-    void draw();
+    void draw(float elapsed_ms);
 };

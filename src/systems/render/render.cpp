@@ -37,8 +37,8 @@ void RenderSystem::init(GLFWwindow* window_arg) {
  * Render our game world
  * http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
  */
-void RenderSystem::draw() {
-    sprite_stage.draw();
+void RenderSystem::draw(float elapsed_ms) {
+    sprite_stage.draw(elapsed_ms);
     text_stage.draw();
     composite_stage.draw();
 

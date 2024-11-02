@@ -56,9 +56,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
         // Iterate through every entity specified, and add the component
         // specified
         try {
-            int i = 1;
             for (auto& array : j["objList"]) {
-
                 const auto entity = Entity();
                 for (auto& data : array["data"]) {
                     std::string type = data["type"];
@@ -106,7 +104,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "sprite_sheet") {
                         SpriteSheet ss{};
                         data.get_to(ss);
-                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
                     }
                 }
             }

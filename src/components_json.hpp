@@ -245,7 +245,8 @@ inline void to_json(json& j, const SpriteSheet& c) {
         {"sheetWidth", c.sheetWidth},
         {"sheetHeight", c.sheetWidth },
         { "cellWidth", c.cellWidth},
-        {"cellHeight", c.cellHeight}
+        {"cellHeight", c.cellHeight},
+        {"animationFrames", c.animationFrames}
     };
 }
 
@@ -255,4 +256,5 @@ inline void from_json(const json& j, SpriteSheet& c) {
     j.at("sheetHeight").get_to(c.sheetHeight);
     j.at("cellWidth").get_to(c.cellWidth);
     j.at("cellHeight").get_to(c.cellHeight);
+    j.at("animationFrames").get_to(c.animationFrames);
 }

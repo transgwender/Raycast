@@ -178,16 +178,23 @@ struct ButtonHelper {
     std::string label;
 };
 
-enum class DASH_STATES { WALK = 0, IDLE = 1, STARE = 2, DASH_ACTIONS_COUNT };
+enum class DASH_STATES { BITE, STARE, WALK, IDLE, YAWN, HIDE, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
     vec2 nearestLightRayDirection;
 };
+
 struct SpriteSheet {
     vec2 position = {0, 0};
-    uint sheetWidth;
-    uint sheetHeight;
-    uint cellWidth;
-    uint cellHeight;
-    uint currFrame = 0;
+    unsigned int sheetWidth;
+    unsigned int sheetHeight;
+    unsigned int cellWidth;
+    unsigned int cellHeight;
+    unsigned int currFrame = 0;
+    unsigned int currState = 0;
+    float timeElapsed = 0.f;
+
+    // Index -> different animation states
+    // Value -> Number of frames in that animation
+    std::vector<unsigned int> animationFrames;
 };
