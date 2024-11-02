@@ -465,8 +465,8 @@
         {
           "type": "sprite_sheet",
           "position": [
-            100.0,
-            100.0
+            160.0,
+            80.0
           ],
           "sheetWidth": 384,
           "sheetHeight": 192,
@@ -474,6 +474,11 @@
           "cellHeight": 32,
           "texture": "turtle_sprite_sheet",
           "animationFrames" : [12, 10, 4, 6, 5, 10]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 1,
+          "minimumDisplacement": [10000, 10000]
         }
       ]
     }

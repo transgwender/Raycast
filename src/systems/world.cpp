@@ -432,11 +432,16 @@ void WorldSystem::updateDash() {
         DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
         vec2 ray = registry.turtles.get(dashEntity).nearestLightRayDirection;
         Motion& dm = registry.motions.get(dashEntity);
-        // SpriteSheet& ss = registry.spriteSheets.get(dashEntity);
+
+        if (registry.spriteSheets.components.empty()) {
+            throw std::runtime_error("Error: Sprite sheet does not exist. Please make sure to add the sprite sheet to the level JSON.");
+        }
+
+        SpriteSheet& ss = registry.spriteSheets.components.front();
 
         if (dash_state == DASH_STATES::WALK) {
             // vec2 displacement = {(dm.position.x - ray.x), (dm.position.y - ray.y)};
-            // ss.currState = static_cast<unsigned int>(DASH_STATES::WALK);
+            ss.currState = static_cast<unsigned int>(DASH_STATES::WALK);
             if (ray.x > 0) {
                 dm.velocity.x = -dashSpeed;
             } else if (ray.x < 0) {
@@ -450,11 +455,11 @@ void WorldSystem::updateDash() {
 
         } else if (dash_state == DASH_STATES::STARE) {
             dm.velocity = {0, 0};
-            // ss.currState = static_cast<unsigned int>(DASH_STATES::STARE);
+            ss.currState = static_cast<unsigned int>(DASH_STATES::STARE);
 
         } else if (dash_state == DASH_STATES::IDLE) {
             dm.velocity = {0, 0};
-            // ss.currState = static_cast<unsigned int>(DASH_STATES::IDLE);
+            ss.currState = static_cast<unsigned int>(DASH_STATES::IDLE);
         }
     }
 }
