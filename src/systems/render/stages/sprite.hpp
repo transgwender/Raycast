@@ -14,7 +14,6 @@ class SpriteStage {
     GLuint vbo = 0;
     GLuint ibo = 0;
     GLuint vao = 0;
-    GLuint vbo_sheet = 0;
 
     ShaderHandle shader = 0;
 

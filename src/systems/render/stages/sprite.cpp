@@ -141,25 +141,8 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     setUniformFloatMat3(program, "transform", transform.mat);
     setUniformFloatMat3(program, "projection", projection_matrix);
 
-    // TODO: handle sprite sheet
     if (registry.spriteSheets.has(entity)) {
-
-        // Select Cell
         SpriteSheet& ss = registry.spriteSheets.get(entity);
-
-        // OPTION 1: use second vertex buffer
-        // TexturedVertex sheet_vertex[4] = {
-        //     {{-1.f / 2, +1.f / 2, 0.f}, {0.f, ss.cellHeight}},
-        //     {{+1.f / 2, +1.f / 2, 0.f}, {ss.cellWidth, ss.cellHeight}},
-        //     {{+1.f / 2, -1.f / 2, 0.f}, {ss.cellWidth, 0.f}},
-        //     {{-1.f / 2, -1.f / 2, 0.f}, {0.f, 0.f}},
-        // };
-        //
-        // glGenBuffers(1, &vbo_sheet);
-        // glBindBuffer(GL_ARRAY_BUFFER, vbo_sheet);
-        // glBufferData(GL_ARRAY_BUFFER, sizeof(sheet_vertex[0]) * std::size(sheet_vertex), sheet_vertex,
-        //          GL_STATIC_DRAW);
-        // checkGlErrors();
 
         // Update animation frame
         ss.timeElapsed += elapsed_ms;
@@ -169,8 +152,8 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
         }
 
         // OPTION 2: calculate UV coord offset
-        float h_offset = ss.cellHeight * ss.currState / ss.sheetHeight;
-        float v_offset = ss.cellWidth * ss.currFrame / ss.sheetWidth;
+        float h_offset = static_cast<float>(ss.cellHeight) * ss.currState / ss.sheetHeight;
+        float v_offset = static_cast<float>(ss.cellWidth) * ss.currFrame / ss.sheetWidth;
         vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
 
         setUniformFloat(shader, "horizontal_offset", h_offset);
