@@ -66,12 +66,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         Sprite c{};
                         data.get_to(c);
                         createSprite(entity, c.position, c.scale, c.angle, c.texture);
-                    } else if (type == "interactable") {
-                        PARSE_COMPONENT(Interactable, interactables);
                     } else if (type == "change_scene") {
                         PARSE_COMPONENT(ChangeScene, changeScenes);
-                    } else if (type == "bounding_box") {
-                        PARSE_COMPONENT(BoundingBox, boundingBoxes);
                     } else if (type == "zone") {
                         PARSE_COMPONENT(Zone, zones);
                     } else if (type == "light_source") {
@@ -103,6 +99,12 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         ButtonHelper c{};
                         data.get_to(c);
                         createEmptyButton(entity, c.position, c.scale, c.label);
+                    } else if (type == "collider") {
+                        PARSE_COMPONENT(Collider, colliders);
+                    } else if (type == "collideable") {
+                        PARSE_COMPONENT(Collideable, collideables);
+                    } else if (type == "interactable") {
+                        PARSE_COMPONENT(Interactable, interactables);
                     }
                 }
             }

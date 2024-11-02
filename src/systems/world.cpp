@@ -1,4 +1,6 @@
 #include "world.hpp"
+
+#include "collisions.h"
 #include "world_init.hpp"
 
 #include <SDL.h>
@@ -205,7 +207,7 @@ void WorldSystem::handle_collisions() {
             registry.lightRays.has(collisionsRegistry.entities[i]))
             continue;
         if (registry.reflectives.has(collisionsRegistry.entities[i])) {
-            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other, collisionsRegistry.components[i].side);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
@@ -248,7 +250,8 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
 
 // Reflect light ray based on collision normal
 // Invariant: other is a light ray
-void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
+// Side: 1 if y side, 2 if x side
+void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int side) {
     assert(registry.lightRays.has(reflected));
     Light& light = registry.lightRays.get(reflected);
     // don't reflect off of same mirror twice
@@ -257,24 +260,40 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
         return;
     }
 
-    sounds.play_sound("light-collision.wav");
 
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
-    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + M_PI_2),
-                                      sin(reflective_surface_motion.angle + M_PI_2)};
+    float angle_addition = M_PI_2;
+    if (side == 1) {
+        LOG_INFO("y-Side reflection\n");
+        angle_addition = M_PI_2;
+    }
+    if (side == 2) {
+        LOG_INFO("x-Side reflection\n");
+        angle_addition = 0.f;
+    }
+    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + angle_addition),
+                                      sin(reflective_surface_motion.angle + angle_addition)};
     float angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                           atan2(light_motion.velocity.y, light_motion.velocity.x);
-    std::cout << angle_between * 180.f / M_PI << std::endl;
     vec2 reflected_velocity = -light_motion.velocity +
                               2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
+    // Check whether reflected velocity points towards centre of rectangle — bad reflection!
+    vec2 light_to_reflective = vec2(light_motion.position - reflective_surface_motion.position);
+    if (dot(reflected_velocity, light_to_reflective) < dot(light_motion.velocity, light_to_reflective)) {
+        LOG_INFO("Reflection edge case -- abort reflection\n");
+        return;
+    }
+    // Play reflection sound
+    sounds.play_sound("light-collision.wav");
+
+    // Update motion
     light_motion.velocity = reflected_velocity;
     light.last_reflected = reflective;
     light.last_reflected_timeout = DOUBLE_REFLECTION_TIMEOUT;
     angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                     atan2(light_motion.velocity.y, light_motion.velocity.x);
     light_motion.angle -= 2 * angle_between;
-    std::cout << angle_between * 180.f / M_PI << std::endl;
 }
 
 // Should the game be over?
@@ -322,104 +341,82 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.entities[0]).position = position; }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
-    vec2 world_pos = screenToWorld(mouse_position);
-    for (Entity entity : registry.interactables.entities) {
-        Motion& motion = registry.motions.get(entity);
-        if (registry.buttons.has(entity)) {
-            // Handle buttons separately — just keep piling on jank!
-            if ((motion.position + abs(motion.scale / 2.f)).y > world_pos.y &&
-                (motion.position + abs(motion.scale / 2.f)).x > world_pos.x &&
-                (motion.position - abs(motion.scale / 2.f)).x < world_pos.x &&
-                (motion.position - abs(motion.scale / 2.f)).y < world_pos.y) {
-                if (registry.highlightables.has(entity)) {
-                    registry.highlightables.get(entity).isHighlighted = true;
-                }
-                return;
-            } else {
-                if (registry.highlightables.has(entity)) {
-                    registry.highlightables.get(entity).isHighlighted = false;
-                }
-            }
-        }
-        if (dot(world_pos - motion.position, world_pos - motion.position)
-                < dot(motion.scale/2.f, motion.scale/2.f)) {
-            if (registry.highlightables.has(entity)) {
-                registry.highlightables.get(entity).isHighlighted = true;
-            }
-        } else {
-            if (registry.highlightables.has(entity)) {
-                registry.highlightables.get(entity).isHighlighted = false;
-            }
-        }
+    auto hovered_entities = clicked_entities(mouse_position.x, mouse_position.y);
+    for (auto& highlightable : registry.highlightables.components) {
+        highlightable.isHighlighted = false;
+    }
+    for (Entity entity : hovered_entities) {
+        if (registry.highlightables.has(entity))
+            registry.highlightables.get(entity).isHighlighted = true;
     }
 }
 
+std::vector<Entity> WorldSystem::clicked_entities(double xpos, double ypos) {
+    if (registry.mice.size() == 0) {
+        const auto mouse = Entity();
+        registry.mice.emplace(mouse);
+        registry.motions.emplace(mouse);
+        Collider& mouse_collider = registry.colliders.emplace(mouse);
+        mouse_collider.bounds_type = BOUNDS_TYPE::POINT;
+        mouse_collider.needs_update = false;
+        mouse_collider.height = 0.5f;
+        mouse_collider.width = 0.5f;
+    }
+    std::vector<Entity> entities;
+
+    Entity& mouse = registry.mice.entities[0];
+    Motion& mouse_motion = registry.motions.get(mouse);
+    mouse_motion.position = screenToWorld({xpos, ypos});
+    for (int i = 0; i < registry.interactables.size(); i++) {
+        if (Collisions::collides(mouse, registry.interactables.entities[i], true))
+            entities.push_back(registry.interactables.entities[i]);
+    }
+    return entities;
+}
+
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
+    auto entities = clicked_entities(xpos, ypos);
     if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
         vec2 world_pos = screenToWorld(vec2(xpos, ypos));
         LOG_INFO("({}, {})", xpos, ypos);
-        for (Entity entity : registry.interactables.entities) {
+        // mouse initialized by clicked_entities
+        for (const Entity& entity : entities) {
             assert(registry.motions.has(entity));
-            Motion& motion = registry.motions.get(entity);
-            if (registry.buttons.has(entity)) {
-                if ((motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
-                    (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
-                    (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
-                    (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-                    // Handle buttons separately — just keep piling on jank!
-                    if (registry.changeScenes.has(entity)) {
-                        ChangeScene& changeScene = registry.changeScenes.get(entity);
-                        change_scene(changeScene.scene);
-                        return;
-                    } else if (registry.resumeGames.has(entity)) {
-                        menus.try_close_menu();
-                        return;
-                    }
-                }
-            } else {
-                if (shouldAllowInput()) {
-                    if (dot(world_pos - motion.position, world_pos - motion.position)
-                        < dot(motion.scale/2.f, motion.scale/2.f)) {
-                        if (registry.rotateables.has(entity)) {
-
-                            // Rotate the entity.
-                            LOG_INFO("Something should be rotating.")
-                            Motion& e_motion = registry.motions.get(entity);
-
-                            // TODO: use lerp too smoothly rotate
-                            float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
-                            e_motion.angle += motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
-                        }
-
-                        if (registry.lerpables.has(entity)) {
-                            Lerpable& e_lr = registry.lerpables.get(entity);
-                            e_lr.t_step = 0;
-                        }
-                    }
-                }
+            if (registry.changeScenes.has(entity)) {
+                ChangeScene& changeScene = registry.changeScenes.get(entity);
+                change_scene(changeScene.scene);
+                return;
+            }
+            if (registry.resumeGames.has(entity)) {
+                menus.try_close_menu();
+                return;
+            }
+            Motion& clicked_motion = registry.motions.get(entity);
+            if (registry.rotateables.has(entity)) {
+                float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
+                clicked_motion.angle += clicked_motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
+            }
+            if (registry.lerpables.has(entity)) {
+                Lerpable& e_lr = registry.lerpables.get(entity);
+                e_lr.t_step = 0;
             }
         }
     }
     if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
         vec2 world_pos = screenToWorld(vec2(xpos, ypos));
         LOG_INFO("({}, {})", xpos, ypos);
-        for (Entity entity : registry.interactables.entities) {
-            if (shouldAllowInput()) {
-                Motion& motion = registry.motions.get(entity);
-
-                if (dot(world_pos - motion.position, world_pos - motion.position) <
-                    dot(motion.scale / 2.f, motion.scale / 2.f)) {
-                    if (registry.entitiesOnLinearRails.has(entity)) {
-                        LOG_INFO("Moving entity on linear rail.");
-                        OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-                        Lerpable& e_lr = registry.lerpables.get(entity);
-                        int which_direction = dot(motion.position - world_pos, e_rails.direction);
-                        if (which_direction > 0) {
-                            e_lr.t_step = -0.5;
-                        } else if (which_direction < 0) {
-                            e_lr.t_step = 0.5;
-                        }
-                    }
+        for (const Entity& entity : entities) {
+            assert(registry.motions.has(entity));
+            Motion& clicked_motion = registry.motions.get(entity);
+            if (shouldAllowInput() && registry.entitiesOnLinearRails.has(entity)) {
+                LOG_INFO("Moving entity on linear rail.");
+                OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
+                Lerpable& e_lr = registry.lerpables.get(entity);
+                int which_direction = dot(clicked_motion.position - world_pos, e_rails.direction);
+                if (which_direction > 0) {
+                    e_lr.t_step = -0.5;
+                } else if (which_direction < 0) {
+                    e_lr.t_step = 0.5;
                 }
             }
         }

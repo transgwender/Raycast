@@ -53,10 +53,19 @@
           "angle": 0
         },
         {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
           "type": "sprite",
           "position": [
             300.0,
-            80.0
+            90.0
           ],
           "texture": "bubble_closed",
           "scale": [

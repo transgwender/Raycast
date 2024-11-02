@@ -77,15 +77,13 @@
           "texture": "stones"
         },
         {
-          "type": "bounding_box",
-          "position": [
-            180.0,
-            120.0
-          ],
-          "scale": [
-            180,
-            120
-          ]
+          "type": "collider",
+          "bounds": 1,
+          "width": 180,
+          "height": 120
+        },
+        {
+          "type": "collideable"
         },
         {
           "type": "zone",
@@ -300,17 +298,6 @@
           "angle": 1.57
         },
         {
-          "type": "bounding_box",
-          "position": [
-            60.0,
-            155.0
-          ],
-          "scale": [
-            25.0,
-            25.0
-          ]
-        },
-        {
           "type": "interactable"
         },
         {
@@ -352,17 +339,6 @@
           "angle": 0.785
         },
         {
-          "type": "bounding_box",
-          "position": [
-            40.0,
-            30.0
-          ],
-          "scale": [
-            25.0,
-            25.0
-          ]
-        },
-        {
           "type": "interactable"
         },
         {
@@ -392,17 +368,6 @@
             30.0
           ],
           "angle": 1.57
-        },
-        {
-          "type": "bounding_box",
-          "position": [
-            295.0,
-            30.0
-          ],
-          "scale": [
-            25.0,
-            25.0
-          ]
         },
         {
           "type": "interactable"
@@ -451,6 +416,12 @@
           "angle": 0.785398163
         },
         {
+          "type": "collider",
+          "bounds": 0,
+          "width": 12.0,
+          "height": 12.0
+        },
+        {
           "type": "light_source",
           "angle": 0
         }
@@ -479,6 +450,15 @@
             12.0,
             12.0
           ]
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "bounds": 0,
+          "width": 3.0,
+          "height": 3.0
         }
       ]
     }

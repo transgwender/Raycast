@@ -77,7 +77,7 @@ void RenderSystem::activeTexturedShader(const Entity entity, const std::string& 
 }
 
 void RenderSystem::drawTexturedMesh(const Entity entity) const {
-    const auto& [position, angle, velocity, scale, collides] =
+    const auto& [position, angle, velocity, scale] =
         registry.motions.get(entity);
     const auto& [texture, shader] = registry.materials.get(entity);
 
