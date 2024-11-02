@@ -92,8 +92,11 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
     glBindTexture(GL_TEXTURE_2D, texture_manager.getNormal(texture));
     checkGlErrors();
 
-    bool isHighlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
-    glUniform1i(glGetUniformLocation(shader, "highlight"), isHighlighted ? 1 : 0);
+    bool is_highlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
+    glUniform1i(glGetUniformLocation(shader, "highlight"), is_highlighted ? 1 : 0);
+
+    bool is_spritesheet = registry.spriteSheets.has(entity);
+    glUniform1i(glGetUniformLocation(shader, "is_spritesheet"), is_spritesheet ? 1 : 0);
 }
 
 /**
@@ -146,18 +149,20 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
 
         // Select Cell
         SpriteSheet& ss = registry.spriteSheets.get(entity);
-        TexturedVertex sheet_vertex[4] = {
-            {{-1.f / 2, +1.f / 2, 0.f}, {0.f, ss.cellHeight}},
-            {{+1.f / 2, +1.f / 2, 0.f}, {ss.cellWidth, ss.cellHeight}},
-            {{+1.f / 2, -1.f / 2, 0.f}, {ss.cellWidth, 0.f}},
-            {{-1.f / 2, -1.f / 2, 0.f}, {0.f, 0.f}},
-        };
 
-        glGenBuffers(1, &vbo_sheet);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_sheet);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(sheet_vertex[0]) * std::size(sheet_vertex), sheet_vertex,
-                 GL_STATIC_DRAW);
-        checkGlErrors();
+        // OPTION 1: use second vertex buffer
+        // TexturedVertex sheet_vertex[4] = {
+        //     {{-1.f / 2, +1.f / 2, 0.f}, {0.f, ss.cellHeight}},
+        //     {{+1.f / 2, +1.f / 2, 0.f}, {ss.cellWidth, ss.cellHeight}},
+        //     {{+1.f / 2, -1.f / 2, 0.f}, {ss.cellWidth, 0.f}},
+        //     {{-1.f / 2, -1.f / 2, 0.f}, {0.f, 0.f}},
+        // };
+        //
+        // glGenBuffers(1, &vbo_sheet);
+        // glBindBuffer(GL_ARRAY_BUFFER, vbo_sheet);
+        // glBufferData(GL_ARRAY_BUFFER, sizeof(sheet_vertex[0]) * std::size(sheet_vertex), sheet_vertex,
+        //          GL_STATIC_DRAW);
+        // checkGlErrors();
 
         // Update animation frame
         // ss.timeElapsed += elapsed_ms;
@@ -167,6 +172,7 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
         //     ss.timeElapsed = 0.f;
         // }
 
+        // OPTION 2: calculate UV coord offset
         float h_offset = ss.cellHeight * ss.currState;
         float v_offset = ss.cellWidth * ss.currFrame;
 
