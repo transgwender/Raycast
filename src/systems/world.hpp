@@ -53,6 +53,7 @@ class WorldSystem {
     // Handle different collision cases
     void handle_reflection(Entity& reflective, Entity& reflected, int side);
     void handle_non_reflection(Entity& collider, Entity& other);
+    void handle_turtle_collisions(int i);
 
     // Restart level
     void restart_game();

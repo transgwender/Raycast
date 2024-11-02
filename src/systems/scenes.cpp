@@ -89,6 +89,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "level_select") {
                         PARSE_COMPONENT(LevelSelect, levelSelects);
                     } else if (type == "dash_the_turtle") {
+                        //createDashTheTurtle(entity, data["position"]);
                         PARSE_COMPONENT(DashTheTurtle, turtles);
                         // int x = registry.motions.has(entity);
                         // printf("Your boolean variable is: %s\n", x ? "true" : "false");

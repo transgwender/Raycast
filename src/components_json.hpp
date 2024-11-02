@@ -285,6 +285,17 @@ inline void from_json(const json& j, SpriteSheet& c) {
     j.at("animationFrames").get_to(c.animationFrames);
 }
 
+
+inline void to_json(json& j, const MiniSun& c) {
+    j = json{{"type", "sprite_sheet"},
+             {"lit", c.lit},
+             {"lit_duration", c.lit_duration}};
+}
+
+inline void from_json(const json& j, MiniSun& c) {
+    j.at("lit").get_to(c.lit);
+    j.at("lit_duration").get_to(c.lit_duration);
+}
 inline void to_json(json& j, const Text& c) {
     j = json{
         {"type", "text"},
