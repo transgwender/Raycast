@@ -32,6 +32,7 @@ uniform PointLight point_lights[MAX_LIGHTS];
 uniform bool is_spritesheet;
 uniform float horizontal_offset;
 uniform float vertical_offset;
+uniform vec2 cell_size;
 
 layout(location = 0) out vec4 color;
 
@@ -68,11 +69,5 @@ void main() {
         result += vec3(0.18);
     }
 
-    vec2 final_tex_coord = tex_coord;
-
-    if (is_spritesheet) {
-        final_tex_coord = vec2(tex_coord.x + horizontal_offset, tex_coord.y + vertical_offset);
-    }
-
-    color = vec4(result, (texture(albedo_tex, final_tex_coord)).w);
+    color = vec4(result, (texture(albedo_tex, tex_coord)).w);
 }

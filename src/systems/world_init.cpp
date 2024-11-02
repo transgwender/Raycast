@@ -133,7 +133,7 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, unsigned int sheet
 
     // TODO: add scale handling to flip direction of turtle when moving
     createSprite(entity, position, vec2(sheetWidth, sheetHeight), 0, "turtle_sprite_sheet");
-    registry.spriteSheets.emplace(entity);
+    registry.spriteSheets.insert(entity, ss);
     return entity;
 }
 
