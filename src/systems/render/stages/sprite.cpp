@@ -165,12 +165,12 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
         // checkGlErrors();
 
         // Update animation frame
-        // ss.timeElapsed += elapsed_ms;
-        // if (ss.timeElapsed >= animation_speed) {
-        //     printf("%lu", ss.animationFrames.size());
-        //     ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
-        //     ss.timeElapsed = 0.f;
-        // }
+        ss.timeElapsed += elapsed_ms;
+        if (ss.timeElapsed >= animation_speed) {
+            printf("%lu", ss.animationFrames.size());
+            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
+            ss.timeElapsed = 0.f;
+        }
 
         // OPTION 2: calculate UV coord offset
         float h_offset = ss.cellHeight * ss.currState;
