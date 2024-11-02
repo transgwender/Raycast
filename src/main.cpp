@@ -1,10 +1,13 @@
 #define GL3W_IMPLEMENTATION
 #include "logging/log.hpp"
 #include "logging/log_manager.hpp"
+#include "particles.hpp"
+#include "systems/ai.hpp"
 #include "systems/physics.hpp"
 #include "systems/render/render.hpp"
 #include "systems/world.hpp"
 #include "systems/ai.hpp"
+#include "utils.h"
 #include <chrono>
 #include <gl3w.h>
 #include <iostream>
@@ -17,6 +20,7 @@ int main() {
     RenderSystem renderer;
     PhysicsSystem physics;
     AISystem ai;
+    ParticleSystem particles;
 
     // Initialize default logger
     raycast::logging::LogManager log_manager;
@@ -55,6 +59,7 @@ int main() {
         physics.step(elapsed_ms);
         ai.step(elapsed_ms);
         world.handle_collisions();
+        particles.step(elapsed_ms);
         renderer.draw(elapsed_ms);
     }
 

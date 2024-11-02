@@ -85,7 +85,7 @@ void ParticleStage::draw() {
 
     Transform transform;
     transform.translate(vec2(100.0f, 100.0f));
-    transform.scale(vec2(64.0, 64.0));
+    transform.scale(vec2(32.0, 32.0));
 
     activateShader("blue_portal");
 
