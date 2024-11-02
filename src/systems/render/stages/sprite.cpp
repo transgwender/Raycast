@@ -118,7 +118,7 @@ void SpriteStage::prepareDraw() const {
  * @param entity The sprite to render
  */
 void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
-    const auto& [position, angle, velocity, scale, collides] = registry.motions.get(entity);
+    const auto& [position, angle, velocity, scale] = registry.motions.get(entity);
     const auto& [texture, sprite_shader] = registry.materials.get(entity);
 
     Transform transform;
@@ -182,7 +182,7 @@ void SpriteStage::draw(float elapsed_ms) {
     prepareDraw();
 
     // Draw all textured meshes that have a material and motion component
-    for (const Entity entity : registry.materials.entities) {
+    for (const Entity& entity : registry.materials.entities) {
         drawSprite(entity, elapsed_ms);
     }
 }

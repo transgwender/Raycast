@@ -43,28 +43,6 @@ inline void to_json(json& j, const ChangeScene& c) {
 
 inline void from_json(const json& j, ChangeScene& c) { j.at("scene").get_to(c.scene); }
 
-// Interactable
-inline void to_json(json& j, const Interactable& c) {
-    (void)c;
-    j = json{{"type", "interactable"}};
-}
-
-inline void from_json(const json& j, Interactable& c) {
-    (void)j;
-    (void)c;
-}
-
-// BoundingBox
-inline void to_json(json& j, const BoundingBox& c) {
-    j = json{{"type", "bounding_box"},
-             {"position", c.position.x},
-             {"scale", c.scale}};
-}
-inline void from_json(const json& j, BoundingBox& c) {
-    j.at("position").get_to(c.position);
-    j.at("scale").get_to(c.scale);
-}
-
 // Zone
 inline void to_json(json& j, const Zone& c) {
     j = json{
@@ -236,6 +214,41 @@ inline void from_json(const json& j, ButtonHelper& c) {
     j.at("position").get_to(c.position);
     j.at("scale").get_to(c.scale);
     j.at("label").get_to(c.label);
+}
+
+inline void to_json(json& j, const Collider& c) {
+    j = json{{{"type", "collider"},
+        {"bounds", c.bounds_type},
+        {"width"}, c.width},
+        {"height", c.height}
+    };
+}
+
+inline void from_json(const json& j, Collider& c) {
+    j.at("bounds").get_to(c.bounds_type);
+    j.at("width").get_to(c.width);
+    j.at("height").get_to(c.height);
+}
+
+// Collideable
+inline void to_json(json& j, const Collideable& c) {
+    (void)c;
+    j = json{{"type", "collideable"}};
+}
+inline void from_json(const json& j, Collideable& c) {
+    (void)j;
+    (void)c;
+}
+
+// Interactable
+inline void to_json(json& j, const Interactable& c) {
+    (void)c;
+    j = json{{"type", "interactable"}};
+}
+
+inline void from_json(const json& j, Interactable& c) {
+    (void)j;
+    (void)c;
 }
 
 inline void to_json(json& j, const SpriteSheet& c) {

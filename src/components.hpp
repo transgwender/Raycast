@@ -43,6 +43,11 @@ struct LightSource {
     float angle = 0;
 };
 
+// Mouse cursor
+struct Mouse {
+
+};
+
 struct Light {
     Entity last_reflected;
     float last_reflected_timeout;
@@ -54,13 +59,33 @@ struct Motion {
     float angle = 0;
     vec2 velocity = {0, 0};
     vec2 scale = {10, 10};
-    bool collides = true;
 };
+
+// Represents the different types of bounding boxes
+enum class BOUNDS_TYPE { RADIAL = 0, RECTANGULAR = 1, POINT = 2 };
+
+// Represents an object that is able to collide with a specific type of bounding box
+struct Collider {
+    BOUNDS_TYPE bounds_type = BOUNDS_TYPE::RADIAL;
+    BOUNDS_TYPE user_interaction_bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    std::array<vec2, 4> rotated_bounds = {};
+    bool needs_update = true;
+    float width = 1.f;
+    float height = 1.f;
+    float angle = 0.f;
+};
+
+// Actively collideable
+struct Collideable {};
+
+// Actively interactable
+struct Interactable {};
 
 // Structure to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
     Entity other; // The second object involved in the collision.
+    int side = 0; // side (1 for y, 2 for x) the collision occurrs on
     explicit Collision(Entity& other) { this->other = other; };
 };
 
@@ -71,8 +96,6 @@ struct Highlightable {
 // Object is reflective
 struct Reflective {};
 
-struct Interactable {};
-
 struct ButtonFlag {}; // Indicates it's a button, menu
 
 // Represents a transition to another scene.
@@ -81,13 +104,6 @@ struct ChangeScene {
 };
 
 struct ResumeGame {};
-
-// Represents the bounding box for the entity it is applied to -- used to detect
-// collisions.
-struct BoundingBox {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-};
 
 /**
  * Single Vertex Buffer element for textured sprites (textured.vs.glsl)

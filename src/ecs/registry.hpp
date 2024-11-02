@@ -16,7 +16,6 @@ class ECSRegistry {
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
     ComponentContainer<ResumeGame> resumeGames;
-    ComponentContainer<BoundingBox> boundingBoxes;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
@@ -28,12 +27,15 @@ class ECSRegistry {
     ComponentContainer<Lerpable> lerpables;
     ComponentContainer<Rotateable> rotateables;
     ComponentContainer<Highlightable> highlightables;
+    ComponentContainer<Collider> colliders;
+    ComponentContainer<Collideable> collideables;
     ComponentContainer<Menu> menus;
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
     ComponentContainer<DashTheTurtle> turtles;
     ComponentContainer<ButtonFlag> buttons;
     ComponentContainer<Text> texts;
+    ComponentContainer<Mouse> mice;
     ComponentContainer<SpriteSheet> spriteSheets;
 
     // constructor that adds all containers for looping over them
@@ -45,7 +47,6 @@ class ECSRegistry {
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&resumeGames);
-        registry_list.push_back(&boundingBoxes);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
@@ -57,12 +58,15 @@ class ECSRegistry {
         registry_list.push_back(&lerpables);
         registry_list.push_back(&rotateables);
         registry_list.push_back(&highlightables);
+        registry_list.push_back(&colliders);
+        registry_list.push_back(&collideables);
         registry_list.push_back(&menus);
         registry_list.push_back(&menuItems);
         registry_list.push_back(&levelSelects);
         registry_list.push_back(&turtles);
         registry_list.push_back(&buttons);
         registry_list.push_back(&texts);
+        registry_list.push_back(&mice);
         registry_list.push_back(&spriteSheets);
     }
 

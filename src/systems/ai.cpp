@@ -44,7 +44,7 @@ void AISystem::updateDash() {
             // registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
         }
 
-        printf("%lu\n", registry.lightRays.entities.size());
+        // printf("%lu\n", registry.lightRays.entities.size());
 
         if (registry.lightRays.entities.size() == 0) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;

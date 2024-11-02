@@ -20,11 +20,18 @@ Entity createLight(const Entity &entity, vec2 position, vec2 velocity) {
 
     Entity light = createSprite(entity, position, scale, angle, "light");
 
+    // Initialize collider
+    registry.collideables.emplace(light);
+    registry.colliders.emplace(light);
+    auto& collider = registry.colliders.get(light);
+    collider.bounds_type = BOUNDS_TYPE::RADIAL;
+    collider.width = scale.x;
+    collider.height = scale.y;
+
     registry.lightRays.emplace(light);
 
     auto& motion = registry.motions.get(light);
     motion.velocity = velocity;
-    motion.collides = true;
 
     PointLight& point_light = registry.pointLights.emplace(light);
     point_light.diffuse = 6.0f * vec3(255, 233, 87);
@@ -38,6 +45,17 @@ Entity createMirror(const Entity& entity, vec2 position, float angle) {
     vec2 scale = vec2({5, 40});
     createSprite(entity, position, scale, angle, "mirror");
     registry.reflectives.emplace(entity);
+
+    // Initialize collider
+    registry.collideables.emplace(entity);
+    registry.colliders.emplace(entity);
+    auto& collider = registry.colliders.get(entity);
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    collider.width = scale.x;
+    collider.height = scale.y;
+
+
     return entity;
 }
 
@@ -47,13 +65,22 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
 
 Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
     createSprite(entity, position, scale, 0, textureName);
-    registry.interactables.emplace(entity);
-    BoundingBox boundingBox;
-    boundingBox.scale = scale;
-    boundingBox.position = position;
-    registry.boundingBoxes.insert(entity, boundingBox);
-    registry.highlightables.emplace(entity);
-    registry.buttons.emplace(entity);
+    if (!registry.interactables.has(entity)) {
+        registry.interactables.emplace(entity);
+    }
+    if (!registry.colliders.has(entity)) {
+        Collider& collider = registry.colliders.emplace(entity);
+        collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+        collider.width = scale.x;
+        collider.height = scale.y;
+        collider.needs_update = true;
+    }
+    if (!registry.highlightables.has(entity)) {
+        registry.highlightables.emplace(entity);
+    }
+    if (!registry.buttons.has(entity)) {
+        registry.buttons.emplace(entity);
+    }
     Text text;
     text.size = 64;
     text.position = position;
@@ -77,7 +104,7 @@ Entity createDashTheTurtle(const Entity& entity, vec2 position) {
 
     auto& motion = registry.motions.get(dash);
     motion.velocity = {0, 0};
-    motion.collides = false;
+    //motion.collides = false;
 
     DashTheTurtle dashComponent;
     dashComponent.behavior = DASH_STATES::IDLE;
@@ -92,35 +119,6 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
     return entity;
 }
 
-/**
-    - load entire sprite sheet as 1 SDL_Surface
-    - create SDL_Rect for given sprite sheet frame
-    - draw frame with SDL_RenderCopy()
-
-    in drawTexturedMesh():
-        if == entity is type sprite sheet:
-            figure out which cell of sheet to draw
-                - what info is DIFF for walk and idle?
-                    - max # frames
-                    - row offset
-                - what info is SAME for walk and idle?
-                    - sheet size
-                    - cell size
-
-    when drawing a frame:
-    - how do we know which animation set of frames to draw?
-        - will need state info NOTE: does not need to be handled here.
-        - what state are we in? -> for now we are always in idle
-            - idle -> go to idle row offset
-            - walk -> go to walk row offset
-        - what frame are we in?
-            - start at 0, increment curr frame and draw offset (curr + offset)
-            - once we hit the last frame, reset currFrame
-
-    ***frames has to be hard coded
-    * scale flip sprite via -x
-*
-*/
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight,
     float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames) {
     SpriteSheet ss;
