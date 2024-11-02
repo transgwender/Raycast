@@ -81,6 +81,11 @@ struct Collideable {};
 // Actively interactable
 struct Interactable {};
 
+struct MiniSun {
+    bool lit = false;
+    float lit_duration = 0;
+};
+
 // Structure to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.

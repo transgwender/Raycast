@@ -201,6 +201,10 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+
+        if (registry.turtles.has(collisionsRegistry.entities[i])) {
+            handle_turtle_collisions(i);
+        }
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
             registry.lightRays.has(collisionsRegistry.entities[i]))
@@ -294,6 +298,31 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                     atan2(light_motion.velocity.y, light_motion.velocity.x);
     light_motion.angle -= 2 * angle_between;
+}
+
+// if the turtle collides against a wall, stop the turtle from moving further
+void WorldSystem::handle_turtle_collisions(int i) {
+    //return;
+    auto& collisionsRegistry = registry.collisions;
+    Entity turtle = collisionsRegistry.entities[i];
+    Entity other = collisionsRegistry.components[i].other;
+    Motion& turtle_motion = registry.motions.get(turtle);
+    Collider& turtle_collider = registry.colliders.get(turtle);
+    Motion& barrier_motion = registry.motions.get(other);
+    //if (turtle_motion.position.x < barrier_motion.position.x - barrier_motion.scale.x / 2 ||
+    //    turtle_motion.position.x > barrier_motion.position.x + barrier_motion.scale.x / 2) {
+    //    return;
+    //}
+
+    // Move to the left of barrier
+    if (turtle_motion.position.x < barrier_motion.position.x) {
+        // registry.sprite
+        turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 - abs(turtle_collider.width / 2);
+    }
+    if (turtle_motion.position.x > barrier_motion.position.x) {
+        turtle_motion.position.x =
+            barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+    }
 }
 
 // Should the game be over?
