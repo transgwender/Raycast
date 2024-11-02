@@ -25,6 +25,7 @@ void CompositorStage::init(GLFWwindow* window_arg) {
 
     // get a reference to the frame textures from the other pipeline stages.
     sprite_stage_texture = texture_manager.get("$sprite_stage");
+    particle_stage_texture = texture_manager.get("$particle_stage");
     text_stage_texture = texture_manager.get("$text_stage");
 
     // create vao
@@ -34,11 +35,13 @@ void CompositorStage::init(GLFWwindow* window_arg) {
 void CompositorStage::setupTextures() const {
     static const char* texture_names[] = {
         "sprite_stage_tex",
+        "particle_stage_tex",
         "text_stage_tex",
     };
 
     static GLuint textures[] = {
         sprite_stage_texture,
+        particle_stage_texture,
         text_stage_texture,
     };
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "texture.hpp"
 
 // Main data relevant to the level
 struct Scene {
@@ -176,6 +177,14 @@ struct Text {
     /** Color channel values are in range [0, 255] */
     vec3 color = vec3(255, 255, 255);
     bool centered;
+};
+
+struct Particle {
+    TextureHandle texture;
+    vec2 position;
+    vec2 scale;
+    float angle;
+    vec2 velocity;
 };
 
 /**

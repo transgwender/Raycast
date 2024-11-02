@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "compositor.hpp"
+#include "particle.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
 #include "stages/text.hpp"
@@ -23,8 +24,9 @@ extern ShaderManager shader_manager;
  */
 class RenderSystem {
     SpriteStage sprite_stage;
-    CompositorStage composite_stage;
+    ParticleStage particle_stage;
     TextStage text_stage;
+    CompositorStage composite_stage;
 
     /** Window handle */
     GLFWwindow* window = nullptr;

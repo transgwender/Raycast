@@ -49,7 +49,7 @@ void SpriteStage::createVertexAndIndexBuffers() {
 /**
  * Update uniform variables for the shader program based on the given entity and texture.
  */
-void SpriteStage::activateShader(const Entity entity, const std::string& texture) const {
+void SpriteStage::activateShader(const Entity& entity, const std::string& texture) const {
     GLint position_location = glGetAttribLocation(shader, "in_position");
     GLint texcoord_location = glGetAttribLocation(shader, "in_texcoord");
     assert(texcoord_location >= 0);
@@ -103,6 +103,8 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
  */
 void SpriteStage::prepareDraw() const {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    glUseProgram(shader);
+    setUniformFloatMat3(shader, "projection", projection_matrix);
     glViewport(0, 0, native_width, native_height);
     glDepthRange(0.00001, 10);
     glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 1.0);
@@ -120,15 +122,12 @@ void SpriteStage::prepareDraw() const {
  */
 void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     const auto& [position, angle, velocity, scale] = registry.motions.get(entity);
-    const auto& [texture, sprite_shader] = registry.materials.get(entity);
+    const auto& texture = registry.materials.get(entity).texture;
 
     Transform transform;
     transform.translate(position);
     transform.rotate(angle);
     transform.scale(scale);
-
-    const auto program = shader_manager.get(sprite_shader);
-    glUseProgram(program);
 
     glBindVertexArray(vao);
 
@@ -139,8 +138,8 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     activateShader(entity, texture);
 
     // Setting uniform values to the currently bound program
-    setUniformFloatMat3(program, "transform", transform.mat);
-    setUniformFloatMat3(program, "projection", projection_matrix);
+    setUniformFloatMat3(shader, "transform", transform.mat);
+    setUniformFloatMat3(shader, "projection", projection_matrix);
 
     if (registry.spriteSheets.has(entity)) {
         SpriteSheet& ss = registry.spriteSheets.get(entity);
@@ -182,7 +181,7 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     GLsizei num_indices = size / sizeof(uint16_t);
 
     // Drawing of num_indices/3 triangles specified in the index buffer
-    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+    glDrawElements(GL_TRIANGLES, std::size(textured_indices), GL_UNSIGNED_SHORT, nullptr);
 
     checkGlErrors();
 }

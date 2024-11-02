@@ -39,7 +39,7 @@ class SpriteStage {
 
     void prepareDraw() const;
 
-    void activateShader(Entity entity, const std::string& texture) const;
+    void activateShader(const Entity& entity, const std::string& texture) const;
 
     void drawSprite(Entity entity, float elapsed_ms);
 
