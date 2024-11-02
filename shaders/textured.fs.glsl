@@ -64,5 +64,5 @@ void main() {
         result += vec3(0.18);
     }
 
-	color = vec4(result, (texture(albedo_tex, tex_coord)).w);
+    color = vec4(result, (texture(albedo_tex, tex_coord)).w);
 }

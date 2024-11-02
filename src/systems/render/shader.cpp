@@ -139,9 +139,19 @@ ShaderManager::~ShaderManager() {
     }
 }
 
+void setUniformInt(const GLuint program, const char* name, const int value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniform1i(location, value);
+}
+
 void setUniformFloat(const GLuint program, const char* name, float value) {
     const GLint location = glGetUniformLocation(program, name);
     glUniform1f(location, value);
+}
+
+void setUniformFloatVec2(GLuint program, const char* name, vec2 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniform2fv(location, 1, (float*)&value);
 }
 
 void setUniformFloatVec3(const GLuint program, const char* name, const vec3 value) {

@@ -36,6 +36,7 @@ class ECSRegistry {
     ComponentContainer<ButtonFlag> buttons;
     ComponentContainer<Text> texts;
     ComponentContainer<Mouse> mice;
+    ComponentContainer<SpriteSheet> spriteSheets;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -66,6 +67,7 @@ class ECSRegistry {
         registry_list.push_back(&buttons);
         registry_list.push_back(&texts);
         registry_list.push_back(&mice);
+        registry_list.push_back(&spriteSheets);
     }
 
     void clear_all_components() {

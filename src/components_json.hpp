@@ -180,7 +180,6 @@ inline void from_json(const json& j, Highlightable& c) {
     j.at("isHighlighted").get_to(c.isHighlighted);
 }
 
-
 inline void to_json(json& j, const DashTheTurtle& c) {
     j = json{{"type", "dashTheTurtle"}, {"behavior", c.behavior}, {"minimumDisplacement", c.nearestLightRayDirection}};
 }
@@ -200,7 +199,6 @@ inline void to_json(json& j, const Motion& c) {
 }
 
 inline void from_json(const json& j, Motion& c) {
-
     j.at("position").get_to(c.position);
     j.at("velocity").get_to(c.velocity);
     j.at("scale").get_to(c.scale);
@@ -251,4 +249,25 @@ inline void to_json(json& j, const Interactable& c) {
 inline void from_json(const json& j, Interactable& c) {
     (void)j;
     (void)c;
+}
+
+inline void to_json(json& j, const SpriteSheet& c) {
+    j = json{
+        {"type", "sprite_sheet"},
+        {"position", c.position},
+        {"sheetWidth", c.sheetWidth},
+        {"sheetHeight", c.sheetWidth },
+        { "cellWidth", c.cellWidth},
+        {"cellHeight", c.cellHeight},
+        {"animationFrames", c.animationFrames}
+    };
+}
+
+inline void from_json(const json& j, SpriteSheet& c) {
+    j.at("position").get_to(c.position);
+    j.at("sheetWidth").get_to(c.sheetWidth);
+    j.at("sheetHeight").get_to(c.sheetHeight);
+    j.at("cellWidth").get_to(c.cellWidth);
+    j.at("cellHeight").get_to(c.cellHeight);
+    j.at("animationFrames").get_to(c.animationFrames);
 }

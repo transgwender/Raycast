@@ -56,9 +56,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
         // Iterate through every entity specified, and add the component
         // specified
         try {
-            int i = 1;
             for (auto& array : j["objList"]) {
-
                 const auto entity = Entity();
                 for (auto& data : array["data"]) {
                     std::string type = data["type"];
@@ -105,6 +103,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Collideable, collideables);
                     } else if (type == "interactable") {
                         PARSE_COMPONENT(Interactable, interactables);
+                    } else if (type == "sprite_sheet") {
+                        SpriteSheet ss{};
+                        data.get_to(ss);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
                     }
                 }
             }
@@ -114,11 +116,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                       << filename << std::endl;
             return false;
         }
-    }
-    else {
+    } else {
         LOG_ERROR("Failed to open file: {}", filename);
     }
-    return true;
 
     LOG_INFO("Successfully loaded scene");
+    return true;
 }

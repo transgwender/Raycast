@@ -66,8 +66,7 @@ int main() {
         physics.step(elapsed_ms);
         ai.step(elapsed_ms);
         world.handle_collisions();
-        renderer.draw();
-        
+        renderer.draw(elapsed_ms);
     }
 
     return EXIT_SUCCESS;

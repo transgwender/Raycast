@@ -20,3 +20,5 @@ Forest by Arcade Island https://arcadeisland.itch.io/forest
 Castle Brick Tileset by Jordon Games https://jordon-games.itch.io/castle-stone-tileset
 
 Silver by Poppy Works https://poppyworks.itch.io/silver
+
+Turtle by Elthen https://elthen.itch.io/2d-pixel-art-turtle-sprites

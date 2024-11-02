@@ -71,6 +71,7 @@ class WorldSystem {
 
     // Game systems
     RailSystem rails;
+    int dashSpeed = 30;
 
     // Music references
     SoundSystem sounds;

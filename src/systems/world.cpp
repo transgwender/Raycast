@@ -425,19 +425,32 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
 void WorldSystem::updateDash() {
 
-    int dashSpeed = 30;
-
     for (Entity dashEntity : registry.turtles.entities) {
         DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
         vec2 ray = registry.turtles.get(dashEntity).nearestLightRayDirection;
+        Motion& dm = registry.motions.get(dashEntity);
+
+        if (registry.spriteSheets.components.empty()) {
+            throw std::runtime_error("Error: Sprite sheet does not exist. Please make sure to add the sprite sheet to the level JSON.");
+        }
+
+        Entity& ss_entity = registry.spriteSheets.entities.front();
+        SpriteSheet& ss = registry.spriteSheets.get(ss_entity);
+        Motion& ss_motion = registry.motions.get(ss_entity);
+
         if (dash_state == DASH_STATES::WALK) {
-            Motion& dm = registry.motions.get(dashEntity);
             // vec2 displacement = {(dm.position.x - ray.x), (dm.position.y - ray.y)};
-            // TODO: Update the turtle sprite
+            ss.currState = static_cast<unsigned int>(DASH_STATES::WALK);
             if (ray.x > 0) {
                 dm.velocity.x = -dashSpeed;
+                if (ss_motion.scale.x > 0) {
+                    ss_motion.scale.x = -ss_motion.scale.x;  // Flip if currently positive
+                }
             } else if (ray.x < 0) {
                 dm.velocity.x = dashSpeed;
+                if (ss_motion.scale.x < 0) {
+                    ss_motion.scale.x = -ss_motion.scale.x;  // Flip if currently negative
+                }
             }
 
             //if (dm.position.x < 100) {
@@ -446,16 +459,12 @@ void WorldSystem::updateDash() {
             //}
 
         } else if (dash_state == DASH_STATES::STARE) {
-            Motion& dm = registry.motions.get(dashEntity);
             dm.velocity = {0, 0};
-            // TODO: Update the turtle sprite
-        
-        } else if (dash_state == DASH_STATES::IDLE) {
-            Motion& dm = registry.motions.get(dashEntity);
-            dm.velocity = {0, 0};
-            // TODO: Update the turtle sprite
+            ss.currState = static_cast<unsigned int>(DASH_STATES::STARE);
 
+        } else if (dash_state == DASH_STATES::IDLE) {
+            dm.velocity = {0, 0};
+            ss.currState = static_cast<unsigned int>(DASH_STATES::IDLE);
         }
     }
-
 }

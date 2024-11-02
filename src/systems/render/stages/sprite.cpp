@@ -92,8 +92,8 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
     glBindTexture(GL_TEXTURE_2D, texture_manager.getNormal(texture));
     checkGlErrors();
 
-    bool isHighlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
-    glUniform1i(glGetUniformLocation(shader, "highlight"), isHighlighted ? 1 : 0);
+    bool is_highlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
+    glUniform1i(glGetUniformLocation(shader, "highlight"), is_highlighted ? 1 : 0);
 }
 
 /**
@@ -117,16 +117,16 @@ void SpriteStage::prepareDraw() const {
  * Draw a given Entity which has a `Motion` and `Material`.
  * @param entity The sprite to render
  */
-void SpriteStage::drawSprite(const Entity entity) const {
+void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     const auto& [position, angle, velocity, scale] = registry.motions.get(entity);
-    const auto& [texture, shader] = registry.materials.get(entity);
+    const auto& [texture, sprite_shader] = registry.materials.get(entity);
 
     Transform transform;
     transform.translate(position);
     transform.rotate(angle);
     transform.scale(scale);
 
-    const auto program = shader_manager.get(shader);
+    const auto program = shader_manager.get(sprite_shader);
     glUseProgram(program);
 
     glBindVertexArray(vao);
@@ -141,6 +141,32 @@ void SpriteStage::drawSprite(const Entity entity) const {
     setUniformFloatMat3(program, "transform", transform.mat);
     setUniformFloatMat3(program, "projection", projection_matrix);
 
+    if (registry.spriteSheets.has(entity)) {
+        SpriteSheet& ss = registry.spriteSheets.get(entity);
+
+        // Update animation frame
+        ss.timeElapsed += elapsed_ms;
+        if (ss.timeElapsed >= animation_speed) {
+            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
+            ss.timeElapsed = 0.f;
+        }
+
+        // Calculate UV coord offset
+        float h_offset = ss.cellHeight * static_cast<float>(ss.currFrame) / ss.sheetWidth;
+        float v_offset = ss.cellWidth * static_cast<float>(ss.currState) / ss.sheetHeight;
+        vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
+
+        setUniformFloat(shader, "horizontal_offset", h_offset);
+        setUniformFloat(shader, "vertical_offset", v_offset);
+        setUniformFloatVec2(shader, "cell_size", cell_size);
+    } else {
+        // Default texture coordinates
+        setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
+        setUniformFloat(shader, "horizontal_offset", 0);
+        setUniformFloat(shader, "vertical_offset", 0);
+    }
+    checkGlErrors();
+
     // Get number of indices from index buffer, which has elements uint16_t
     GLint size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
@@ -152,12 +178,12 @@ void SpriteStage::drawSprite(const Entity entity) const {
     checkGlErrors();
 }
 
-void SpriteStage::draw() const {
+void SpriteStage::draw(float elapsed_ms) {
     prepareDraw();
 
     // Draw all textured meshes that have a material and motion component
-    for (const Entity entity : registry.materials.entities) {
-        drawSprite(entity);
+    for (const Entity& entity : registry.materials.entities) {
+        drawSprite(entity, elapsed_ms);
     }
 }
 
