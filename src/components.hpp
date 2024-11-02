@@ -37,13 +37,6 @@ struct Zone {
     ZONE_TYPE type;
 };
 
-// Entities that are `renderable` are visible in scenes.
-struct Renderable {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-    float angle = 0;
-};
-
 // Light source captures the characteristics of a source of light, such as the
 // angle the light is shot at and the time interval between firing.
 struct LightSource {
@@ -103,7 +96,7 @@ struct Highlightable {
 // Object is reflective
 struct Reflective {};
 
-struct Button {}; // Indicates it's a button, menu
+struct ButtonFlag {}; // Indicates it's a button, menu
 
 // Represents a transition to another scene.
 struct ChangeScene {
@@ -165,10 +158,16 @@ struct PointLight {
     float constant = 1.0;
 };
 
+/**
+ * Component for displaying text on screen.
+ */
 struct Text {
     std::string text;
+    /** Position of the text. The position is based in the bottom left corner of the first character of the text. */
     vec2 position;
-    int fontSize;
+    unsigned int size;
+    /** Color channel values are in range [0, 255] */
+    vec3 color = vec3(255, 255, 255);
 };
 
 /**

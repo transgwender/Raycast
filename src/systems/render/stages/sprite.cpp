@@ -1,0 +1,173 @@
+#include "sprite.hpp"
+#include "registry.hpp"
+#include "render.hpp"
+
+void SpriteStage::init() {
+    // create a new framebuffer to render to
+    glGenFramebuffers(1, &frame_buffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+
+    // create a new vao
+    glGenVertexArrays(1, &vao);
+
+    // create a new screen texture and bind it to our new framebuffer
+    glGenTextures(1, &frame_texture);
+    glBindTexture(GL_TEXTURE_2D, frame_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
+
+    // go back to the default framebuffer
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    checkGlErrors();
+
+    shader = shader_manager.get("textured");
+
+    createVertexAndIndexBuffers();
+
+    // add this stage's frame texture to the texture manager
+    texture_manager.add("$sprite_stage", frame_texture);
+}
+
+void SpriteStage::createVertexAndIndexBuffers() {
+    glGenBuffers(1, &vbo);
+    glGenBuffers(1, &ibo);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(textured_vertices[0]) * std::size(textured_vertices), textured_vertices,
+                 GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(textured_indices[0]) * std::size(textured_indices), textured_indices,
+                 GL_STATIC_DRAW);
+
+    checkGlErrors();
+}
+
+/**
+ * Update uniform variables for the shader program based on the given entity and texture.
+ */
+void SpriteStage::activateShader(const Entity entity, const std::string& texture) const {
+    GLint position_location = glGetAttribLocation(shader, "in_position");
+    GLint texcoord_location = glGetAttribLocation(shader, "in_texcoord");
+    assert(texcoord_location >= 0);
+
+    glEnableVertexAttribArray(position_location);
+    glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)nullptr);
+    glEnableVertexAttribArray(texcoord_location);
+    glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+
+    // set uniforms
+    auto albedo_tex_location = glGetUniformLocation(shader, "albedo_tex");
+    auto normal_tex_location = glGetUniformLocation(shader, "normal_tex");
+    glUniform1i(albedo_tex_location, 0);
+    glUniform1i(normal_tex_location, 1);
+
+    setUniformFloatVec3(shader, "ambient_light", ambient_light_colour / 255.0f);
+
+    int point_lights_count = 0;
+    for (const auto& point_light : registry.pointLights.entities) {
+        PointLight& pl = registry.pointLights.get(point_light);
+        Motion& motion = registry.motions.get(point_light);
+
+        const int i = point_lights_count++;
+        const std::string prefix = std::string("point_lights[") + std::to_string(i) + std::string("].");
+
+        setUniformFloatVec3(shader, (prefix + std::string("position")).c_str(), vec3(motion.position, 10.0f));
+        setUniformFloatVec3(shader, (prefix + std::string("diffuse")).c_str(), pl.diffuse / 255.0f);
+        setUniformFloat(shader, (prefix + std::string("constant")).c_str(), pl.constant);
+        setUniformFloat(shader, (prefix + std::string("linear")).c_str(), pl.linear);
+        setUniformFloat(shader, (prefix + std::string("quadratic")).c_str(), pl.quadratic);
+    }
+
+    auto point_lights_count_location = glGetUniformLocation(shader, "point_lights_count");
+    glUniform1i(point_lights_count_location, point_lights_count);
+
+    // Enabling and binding texture to slot 0 and 1
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, texture_manager.get(texture));
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, texture_manager.getNormal(texture));
+    checkGlErrors();
+
+    bool isHighlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
+    glUniform1i(glGetUniformLocation(shader, "highlight"), isHighlighted ? 1 : 0);
+}
+
+/**
+ * Prepare for drawing by setting various OpenGL flags, setting and clearing the framebuffer,
+ * and updating the viewport.
+ */
+void SpriteStage::prepareDraw() const {
+    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    glViewport(0, 0, native_width, native_height);
+    glDepthRange(0.00001, 10);
+    glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 1.0);
+    glClearDepth(10.f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glDisable(GL_DEPTH_TEST);
+    checkGlErrors();
+}
+
+/**
+ * Draw a given Entity which has a `Motion` and `Material`.
+ * @param entity The sprite to render
+ */
+void SpriteStage::drawSprite(const Entity entity) const {
+    const auto& [position, angle, velocity, scale] = registry.motions.get(entity);
+    const auto& [texture, shader] = registry.materials.get(entity);
+
+    Transform transform;
+    transform.translate(position);
+    transform.rotate(angle);
+    transform.scale(scale);
+
+    const auto program = shader_manager.get(shader);
+    glUseProgram(program);
+
+    glBindVertexArray(vao);
+
+    // Setting active vertex and index buffers
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+    activateShader(entity, texture);
+
+    // Setting uniform values to the currently bound program
+    setUniformFloatMat3(program, "transform", transform.mat);
+    setUniformFloatMat3(program, "projection", projection_matrix);
+
+    // Get number of indices from index buffer, which has elements uint16_t
+    GLint size = 0;
+    glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
+    GLsizei num_indices = size / sizeof(uint16_t);
+
+    // Drawing of num_indices/3 triangles specified in the index buffer
+    glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
+
+    checkGlErrors();
+}
+
+void SpriteStage::draw() const {
+    prepareDraw();
+
+    // Draw all textured meshes that have a material and motion component
+    for (const Entity entity : registry.materials.entities) {
+        drawSprite(entity);
+    }
+}
+
+SpriteStage::~SpriteStage() {
+    glDeleteBuffers(1, &vbo);
+    glDeleteBuffers(1, &ibo);
+
+    glDeleteTextures(1, &frame_texture);
+    glDeleteVertexArrays(1, &vao);
+    glDeleteFramebuffers(1, &frame_buffer);
+
+    checkGlErrors();
+}

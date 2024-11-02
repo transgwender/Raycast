@@ -16,7 +16,6 @@ class ECSRegistry {
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
     ComponentContainer<ResumeGame> resumeGames;
-    ComponentContainer<Renderable> renderables;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
@@ -34,7 +33,7 @@ class ECSRegistry {
     ComponentContainer<MenuItem> menuItems;
     ComponentContainer<LevelSelect> levelSelects;
     ComponentContainer<DashTheTurtle> turtles;
-    ComponentContainer<Button> buttons;
+    ComponentContainer<ButtonFlag> buttons;
     ComponentContainer<Text> texts;
     ComponentContainer<Mouse> mice;
 
@@ -47,7 +46,6 @@ class ECSRegistry {
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
         registry_list.push_back(&resumeGames);
-        registry_list.push_back(&renderables);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);

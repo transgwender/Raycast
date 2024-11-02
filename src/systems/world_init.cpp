@@ -82,8 +82,9 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
         registry.buttons.emplace(entity);
     }
     Text text;
-    text.fontSize = 16;
+    text.size = 64;
     text.position = position;
+    text.position.x -= 10; // TODO: hacky fix, remove later
     text.text = label;
     registry.texts.insert(entity, text);
     return entity;

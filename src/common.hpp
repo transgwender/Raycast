@@ -21,6 +21,9 @@
 #include <glm/vec3.hpp>            // vec3
 using namespace glm;
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
 #include "ecs/ecs.hpp"
 
 // Simple utility functions to avoid mistyping directory name
@@ -48,9 +51,9 @@ inline std::string sfx_path(const std::string& name) {
 inline std::string sfx_dir_path() {
     return data_path() + "/audio/sfx/";
 };
-inline std::string mesh_path(const std::string& name) {
-    return data_path() + "/meshes/" + std::string(name);
-};
+inline std::string font_path(const std::string& name) {
+    return data_path() + "/fonts/" + name;
+}
 
 const int window_width_px = 1280;
 const int window_height_px = 720;

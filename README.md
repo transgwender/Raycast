@@ -18,3 +18,5 @@ The world has fallen into darkness, and nearly all life has disappeared. The las
 Forest by Arcade Island https://arcadeisland.itch.io/forest
 
 Castle Brick Tileset by Jordon Games https://jordon-games.itch.io/castle-stone-tileset
+
+Silver by Poppy Works https://poppyworks.itch.io/silver
