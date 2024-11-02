@@ -169,26 +169,20 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
         }
 
         // OPTION 2: calculate UV coord offset
-        float h_offset = ((float)ss.cellHeight * ss.currFrame) / ss.sheetWidth;
-        float v_offset = ((float)ss.cellWidth * ss.currState) / ss.sheetHeight;
+        float h_offset = ss.cellHeight * ss.currState / ss.sheetHeight;
+        float v_offset = ss.cellWidth * ss.currFrame / ss.sheetWidth;
+        vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
 
         setUniformFloat(shader, "horizontal_offset", h_offset);
         setUniformFloat(shader, "vertical_offset", v_offset);
-
-        auto cell_size = vec2((float)ss.cellWidth / ss.sheetWidth, (float)ss.cellHeight / ss.sheetHeight);
         setUniformFloatVec2(shader, "cell_size", cell_size);
-
-        // GLint h_offset_uloc = glGetUniformLocation(shader, "horizontal_offset");
-        // GLint v_offset_uloc = glGetUniformLocation(shader, "vertical_offset");
-        //
-        // glUniform1f(h_offset_uloc, h_offset);
-        // glUniform1f(v_offset_uloc, v_offset);
-        checkGlErrors();
     } else {
+        // Default texture coordinates
         setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
         setUniformFloat(shader, "horizontal_offset", 0);
         setUniformFloat(shader, "vertical_offset", 0);
     }
+    checkGlErrors();
 
     // Get number of indices from index buffer, which has elements uint16_t
     GLint size = 0;
