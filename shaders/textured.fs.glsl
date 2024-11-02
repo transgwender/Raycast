@@ -29,11 +29,6 @@ uniform vec3 ambient_light;
 uniform int point_lights_count;
 uniform PointLight point_lights[MAX_LIGHTS];
 
-uniform bool is_spritesheet;
-uniform float horizontal_offset;
-uniform float vertical_offset;
-uniform vec2 cell_size;
-
 layout(location = 0) out vec4 color;
 
 vec3 calculate_ambient_light() {
