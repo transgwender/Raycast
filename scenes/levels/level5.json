@@ -61,38 +61,44 @@
             ]
         },
         {
-            "name": "stones",
+            "name": "m87",
             "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 5.0,
+                    "schwarzchild_radius": 24.0
+                },
                 {
                     "type": "sprite",
                     "position": [
-                        180.0,
-                        120.0
+                        120.0,
+                        40.0
                     ],
+                    "texture": "light",
                     "scale": [
-                        180,
-                        120
+                        10.0,
+                        10.0
                     ],
-                    "texture": "stones"
-                },
-                {
-                    "type": "collider",
-                    "width": 180,
-                    "height": 120,
-                    "bounds": 1
+                    "angle": 0
                 },
                 {
                     "type": "collideable"
                 },
                 {
+                    "type": "collider",
+                    "width": 10.0,
+                    "height": 10.0,
+                    "bounds": 1
+                },
+                {
                     "type": "zone",
                     "position": [
-                        180.0,
-                        120.0
+                        120.0,
+                        40.0
                     ],
                     "scale": [
-                        180,
-                        120
+                        60,
+                        20
                     ],
                     "zone_type": 3
                 }
@@ -301,55 +307,6 @@
                 },
                 {
                     "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "rail-1",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        40.0,
-                        30.0
-                    ],
-                    "scale": [
-                        50,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        40.0,
-                        30.0
-                    ],
-                    "angle": 0.785
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 25
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
                 },
                 {
                     "type": "highlightable",

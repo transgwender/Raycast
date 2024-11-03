@@ -59,7 +59,7 @@ bool loadShader(const std::string& vs_path, const std::string& fs_path, GLuint& 
         return false;
     }
     if (!compileShader(fragment)) {
-        fprintf(stderr, "Vertex compilation failed");
+        fprintf(stderr, "Fragment compilation failed");
         return false;
     }
 

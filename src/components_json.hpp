@@ -251,6 +251,19 @@ inline void from_json(const json& j, Interactable& c) {
     (void)c;
 }
 
+// Blackhole 
+inline void to_json(json& j, const Blackhole& bh) {
+    j = json{
+        {"type", "blackhole"},
+        {"mass", bh.mass},
+        {"schwarzchild_radius", bh.schwarzchild_radius}
+    };
+}
+
+inline void from_json(const json& j, Blackhole& bh) {
+    j.at("mass").get_to(bh.mass);
+    j.at("schwarzchild_radius").get_to(bh.schwarzchild_radius);
+} 
 inline void to_json(json& j, const SpriteSheet& c) {
     j = json{
         {"type", "sprite_sheet"},

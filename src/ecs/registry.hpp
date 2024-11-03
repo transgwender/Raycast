@@ -36,6 +36,7 @@ class ECSRegistry {
     ComponentContainer<ButtonFlag> buttons;
     ComponentContainer<Text> texts;
     ComponentContainer<Mouse> mice;
+    ComponentContainer<Blackhole> blackholes;
     ComponentContainer<SpriteSheet> spriteSheets;
 
     // constructor that adds all containers for looping over them
@@ -67,6 +68,7 @@ class ECSRegistry {
         registry_list.push_back(&buttons);
         registry_list.push_back(&texts);
         registry_list.push_back(&mice);
+        registry_list.push_back(&blackholes);
         registry_list.push_back(&spriteSheets);
     }
 

@@ -53,6 +53,20 @@ inline bool definitelyLessThan(float a, float b) {
   return t;
 }
 
+/// @brief returns the angle between the vector `vec` and the positive x-axis in radians
+inline float heading(vec2 vec) {
+    return atan2(vec.y, vec.x);
+}
+
+/// @brief returns a normalized vector pointing the direction of theta (reference from +x-axis)
+inline vec2 from_angle(float theta) {
+    return vec2(::cos(theta), ::sin(theta));
+}
+
+/// @brief returns a vector pointing in the same direction as vec but with magnitude set to mag
+inline vec2 set_mag(vec2 vec, float mag) {
+    return glm::normalize(vec) * mag;
+}
 
 } // namespace math
 } // namespace raycast

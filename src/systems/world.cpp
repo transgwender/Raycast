@@ -119,7 +119,6 @@ bool WorldSystem::shouldAllowInput() {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    float speed = 100;
     if (isInLevel() && shouldStep()) {
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
 
@@ -147,7 +146,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 float angle = registry.lightSources.components[i].angle;
 
                 const auto entity = Entity();
-                createLight(entity, position, vec2(cos(-angle * M_PI / 180) * speed, sin(-angle * M_PI / 180) * speed));
+                createLight(entity, position, angle);
             }
         }
 
@@ -183,8 +182,8 @@ void WorldSystem::restart_game() {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    if(!registry.levelSelects.components.empty()) {
-        menus.generate_level_select_buttons((int) scenes.level_count());
+    if (!registry.levelSelects.components.empty()) {
+        menus.generate_level_select_buttons((int)scenes.level_count());
     }
 
     rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
@@ -207,7 +206,8 @@ void WorldSystem::handle_collisions() {
             registry.lightRays.has(collisionsRegistry.entities[i]))
             continue;
         if (registry.reflectives.has(collisionsRegistry.entities[i])) {
-            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other, collisionsRegistry.components[i].side);
+            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other,
+                              collisionsRegistry.components[i].side);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
@@ -222,18 +222,18 @@ void WorldSystem::handle_collisions() {
 // Invariant: other is a light ray
 void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     assert(registry.lightRays.has(other));
-    if (registry.zones.has(collider))
+    if (registry.zones.has(collider)) {
         switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
             LOG_INFO("Level beaten!");
-//            std::string next_scene = "gamefinish";
-//            change_scene(next_scene);
+            //            std::string next_scene = "gamefinish";
+            //            change_scene(next_scene);
             assert(registry.levels.size() == 1);
             Level& level = registry.levels.components.front();
             if (registry.menus.components.empty()) {
-                menus.generate_level_win_popup(level.id, (int) scenes.level_count());
+                menus.generate_level_win_popup(level.id, (int)scenes.level_count());
             }
-//            registry.remove_all_components_of(other);
+            //            registry.remove_all_components_of(other);
             break;
         }
         case ZONE_TYPE::START: {
@@ -246,6 +246,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             break;
         }
         }
+    }
 }
 
 // Reflect light ray based on collision normal
@@ -259,7 +260,6 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     if (light.last_reflected == reflective && light.last_reflected_timeout > 0) {
         return;
     }
-
 
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
@@ -315,11 +315,11 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         if (registry.menus.size() == 0) {
             assert(registry.menus.size() <= 1);
             if (registry.levels.size() > 0) {
-                Level &level = registry.levels.components.front();
+                Level& level = registry.levels.components.front();
                 menus.generate_pause_popup(level.id);
             }
         } else {
-            Menu &menu = registry.menus.components.front();
+            Menu& menu = registry.menus.components.front();
             if (menu.canClose) {
                 menus.try_close_menu();
             }
@@ -453,10 +453,10 @@ void WorldSystem::updateDash() {
                 }
             }
 
-            //if (dm.position.x < 100) {
-            //    int w = 0;
-            //    w++;
-            //}
+            // if (dm.position.x < 100) {
+            //     int w = 0;
+            //     w++;
+            // }
 
         } else if (dash_state == DASH_STATES::STARE) {
             dm.velocity = {0, 0};

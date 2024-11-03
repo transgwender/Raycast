@@ -1,4 +1,6 @@
 #include "world_init.hpp"
+#include "utils/math.hpp"
+#include "systems/physics.hpp"
 #include "ecs/registry.hpp"
 
 Entity createSprite(const Entity& entity, const vec2 position, const vec2 scale, float angle,
@@ -14,11 +16,11 @@ Entity createSprite(const Entity& entity, const vec2 position, const vec2 scale,
     return entity;
 }
 
-Entity createLight(const Entity &entity, vec2 position, vec2 velocity) {
+Entity createLight(const Entity &entity, vec2 position, float dir) {
     vec2 scale = vec2({8, 8});
-    float angle = M_PI_2 + atan2(velocity.y, velocity.x);
-
-    Entity light = createSprite(entity, position, scale, angle, "light");
+    vec2 velocity = raycast::math::from_angle(dir);
+    velocity = raycast::math::set_mag(velocity, PhysicsSystem::SpeedOfLight);
+    Entity light = createSprite(entity, position, scale, dir, "light");
 
     // Initialize collider
     registry.collideables.emplace(light);
@@ -32,6 +34,7 @@ Entity createLight(const Entity &entity, vec2 position, vec2 velocity) {
 
     auto& motion = registry.motions.get(light);
     motion.velocity = velocity;
+    motion.angle = dir;
 
     PointLight& point_light = registry.pointLights.emplace(light);
     point_light.diffuse = 6.0f * vec3(255, 233, 87);

@@ -92,7 +92,6 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(DashTheTurtle, turtles);
                         // int x = registry.motions.has(entity);
                         // printf("Your boolean variable is: %s\n", x ? "true" : "false");
-
                     } else if (type == "button") {
                         ButtonHelper c{};
                         data.get_to(c);
@@ -103,6 +102,13 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Collideable, collideables);
                     } else if (type == "interactable") {
                         PARSE_COMPONENT(Interactable, interactables);
+                    } else if (type == "blackhole") {
+                        PARSE_COMPONENT(Blackhole, blackholes);
+                        // the blackhole is itself a point light source as well
+                        PointLight& point_light = registry.pointLights.emplace(entity);
+                        point_light.diffuse = 6.0f * vec3(255, 233, 87);
+                        point_light.linear = -0.25f; // the render magic lies in this value
+                        point_light.quadratic = 0.01;
                     } else if (type == "sprite_sheet") {
                         SpriteSheet ss{};
                         data.get_to(ss);
@@ -112,16 +118,22 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     }
                 }
             }
+        // catches all errors deriving from the standard exception class, this is better than a catch(...) statement since it gives
+        // us information about the error via e.what()
+        } catch (const std::exception& e) {
+            LOG_ERROR("Parsing file {} failed with error: {}\n", filename, e.what());
+            return false;
+        
+        // catches any other error -- practically this case should never be reached since its good practice to have all errors extend the std::exception class
         } catch (...) {
-            LOG_ERROR("Parsing file failed for file; {}", filename);
-            std::cout << "ERROR: issue with the formatting of the file: "
-                      << filename << std::endl;
+            LOG_ERROR("Parsing file {} failed with an unknown error, check formatting\n", filename);
             return false;
         }
-    } else {
-        LOG_ERROR("Failed to open file: {}", filename);
+    }
+    else {
+        LOG_ERROR("Failed to open file: {}\n", filename);
     }
 
-    LOG_INFO("Successfully loaded scene");
+    LOG_INFO("Successfully loaded scene\n");
     return true;
 }

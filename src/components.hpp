@@ -195,6 +195,14 @@ struct ButtonHelper {
     std::string label;
 };
 
+struct Blackhole {
+    float mass;
+    // NOTE: You may notice that we do not need to use the schwarzchild radius at all in our blackhole calculations since it naturally
+    // shows up in the equations that are used. It is still included here to help with level design, in particular all light rays at a 
+    // distance of >= 2.6 schwartzchild radius from the blackhole will not get sucked in (assuming speed of light >= 50).
+    float schwarzchild_radius;
+};
+
 enum class DASH_STATES { BITE, STARE, WALK, IDLE, YAWN, HIDE, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
