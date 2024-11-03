@@ -65,6 +65,7 @@ void ParticleStage::prepareDraw() const {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glBlendEquation(GL_MAX);
     glDisable(GL_DEPTH_TEST);
     checkGlErrors();
 }
@@ -72,10 +73,12 @@ void ParticleStage::prepareDraw() const {
 /**
  * Update uniform variables for the shader program based on the given entity and texture.
  */
-void ParticleStage::activateShader(const TextureHandle& texture) const {
+void ParticleStage::activateShader(const Particle& particle) const {
     // Enabling and binding texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, particle.texture);
+
+    setUniformFloatVec4(shader, "texture_color", particle.color / 255.0f);
 }
 
 void ParticleStage::draw() {
@@ -84,18 +87,13 @@ void ParticleStage::draw() {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    int last_texture = -1;
-
     for (const Particle& particle : registry.particles.components) {
         Transform transform;
         transform.translate(particle.position);
         transform.rotate(particle.angle);
         transform.scale(particle.scale);
 
-        if (last_texture != particle.texture) {
-            activateShader(particle.texture);
-            last_texture = particle.texture;
-        }
+        activateShader(particle);
 
         setUniformFloatMat3(shader, "transform", transform.mat);
 

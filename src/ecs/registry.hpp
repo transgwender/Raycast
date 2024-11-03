@@ -42,6 +42,7 @@ class ECSRegistry {
     ComponentContainer<Gravity> gravities;
     ComponentContainer<Lever> levers;
     ComponentContainer<Particle> particles;
+    ComponentContainer<ParticleSpawner> particleSpawners;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -78,6 +79,7 @@ class ECSRegistry {
         registry_list.push_back(&gravities);
         registry_list.push_back(&levers);
         registry_list.push_back(&particles);
+        registry_list.push_back(&particleSpawners);
     }
 
     void clear_all_components() {

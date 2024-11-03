@@ -45,9 +45,7 @@ struct LightSource {
 };
 
 // Mouse cursor
-struct Mouse {
-
-};
+struct Mouse {};
 
 struct Light {
     Entity last_reflected;
@@ -179,12 +177,46 @@ struct Text {
     bool centered;
 };
 
+/** A single particle. You probably don't want to instantiate this yourself, but rather use a `ParticleSpawner` instance. */
 struct Particle {
     TextureHandle texture;
     vec2 position;
-    vec2 scale;
-    float angle;
-    vec2 velocity;
+    vec4 color = {255, 255, 0, 255.0};
+    vec2 scale = {24, 24};
+    float angle = 0.f;
+    vec2 linear_velocity = {0.0, 5.0};
+    float spin_velocity = 0.0f;
+    float scale_fall_off = 0.0f;
+    float lifetime = 1.0;
+};
+
+/** Object that spawns particles according to various parameters. */
+struct ParticleSpawner {
+    /** The texture ID of the texture that all spawned particles will take. */
+    TextureHandle texture;
+    /** The position of the spawner. */
+    vec2 position;
+    /** The initial speed of the spawned particles. */
+    float initial_speed;
+    /** Controls the rate in which the particle spins, in radians/sec */
+    float spin_velocity;
+    /**
+     * The direction the spawner is facing. This will combine with the `spread` property to determine the initial
+     * direction of the particles.
+     */
+    vec2 direction;
+    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0, 255]. */
+    vec4 color = vec4(255, 255, 255, 255);
+    /** The angle range that the spawner sends particles in. */
+    float spread;
+    /** Controls how many units of scale the particle loses/gains per second. Zero for no change. */
+    float scale_fall_off;
+    /** How long (in seconds) a spawned particle will live before being deleted. */
+    float lifetime;
+    /** The max number of particles from this spawner that should exist at any given time (may be off +/- 1). */
+    float max_particles;
+
+    float _cooldown = 0.0f;
 };
 
 /**
@@ -203,7 +235,6 @@ struct Mirror {
     vec2 position = {0, 0};
     float angle = 0;
 };
-
 
 struct ButtonHelper {
     vec2 position = {0, 0};

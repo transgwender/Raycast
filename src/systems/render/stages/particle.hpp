@@ -29,7 +29,7 @@ class ParticleStage {
 
     void prepareDraw() const;
 
-    void activateShader(const TextureHandle& texture) const;
+    void activateShader(const Particle& particle) const;
 
   public:
     void init();
