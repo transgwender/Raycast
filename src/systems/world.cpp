@@ -162,7 +162,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                     registry.litEntities.remove(minisunEntity);
                     auto &minisun = registry.minisuns.get(minisunEntity);
                     minisun.lit = false;
-                } 
+                }
             }
         }
 
@@ -251,12 +251,12 @@ void WorldSystem::handle_collisions() {
             continue;
         if (registry.reflectives.has(collisionsRegistry.entities[i])) {
             handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other,
-                              collisionsRegistry.components[i].side);
+                              collisionsRegistry.components[i].side, collisionsRegistry.components[i].overlap);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
             if (registry.minisuns.has(collisionsRegistry.entities[i])) {
                 handle_minisun_collision(collisionsRegistry.entities[i]);
-            
+
             }
         }
     }
@@ -313,7 +313,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         if (!registry.turtles.has(collider)) {
             sounds.play_sound("light-collision.wav");
             // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
-            registry.remove_all_components_of(other); 
+            registry.remove_all_components_of(other);
         }
     }
 }
@@ -321,7 +321,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
 // Reflect light ray based on collision normal
 // Invariant: other is a light ray
 // Side: 1 if y side, 2 if x side
-void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int side) {
+void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap) {
     assert(registry.lightRays.has(reflected));
     Light& light = registry.lightRays.get(reflected);
     // don't reflect off of same mirror twice
@@ -334,11 +334,11 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     Motion& reflective_surface_motion = registry.motions.get(reflective);
     float angle_addition = M_PI_2;
     if (side == 1) {
-        LOG_INFO("y-Side reflection\n");
+        // LOG_INFO("y-Side reflection\n");
         angle_addition = M_PI_2;
     }
     if (side == 2) {
-        LOG_INFO("x-Side reflection\n");
+        // LOG_INFO("x-Side reflection\n");
         angle_addition = 0.f;
     }
     vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + angle_addition),
@@ -355,6 +355,9 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     }
     // Play reflection sound
     sounds.play_sound("light-collision.wav");
+
+    // Correct light position with overlap
+    light_motion.position -= normalize(light_motion.velocity) * overlap;
 
     // Update motion
     light_motion.velocity = reflected_velocity;
@@ -423,7 +426,7 @@ void WorldSystem::handle_turtle_collisions(int i) {
                 t.behavior = DASH_STATES::IDLE;
             }
         }
-    
+
     } else {
         if (turtle_motion.position.y < barrier_motion.position.y) {
             turtle_motion.position.y =

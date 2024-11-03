@@ -1,5 +1,6 @@
 #include "collisions.h"
 
+#include "ai.hpp"
 #include "registry.hpp"
 #include "utils/math.hpp"
 
@@ -66,9 +67,13 @@ bool no_overlap(std::array<vec2, 4> m1_bounding_points,
 // step with radial boundaries and different fine steps depending on collider types
 // The optional user_interaction flag allows different boundaries to be used for
 // interactions if set
+// Returns 0 if no overlap
+// vec2.x:
 // Returns 1 if collision along sprite y side of rectangle
 // Returns 2 if collision along sprite x side of rectangle
-int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interaction) {
+// vec2.y
+// Returns magnitude of overlap;
+vec2 Collisions::overlap(const Entity& e1, const Entity& e2, bool user_interaction) {
     // see if the distance between centre points of motion1 and motion2
     // are within the maximum possible distance for them to be touching
     Motion& motion1 = registry.motions.get(e1);
@@ -110,10 +115,10 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
         if ((bounds_type1 == BOUNDS_TYPE::RADIAL || bounds_type1 == BOUNDS_TYPE::POINT)
                 && (bounds_type2 == BOUNDS_TYPE::RADIAL || bounds_type2 == BOUNDS_TYPE::POINT)) {
             if (dist_squared < max_possible_collision_distance/2.f) {
-                // LOG_INFO("Radial radial collision\n");
-                return 1;
+                LOG_INFO("Radial radial collision\n");
+                return {1, max_possible_collision_distance/2.f - dist_squared};
             }
-            return 0;
+            return {0, 0.f};
         }
 
         std::array<vec2, 4> m2_bounding_points = get_bounding_points(collider2, e2);
@@ -126,20 +131,27 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
             vec2 first_quadrant_circle = abs(false_rotated_circle);
             if (first_quadrant_circle.x <= collider2.width/2.f + radius1/2.f
                 && first_quadrant_circle.y <= collider2.height/2.f + radius1/2.f) {
+                // calculate magnitude of overlap, transform to screen coordinates and
+                // move radial object back that amount along its velocity vector
+                vec2 overlap = {collider2.width/2.f + radius1/2.f - first_quadrant_circle.x,
+                    collider2.height/2.f + radius1/2.f - first_quadrant_circle.y};
+                LOG_INFO("Overlap: ({}, {})\n", overlap.x, overlap.y);
+                float overlap_magnitude = min(overlap.x, overlap.y);
+                LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
                 if (false_rotated_circle.x < collider2.width && false_rotated_circle.x > -collider2.width) {
                     if (false_rotated_circle.y > collider2.height/2.f
                         || false_rotated_circle.y < -collider2.height/2.f) {
-                        return 2;
+                        return {2, overlap_magnitude};
                     }
                 }
-                return 1;
+                return {1, overlap_magnitude};
             }
 
             // NOTE: maybe useful to find additional radial-rect collisions -- save for future debugging
             // if (sqrt(dot(first_quadrant_circle - vec2(collider2.width,collider2.height)/2.f, first_quadrant_circle - vec2(collider2.width,collider2.height)/2.f)) <= collider1.width/2.f)
             //     return 1;
 
-            return 0;
+            return {0, 0.f};
         }
 
         std::array<vec2, 4> m1_bounding_points = get_bounding_points(collider1, e1);
@@ -152,20 +164,26 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
             vec2 first_quadrant_circle = abs(false_rotated_circle);
             if (first_quadrant_circle.x <= collider1.width/2.f + radius2/2.f
                 && first_quadrant_circle.y <= collider1.height/2.f + radius2/2.f) {
+                // calculate magnitude of overlap, transform to screen coordinates
+                // and move radial object back that amount along its velocity vector
+                vec2 overlap = {collider1.width/2.f + radius2/2.f - first_quadrant_circle.x,
+                    collider1.height/2.f + radius2/2.f - first_quadrant_circle.y};
+                float overlap_magnitude = min(overlap.x, overlap.y) * 1.01;
+                LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
                 if (false_rotated_circle.x < collider1.width && false_rotated_circle.x > -collider1.width) {
                     if (false_rotated_circle.y > collider1.height/2.f
                         || false_rotated_circle.y < -collider1.height/2.f) {
-                        return 2;
+                        return {2, overlap_magnitude};
                     }
                 }
-                return 1;
+                return {1, overlap_magnitude};
             }
 
             // NOTE: maybe useful to find additional radial-rect collisions -- save for future debugging
             // if (sqrt(dot(first_quadrant_circle - vec2(collider1.width,collider1.height)/2.f, first_quadrant_circle - vec2(collider1.width,collider1.height)/2.f)) <= collider2.width/2.f)
                 // return 1;
 
-            return 0;
+            return {0, 0.f};
         }
 
         // Transform bounding points to screen positions
@@ -229,10 +247,10 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
                         face_points[1], face_points[2], face_points[2]}, angle);
                 }
                 if (!separated) {
-                    return 1;
+                    return {1, 0.f};
                 }
             }
-            return 0;
+            return {0, 0.f};
         }
 
         //
@@ -305,10 +323,10 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
         for (float& angle : axis_angles) {
             if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
                 // LOG_INFO("No collision!");
-                return 0;
+                return {0, 0.f};
             }
         }
-        return 1;
+        return {1, 0.f};
     }
-    return 0;
+    return {0, 0.f};
 }

@@ -90,6 +90,7 @@ struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
     Entity other; // The second object involved in the collision.
     int side = 0; // side (1 for y, 2 for x) the collision occurrs on
+    float overlap = 0.f; // amount the two objects overlap
     explicit Collision(Entity& other) { this->other = other; };
 };
 

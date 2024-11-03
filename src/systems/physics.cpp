@@ -87,11 +87,16 @@ void PhysicsSystem::detect_collisions() {
             Entity entity_j = collideable_registry.entities[j];
             // create a collisions event for each entity colliding with other
             // (to ensure both orders exist for later collision handling)
-            int collision = Collisions::collides(entity_i, entity_j);
-            if (collision > 0) {
+            vec2 collision = Collisions::overlap(entity_i, entity_j);
+            if (collision.x != 0) {
                 // LOG_INFO("Collision detected\n");
-                registry.collisions.emplace_with_duplicates(entity_i, entity_j).side = collision;
-                registry.collisions.emplace_with_duplicates(entity_j, entity_i).side = collision;
+                Collision& c1 = registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                Collision& c2 = registry.collisions.emplace_with_duplicates(entity_j, entity_i);
+
+                c1.side = collision.x;
+                c2.side = collision.x;
+                c1.overlap = collision.y;
+                c2.overlap = collision.y;
             }
         }
     }
