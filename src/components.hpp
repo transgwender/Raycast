@@ -213,6 +213,7 @@ struct Blackhole {
 enum class DASH_STATES { BITE, STARE, WALK, IDLE, YAWN, HIDE, DASH_ACTIONS_COUNT };
 struct DashTheTurtle {
     DASH_STATES behavior;
+    bool tired = false;
     vec2 nearestLightRayDirection;
 };
 

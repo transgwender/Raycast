@@ -305,7 +305,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         }
         default: {
             sounds.play_sound("light-collision.wav");
-            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
             break;
         }
@@ -314,7 +314,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         // TEMP FIX regarding awkward turtle collision box: TODO
         if (!registry.turtles.has(collider)) {
             sounds.play_sound("light-collision.wav");
-            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other); 
         }
     }
@@ -407,6 +407,9 @@ void WorldSystem::handle_turtle_collisions(int i) {
             // If the "barrier" is a lever, push it to the right!
             if (registry.levers.has(other)) {
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
+                DashTheTurtle& t = registry.turtles.get(turtle);
+                t.tired = true;
+                t.behavior = DASH_STATES::IDLE;
             }
         }
          if (turtle_motion.position.x > barrier_motion.position.x) {
@@ -417,6 +420,9 @@ void WorldSystem::handle_turtle_collisions(int i) {
             // If the "barrier" is a lever, push it to the left!
             if (registry.levers.has(other)) {
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
+                DashTheTurtle& t = registry.turtles.get(turtle);
+                t.tired = true;
+                t.behavior = DASH_STATES::IDLE;
             }
         }
     
@@ -557,7 +563,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 }
 
 void WorldSystem::updateDash() {
-    for (Entity dashEntity : registry.turtles.entities) {
+    for (const Entity& dashEntity : registry.turtles.entities) {
         DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
         vec2 ray = registry.turtles.get(dashEntity).nearestLightRayDirection;
         Motion& dm = registry.motions.get(dashEntity);

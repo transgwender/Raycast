@@ -54,7 +54,7 @@ void PhysicsSystem::step(float elapsed_ms) {
             // (to ensure both orders exist for later collision handling)
             int collision = Collisions::collides(entity_i, entity_j);
             if (collision > 0) {
-                LOG_INFO("Collision detected\n");
+                // LOG_INFO("Collision detected\n");
                 registry.collisions.emplace_with_duplicates(entity_i, entity_j).side = collision;
                 registry.collisions.emplace_with_duplicates(entity_j, entity_i).side = collision;
             }

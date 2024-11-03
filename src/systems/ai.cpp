@@ -1,75 +1,64 @@
 // internal
 #include "ai.hpp"
 
-
 float walk_react_distance = 20.0f;
 float walk_react_minisun_distance = 1000.0f;
 float look_react_distance = 800.0f;
 
-void AISystem::step(float elapsed_ms) { 
-
-    updateDash();
-
-    (void)elapsed_ms; // placeholder to silence unused warning until implemented
+void AISystem::step(float elapsed_ms) {
+    updateDash(elapsed_ms);
 }
 
+// Helper function to calculate squared distance between two positions
+float AISystem::calculateDistanceSquared(const vec2& position1, const vec2& position2) {
+    float dx = position1.x - position2.x;
+    float dy = position1.y - position2.y;
+    return dx * dx + dy * dy;
+}
 
-void AISystem::updateDash() {
-    for (Entity dashEntity : registry.turtles.entities) {
+void AISystem::updateDash(float elapsed_ms) {
+    for (const Entity& dashEntity : registry.turtles.entities) {
         Motion& dashMotion = registry.motions.get(dashEntity);
-        float minimumDistance = std::numeric_limits<float>::max();
-        //Entity minimumLightEntity;
+        DashTheTurtle& t = registry.turtles.get(dashEntity);
+        float minimumDistanceSquared = std::numeric_limits<float>::max();
         vec2 minimumDisplacement = vec2(0, 0);
         bool foundMinisun = false;
 
+        // Precompute squared comparison distances
+        float walkReactMinisunDistanceSquared = walk_react_minisun_distance * walk_react_minisun_distance;
+        float walkReactDistanceSquared = walk_react_distance * walk_react_distance;
+        float lookReactDistanceSquared = look_react_distance * look_react_distance;
 
-        for (Entity sunEntity : registry.minisuns.entities) {
+        // Check minisuns
+        for (const Entity& sunEntity : registry.minisuns.entities) {
             if (registry.minisuns.get(sunEntity).lit) {
                 Motion& sunMotion = registry.motions.get(sunEntity);
-                float dx = dashMotion.position.x - sunMotion.position.x;
-                float dy = dashMotion.position.y - sunMotion.position.y;
-                float distance = sqrt(dx * dx + dy * dy);
-                if (distance < minimumDistance) {
-                    minimumDistance = distance;
-                    // minimumLightEntity = lightEntity;
-                    minimumDisplacement = vec2(dx, dy);
+                float distanceSquared = calculateDistanceSquared(dashMotion.position, sunMotion.position);
+
+                if (distanceSquared < minimumDistanceSquared) {
+                    minimumDistanceSquared = distanceSquared;
+                    minimumDisplacement = vec2(dashMotion.position.x - sunMotion.position.x,
+                                               dashMotion.position.y - sunMotion.position.y);
                 }
                 foundMinisun = true;
             }
         }
 
-        if (!foundMinisun) {
-            for (Entity lightEntity : registry.lightRays.entities) {
-                Motion& lightMotion = registry.motions.get(lightEntity);
-                float dx = dashMotion.position.x - lightMotion.position.x;
-                float dy = dashMotion.position.y - lightMotion.position.y;
-                float distance = sqrt(dx * dx + dy * dy);
-                if (distance < minimumDistance) {
-                    minimumDistance = distance;
-                    // minimumLightEntity = lightEntity;
-                    minimumDisplacement = vec2(dx, dy);
-                }
+        // Choose reaction based on distance squared
+        float compareDistanceSquared = foundMinisun ? walkReactMinisunDistanceSquared : walkReactDistanceSquared;
+
+        if (!t.tired) {
+            if (minimumDistanceSquared <= compareDistanceSquared) {
+                t.behavior = DASH_STATES::WALK;
+                t.nearestLightRayDirection = minimumDisplacement;
+            } else if (minimumDistanceSquared <= lookReactDistanceSquared) {
+                t.behavior = DASH_STATES::STARE;
+                t.nearestLightRayDirection = minimumDisplacement;
+            } else {
+                t.behavior = DASH_STATES::IDLE;
             }
         }
-
-        float compareDistance = foundMinisun ? walk_react_minisun_distance : walk_react_distance;
-        if (minimumDistance <= compareDistance) {
-            registry.turtles.get(dashEntity).behavior = DASH_STATES::WALK;
-            registry.turtles.get(dashEntity).nearestLightRayDirection = minimumDisplacement;
-            //registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
-        } else if (minimumDistance <= look_react_distance) {
-            registry.turtles.get(dashEntity).behavior = DASH_STATES::STARE;
-            registry.turtles.get(dashEntity).nearestLightRayDirection = minimumDisplacement;
-            //registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
-        } else {
-            registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
-            // registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
-        }
-
-        // printf("%lu\n", registry.lightRays.entities.size());
-
-        if (registry.lightRays.entities.size() == 0) {
-            registry.turtles.get(dashEntity).behavior = DASH_STATES::IDLE;
-        }
     }
+
+    (void)elapsed_ms;
 }
