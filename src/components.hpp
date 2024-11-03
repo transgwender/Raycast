@@ -233,13 +233,24 @@ struct SpriteSheet {
 };
 
 
-enum class LEVER_STATES { LEFT, MIDDLE, RIGHT, LEVER_STATES_COUNT };
+enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, LEVER_STATES_COUNT };
 enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
 enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
+enum class ACTIVE_LEVER { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, ACTIVE_LEVER_COUNT };
+
+// PLEASE KEEP LEVER_STATES IDENTICAL TO ACTIVE LEVER, it makes it easier for comparison!
+
 
 struct Lever {
     LEVER_STATES state;
     LEVER_MOVEMENT_STATES movementState;
     LEVER_EFFECTS effect;
+    ACTIVE_LEVER activeLever;
     Entity affectedEntity;
+
+    // lever_state -- is it pushed all the way right, all the way left, or somewhere in the middle?
+    // lever_movement_states -- is the lever currently being pushed in a certain direction? If so, which direction?
+    // lever_effect -- what effect does the lever have when active on the affected entity?
+    // active_lever -- is the lever active when pushed right? or left?
+    // affectedEntity -- which entity is affected by this lever?
 };

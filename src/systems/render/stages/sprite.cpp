@@ -143,22 +143,30 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
 
     if (registry.spriteSheets.has(entity)) {
         SpriteSheet& ss = registry.spriteSheets.get(entity);
-
-        // Update animation frame
         ss.timeElapsed += elapsed_ms;
-        if (ss.timeElapsed >= animation_speed) {
-            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
-            ss.timeElapsed = 0.f;
+
+
+        if (registry.levers.has(entity)) { // IF animated sprite is a lever
+            animateLever(entity, ss);
+
+        } else { // If animated sprite is not a lever
+
+            // Update animation frame
+            if (ss.timeElapsed >= animation_speed) {
+                ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
+                ss.timeElapsed = 0.f;
+            }
         }
 
-        // Calculate UV coord offset
+         // Calculate UV coord offset
         float h_offset = ss.cellHeight * static_cast<float>(ss.currFrame) / ss.sheetWidth;
         float v_offset = ss.cellWidth * static_cast<float>(ss.currState) / ss.sheetHeight;
         vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
 
         setUniformFloat(shader, "horizontal_offset", h_offset);
         setUniformFloat(shader, "vertical_offset", v_offset);
-        setUniformFloatVec2(shader, "cell_size", cell_size);
+        setUniformFloatVec2(shader, "cell_size", cell_size); 
+
     } else {
         // Default texture coordinates
         setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
@@ -176,6 +184,28 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     glDrawElements(GL_TRIANGLES, num_indices, GL_UNSIGNED_SHORT, nullptr);
 
     checkGlErrors();
+}
+
+void SpriteStage::animateLever(const Entity& entity, SpriteSheet& ss) {
+    Lever& lever = registry.levers.get(entity);
+
+    // Update animation frame
+    if (ss.timeElapsed >= animation_speed) {
+        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_RIGHT &&
+            ss.currFrame < ss.animationFrames[ss.currState] - 1) {
+            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
+            ss.timeElapsed = 0.f;
+            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
+        }
+
+        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_LEFT && ss.currFrame > 0) {
+            ss.currFrame = (ss.currFrame - 1) % ss.animationFrames[ss.currState];
+            ss.timeElapsed = 0.f;
+            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
+        }
+
+        lever.state = (LEVER_STATES) ss.currFrame;
+    }
 }
 
 void SpriteStage::draw(float elapsed_ms) {

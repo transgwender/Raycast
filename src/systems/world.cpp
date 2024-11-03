@@ -120,7 +120,19 @@ bool WorldSystem::shouldAllowInput() {
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
     if (isInLevel() && shouldStep()) {
+        ECSRegistry& test_registry = registry;
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+
+        for (int i = 0; i < registry.levers.components.size(); i++) {
+            auto& leverEntity = registry.levers.entities[i];
+            auto& lever = registry.levers.components[i];
+            if ((int) lever.state == (int) lever.activeLever) {
+                if (lever.effect == LEVER_EFFECTS::REMOVE) {
+                    registry.remove_all_components_of(lever.affectedEntity);
+                }
+            }
+        
+        }
 
         for (int i = 0; i < registry.lightRays.components.size(); i++) {
             auto& lightEntity = registry.lightRays.entities[i];
@@ -226,6 +238,7 @@ void WorldSystem::handle_collisions() {
 
         if (registry.turtles.has(collisionsRegistry.entities[i])) {
             handle_turtle_collisions(i);
+            continue;
         }
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
@@ -346,10 +359,17 @@ void WorldSystem::handle_turtle_collisions(int i) {
 
 
 
-    //return;
+
     auto& collisionsRegistry = registry.collisions;
     Entity turtle = collisionsRegistry.entities[i];
     Entity other = collisionsRegistry.components[i].other;
+
+    // TODO: Rough patch to handle TRIPLE COLLISIONS... might want to improve in the future
+    if (!registry.motions.has(other) || !registry.colliders.has(other)) {
+        return;
+    }
+
+
     Motion& turtle_motion = registry.motions.get(turtle);
     Collider& turtle_collider = registry.colliders.get(turtle);
     Motion& barrier_motion = registry.motions.get(other);
@@ -369,26 +389,36 @@ void WorldSystem::handle_turtle_collisions(int i) {
     float overlapX = std::min(turtleRight, barrierRight) - std::max(turtleLeft, barrierLeft);
     float overlapY = std::min(turtleBottom, barrierBottom) - std::max(turtleTop, barrierTop);
 
+    // Check to see collision penetration, is there more overlap on the x-axis or the y-axis? Resolve the collision on the axis with the most overlap
     if (abs(overlapX) < abs(overlapY)) {
          if (turtle_motion.position.x < barrier_motion.position.x) {
-            // registry.sprite
-            turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 -
-            abs(turtle_collider.width / 2);
+            // Place the turtle to the left of the barrier
+            turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
+
+            // If the "barrier" is a lever, push it to the right!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
+            }
         }
          if (turtle_motion.position.x > barrier_motion.position.x) {
+            // Place the turtle to the right of the barrier
             turtle_motion.position.x =
-                barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+                 barrier_motion.position.x + abs(barrier_collider.width / 2) + abs(turtle_collider.width / 2) - 0.01f;
+
+            // If the "barrier" is a lever, push it to the left!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
+            }
         }
     
     } else {
         if (turtle_motion.position.y < barrier_motion.position.y) {
-            // registry.sprite
             turtle_motion.position.y =
-                barrier_motion.position.y - barrier_motion.scale.y / 2 - abs(turtle_collider.height / 2);
+                barrier_motion.position.y - abs(barrier_collider.height / 2) - abs(turtle_collider.height / 2) - 0.01f;
         }
         if (turtle_motion.position.y > barrier_motion.position.y) {
             turtle_motion.position.y =
-                barrier_motion.position.y + barrier_motion.scale.y / 2 + abs(turtle_collider.height / 2);
+                barrier_motion.position.y + abs(barrier_collider.height / 2) + abs(turtle_collider.height / 2) + 0.01f;
         }
         turtle_motion.velocity.y = 0;
     }
