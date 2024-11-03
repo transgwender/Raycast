@@ -1,6 +1,7 @@
 // internal
 #include "ai.hpp"
 
+
 float walk_react_distance = 20.0f;
 float walk_react_minisun_distance = 1000.0f;
 float look_react_distance = 800.0f;

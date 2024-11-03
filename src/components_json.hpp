@@ -316,6 +316,7 @@ inline void from_json(const json& j, Text& c) {
 }
 
 
+
 inline void to_json(json& j, const Gravity& c) {
     (void)c;
     j = json{{"type", "gravity"}};

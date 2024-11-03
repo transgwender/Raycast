@@ -374,9 +374,6 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
 // if the turtle collides against a wall, stop the turtle from moving further
 void WorldSystem::handle_turtle_collisions(int i) {
 
-
-
-
     auto& collisionsRegistry = registry.collisions;
     Entity turtle = collisionsRegistry.entities[i];
     Entity other = collisionsRegistry.components[i].other;
@@ -385,8 +382,6 @@ void WorldSystem::handle_turtle_collisions(int i) {
     if (!registry.motions.has(other) || !registry.colliders.has(other)) {
         return;
     }
-
-
     Motion& turtle_motion = registry.motions.get(turtle);
     Collider& turtle_collider = registry.colliders.get(turtle);
     Motion& barrier_motion = registry.motions.get(other);
@@ -405,6 +400,7 @@ void WorldSystem::handle_turtle_collisions(int i) {
 
     float overlapX = std::min(turtleRight, barrierRight) - std::max(turtleLeft, barrierLeft);
     float overlapY = std::min(turtleBottom, barrierBottom) - std::max(turtleTop, barrierTop);
+
 
     // Check to see collision penetration, is there more overlap on the x-axis or the y-axis? Resolve the collision on the axis with the most overlap
     if (abs(overlapX) < abs(overlapY)) {
