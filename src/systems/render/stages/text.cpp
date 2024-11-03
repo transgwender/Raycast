@@ -109,7 +109,7 @@ std::vector<Character>& TextStage::getCharacterSet(const unsigned int size) {
     return character_sets[size];
 }
 
-void TextStage::renderText(const std::string& text, float x, float y, const unsigned int size, const vec3 color) {
+void TextStage::renderText(const std::string& text, float x, float y, const unsigned int size, const vec3 color, bool centered) {
     glUseProgram(text_shader);
     glViewport(0, 0, frame_width, frame_height);
 
@@ -125,33 +125,35 @@ void TextStage::renderText(const std::string& text, float x, float y, const unsi
     float start_pos_x = x;
     float start_pos_y = y;
 
-    float max_x = 0;
-    float max_y = 0;
+    if (centered) {
+        float max_x = 0;
+        float max_y = 0;
 
-    // get width info
-    for (const unsigned char c : text) {
-        const float scale = 1.0;
-        auto [texture, size, bearing, advance] = characters[c];
-        if (c == '\n') {
-            y += static_cast<float>(size.y) * scale;
-            x = start_pos_x;
-            continue;
-        }
-        if (c == ' ') {
+        // get width info
+        for (const unsigned char c : text) {
+            const float scale = 1.0;
+            auto [texture, size, bearing, advance] = characters[c];
+            if (c == '\n') {
+                y += static_cast<float>(size.y) * scale;
+                x = start_pos_x;
+                continue;
+            }
+            if (c == ' ') {
+                x += static_cast<float>(advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+                continue;
+            }
+            // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
             x += static_cast<float>(advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-            continue;
+
+            max_x = max(max_x, x);
+            max_y = max(max_y, y - static_cast<float>(size.y) * scale);
         }
-        // now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-        x += static_cast<float>(advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
 
-        max_x = max(max_x, x);
-        max_y = max(max_y, y - static_cast<float>(size.y) * scale);
+        start_pos_x = start_pos_x - ((max_x - start_pos_x)/2.f);
+        x = start_pos_x;
+        start_pos_y = start_pos_y - ((max_y - start_pos_y)/2.f);
+        y = start_pos_y;
     }
-
-    start_pos_x = start_pos_x - ((max_x - start_pos_x)/2.f);
-    x = start_pos_x;
-    start_pos_y = start_pos_y - ((max_y - start_pos_y)/2.f);
-    y = start_pos_y;
 
     // iterate through all characters
     for (const unsigned char c : text) {
@@ -220,7 +222,7 @@ void TextStage::draw() {
     for (const Text& text : registry.texts.components) {
         const float x = (text.position.x / world_width) * static_cast<float>(frame_width);
         const float y = (text.position.y / world_height) * static_cast<float>(frame_height);
-        renderText(text.text, x, y, text.size, text.color);
+        renderText(text.text, x, y, text.size, text.color, text.centered);
     }
 }
 

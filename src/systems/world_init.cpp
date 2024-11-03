@@ -85,6 +85,7 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     text.size = 64;
     text.position = position;
     text.text = label;
+    text.centered = true;
     registry.texts.insert(entity, text);
     return entity;
 }
