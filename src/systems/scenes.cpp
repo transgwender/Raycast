@@ -71,7 +71,9 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "light_source") {
                         PARSE_COMPONENT(LightSource, lightSources);
                     } else if (type == "on_linear_rails") {
-                        PARSE_COMPONENT(OnLinearRails, entitiesOnLinearRails);
+                        OnLinearRails lr{};
+                        data.get_to(lr);
+                        createOnLinearRails(entity, lr);
                     } else if (type == "lerpable") {
                         PARSE_COMPONENT(Lerpable, lerpables);
                     } else if (type == "rotateable") {

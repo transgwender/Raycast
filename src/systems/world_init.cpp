@@ -143,3 +143,14 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     zone.position = position;
     zone.type = zType;
 }
+
+void createOnLinearRails(Entity entity, OnLinearRails rails) {
+    Motion& motion = registry.motions.get(entity);
+    auto direction = vec2(cos(rails.angle), sin(rails.angle));
+    vec2 firstEndpoint = motion.position + rails.length * direction;
+    vec2 secondEndpoint = motion.position - rails.length * direction;
+    rails.firstEndpoint = firstEndpoint;
+    rails.secondEndpoint = secondEndpoint;
+    rails.direction = direction;
+    registry.entitiesOnLinearRails.insert(entity, rails);
+}

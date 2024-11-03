@@ -15,5 +15,6 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
 Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName);
 Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& nextScene);
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames);
+void createOnLinearRails(Entity entity, OnLinearRails rails);
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);

@@ -11,10 +11,10 @@
 
 // Systems
 #include "physics.hpp"
-#include "rails.hpp"
 #include "sounds.hpp"
 #include "scenes.hpp"
 #include "menu.hpp"
+#include "utils/input_manager.hpp"
 
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
@@ -44,6 +44,7 @@ class WorldSystem {
 
 
   private:
+    InputManager input_manager;
     // Input callback functions
     void on_key(int key, int, int action, int mod);
     void on_mouse_move(vec2 pos);
@@ -70,8 +71,6 @@ class WorldSystem {
     MenuSystem menus;
     float current_speed;
 
-    // Game systems
-    RailSystem rails;
     int dashSpeed = 30;
 
     // Music references
