@@ -225,8 +225,21 @@ struct SpriteSheet {
     unsigned int currFrame = 0;
     unsigned int currState = 0;
     float timeElapsed = 0.f;
+    bool animationActive = false;
 
     // Index -> different animation states
     // Value -> Number of frames in that animation
     std::vector<unsigned int> animationFrames;
+};
+
+
+enum class LEVER_STATES { LEFT, MIDDLE, RIGHT, LEVER_STATES_COUNT };
+enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
+enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
+
+struct Lever {
+    LEVER_STATES state;
+    LEVER_MOVEMENT_STATES movementState;
+    LEVER_EFFECTS effect;
+    Entity affectedEntity;
 };

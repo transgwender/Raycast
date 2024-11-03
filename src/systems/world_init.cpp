@@ -132,8 +132,9 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
     return entity;
 }
 
-Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight,
-    float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames) {
+Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
+                         float cellHeight, const std::vector<unsigned int>& animationFrames,
+                         const std::string textureName) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
