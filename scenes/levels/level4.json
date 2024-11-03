@@ -89,49 +89,11 @@
           "type": "zone",
           "position": [
             180.0,
-            190.0
+            120.0
           ],
           "scale": [
             180,
             120
-          ],
-          "zone_type": 3
-        }
-      ]
-    },
-    {
-      "name": "stones2",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            180.0,
-            110.0
-          ],
-          "scale": [
-            60,
-            40
-          ],
-          "texture": "stones"
-        },
-        {
-          "type": "collider",
-          "width": 60,
-          "height": 40,
-          "bounds": 1
-        },
-        {
-          "type": "collideable"
-        },
-        {
-          "type": "zone",
-          "position": [
-            180.0,
-            110.0
-          ],
-          "scale": [
-            60,
-            40
           ],
           "zone_type": 3
         }
@@ -386,7 +348,7 @@
         },
         {
           "type": "lerpable",
-          "should_switch_direction": false,
+          "should_switch_direction" : false,
           "t": 0,
           "t_step": 0
         },
@@ -499,21 +461,12 @@
           "cellWidth": 32,
           "cellHeight": 32,
           "texture": "turtle_sprite_sheet",
-          "animationFrames": [ 12, 10, 4, 6, 5, 10 ]
+          "animationFrames" : [12, 10, 4, 6, 5, 10]
         },
         {
           "type": "dash_the_turtle",
           "behavior": 3,
           "minimumDisplacement": [ 10000, 10000 ]
-        },
-        {
-          "type": "collider",
-          "width": 16,
-          "height": 16,
-          "bounds": 1
-        },
-        {
-          "type": "collideable"
         }
       ]
     }
