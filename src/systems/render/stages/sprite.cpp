@@ -60,12 +60,13 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
     glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
 
     // set uniforms
-    auto albedo_tex_location = glGetUniformLocation(shader, "albedo_tex");
-    auto normal_tex_location = glGetUniformLocation(shader, "normal_tex");
-    glUniform1i(albedo_tex_location, 0);
-    glUniform1i(normal_tex_location, 1);
+    setUniformInt(shader, "albedo_tex", 0);
+    setUniformInt(shader, "normal_tex", 1);
 
     setUniformFloatVec3(shader, "ambient_light", ambient_light_colour / 255.0f);
+
+
+    setUniformInt(shader, "skip_lighting", registry.menuItems.has(entity));
 
     int point_lights_count = 0;
     for (const auto& point_light : registry.pointLights.entities) {
