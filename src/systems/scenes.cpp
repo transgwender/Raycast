@@ -120,6 +120,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(MiniSun, minisuns);
                     } else if (type == "gravity") {
                         PARSE_COMPONENT(Gravity, gravities);
+                    } else if (type == "menu_item") {
+                        PARSE_COMPONENT(MenuItem, menuItems);
                     } else if (type == "text") {
                         PARSE_COMPONENT(Text, texts);
                     } else if (type == "lever") { // This is used to attach a lever entity that can exhibit some effect on the CURRENT ENTITY

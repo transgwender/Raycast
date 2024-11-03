@@ -66,7 +66,7 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     return createEmptyButton(entity, position, scale, label, "button");
 }
 
-Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
+Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName, vec3 color) {
     createSprite(entity, position, scale, 0, textureName);
     if (!registry.interactables.has(entity)) {
         registry.interactables.emplace(entity);
@@ -88,14 +88,15 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     text.size = 64;
     text.position = position;
     text.text = label;
+    text.color = color;
     text.centered = true;
     registry.texts.insert(entity, text);
     return entity;
 }
 
 Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName,
-                               const std::string& nextScene) {
-    createEmptyButton(entity, position, scale, label, textureName);
+                               const std::string& nextScene, vec3 color) {
+    createEmptyButton(entity, position, scale, label, textureName, color);
     ChangeScene changeScene;
     changeScene.scene = nextScene;
     registry.changeScenes.insert(entity, changeScene);
@@ -127,7 +128,7 @@ Entity createDashTheTurtle(const Entity& entity, vec2 position) {
 }
 
 Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
-    createEmptyButton(entity, position, scale, label, textureName);
+    createEmptyButton(entity, position, scale, label, textureName, {255, 255, 255});
     registry.resumeGames.emplace(entity);
     return entity;
 }

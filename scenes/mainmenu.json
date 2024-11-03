@@ -35,6 +35,9 @@
         {
           "type": "change_scene",
           "scene": "levelmenu"
+        },
+        {
+          "type": "menu_item"
         }
       ]
     },
