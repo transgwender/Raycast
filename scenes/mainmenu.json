@@ -37,6 +37,46 @@
           "scene": "levelmenu"
         }
       ]
+    },
+    {
+      "name": "Team name",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            160,
+            20
+          ],
+          "size": 96,
+          "text": "Lightbox Presents:",
+          "color": [
+            210,
+            210,
+            210
+          ],
+          "centered": true
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            2,
+            140
+          ],
+          "size": 32,
+          "text": "UBC CPSC 427 - 2024W1\nProject Group 03:\n\nArpit Kumar\nGwendolyn Kornak\nJackson Li\nJocelyn Baker\nMuhammad Assad\nSuraj Emmattiparambil",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "centered": false
+        }
+      ]
     }
   ]
 }
