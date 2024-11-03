@@ -563,6 +563,24 @@
           "zone_type": 3
         }
       ]
+    },
+    {
+      "name": "lever",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            260.0,
+            114.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "texture": "lever_sprite_sheet",
+          "animationFrames": [ 1, 2, 3, 4, 5 ]
+        }
+      ]
     }
   ]
 }
