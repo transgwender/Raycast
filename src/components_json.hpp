@@ -287,7 +287,7 @@ inline void from_json(const json& j, SpriteSheet& c) {
 
 
 inline void to_json(json& j, const MiniSun& c) {
-    j = json{{"type", "sprite_sheet"},
+    j = json{{"type", "minisun"},
              {"lit", c.lit},
              {"lit_duration", c.lit_duration}};
 }
@@ -313,4 +313,16 @@ inline void from_json(const json& j, Text& c) {
     j.at("text").get_to(c.text);
     j.at("color").get_to(c.color);
     j.at("centered").get_to(c.centered);
+}
+}
+
+
+inline void to_json(json& j, const Gravity& c) {
+    (void)c;
+    j = json{{"type", "gravity"}};
+}
+
+inline void from_json(const json& j, Gravity& c) {
+    (void)j;
+    (void)c;
 }

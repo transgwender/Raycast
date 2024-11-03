@@ -114,6 +114,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         SpriteSheet ss{};
                         data.get_to(ss);
                         createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
+                    } else if (type == "minisun") {
+                        PARSE_COMPONENT(MiniSun, minisuns);
+                    } else if (type == "gravity") {
+                        PARSE_COMPONENT(Gravity, gravities);
                     } else if (type == "text") {
                         PARSE_COMPONENT(Text, texts);
                     }

@@ -110,6 +110,8 @@ struct ChangeScene {
 
 struct ResumeGame {};
 
+struct Gravity {};
+
 /**
  * Single Vertex Buffer element for textured sprites (textured.vs.glsl)
  */

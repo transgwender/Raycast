@@ -18,16 +18,35 @@ void AISystem::updateDash() {
         float minimumDistance = std::numeric_limits<float>::max();
         //Entity minimumLightEntity;
         vec2 minimumDisplacement = vec2(0, 0);
+        bool foundMinisun = false;
 
-        for (Entity lightEntity : registry.lightRays.entities) {
-            Motion& lightMotion = registry.motions.get(lightEntity);
-            float dx = dashMotion.position.x - lightMotion.position.x;
-            float dy = dashMotion.position.y - lightMotion.position.y;
-            float distance = sqrt(dx * dx + dy * dy);
-            if (distance < minimumDistance) {
-                minimumDistance = distance;
-                //minimumLightEntity = lightEntity;
-                minimumDisplacement = vec2(dx, dy);
+
+        for (Entity sunEntity : registry.minisuns.entities) {
+            if (registry.minisuns.get(sunEntity).lit) {
+                Motion& sunMotion = registry.motions.get(sunEntity);
+                float dx = dashMotion.position.x - sunMotion.position.x;
+                float dy = dashMotion.position.y - sunMotion.position.y;
+                float distance = sqrt(dx * dx + dy * dy);
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    // minimumLightEntity = lightEntity;
+                    minimumDisplacement = vec2(dx, dy);
+                }
+                foundMinisun = true;
+            }
+        }
+
+        if (!foundMinisun) {
+            for (Entity lightEntity : registry.lightRays.entities) {
+                Motion& lightMotion = registry.motions.get(lightEntity);
+                float dx = dashMotion.position.x - lightMotion.position.x;
+                float dy = dashMotion.position.y - lightMotion.position.y;
+                float distance = sqrt(dx * dx + dy * dy);
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    // minimumLightEntity = lightEntity;
+                    minimumDisplacement = vec2(dx, dy);
+                }
             }
         }
 

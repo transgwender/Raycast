@@ -39,6 +39,8 @@ class WorldSystem {
     // Check for collisions
     void handle_collisions();
 
+    void handle_minisun_collision(Entity& minisun_entity);
+
     // Should the game be over ?
     bool is_over() const;
 
@@ -74,6 +76,7 @@ class WorldSystem {
     // Game systems
     RailSystem rails;
     int dashSpeed = 30;
+    float gravity = 2;
 
     // Music references
     SoundSystem sounds;
