@@ -103,15 +103,25 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
 }
 
 Entity createDashTheTurtle(const Entity& entity, vec2 position) {
-    Entity dash = createSprite(entity, position, {100, 100}, 0, "button");
+    Entity dash = createSprite(entity, position, {10, 10}, 0, "button");
 
     auto& motion = registry.motions.get(dash);
     motion.velocity = {0, 0};
-    //motion.collides = false;
+    motion.scale = {10, 10};
+
+    registry.collideables.emplace(entity);
+    auto& collider = registry.colliders.emplace(entity);
+
+    // TEMPORARY
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    collider.width = 10;
+    collider.height = 10;
+    // motion.collides = false;
 
     DashTheTurtle dashComponent;
     dashComponent.behavior = DASH_STATES::IDLE;
     dashComponent.nearestLightRayDirection = {1000000000, 1000000000};
+    registry.turtles.emplace(dash);
 
     return entity;
 }

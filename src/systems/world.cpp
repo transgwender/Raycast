@@ -140,6 +140,21 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             }
         }
 
+        for (int i = 0; i < registry.minisuns.components.size(); i++) {
+            auto& minisunEntity = registry.minisuns.entities[i];
+            auto& minisun = registry.minisuns.components[i];
+            if (minisun.lit) {
+                if (minisun.lit_duration > 0) {
+                    minisun.lit_duration -= elapsed_ms_since_last_update;
+                } else {
+                    minisun.lit = false;
+                    registry.pointLights.remove(minisunEntity);
+                    registry.materials.remove(minisunEntity);
+                    registry.materials.insert(minisunEntity, {"minisun_off", "textured"});
+                } 
+            }
+        }
+
         if (registry.lightRays.components.size() < MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
@@ -155,6 +170,13 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 createLight(entity, position, angle);
             }
         }
+        for (int i = 0; i < registry.gravities.components.size(); i++) {
+            auto& gravityEntity = registry.gravities.entities[i];
+            auto& motion = registry.motions.get(gravityEntity);
+            motion.velocity.y += gravity;
+        }
+
+        
 
         rails.step(elapsed_ms_since_last_update);
         updateDash();
@@ -211,6 +233,10 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+
+        if (registry.turtles.has(collisionsRegistry.entities[i])) {
+            handle_turtle_collisions(i);
+        }
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
             registry.lightRays.has(collisionsRegistry.entities[i]))
@@ -220,10 +246,29 @@ void WorldSystem::handle_collisions() {
                               collisionsRegistry.components[i].side);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            if (registry.minisuns.has(collisionsRegistry.entities[i])) {
+                handle_minisun_collision(collisionsRegistry.entities[i]);
+            
+            }
         }
     }
     // Remove all collisions from this simulation step
     registry.collisions.clear();
+}
+
+void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
+    registry.minisuns.get(minisun_entity).lit_duration = 5000;
+    if (!registry.minisuns.get(minisun_entity).lit) {
+        registry.minisuns.get(minisun_entity).lit = true;
+
+        registry.materials.remove(minisun_entity);
+        registry.materials.insert(minisun_entity, {"light", "textured"});
+
+        PointLight& point_light = registry.pointLights.emplace(minisun_entity);
+        point_light.diffuse = 10.0f * vec3(255, 233, 87);
+        point_light.linear = 0.060f;
+        point_light.quadratic = 0.0100;
+    }
 }
 
 // When colliding entities to not reflect, if one of the entities
@@ -304,6 +349,69 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                     atan2(light_motion.velocity.y, light_motion.velocity.x);
     light_motion.angle -= 2 * angle_between;
+}
+
+// if the turtle collides against a wall, stop the turtle from moving further
+void WorldSystem::handle_turtle_collisions(int i) {
+
+
+
+    //return;
+    auto& collisionsRegistry = registry.collisions;
+    Entity turtle = collisionsRegistry.entities[i];
+    Entity other = collisionsRegistry.components[i].other;
+    Motion& turtle_motion = registry.motions.get(turtle);
+    Collider& turtle_collider = registry.colliders.get(turtle);
+    Motion& barrier_motion = registry.motions.get(other);
+    Collider& barrier_collider = registry.colliders.get(other);
+
+    float turtleLeft = turtle_motion.position.x - turtle_collider.width / 2;
+    float turtleRight = turtle_motion.position.x + turtle_collider.width / 2;
+    float turtleTop = turtle_motion.position.y - turtle_collider.height / 2;
+    float turtleBottom = turtle_motion.position.y + turtle_collider.height / 2;
+
+    float barrierLeft = barrier_motion.position.x - barrier_collider.width / 2;
+    float barrierRight = barrier_motion.position.x + barrier_collider.width / 2;
+    float barrierTop = barrier_motion.position.y - barrier_collider.height / 2;
+    float barrierBottom = barrier_motion.position.y + barrier_collider.height / 2;
+
+
+    float overlapX = std::min(turtleRight, barrierRight) - std::max(turtleLeft, barrierLeft);
+    float overlapY = std::min(turtleBottom, barrierBottom) - std::max(turtleTop, barrierTop);
+
+    if (abs(overlapX) < abs(overlapY)) {
+         if (turtle_motion.position.x < barrier_motion.position.x) {
+            // registry.sprite
+            turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 -
+            abs(turtle_collider.width / 2);
+        }
+         if (turtle_motion.position.x > barrier_motion.position.x) {
+            turtle_motion.position.x =
+                barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+        }
+    
+    } else {
+        if (turtle_motion.position.y < barrier_motion.position.y) {
+            // registry.sprite
+            turtle_motion.position.y =
+                barrier_motion.position.y - barrier_motion.scale.y / 2 - abs(turtle_collider.height / 2);
+        }
+        if (turtle_motion.position.y > barrier_motion.position.y) {
+            turtle_motion.position.y =
+                barrier_motion.position.y + barrier_motion.scale.y / 2 + abs(turtle_collider.height / 2);
+        }
+        turtle_motion.velocity.y = 0;
+    }
+
+    // Move to the left of barrier
+    //if (turtle_motion.position.x < barrier_motion.position.x) {
+    //    // registry.sprite
+    //    turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 - abs(turtle_collider.width / 2);
+    //}
+    //if (turtle_motion.position.x > barrier_motion.position.x) {
+    //    turtle_motion.position.x =
+    //        barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+    //}
 }
 
 // Should the game be over?
