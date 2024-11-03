@@ -12,7 +12,7 @@
 #include "logging/log.hpp"
 #include "systems/menu.hpp"
 #include "systems/physics.hpp"
-#include "systems/rails.hpp"
+#include "utils/math.hpp"
 
 #include <utils.h>
 
@@ -182,15 +182,13 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 createLight(entity, position, angle);
             }
         }
+
         for (int i = 0; i < registry.gravities.components.size(); i++) {
             auto& gravityEntity = registry.gravities.entities[i];
             auto& motion = registry.motions.get(gravityEntity);
             motion.velocity.y += gravity;
         }
-
         
-
-        rails.step(elapsed_ms_since_last_update);
         updateDash();
     }
 
@@ -229,8 +227,6 @@ void WorldSystem::restart_game() {
     // add frame counter
     frame_rate_entity = Entity();
     registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
-
-    rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -458,16 +454,17 @@ bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); 
 
 // On key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
+    input_manager.update_key_state(key, action, mod);
+
     // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
+    if (IS_RELEASED(GLFW_KEY_R)) {
         int w, h;
         glfwGetWindowSize(window, &w, &h);
-
         restart_game();
     }
 
     // Pausing
-    if (action == GLFW_RELEASE && key == GLFW_KEY_ESCAPE) {
+    if (IS_RELEASED(GLFW_KEY_ESCAPE)) {
         assert(registry.menus.size() <= 1);
         if (registry.menus.size() == 0) {
             assert(registry.menus.size() <= 1);
@@ -488,11 +485,11 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     }
 
     // Control the current speed with `<` `>`
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA) {
+    if (IS_RELEASED_WITH_SHIFT(GLFW_KEY_COMMA)) {
         current_speed -= 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD) {
+    if (IS_RELEASED_WITH_SHIFT(GLFW_KEY_PERIOD)) {
         current_speed += 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
@@ -502,44 +499,53 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.entities[0]).position = position; }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
-    auto hovered_entities = clicked_entities(mouse_position.x, mouse_position.y);
+    input_manager.update_mouse_position(mouse_position);
+
+    auto hovered_entities = input_manager.get_entities_at_mouse_pos();
     for (auto& highlightable : registry.highlightables.components) {
         highlightable.isHighlighted = false;
     }
+
     for (Entity entity : hovered_entities) {
-        if (registry.highlightables.has(entity))
+        if (registry.highlightables.has(entity)) {
             registry.highlightables.get(entity).isHighlighted = true;
-    }
-}
+        }
 
-std::vector<Entity> WorldSystem::clicked_entities(double xpos, double ypos) {
-    if (registry.mice.size() == 0) {
-        const auto mouse = Entity();
-        registry.mice.emplace(mouse);
-        registry.motions.emplace(mouse);
-        Collider& mouse_collider = registry.colliders.emplace(mouse);
-        mouse_collider.bounds_type = BOUNDS_TYPE::POINT;
-        mouse_collider.needs_update = false;
-        mouse_collider.height = 0.5f;
-        mouse_collider.width = 0.5f;
-    }
-    std::vector<Entity> entities;
+        // hanlde the mirror movements
+        if (input_manager.is_mouse_button_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
+            Motion &clicked_motion = registry.motions.get(entity);
 
-    Entity& mouse = registry.mice.entities[0];
-    Motion& mouse_motion = registry.motions.get(mouse);
-    mouse_motion.position = screenToWorld({xpos, ypos});
-    for (int i = 0; i < registry.interactables.size(); i++) {
-        if (Collisions::collides(mouse, registry.interactables.entities[i], true))
-            entities.push_back(registry.interactables.entities[i]);
+            if (registry.rotateables.has(entity)) { // rotateable mirrors
+                vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
+                // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
+                clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
+            }
+
+            if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
+                OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity); 
+                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate 
+                // beyond the y-axis it flips so this check is necessary
+                if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
+                    clicked_motion.position.x = raycast::math::clamp(
+                        rails.firstEndpoint.x,
+                        rails.secondEndpoint.x,
+                        screenToWorld(mouse_position).x);
+                } else {
+                    clicked_motion.position.x = raycast::math::clamp(
+                        rails.secondEndpoint.x,
+                        rails.firstEndpoint.x,
+                        screenToWorld(mouse_position).x);
+                }
+            }
+        }
     }
-    return entities;
 }
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
-    auto entities = clicked_entities(xpos, ypos);
-    if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
-        // LOG_INFO("({}, {})", xpos, ypos);
+    input_manager.update_mouse_button_state(key, action, mod, vec2(xpos, ypos));
+
+    auto entities = input_manager.get_entities_at_mouse_pos();
+    if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {
         // mouse initialized by clicked_entities
         for (const Entity& entity : entities) {
             assert(registry.motions.has(entity));
@@ -551,34 +557,6 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
             if (registry.resumeGames.has(entity)) {
                 menus.try_close_menu();
                 return;
-            }
-            Motion& clicked_motion = registry.motions.get(entity);
-            if (registry.rotateables.has(entity)) {
-                float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
-                clicked_motion.angle += clicked_motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
-            }
-            if (registry.lerpables.has(entity)) {
-                Lerpable& e_lr = registry.lerpables.get(entity);
-                e_lr.t_step = 0;
-            }
-        }
-    }
-    if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
-        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
-        LOG_INFO("({}, {})", xpos, ypos);
-        for (const Entity& entity : entities) {
-            assert(registry.motions.has(entity));
-            Motion& clicked_motion = registry.motions.get(entity);
-            if (shouldAllowInput() && registry.entitiesOnLinearRails.has(entity)) {
-                LOG_INFO("Moving entity on linear rail.");
-                OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-                Lerpable& e_lr = registry.lerpables.get(entity);
-                int which_direction = dot(clicked_motion.position - world_pos, e_rails.direction);
-                if (which_direction > 0) {
-                    e_lr.t_step = -0.5;
-                } else if (which_direction < 0) {
-                    e_lr.t_step = 0.5;
-                }
             }
         }
     }

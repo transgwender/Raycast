@@ -163,6 +163,16 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     zone.type = zType;
 }
 
+void initLinearRails(Entity entity, OnLinearRails rails) {
+    Motion& motion = registry.motions.get(entity);
+    auto direction = vec2(cos(rails.angle), sin(rails.angle));
+    vec2 firstEndpoint = motion.position + rails.length * direction;
+    vec2 secondEndpoint = motion.position - rails.length * direction;
+    rails.firstEndpoint = firstEndpoint;
+    rails.secondEndpoint = secondEndpoint;
+    rails.direction = direction;
+    registry.entitiesOnLinearRails.insert(entity, rails);
+}
 
 // state describes how far the lever has been pushed
 // effect is the effect that the lever has on the affectedEntity when activated
@@ -191,8 +201,6 @@ Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES sta
     zone.position = position;
     zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
     registry.zones.insert(leverEntity, zone);
+    
     return leverEntity;
-
-
-
 }
