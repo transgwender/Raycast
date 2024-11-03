@@ -132,6 +132,8 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
     return entity;
 }
 
+// imageHeight and imageWidth control the actual dimensions of the sprite when rendered onto the screen
+
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
                          float cellHeight, const std::vector<unsigned int>& animationFrames,
                          const std::string textureName, float imageWidth, float imageHeight) {
@@ -159,6 +161,11 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     zone.position = position;
     zone.type = zType;
 }
+
+
+// state describes how far the lever has been pushed
+// effect is the effect that the lever has on the affectedEntity when activated
+// activeLever is the state required to activate it
 
 Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
     LEVER_STATES activeLever) {
