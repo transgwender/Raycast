@@ -38,6 +38,7 @@ int main() {
     // Initialize the main systems
     renderer.init(window);
     world.init();
+    particles.init();
 
     // Variable time step loop
     auto t = Clock::now();

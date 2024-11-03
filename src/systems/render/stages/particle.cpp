@@ -1,5 +1,6 @@
 #include "particle.hpp"
 
+#include "registry.hpp"
 #include "render.hpp"
 
 void ParticleStage::createVertexAndIndexBuffers() {
@@ -71,10 +72,10 @@ void ParticleStage::prepareDraw() const {
 /**
  * Update uniform variables for the shader program based on the given entity and texture.
  */
-void ParticleStage::activateShader(const std::string& texture) const {
+void ParticleStage::activateShader(const TextureHandle& texture) const {
     // Enabling and binding texture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture_manager.get(texture));
+    glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void ParticleStage::draw() {
@@ -83,16 +84,23 @@ void ParticleStage::draw() {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
 
-    Transform transform;
-    transform.translate(vec2(100.0f, 100.0f));
-    transform.scale(vec2(32.0, 32.0));
+    int last_texture = -1;
 
-    activateShader("blue_portal");
+    for (const Particle& particle : registry.particles.components) {
+        Transform transform;
+        transform.translate(particle.position);
+        transform.rotate(particle.angle);
+        transform.scale(particle.scale);
 
-    // Setting uniform values to the currently bound program
-    setUniformFloatMat3(shader, "transform", transform.mat);
+        if (last_texture != particle.texture) {
+            activateShader(particle.texture);
+            last_texture = particle.texture;
+        }
 
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+        setUniformFloatMat3(shader, "transform", transform.mat);
+
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
 }
 
 ParticleStage::~ParticleStage() {

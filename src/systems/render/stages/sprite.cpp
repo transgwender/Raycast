@@ -50,15 +50,6 @@ void SpriteStage::createVertexAndIndexBuffers() {
  * Update uniform variables for the shader program based on the given entity and texture.
  */
 void SpriteStage::activateShader(const Entity& entity, const std::string& texture) const {
-    GLint position_location = glGetAttribLocation(shader, "in_position");
-    GLint texcoord_location = glGetAttribLocation(shader, "in_texcoord");
-    assert(texcoord_location >= 0);
-
-    glEnableVertexAttribArray(position_location);
-    glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)nullptr);
-    glEnableVertexAttribArray(texcoord_location);
-    glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
-
     // set uniforms
     setUniformInt(shader, "albedo_tex", 0);
     setUniformInt(shader, "normal_tex", 1);
@@ -83,8 +74,7 @@ void SpriteStage::activateShader(const Entity& entity, const std::string& textur
         setUniformFloat(shader, (prefix + std::string("quadratic")).c_str(), pl.quadratic);
     }
 
-    auto point_lights_count_location = glGetUniformLocation(shader, "point_lights_count");
-    glUniform1i(point_lights_count_location, point_lights_count);
+    setUniformInt(shader, "point_lights_count", point_lights_count);
 
     // Enabling and binding texture to slot 0 and 1
     glActiveTexture(GL_TEXTURE0);
@@ -93,8 +83,8 @@ void SpriteStage::activateShader(const Entity& entity, const std::string& textur
     glBindTexture(GL_TEXTURE_2D, texture_manager.getNormal(texture));
     checkGlErrors();
 
-    bool is_highlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
-    glUniform1i(glGetUniformLocation(shader, "highlight"), is_highlighted ? 1 : 0);
+    const bool isHighlighted = registry.highlightables.has(entity) && registry.highlightables.get(entity).isHighlighted;
+    setUniformInt(shader, "highlight", isHighlighted ? 1 : 0);
 }
 
 /**
@@ -113,6 +103,21 @@ void SpriteStage::prepareDraw() const {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
+
+    // Setting active vertex and index buffers
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+    GLint position_location = glGetAttribLocation(shader, "in_position");
+    GLint texcoord_location = glGetAttribLocation(shader, "in_texcoord");
+    assert(texcoord_location >= 0);
+
+    glEnableVertexAttribArray(position_location);
+    glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)nullptr);
+    glEnableVertexAttribArray(texcoord_location);
+    glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(TexturedVertex), (void*)sizeof(vec3));
+
     checkGlErrors();
 }
 
@@ -128,12 +133,6 @@ void SpriteStage::drawSprite(const Entity entity, float elapsed_ms) {
     transform.translate(position);
     transform.rotate(angle);
     transform.scale(scale);
-
-    glBindVertexArray(vao);
-
-    // Setting active vertex and index buffers
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
     activateShader(entity, texture);
 
