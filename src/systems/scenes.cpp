@@ -113,13 +113,36 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "sprite_sheet") {
                         SpriteSheet ss{};
                         data.get_to(ss);
-                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth,
+                                          ss.cellHeight, ss.animationFrames, data["texture"], data["imageWidth"],
+                                          data["imageHeight"]);
                     } else if (type == "minisun") {
                         PARSE_COMPONENT(MiniSun, minisuns);
                     } else if (type == "gravity") {
                         PARSE_COMPONENT(Gravity, gravities);
                     } else if (type == "text") {
                         PARSE_COMPONENT(Text, texts);
+                    } else if (type == "lever") { // This is used to attach a lever entity that can exhibit some effect on the CURRENT ENTITY
+                        Entity leverEntity = Entity();
+                        std::vector<unsigned int> vec = {6};
+                        createSpriteSheet(leverEntity, data["position"], 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+                        Lever lever{};
+                        lever.state = data["state"];
+                        lever.movementState = data["movementState"];
+                        lever.effect = data["effect"];
+                        lever.activeLever = data["activeLever"];
+                        lever.affectedEntity = entity;
+                        registry.levers.insert(leverEntity, lever);
+                        registry.collideables.emplace(leverEntity);
+                        Collider collider{};
+                        collider.width = 12;
+                        collider.height = 20;
+                        collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+                        registry.colliders.insert(leverEntity, collider);
+                        Zone zone{};
+                        zone.position = data["position"];
+                        zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
+                        registry.zones.insert(leverEntity, zone);
                     }
                 }
             }

@@ -314,7 +314,6 @@ inline void from_json(const json& j, Text& c) {
     j.at("color").get_to(c.color);
     j.at("centered").get_to(c.centered);
 }
-}
 
 
 inline void to_json(json& j, const Gravity& c) {
@@ -326,3 +325,4 @@ inline void from_json(const json& j, Gravity& c) {
     (void)j;
     (void)c;
 }
+
