@@ -1,7 +1,9 @@
 // internal
 #include "ai.hpp"
 
-float walk_react_distance = 1000.0f;
+
+float walk_react_distance = 20.0f;
+float walk_react_minisun_distance = 1000.0f;
 float look_react_distance = 800.0f;
 
 void AISystem::step(float elapsed_ms) { 
@@ -50,7 +52,8 @@ void AISystem::updateDash() {
             }
         }
 
-        if (minimumDistance <= walk_react_distance) {
+        float compareDistance = foundMinisun ? walk_react_minisun_distance : walk_react_distance;
+        if (minimumDistance <= compareDistance) {
             registry.turtles.get(dashEntity).behavior = DASH_STATES::WALK;
             registry.turtles.get(dashEntity).nearestLightRayDirection = minimumDisplacement;
             //registry.turtles.get(dashEntity).closestLightRay = minimumLightEntity;
