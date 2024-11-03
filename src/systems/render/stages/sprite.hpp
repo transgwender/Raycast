@@ -43,6 +43,8 @@ class SpriteStage {
 
     void drawSprite(Entity entity, float elapsed_ms);
 
+    void animateLever(const Entity& entity, SpriteSheet& ss);
+
   public:
     void init();
 

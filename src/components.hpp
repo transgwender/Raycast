@@ -225,8 +225,29 @@ struct SpriteSheet {
     unsigned int currFrame = 0;
     unsigned int currState = 0;
     float timeElapsed = 0.f;
+    bool animationActive = false;
 
     // Index -> different animation states
     // Value -> Number of frames in that animation
     std::vector<unsigned int> animationFrames;
+};
+
+
+enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, LEVER_STATES_COUNT };
+enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
+enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
+
+
+struct Lever {
+    LEVER_STATES state;
+    LEVER_MOVEMENT_STATES movementState;
+    LEVER_EFFECTS effect;
+    LEVER_STATES activeLever;
+    Entity affectedEntity;
+
+    // lever_state -- is it pushed all the way right, all the way left, or somewhere in the middle?
+    // lever_movement_states -- is the lever currently being pushed in a certain direction? If so, which direction?
+    // lever_effect -- what effect does the lever have when active on the affected entity?
+    // active_lever -- is the lever active when pushed right? or left?
+    // affectedEntity -- which entity is affected by this lever?
 };

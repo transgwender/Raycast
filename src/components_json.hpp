@@ -334,3 +334,4 @@ inline void from_json(const json& j, Gravity& c) {
     (void)j;
     (void)c;
 }
+

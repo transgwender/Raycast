@@ -133,8 +133,11 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
     return entity;
 }
 
-Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight,
-    float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames) {
+// imageHeight and imageWidth control the actual dimensions of the sprite when rendered onto the screen
+
+Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
+                         float cellHeight, const std::vector<unsigned int>& animationFrames,
+                         const std::string textureName, float imageWidth, float imageHeight) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
@@ -143,8 +146,13 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
     ss.cellHeight = cellHeight;
     ss.animationFrames = animationFrames;
 
+    if (imageWidth == 0 || imageHeight == 0) {
+        createSprite(entity, position, vec2(cellWidth, cellHeight), 0, textureName);
+    } else {
+        createSprite(entity, position, vec2(imageWidth, imageHeight), 0, textureName);
+    }
+
     // TODO: add scale handling to flip direction of turtle when moving
-    createSprite(entity, position, vec2(cellWidth, cellHeight), 0, "turtle_sprite_sheet");
     registry.spriteSheets.insert(entity, ss);
     return entity;
 }
@@ -153,4 +161,38 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     Zone zone = registry.zones.emplace(entity);
     zone.position = position;
     zone.type = zType;
+}
+
+
+// state describes how far the lever has been pushed
+// effect is the effect that the lever has on the affectedEntity when activated
+// activeLever is the state required to activate it
+
+Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
+    LEVER_STATES activeLever) {
+
+    Entity leverEntity = Entity();
+    std::vector<unsigned int> vec = {6};
+    createSpriteSheet(leverEntity, position, 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+    Lever lever{};
+    lever.state = state;
+    lever.movementState = LEVER_MOVEMENT_STATES::STILL;
+    lever.effect = effect;
+    lever.activeLever = activeLever;
+    lever.affectedEntity = affectedEntity;
+    registry.levers.insert(leverEntity, lever);
+    registry.collideables.emplace(leverEntity);
+    Collider collider{};
+    collider.width = 12;
+    collider.height = 20;
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    registry.colliders.insert(leverEntity, collider);
+    Zone zone{};
+    zone.position = position;
+    zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
+    registry.zones.insert(leverEntity, zone);
+    return leverEntity;
+
+
+
 }
