@@ -17,12 +17,6 @@ float AISystem::calculateDistanceSquared(const vec2& position1, const vec2& posi
 }
 
 void AISystem::updateDash(float elapsed_ms) {
-    // Accumulate elapsed time
-    timeAccumulator += elapsed_ms;
-
-    // Only print every 500 milliseconds
-    bool shouldPrint = timeAccumulator >= 500.0f;
-
     for (const Entity& dashEntity : registry.turtles.entities) {
         Motion& dashMotion = registry.motions.get(dashEntity);
         DashTheTurtle& t = registry.turtles.get(dashEntity);
@@ -54,7 +48,6 @@ void AISystem::updateDash(float elapsed_ms) {
         float compareDistanceSquared = foundMinisun ? walkReactMinisunDistanceSquared : walkReactDistanceSquared;
 
         if (!t.tired) {
-            if (shouldPrint) printf("not tired\n");
             if (minimumDistanceSquared <= compareDistanceSquared) {
                 t.behavior = DASH_STATES::WALK;
                 t.nearestLightRayDirection = minimumDisplacement;
@@ -64,11 +57,8 @@ void AISystem::updateDash(float elapsed_ms) {
             } else {
                 t.behavior = DASH_STATES::IDLE;
             }
-        } else {
-            if (shouldPrint) printf("tired\n");
         }
     }
 
-    // Reset the timer if we printed this frame
-    if (shouldPrint) timeAccumulator = 0.0f;
+    (void)elapsed_ms;
 }
