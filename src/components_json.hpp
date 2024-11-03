@@ -271,3 +271,22 @@ inline void from_json(const json& j, SpriteSheet& c) {
     j.at("cellHeight").get_to(c.cellHeight);
     j.at("animationFrames").get_to(c.animationFrames);
 }
+
+inline void to_json(json& j, const Text& c) {
+    j = json{
+        {"type", "text"},
+        {"position", c.position},
+        {"size", c.size},
+        {"text", c.text },
+        {"color", c.color},
+        {"centered", c.centered}
+    };
+}
+
+inline void from_json(const json& j, Text& c) {
+    j.at("position").get_to(c.position);
+    j.at("size").get_to(c.size);
+    j.at("text").get_to(c.text);
+    j.at("color").get_to(c.color);
+    j.at("centered").get_to(c.centered);
+}

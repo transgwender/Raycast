@@ -53,7 +53,7 @@ class TextStage {
 
     void prepareDraw();
 
-    void renderText(const std::string& text, float x, float y, unsigned int size, vec3 color);
+    void renderText(const std::string& text, float x, float y, unsigned int size, vec3 color, bool centered);
 
   public:
     /**

@@ -168,6 +168,7 @@ struct Text {
     unsigned int size;
     /** Color channel values are in range [0, 255] */
     vec3 color = vec3(255, 255, 255);
+    bool centered;
 };
 
 /**

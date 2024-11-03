@@ -107,6 +107,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         SpriteSheet ss{};
                         data.get_to(ss);
                         createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
+                    } else if (type == "text") {
+                        PARSE_COMPONENT(Text, texts);
                     }
                 }
             }
