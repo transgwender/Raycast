@@ -66,7 +66,7 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     return createEmptyButton(entity, position, scale, label, "button");
 }
 
-Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
+Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName, vec3 color) {
     createSprite(entity, position, scale, 0, textureName);
     if (!registry.interactables.has(entity)) {
         registry.interactables.emplace(entity);
@@ -88,14 +88,15 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     text.size = 64;
     text.position = position;
     text.text = label;
+    text.color = color;
     text.centered = true;
     registry.texts.insert(entity, text);
     return entity;
 }
 
 Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName,
-                               const std::string& nextScene) {
-    createEmptyButton(entity, position, scale, label, textureName);
+                               const std::string& nextScene, vec3 color) {
+    createEmptyButton(entity, position, scale, label, textureName, color);
     ChangeScene changeScene;
     changeScene.scene = nextScene;
     registry.changeScenes.insert(entity, changeScene);
@@ -103,27 +104,40 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
 }
 
 Entity createDashTheTurtle(const Entity& entity, vec2 position) {
-    Entity dash = createSprite(entity, position, {100, 100}, 0, "button");
+    Entity dash = createSprite(entity, position, {10, 10}, 0, "button");
 
     auto& motion = registry.motions.get(dash);
     motion.velocity = {0, 0};
-    //motion.collides = false;
+    motion.scale = {10, 10};
+
+    registry.collideables.emplace(entity);
+    auto& collider = registry.colliders.emplace(entity);
+
+    // TEMPORARY
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    collider.width = 10;
+    collider.height = 10;
+    // motion.collides = false;
 
     DashTheTurtle dashComponent;
     dashComponent.behavior = DASH_STATES::IDLE;
     dashComponent.nearestLightRayDirection = {1000000000, 1000000000};
+    registry.turtles.emplace(dash);
 
     return entity;
 }
 
 Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const std::string& label, const std::string& textureName) {
-    createEmptyButton(entity, position, scale, label, textureName);
+    createEmptyButton(entity, position, scale, label, textureName, {255, 255, 255});
     registry.resumeGames.emplace(entity);
     return entity;
 }
 
-Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight,
-    float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames) {
+// imageHeight and imageWidth control the actual dimensions of the sprite when rendered onto the screen
+
+Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
+                         float cellHeight, const std::vector<unsigned int>& animationFrames,
+                         const std::string textureName, float imageWidth, float imageHeight) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
@@ -132,8 +146,13 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
     ss.cellHeight = cellHeight;
     ss.animationFrames = animationFrames;
 
+    if (imageWidth == 0 || imageHeight == 0) {
+        createSprite(entity, position, vec2(cellWidth, cellHeight), 0, textureName);
+    } else {
+        createSprite(entity, position, vec2(imageWidth, imageHeight), 0, textureName);
+    }
+
     // TODO: add scale handling to flip direction of turtle when moving
-    createSprite(entity, position, vec2(cellWidth, cellHeight), 0, "turtle_sprite_sheet");
     registry.spriteSheets.insert(entity, ss);
     return entity;
 }
@@ -144,7 +163,7 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     zone.type = zType;
 }
 
-void createOnLinearRails(Entity entity, OnLinearRails rails) {
+void initLinearRails(Entity entity, OnLinearRails rails) {
     Motion& motion = registry.motions.get(entity);
     auto direction = vec2(cos(rails.angle), sin(rails.angle));
     vec2 firstEndpoint = motion.position + rails.length * direction;
@@ -153,4 +172,35 @@ void createOnLinearRails(Entity entity, OnLinearRails rails) {
     rails.secondEndpoint = secondEndpoint;
     rails.direction = direction;
     registry.entitiesOnLinearRails.insert(entity, rails);
+}
+
+// state describes how far the lever has been pushed
+// effect is the effect that the lever has on the affectedEntity when activated
+// activeLever is the state required to activate it
+
+Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
+    LEVER_STATES activeLever) {
+
+    Entity leverEntity = Entity();
+    std::vector<unsigned int> vec = {6};
+    createSpriteSheet(leverEntity, position, 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+    Lever lever{};
+    lever.state = state;
+    lever.movementState = LEVER_MOVEMENT_STATES::STILL;
+    lever.effect = effect;
+    lever.activeLever = activeLever;
+    lever.affectedEntity = affectedEntity;
+    registry.levers.insert(leverEntity, lever);
+    registry.collideables.emplace(leverEntity);
+    Collider collider{};
+    collider.width = 12;
+    collider.height = 20;
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    registry.colliders.insert(leverEntity, collider);
+    Zone zone{};
+    zone.position = position;
+    zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
+    registry.zones.insert(leverEntity, zone);
+    
+    return leverEntity;
 }

@@ -191,10 +191,11 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
                 return 0;
             }
         }
-        // LOG_INFO("Collision detected between motion with position ({}, {}) and "
-        //          "motion with position ({}, {})",
-        //          motion1.position.x, motion1.position.y, motion2.position.x,
-        //          motion2.position.y);
+        if (user_interaction == false) 
+            LOG_INFO("Collision detected between motion with position ({}, {}) and "
+                  "motion with position ({}, {})",
+                  motion1.position.x, motion1.position.y, motion2.position.x,
+                  motion2.position.y);
         return 1;
     }
     return 0;

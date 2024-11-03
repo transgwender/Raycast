@@ -73,7 +73,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "on_linear_rails") {
                         OnLinearRails lr{};
                         data.get_to(lr);
-                        createOnLinearRails(entity, lr);
+                        initLinearRails(entity, lr);
                     } else if (type == "lerpable") {
                         PARSE_COMPONENT(Lerpable, lerpables);
                     } else if (type == "rotateable") {
@@ -91,6 +91,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "level_select") {
                         PARSE_COMPONENT(LevelSelect, levelSelects);
                     } else if (type == "dash_the_turtle") {
+                        //createDashTheTurtle(entity, data["position"]);
                         PARSE_COMPONENT(DashTheTurtle, turtles);
                         // int x = registry.motions.has(entity);
                         // printf("Your boolean variable is: %s\n", x ? "true" : "false");
@@ -114,9 +115,19 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "sprite_sheet") {
                         SpriteSheet ss{};
                         data.get_to(ss);
-                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth, ss.cellHeight, ss.animationFrames);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth,
+                                          ss.cellHeight, ss.animationFrames, data["texture"], data["imageWidth"],
+                                          data["imageHeight"]);
+                    } else if (type == "minisun") {
+                        PARSE_COMPONENT(MiniSun, minisuns);
+                    } else if (type == "gravity") {
+                        PARSE_COMPONENT(Gravity, gravities);
+                    } else if (type == "menu_item") {
+                        PARSE_COMPONENT(MenuItem, menuItems);
                     } else if (type == "text") {
                         PARSE_COMPONENT(Text, texts);
+                    } else if (type == "lever") { // This is used to attach a lever entity that can exhibit some effect on the CURRENT ENTITY
+                        createLever(entity, data["position"], data["state"], data["effect"], data["activeLever"]);
                     }
                 }
             }

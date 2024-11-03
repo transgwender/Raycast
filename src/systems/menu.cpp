@@ -15,7 +15,7 @@ void MenuSystem::generate_level_select_buttons(int levelCount) {
         std::string tag = "level" + std::to_string(i);
         int xPos = left + 30*((i-1)%columnMax);
         int yPos = top + 30*((i-1)/columnMax);
-        createChangeSceneButton(level, vec2(xPos, yPos), vec2(20, 20), label, "button_square", tag);
+        createChangeSceneButton(level, vec2(xPos, yPos), vec2(20, 20), label, "button_square", tag, {0, 0, 0});
         registry.menuItems.emplace(level);
     }
 
@@ -41,15 +41,15 @@ void MenuSystem::generate_level_win_popup(int levelCurrent, int levelCount) {
         registry.menuItems.emplace(popup_background);
 
         Entity restart_button = Entity();
-        createChangeSceneButton(restart_button, vec2(xPos - 60, yPos), vec2(50, 50), "Restart", "button_square", "level" + std::to_string(levelCurrent));
+        createChangeSceneButton(restart_button, vec2(xPos - 60, yPos), vec2(50, 50), "Restart", "button_square", "level" + std::to_string(levelCurrent), {0, 0, 0});
         registry.menuItems.emplace(restart_button);
 
         Entity main_menu_button = Entity();
-        createChangeSceneButton(main_menu_button, vec2(xPos, yPos), vec2(50, 50), "Main Menu", "button_square", "mainmenu");
+        createChangeSceneButton(main_menu_button, vec2(xPos, yPos), vec2(50, 50), "Main Menu", "button_square", "mainmenu", {0, 0, 0});
         registry.menuItems.emplace(main_menu_button);
 
         Entity next_button = Entity();
-        createChangeSceneButton(next_button, vec2(xPos + 60, yPos), vec2(50, 50), "Continue", "button_square", "level" + std::to_string(levelCurrent+1));
+        createChangeSceneButton(next_button, vec2(xPos + 60, yPos), vec2(50, 50), "Continue", "button_square", "level" + std::to_string(levelCurrent+1), {0, 0, 0});
         registry.menuItems.emplace(next_button);
     } else {
         Entity popup_background = Entity();

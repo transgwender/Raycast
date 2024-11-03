@@ -38,6 +38,10 @@ class ECSRegistry {
     ComponentContainer<Mouse> mice;
     ComponentContainer<Blackhole> blackholes;
     ComponentContainer<SpriteSheet> spriteSheets;
+    ComponentContainer<MiniSun> minisuns;
+    ComponentContainer<Gravity> gravities;
+    ComponentContainer<Lever> levers;
+
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -70,6 +74,10 @@ class ECSRegistry {
         registry_list.push_back(&mice);
         registry_list.push_back(&blackholes);
         registry_list.push_back(&spriteSheets);
+        registry_list.push_back(&minisuns);
+        registry_list.push_back(&gravities);
+        registry_list.push_back(&levers);
+
     }
 
     void clear_all_components() {

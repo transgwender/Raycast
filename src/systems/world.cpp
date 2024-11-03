@@ -14,6 +14,8 @@
 #include "systems/physics.hpp"
 #include "utils/math.hpp"
 
+#include <utils.h>
+
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
     // Seeding rng with random device
@@ -119,8 +121,24 @@ bool WorldSystem::shouldAllowInput() {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    // update frame rate value
+    const int fps_value = Utils::fps(elapsed_ms_since_last_update);
+    registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
+
     if (isInLevel() && shouldStep()) {
+        ECSRegistry& test_registry = registry;
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+
+        for (int i = 0; i < registry.levers.components.size(); i++) {
+            auto& leverEntity = registry.levers.entities[i];
+            auto& lever = registry.levers.components[i];
+            if ((int) lever.state == (int) lever.activeLever) {
+                if (lever.effect == LEVER_EFFECTS::REMOVE) {
+                    registry.remove_all_components_of(lever.affectedEntity);
+                }
+            }
+        
+        }
 
         for (int i = 0; i < registry.lightRays.components.size(); i++) {
             auto& lightEntity = registry.lightRays.entities[i];
@@ -131,6 +149,21 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             if (motion.position.x < -15 || motion.position.x > native_width + 15 || motion.position.y < -15 ||
                 motion.position.y > native_height + 15) {
                 registry.remove_all_components_of(lightEntity);
+            }
+        }
+
+        for (int i = 0; i < registry.minisuns.components.size(); i++) {
+            auto& minisunEntity = registry.minisuns.entities[i];
+            auto& minisun = registry.minisuns.components[i];
+            if (minisun.lit) {
+                if (minisun.lit_duration > 0) {
+                    minisun.lit_duration -= elapsed_ms_since_last_update;
+                } else {
+                    minisun.lit = false;
+                    registry.pointLights.remove(minisunEntity);
+                    registry.materials.remove(minisunEntity);
+                    registry.materials.insert(minisunEntity, {"minisun_off", "textured"});
+                } 
             }
         }
 
@@ -149,6 +182,13 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 createLight(entity, position, angle);
             }
         }
+
+        for (int i = 0; i < registry.gravities.components.size(); i++) {
+            auto& gravityEntity = registry.gravities.entities[i];
+            auto& motion = registry.motions.get(gravityEntity);
+            motion.velocity.y += gravity;
+        }
+        
         updateDash();
     }
 
@@ -183,6 +223,10 @@ void WorldSystem::restart_game() {
     if (!registry.levelSelects.components.empty()) {
         menus.generate_level_select_buttons((int)scenes.level_count());
     }
+
+    // add frame counter
+    frame_rate_entity = Entity();
+    registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -197,6 +241,11 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+
+        if (registry.turtles.has(collisionsRegistry.entities[i]) && !registry.lightRays.has(collisionsRegistry.components[i].other)) {
+            handle_turtle_collisions(i);
+            continue;
+        }
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
             registry.lightRays.has(collisionsRegistry.entities[i]))
@@ -206,10 +255,29 @@ void WorldSystem::handle_collisions() {
                               collisionsRegistry.components[i].side);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            if (registry.minisuns.has(collisionsRegistry.entities[i])) {
+                handle_minisun_collision(collisionsRegistry.entities[i]);
+            
+            }
         }
     }
     // Remove all collisions from this simulation step
     registry.collisions.clear();
+}
+
+void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
+    registry.minisuns.get(minisun_entity).lit_duration = 5000;
+    if (!registry.minisuns.get(minisun_entity).lit) {
+        registry.minisuns.get(minisun_entity).lit = true;
+
+        registry.materials.remove(minisun_entity);
+        registry.materials.insert(minisun_entity, {"light", "textured"});
+
+        PointLight& point_light = registry.pointLights.emplace(minisun_entity);
+        point_light.diffuse = 10.0f * vec3(255, 233, 87);
+        point_light.linear = 0.060f;
+        point_light.quadratic = 0.0100;
+    }
 }
 
 // When colliding entities to not reflect, if one of the entities
@@ -241,6 +309,13 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             registry.remove_all_components_of(other);
             break;
         }
+        }
+    } else {
+        // TEMP FIX regarding awkward turtle collision box: TODO
+        if (!registry.turtles.has(collider)) {
+            sounds.play_sound("light-collision.wav");
+            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            registry.remove_all_components_of(other); 
         }
     }
 }
@@ -292,6 +367,82 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     light_motion.angle -= 2 * angle_between;
 }
 
+// if the turtle collides against a wall, stop the turtle from moving further
+void WorldSystem::handle_turtle_collisions(int i) {
+
+    auto& collisionsRegistry = registry.collisions;
+    Entity turtle = collisionsRegistry.entities[i];
+    Entity other = collisionsRegistry.components[i].other;
+
+    // TODO: Rough patch to handle TRIPLE COLLISIONS... might want to improve in the future
+    if (!registry.motions.has(other) || !registry.colliders.has(other)) {
+        return;
+    }
+    Motion& turtle_motion = registry.motions.get(turtle);
+    Collider& turtle_collider = registry.colliders.get(turtle);
+    Motion& barrier_motion = registry.motions.get(other);
+    Collider& barrier_collider = registry.colliders.get(other);
+
+    float turtleLeft = turtle_motion.position.x - turtle_collider.width / 2;
+    float turtleRight = turtle_motion.position.x + turtle_collider.width / 2;
+    float turtleTop = turtle_motion.position.y - turtle_collider.height / 2;
+    float turtleBottom = turtle_motion.position.y + turtle_collider.height / 2;
+
+    float barrierLeft = barrier_motion.position.x - barrier_collider.width / 2;
+    float barrierRight = barrier_motion.position.x + barrier_collider.width / 2;
+    float barrierTop = barrier_motion.position.y - barrier_collider.height / 2;
+    float barrierBottom = barrier_motion.position.y + barrier_collider.height / 2;
+
+
+    float overlapX = std::min(turtleRight, barrierRight) - std::max(turtleLeft, barrierLeft);
+    float overlapY = std::min(turtleBottom, barrierBottom) - std::max(turtleTop, barrierTop);
+
+
+    // Check to see collision penetration, is there more overlap on the x-axis or the y-axis? Resolve the collision on the axis with the most overlap
+    if (abs(overlapX) < abs(overlapY)) {
+         if (turtle_motion.position.x < barrier_motion.position.x) {
+            // Place the turtle to the left of the barrier
+            turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
+
+            // If the "barrier" is a lever, push it to the right!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
+            }
+        }
+         if (turtle_motion.position.x > barrier_motion.position.x) {
+            // Place the turtle to the right of the barrier
+            turtle_motion.position.x =
+                 barrier_motion.position.x + abs(barrier_collider.width / 2) + abs(turtle_collider.width / 2) - 0.01f;
+
+            // If the "barrier" is a lever, push it to the left!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
+            }
+        }
+    
+    } else {
+        if (turtle_motion.position.y < barrier_motion.position.y) {
+            turtle_motion.position.y =
+                barrier_motion.position.y - abs(barrier_collider.height / 2) - abs(turtle_collider.height / 2) - 0.01f;
+        }
+        if (turtle_motion.position.y > barrier_motion.position.y) {
+            turtle_motion.position.y =
+                barrier_motion.position.y + abs(barrier_collider.height / 2) + abs(turtle_collider.height / 2) + 0.01f;
+        }
+        turtle_motion.velocity.y = 0;
+    }
+
+    // Move to the left of barrier
+    //if (turtle_motion.position.x < barrier_motion.position.x) {
+    //    // registry.sprite
+    //    turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 - abs(turtle_collider.width / 2);
+    //}
+    //if (turtle_motion.position.x > barrier_motion.position.x) {
+    //    turtle_motion.position.x =
+    //        barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+    //}
+}
+
 // Should the game be over?
 bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); }
 
@@ -321,6 +472,10 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
                 menus.try_close_menu();
             }
         }
+    }
+
+    if (action == GLFW_RELEASE && key == GLFW_KEY_F) {
+        frame_rate_enabled = !frame_rate_enabled;
     }
 
     // Control the current speed with `<` `>`
