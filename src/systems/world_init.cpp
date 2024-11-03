@@ -159,3 +159,32 @@ void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
     zone.position = position;
     zone.type = zType;
 }
+
+Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
+    LEVER_STATES activeLever) {
+
+    Entity leverEntity = Entity();
+    std::vector<unsigned int> vec = {6};
+    createSpriteSheet(leverEntity, position, 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+    Lever lever{};
+    lever.state = state;
+    lever.movementState = LEVER_MOVEMENT_STATES::STILL;
+    lever.effect = effect;
+    lever.activeLever = activeLever;
+    lever.affectedEntity = affectedEntity;
+    registry.levers.insert(leverEntity, lever);
+    registry.collideables.emplace(leverEntity);
+    Collider collider{};
+    collider.width = 12;
+    collider.height = 20;
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    registry.colliders.insert(leverEntity, collider);
+    Zone zone{};
+    zone.position = position;
+    zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
+    registry.zones.insert(leverEntity, zone);
+    return leverEntity;
+
+
+
+}
