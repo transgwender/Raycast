@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "level_id -- Black Hole",
+            "name": "level_id -- Thread the Needle",
             "data": [
                 {
                     "type": "level",
-                    "id": 6
+                    "id": 7
                 }
             ]
         },
@@ -33,7 +33,7 @@
                     "type": "sprite",
                     "position": [
                         55.0,
-                        100.0
+                        105.0
                     ],
                     "scale": [
                         59,
@@ -50,7 +50,7 @@
                     "type": "sprite",
                     "position": [
                         160.0,
-                        25.0
+                        27.0
                     ],
                     "scale": [
                         320,
@@ -61,246 +61,91 @@
             ]
         },
         {
-            "name": "m87",
+            "name": "lower_left_spike",
             "data": [
-                {
-                    "type": "blackhole",
-                    "mass": 5,
-                    "schwarzchild_radius": 24.0
-                },
                 {
                     "type": "sprite",
                     "position": [
-                        150.0,
+                        130.0,
                         120.0
                     ],
-                    "texture": "light",
                     "scale": [
-                        10.0,
-                        10.0
+                        260,
+                        10
                     ],
-                    "angle": 0
+                    "texture": "stones"
+                },
+                {
+                    "type": "collider",
+                    "width": 260,
+                    "height": 10,
+                    "bounds": 1
                 },
                 {
                     "type": "collideable"
                 },
                 {
-                    "type": "collider",
-                    "width": 20.0,
-                    "height": 20.0,
-                    "bounds": 0
-                },
-                {
                     "type": "zone",
                     "position": [
-                        150.0,
+                        130.0,
                         120.0
                     ],
                     "scale": [
-                        60,
-                        20
+                        260,
+                        10
                     ],
                     "zone_type": 3
                 }
             ]
         },
         {
-            "name": "ground0",
+            "name": "middle_right_spike",
             "data": [
                 {
                     "type": "sprite",
                     "position": [
-                        0,
-                        180.0
+                        190.0,
+                        70.0
                     ],
                     "scale": [
-                        32,
-                        34
+                        260,
+                        10
                     ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
+                    "texture": "stones"
+                },
                 {
-                    "type": "sprite",
-                    "position": [
-                        32,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
+                    "type": "collider",
+                    "width": 260,
+                    "height": 10,
+                    "bounds": 1
+                },
                 {
-                    "type": "sprite",
-                    "position": [
-                        64,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
+                    "type": "collideable"
+                },
                 {
-                    "type": "sprite",
+                    "type": "zone",
                     "position": [
-                        96,
-                        180.0
+                        190.0,
+                        70.0
                     ],
                     "scale": [
-                        32,
-                        34
+                        260,
+                        10
                     ],
-                    "texture": "ground0"
+                    "zone_type": 3
                 }
             ]
         },
         {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        128,
-                        180
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        192,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        224,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        256,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        288,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        320,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "rotate-mirror",
+            "name": "bottom_right_mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        80.0,
+                        290.0,
                         155.0
                     ],
-                    "angle": 1.57
+                    "angle": 1.5708
                 },
                 {
                     "type": "interactable"
@@ -315,13 +160,206 @@
             ]
         },
         {
+            "name": "middle_right_mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        290.0,
+                        95.0
+                    ],
+                    "angle": 1.5708
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotateable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "middle_left_mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        20.0,
+                        80.0
+                    ],
+                    "angle": 1.5708
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotateable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top_left_rail",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        55.0,
+                        15.0
+                    ],
+                    "scale": [
+                        70,
+                        2
+                    ],
+                    "angle": 0,
+                    "texture": "mirror"
+                }
+            ]
+        },
+        {
+            "name": "top_left_mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        55.0,
+                        15.0
+                    ],
+                    "angle": 1.5708
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "on_linear_rails",
+                    "angle": 0,
+                    "length": 35
+                },
+                {
+                    "type": "lerpable",
+                    "should_switch_direction": false,
+                    "t": 0,
+                    "t_step": 0
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top_second_rail",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        120.0,
+                        55.0
+                    ],
+                    "scale": [
+                        70,
+                        2
+                    ],
+                    "angle": 0,
+                    "texture": "mirror"
+                }
+            ]
+        },
+        {
+            "name": "top_second_mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        120.0,
+                        55.0
+                    ],
+                    "angle": 1.5708
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "on_linear_rails",
+                    "angle": 0,
+                    "length": 35
+                },
+                {
+                    "type": "lerpable",
+                    "should_switch_direction": false,
+                    "t": 0,
+                    "t_step": 0
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top_third_rail",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        170.0,
+                        15.0
+                    ],
+                    "scale": [
+                        70,
+                        2
+                    ],
+                    "angle": 0,
+                    "texture": "mirror"
+                }
+            ]
+        },
+        {
+            "name": "top_third_mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        170.0,
+                        15.0
+                    ],
+                    "angle": 1.1
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "on_linear_rails",
+                    "angle": 0,
+                    "length": 35
+                },
+                {
+                    "type": "lerpable",
+                    "should_switch_direction": false,
+                    "t": 0,
+                    "t_step": 0
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
             "name": "start_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
                         20.0,
-                        100.0
+                        150.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -330,7 +368,7 @@
                     "type": "sprite",
                     "position": [
                         20.0,
-                        100.0
+                        150.0
                     ],
                     "texture": "bubble_open",
                     "scale": [
@@ -341,7 +379,7 @@
                 },
                 {
                     "type": "light_source",
-                    "angle": 0.7
+                    "angle": 0
                 }
             ]
         },
@@ -351,8 +389,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
-                        45.0
+                        270.0,
+                        35.0
                     ],
                     "zone_type": 1,
                     "angle": 0
@@ -369,8 +407,8 @@
                 {
                     "type": "sprite",
                     "position": [
-                        300.0,
-                        45.0
+                        270.0,
+                        35.0
                     ],
                     "texture": "bubble_closed",
                     "scale": [
