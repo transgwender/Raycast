@@ -50,10 +50,7 @@ int main() {
         // Calculating elapsed times in milliseconds from the previous iteration
         auto now = Clock::now();
         float elapsed_ms =
-            static_cast<float>(
-                (std::chrono::duration_cast<std::chrono::microseconds>(now - t))
-                    .count()) /
-            1000;
+            static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count()) / 1000;
         t = now;
 
         world.step(elapsed_ms);

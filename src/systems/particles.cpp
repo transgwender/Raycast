@@ -4,7 +4,7 @@
 
 void ParticleSystem::init() {
     // registry.particles.insert(Entity(), {texture_manager.get("bubble_closed"), vec2(10, 10), vec2(12 ,12), 0.0f, vec2(10, 10)});
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 1000; i++) {
         registry.particles.insert(Entity(), {texture_manager.get("bubble_closed"), vec2(i % 320, i % 180), vec2(4 ,4), i / 4.0f, vec2(i % 10, i % 20)});
     }
 }
