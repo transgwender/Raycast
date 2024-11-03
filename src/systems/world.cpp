@@ -14,6 +14,8 @@
 #include "systems/physics.hpp"
 #include "systems/rails.hpp"
 
+#include <utils.h>
+
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
     // Seeding rng with random device
@@ -119,6 +121,10 @@ bool WorldSystem::shouldAllowInput() {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    // update frame rate value
+    const int fps_value = Utils::fps(elapsed_ms_since_last_update);
+    registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
+
     if (isInLevel() && shouldStep()) {
         ECSRegistry& test_registry = registry;
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
@@ -219,6 +225,10 @@ void WorldSystem::restart_game() {
     if (!registry.levelSelects.components.empty()) {
         menus.generate_level_select_buttons((int)scenes.level_count());
     }
+
+    // add frame counter
+    frame_rate_entity = Entity();
+    registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
 
     rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
 }
@@ -469,6 +479,10 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
                 menus.try_close_menu();
             }
         }
+    }
+
+    if (action == GLFW_RELEASE && key == GLFW_KEY_F) {
+        frame_rate_enabled = !frame_rate_enabled;
     }
 
     // Control the current speed with `<` `>`

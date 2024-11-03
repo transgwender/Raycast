@@ -85,6 +85,9 @@ class WorldSystem {
     std::default_random_engine rng;
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
 
+    Entity frame_rate_entity;
+    bool frame_rate_enabled = true;
+
     bool shouldStep();
     bool isInLevel();
 
