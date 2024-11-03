@@ -236,7 +236,7 @@ void WorldSystem::handle_collisions() {
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
 
-        if (registry.turtles.has(collisionsRegistry.entities[i])) {
+        if (registry.turtles.has(collisionsRegistry.entities[i]) && !registry.lightRays.has(collisionsRegistry.components[i].other)) {
             handle_turtle_collisions(i);
             continue;
         }
@@ -303,6 +303,13 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             registry.remove_all_components_of(other);
             break;
         }
+        }
+    } else {
+        // TEMP FIX regarding awkward turtle collision box: TODO
+        if (!registry.turtles.has(collider)) {
+            sounds.play_sound("light-collision.wav");
+            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            registry.remove_all_components_of(other); 
         }
     }
 }
