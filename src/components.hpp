@@ -177,7 +177,10 @@ struct Text {
     bool centered;
 };
 
-/** A single particle. You probably don't want to instantiate this yourself, but rather use a `ParticleSpawner` instance. */
+/**
+ * A single particle. You probably don't want to instantiate this yourself, but rather use a `ParticleSpawner` instance.
+ * Choice of parameters here and in `ParticleSpawner` based on Godot's CPUParticles2D.
+ */
 struct Particle {
     TextureHandle texture;
     vec2 position;
@@ -186,7 +189,8 @@ struct Particle {
     float angle = 0.f;
     vec2 linear_velocity = {0.0, 5.0};
     float spin_velocity = 0.0f;
-    float scale_fall_off = 0.0f;
+    float scale_change = 0.0f;
+    float alpha_fall_off = 0.0f;
     float lifetime = 1.0;
 };
 
@@ -209,8 +213,12 @@ struct ParticleSpawner {
     vec4 color = vec4(255, 255, 255, 255);
     /** The angle range that the spawner sends particles in. */
     float spread;
+    /** Controls the initial scale of the particles. */
+    vec2 initial_scale;
     /** Controls how many units of scale the particle loses/gains per second. Zero for no change. */
-    float scale_fall_off;
+    float scale_change;
+    /** Controls how much the alpha channel of the texture's color decreases per second. Keep in mind that alpha channel values are in range [0, 255]*/
+    float alpha_fall_off = 0.0f;
     /** How long (in seconds) a spawned particle will live before being deleted. */
     float lifetime;
     /** The max number of particles from this spawner that should exist at any given time (may be off +/- 1). */
