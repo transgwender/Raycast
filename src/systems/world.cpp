@@ -227,13 +227,6 @@ void WorldSystem::restart_game() {
     // add frame counter
     frame_rate_entity = Entity();
     registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
-
-    const auto new_entity = Entity();
-    auto mesh = createMesh("salmon.obj");
-    Motion& m = registry.motions.emplace(new_entity);
-    m.position = vec2(250, 20);
-    m.scale = mesh.original_size * 50.0f;
-    registry.meshes.insert(new_entity, mesh);
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
