@@ -78,15 +78,16 @@ endif ()
 
 set(glm_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/cmake/glm) # if necessary
 find_package(glm REQUIRED)
-find_package(Freetype REQUIRED)
 
 # GLFW, SDL2 could be precompiled (on windows) or installed by a package manager (on OSX and Linux)
 if (IS_OS_LINUX OR IS_OS_MAC)
     # Try to find packages rather than to use the precompiled ones
-    # Since we're on OSX or Linux, we can just use pkgconfig.
+    # Since we're on OSX or Linux, we can just use pkgconfig.  
     find_package(PkgConfig REQUIRED)
 
     pkg_search_module(GLFW REQUIRED glfw3)
+
+    find_package(Freetype REQUIRED)
 
     pkg_search_module(SDL2 REQUIRED sdl2)
     pkg_search_module(SDL2MIXER REQUIRED SDL2_mixer)
@@ -211,5 +212,5 @@ target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES}
 
 # Needed to add this
 if (IS_OS_LINUX)
-    target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${CMAKE_DL_LIBS})
+    target_link_libraries(${PROJECT_NAME} PUBLIC glfw ${CMAKE_DL_LIBS}) 
 endif ()
