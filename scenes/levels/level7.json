@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "level_id -- Thread the Needle",
+            "name": "level_id -- Yin and Yin",
             "data": [
                 {
                     "type": "level",
@@ -61,23 +61,129 @@
             ]
         },
         {
-            "name": "lower_left_spike",
+            "name": "bottom_left_blackhole",
+            "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 4,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
+                    "position": [
+                        110.0,
+                        130.0
+                    ],
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        110.0,
+                        130.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "top_right_blackhole",
+            "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 5,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
+                    "position": [
+                        210.0,
+                        50.0
+                    ],
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        210.0,
+                        50.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "start_mirror_rail",
             "data": [
                 {
                     "type": "sprite",
                     "position": [
-                        130.0,
-                        120.0
+                        70.0,
+                        35.0
                     ],
                     "scale": [
-                        260,
+                        50,
+                        2
+                    ],
+                    "angle": -0.7854,
+                    "texture": "mirror"
+                }
+            ]
+        },
+        {
+            "name": "middle_right_wall",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        250.0,
+                        130.0
+                    ],
+                    "scale": [
+                        100,
                         10
                     ],
                     "texture": "stones"
                 },
                 {
                     "type": "collider",
-                    "width": 260,
+                    "width": 100,
                     "height": 10,
                     "bounds": 1
                 },
@@ -87,11 +193,11 @@
                 {
                     "type": "zone",
                     "position": [
-                        130.0,
-                        120.0
+                        250.0,
+                        130.0
                     ],
                     "scale": [
-                        260,
+                        100,
                         10
                     ],
                     "zone_type": 3
@@ -99,246 +205,23 @@
             ]
         },
         {
-            "name": "middle_right_spike",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "texture": "stones"
-                },
-                {
-                    "type": "collider",
-                    "width": 260,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "bottom_right_mirror",
+            "name": "start_mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        290.0,
-                        155.0
+                        70.0,
+                        35.0
                     ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_right_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        290.0,
-                        95.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        20.0,
-                        80.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_left_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        55.0,
-                        15.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        55.0,
-                        15.0
-                    ],
-                    "angle": 1.5708
+                    "angle": -0.7854
                 },
                 {
                     "type": "interactable"
                 },
                 {
                     "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_second_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        120.0,
-                        55.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_second_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        120.0,
-                        55.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_third_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        170.0,
-                        15.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_third_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        170.0,
-                        15.0
-                    ],
-                    "angle": 1.1
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
+                    "angle": -0.7854,
+                    "length": 25
                 },
                 {
                     "type": "lerpable",
@@ -359,7 +242,7 @@
                     "type": "zone",
                     "position": [
                         20.0,
-                        150.0
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -368,7 +251,7 @@
                     "type": "sprite",
                     "position": [
                         20.0,
-                        150.0
+                        40.0
                     ],
                     "texture": "bubble_open",
                     "scale": [
@@ -389,8 +272,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        270.0,
-                        35.0
+                        280.0,
+                        50.0
                     ],
                     "zone_type": 1,
                     "angle": 0
@@ -407,8 +290,8 @@
                 {
                     "type": "sprite",
                     "position": [
-                        270.0,
-                        35.0
+                        280.0,
+                        50.0
                     ],
                     "texture": "bubble_closed",
                     "scale": [

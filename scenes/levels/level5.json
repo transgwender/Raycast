@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "level_id",
+            "name": "level_id -- Black Hole",
             "data": [
                 {
                     "type": "level",
@@ -65,14 +65,14 @@
             "data": [
                 {
                     "type": "blackhole",
-                    "mass": 5.0,
+                    "mass": 5,
                     "schwarzchild_radius": 24.0
                 },
                 {
                     "type": "sprite",
                     "position": [
-                        120.0,
-                        40.0
+                        150.0,
+                        120.0
                     ],
                     "texture": "light",
                     "scale": [
@@ -86,15 +86,15 @@
                 },
                 {
                     "type": "collider",
-                    "width": 10.0,
-                    "height": 10.0,
-                    "bounds": 1
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
                 },
                 {
                     "type": "zone",
                     "position": [
-                        120.0,
-                        40.0
+                        150.0,
+                        120.0
                     ],
                     "scale": [
                         60,
@@ -297,31 +297,8 @@
                 {
                     "type": "mirror",
                     "position": [
-                        60.0,
+                        80.0,
                         155.0
-                    ],
-                    "angle": 1.57
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "far-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        295.0,
-                        30.0
                     ],
                     "angle": 1.57
                 },
@@ -344,7 +321,7 @@
                     "type": "zone",
                     "position": [
                         20.0,
-                        140.0
+                        100.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -353,7 +330,7 @@
                     "type": "sprite",
                     "position": [
                         20.0,
-                        140.0
+                        100.0
                     ],
                     "texture": "bubble_open",
                     "scale": [
@@ -364,7 +341,7 @@
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
+                    "angle": 0.7
                 }
             ]
         },
@@ -375,7 +352,7 @@
                     "type": "zone",
                     "position": [
                         300.0,
-                        140.0
+                        45.0
                     ],
                     "zone_type": 1,
                     "angle": 0
@@ -393,7 +370,7 @@
                     "type": "sprite",
                     "position": [
                         300.0,
-                        140.0
+                        45.0
                     ],
                     "texture": "bubble_closed",
                     "scale": [
