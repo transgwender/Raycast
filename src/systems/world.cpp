@@ -188,7 +188,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             auto& motion = registry.motions.get(gravityEntity);
             motion.velocity.y += gravity;
         }
-        
+
         updateDash();
     }
 
@@ -515,16 +515,16 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
         if (input_manager.is_mouse_button_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
             Motion &clicked_motion = registry.motions.get(entity);
             vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
-            
+
             if (registry.rotateables.has(entity)) { // rotateable mirrors
                 // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
                 clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
             }
 
             if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
-                OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity); 
+                OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity);
 
-                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate 
+                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate
                 // beyond the y-axis it flips so this check is necessary
                 if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
                     clicked_motion.position = raycast::math::clampToLineSegment(

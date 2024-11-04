@@ -27,6 +27,7 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     shader_manager.init();
 
     sprite_stage.init();
+    mesh_stage.init();
     menu_stage.init();
     particle_stage.init();
     text_stage.init();
@@ -41,6 +42,7 @@ void RenderSystem::init(GLFWwindow* window_arg) {
  */
 void RenderSystem::draw(float elapsed_ms) {
     sprite_stage.draw(elapsed_ms);
+    mesh_stage.draw();
     particle_stage.draw();
     menu_stage.draw();
     text_stage.draw();

@@ -21,6 +21,7 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
 
 Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
                    LEVER_STATES activeLever);
+Mesh createMesh(const std::string& mesh_name);
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);
 void initLinearRails(Entity entity, OnLinearRails rails);
