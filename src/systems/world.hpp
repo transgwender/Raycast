@@ -79,6 +79,7 @@ class WorldSystem {
 
     // Music references
     SoundSystem sounds;
+    bool music_muted = false;
 
     // C++ random number generator
     std::default_random_engine rng;

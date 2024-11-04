@@ -72,7 +72,6 @@ Entity createMirror(const Entity& entity, vec2 position, float angle) {
     collider.width = scale.x;
     collider.height = scale.y;
 
-
     return entity;
 }
 

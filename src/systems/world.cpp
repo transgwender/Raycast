@@ -463,6 +463,16 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         restart_game();
     }
 
+    if (IS_PRESSED(GLFW_KEY_M)) {
+        if (music_muted) {
+            Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
+        } else {
+            Mix_VolumeMusic(0);
+        }
+        music_muted = !music_muted;
+    }
+
+
     // Pausing
     if (IS_RELEASED(GLFW_KEY_ESCAPE)) {
         assert(registry.menus.size() <= 1);

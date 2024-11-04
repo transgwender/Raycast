@@ -28,7 +28,7 @@ void SoundSystem::load_all_sounds(const std::string& bgm_filename) {
     }
 
     Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
-    // Mix_PlayMusic(background_music, -1);
+    Mix_PlayMusic(background_music, -1);
 
     // Load all sound effects
     load_chunks();
