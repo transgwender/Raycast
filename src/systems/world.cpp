@@ -514,27 +514,28 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
         // hanlde the mirror movements
         if (input_manager.is_mouse_button_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
             Motion &clicked_motion = registry.motions.get(entity);
-
+            vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
+            
             if (registry.rotateables.has(entity)) { // rotateable mirrors
-                vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
                 // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
                 clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
             }
 
             if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
                 OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity); 
+
                 // ideally the fist endpoint should correspond to the left endpoint, but if we roatate 
                 // beyond the y-axis it flips so this check is necessary
                 if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
-                    clicked_motion.position.x = raycast::math::clamp(
-                        rails.firstEndpoint.x,
-                        rails.secondEndpoint.x,
-                        screenToWorld(mouse_position).x);
+                    clicked_motion.position = raycast::math::clampToLineSegment(
+                        rails.firstEndpoint,
+                        rails.secondEndpoint,
+                        screenToWorld(mouse_position));
                 } else {
-                    clicked_motion.position.x = raycast::math::clamp(
-                        rails.secondEndpoint.x,
-                        rails.firstEndpoint.x,
-                        screenToWorld(mouse_position).x);
+                    clicked_motion.position = raycast::math::clampToLineSegment(
+                        rails.secondEndpoint,
+                        rails.firstEndpoint,
+                        screenToWorld(mouse_position));
                 }
             }
         }
