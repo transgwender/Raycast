@@ -68,5 +68,18 @@ inline vec2 set_mag(vec2 vec, float mag) {
     return glm::normalize(vec) * mag;
 }
 
+/// @brief project vector a onto vector b
+inline vec2 project(vec2 a, vec2 b) {
+    return (glm::dot(a,b) / glm::dot(b,b)) * b;
+}
+
+/// @brief project points on the line segment between start and end and clamps to be strictly on this line
+inline vec2 clampToLineSegment(vec2 start, vec2 end, vec2 point) {
+    vec2 dir = end - start;
+    float t = glm::dot(point - start, dir) / glm::dot(dir, dir);
+    t = glm::clamp(t, 0.0f, 1.0f);
+    return start + t * dir;
+}
+
 } // namespace math
 } // namespace raycast

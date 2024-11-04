@@ -24,6 +24,7 @@ uniform sampler2D albedo_tex;
 uniform sampler2D normal_tex;
 uniform bool highlight;
 uniform bool skip_lighting;
+uniform bool is_blackhole;
 
 uniform vec3 ambient_light;
 
@@ -61,6 +62,11 @@ void main() {
         if (highlight) {
             color += vec4(vec3(0.18), 0.0);
         }
+        return;
+    }
+
+    if (is_blackhole) {
+        color = vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
 

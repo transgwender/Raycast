@@ -67,6 +67,7 @@ void SpriteStage::activateShader(const Entity entity, const std::string& texture
 
 
     setUniformInt(shader, "skip_lighting", registry.menuItems.has(entity));
+    setUniformInt(shader, "is_blackhole", registry.blackholes.has(entity));
 
     int point_lights_count = 0;
     for (const auto& point_light : registry.pointLights.entities) {
