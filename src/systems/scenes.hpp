@@ -25,7 +25,7 @@ class SceneSystem {
     std::map<std::string, std::string> scene_paths {
         {"mainmenu", scene_path("mainmenu.json")},
         {"levelmenu", scene_path("levelmenu.json")},
-        {"gamefinish", scene_path("gamefinish.json")}
+        {"gamefinish", scene_path("gamefinish.json")},
     };
 
 };
