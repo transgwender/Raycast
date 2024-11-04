@@ -309,6 +309,26 @@
             ]
         },
         {
+            "name": "Rail help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        75.0,
+                        30.0
+                    ],
+                    "size": 32,
+                    "text": "<- Click and drag this mirror\n to move it along the rail",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "rail-1",
             "data": [
                 {
@@ -354,6 +374,26 @@
                 {
                     "type": "highlightable",
                     "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rotatable mirror help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        200.0,
+                        30.0
+                    ],
+                    "size": 32,
+                    "text": "Mirrors without a rail rotate!\n Click and drag to do so ->",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
                 }
             ]
         },
@@ -408,6 +448,26 @@
                 {
                     "type": "light_source",
                     "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        235.0,
+                        138.0
+                    ],
+                    "size": 32,
+                    "text": "Your goal is to\n reach this end zone ->",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
                 }
             ]
         },

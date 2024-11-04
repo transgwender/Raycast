@@ -26,7 +26,6 @@ class SceneSystem {
         {"mainmenu", scene_path("mainmenu.json")},
         {"levelmenu", scene_path("levelmenu.json")},
         {"gamefinish", scene_path("gamefinish.json")},
-        {"help", scene_path("help.json")}
     };
 
 };
