@@ -86,7 +86,7 @@ void PhysicsSystem::step(float elapsed_ms) {
             float theta = raycast::math::heading(to_blackhole);
             float distance_to_blackhole = glm::length(to_blackhole);
             float force_gravity = PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * distance_to_blackhole);
-            float delta_theta = -force_gravity * (elapsed_ms / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
+            float delta_theta = -force_gravity * (15.0 / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
             delta_theta /= std::abs(1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
             light_ray_motion.angle += delta_theta;
             light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);

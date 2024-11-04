@@ -480,7 +480,7 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         }
     }
 
-    if (action == GLFW_RELEASE && key == GLFW_KEY_F) {
+    if (IS_RELEASED(GLFW_KEY_F)) {
         frame_rate_enabled = !frame_rate_enabled;
     }
 
