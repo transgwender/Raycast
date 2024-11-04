@@ -296,6 +296,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             Level& level = registry.levels.components.front();
             if (registry.menus.components.empty()) {
                 menus.generate_level_win_popup(level.id, (int)scenes.level_count());
+                sounds.play_sound("win.wav");
             }
             //            registry.remove_all_components_of(other);
             break;
@@ -561,11 +562,13 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         for (const Entity& entity : entities) {
             assert(registry.motions.has(entity));
             if (registry.changeScenes.has(entity)) {
+                sounds.play_sound("button-click.wav");
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
                 return;
             }
             if (registry.resumeGames.has(entity)) {
+                sounds.play_sound("button-click.wav");
                 menus.try_close_menu();
                 return;
             }

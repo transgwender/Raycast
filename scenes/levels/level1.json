@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "level_id",
+            "name": "tutorial",
             "data": [
                 {
                     "type": "level",
@@ -112,10 +112,10 @@
                     "type": "text",
                     "position": [
                         90.0,
-                        33.0
+                        37.0
                     ],
                     "size": 32,
-                    "text": "<- Click and drag this mirror\n to move it along the rail",
+                    "text": "<< Click and drag to SLIDE\n mirror with rails",
                     "color": [
                         255,
                         255,
@@ -132,7 +132,7 @@
                     "type": "sprite",
                     "position": [
                         54.0,
-                        32.0
+                        35.0
                     ],
                     "scale": [
                         50,
@@ -150,7 +150,7 @@
                     "type": "mirror",
                     "position": [
                         54.0,
-                        32.0
+                        35.0
                     ],
                     "angle": 0.785
                 },
@@ -180,11 +180,11 @@
                 {
                     "type": "text",
                     "position": [
-                        200.0,
-                        30.0
+                        215.0,
+                        32.0
                     ],
                     "size": 32,
-                    "text": "Mirrors without a rail rotate!\n Click and drag to do so ->",
+                    "text": "Click and drag to ROTATE\n mirror with gears >>",
                     "color": [
                         255,
                         255,
@@ -201,7 +201,7 @@
                     "type": "sprite",
                     "position": [
                         295.0,
-                        30.0
+                        35.0
                     ],
                     "scale": [
                         12,
@@ -219,7 +219,7 @@
                     "type": "mirror",
                     "position": [
                         295.0,
-                        30.0
+                        35.0
                     ],
                     "angle": 1.57
                 },
@@ -279,11 +279,11 @@
                 {
                     "type": "text",
                     "position": [
-                        230.0,
-                        142.0
+                        212.0,
+                        148.0
                     ],
                     "size": 32,
-                    "text": "Your goal is to\n reach this end zone ->",
+                    "text": "GOAL: Guide light to end zone >>",
                     "color": [
                         255,
                         255,
