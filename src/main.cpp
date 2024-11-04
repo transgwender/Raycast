@@ -14,6 +14,8 @@
 
 using Clock = std::chrono::high_resolution_clock;
 
+#define FIXED_UPDATE_MS 2
+
 int main() {
     // Global systems
     WorldSystem world;
@@ -40,6 +42,8 @@ int main() {
     world.init();
     particles.init();
 
+    float remainder = 0;
+
     // Variable time step loop
     auto t = Clock::now();
     while (!world.is_over()) {
@@ -53,10 +57,15 @@ int main() {
             static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count()) / 1000;
         t = now;
 
+        float elapsed_remainder_ms = elapsed_ms + remainder;
+
         world.step(elapsed_ms);
-        physics.step(elapsed_ms);
-        ai.step(elapsed_ms);
-        world.handle_collisions();
+        for (int i = 0; i < (int)floor(elapsed_remainder_ms/FIXED_UPDATE_MS); ++i) {
+            physics.step(FIXED_UPDATE_MS);
+            world.handle_collisions();
+            ai.step(FIXED_UPDATE_MS);
+        }
+        remainder = fmod(elapsed_remainder_ms,(float) FIXED_UPDATE_MS);
         particles.step(elapsed_ms);
         renderer.draw(elapsed_ms);
     }
