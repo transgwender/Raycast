@@ -65,6 +65,24 @@
             ]
         },
         {
+            "name": "gear-1",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        60.0,
+                        155.0
+                    ],
+                    "scale": [
+                        12,
+                        12
+                    ],
+                    "angle": 0,
+                    "texture": "gear"
+                }
+            ]
+        },
+        {
             "name": "rotate-mirror",
             "data": [
                 {
@@ -93,8 +111,8 @@
                 {
                     "type": "text",
                     "position": [
-                        75.0,
-                        30.0
+                        90.0,
+                        33.0
                     ],
                     "size": 32,
                     "text": "<- Click and drag this mirror\n to move it along the rail",
@@ -113,15 +131,15 @@
                 {
                     "type": "sprite",
                     "position": [
-                        40.0,
-                        30.0
+                        54.0,
+                        32.0
                     ],
                     "scale": [
                         50,
-                        2
+                        3
                     ],
                     "angle": 0,
-                    "texture": "mirror"
+                    "texture": "mirror_0"
                 }
             ]
         },
@@ -131,8 +149,8 @@
                 {
                     "type": "mirror",
                     "position": [
-                        40.0,
-                        30.0
+                        54.0,
+                        32.0
                     ],
                     "angle": 0.785
                 },
@@ -142,7 +160,7 @@
                 {
                     "type": "on_linear_rails",
                     "angle": 0,
-                    "length": 25
+                    "length": 27
                 },
                 {
                     "type": "lerpable",
@@ -173,6 +191,24 @@
                         255
                     ],
                     "centered": false
+                }
+            ]
+        },
+        {
+            "name": "gear-1",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        295.0,
+                        30.0
+                    ],
+                    "scale": [
+                        12,
+                        12
+                    ],
+                    "angle": 0,
+                    "texture": "gear"
                 }
             ]
         },
