@@ -5,6 +5,7 @@
 #include "particle.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
+#include "stages/menu.hpp"
 #include "stages/text.hpp"
 #include "texture.hpp"
 
@@ -25,6 +26,7 @@ extern ShaderManager shader_manager;
 class RenderSystem {
     SpriteStage sprite_stage;
     ParticleStage particle_stage;
+    MenuStage menu_stage;
     TextStage text_stage;
     CompositorStage composite_stage;
 

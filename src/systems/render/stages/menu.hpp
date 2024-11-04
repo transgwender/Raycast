@@ -4,7 +4,7 @@
 #include "shader.hpp"
 #include "util.hpp"
 
-class SpriteStage {
+class MenuStage {
     /**
      * Intermediate frame texture. All drawing for this stage will be output to this texture
      */
@@ -18,8 +18,6 @@ class SpriteStage {
     ShaderHandle shader = 0;
 
     mat3 projection_matrix = createProjectionMatrix();
-
-    float animation_speed = 240.f;
 
     /**
      * Vertex data for a textured quad. Each vertex contains position and UV coordinates
@@ -41,9 +39,7 @@ class SpriteStage {
 
     void activateShader(const Entity& entity, const std::string& texture) const;
 
-    void drawSprite(const Entity& entity, float elapsed_ms);
-
-    void animateLever(const Entity& entity, SpriteSheet& ss);
+    void drawSprite(Entity entity);
 
   public:
     void init();
@@ -51,7 +47,7 @@ class SpriteStage {
     /**
      * Draw all renderable sprites onto the screen.
      */
-    void draw(float elapsed_ms);
+    void draw();
 
-    ~SpriteStage();
+    ~MenuStage();
 };

@@ -49,10 +49,10 @@ Entity createLight(const Entity &entity, vec2 position, float dir) {
     spawner.color = vec4(255, 255, 0, 255);
     spawner.spread = 0.0f;
     spawner.initial_scale = vec2(8, 8);
-    spawner.scale_change = -16.f;
+    spawner.scale_change = -15.f;
     spawner.alpha_fall_off = 255.0f;
     spawner.lifetime = 1;
-    spawner.max_particles = 5;
+    spawner.max_particles = 8;
     registry.particleSpawners.insert(light, spawner);
 
     return entity;
