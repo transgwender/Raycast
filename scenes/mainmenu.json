@@ -42,30 +42,6 @@
             ]
         },
         {
-            "name": "help_button",
-            "data": [
-                {
-                    "type": "button",
-                    "position": [
-                        160.0,
-                        150.0
-                    ],
-                    "label": "Help",
-                    "scale": [
-                        96.0,
-                        32.0
-                    ]
-                },
-                {
-                    "type": "change_scene",
-                    "scene": "help"
-                },
-                {
-                    "type": "menu_item"
-                }
-            ]
-        },
-        {
             "name": "Team name",
             "data": [
                 {
