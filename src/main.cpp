@@ -1,10 +1,13 @@
 #define GL3W_IMPLEMENTATION
 #include "logging/log.hpp"
 #include "logging/log_manager.hpp"
+#include "particles.hpp"
+#include "systems/ai.hpp"
 #include "systems/physics.hpp"
 #include "systems/render/render.hpp"
 #include "systems/world.hpp"
 #include "systems/ai.hpp"
+#include "utils.h"
 #include <chrono>
 #include <gl3w.h>
 #include <iostream>
@@ -17,6 +20,7 @@ int main() {
     RenderSystem renderer;
     PhysicsSystem physics;
     AISystem ai;
+    ParticleSystem particles;
 
     // Initialize default logger
     raycast::logging::LogManager log_manager;
@@ -34,6 +38,7 @@ int main() {
     // Initialize the main systems
     renderer.init(window);
     world.init();
+    particles.init();
 
     // Variable time step loop
     auto t = Clock::now();
@@ -45,16 +50,14 @@ int main() {
         // Calculating elapsed times in milliseconds from the previous iteration
         auto now = Clock::now();
         float elapsed_ms =
-            static_cast<float>(
-                (std::chrono::duration_cast<std::chrono::microseconds>(now - t))
-                    .count()) /
-            1000;
+            static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count()) / 1000;
         t = now;
 
         world.step(elapsed_ms);
         physics.step(elapsed_ms);
         ai.step(elapsed_ms);
         world.handle_collisions();
+        particles.step(elapsed_ms);
         renderer.draw(elapsed_ms);
     }
 

@@ -1,8 +1,8 @@
-#include "sprite.hpp"
+#include "menu.hpp"
 #include "registry.hpp"
 #include "render.hpp"
 
-void SpriteStage::init() {
+void MenuStage::init() {
     // create a new framebuffer to render to
     glGenFramebuffers(1, &frame_buffer);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
@@ -28,10 +28,10 @@ void SpriteStage::init() {
     createVertexAndIndexBuffers();
 
     // add this stage's frame texture to the texture manager
-    texture_manager.add("$sprite_stage", frame_texture);
+    texture_manager.add("$menu_stage", frame_texture);
 }
 
-void SpriteStage::createVertexAndIndexBuffers() {
+void MenuStage::createVertexAndIndexBuffers() {
     glGenBuffers(1, &vbo);
     glGenBuffers(1, &ibo);
 
@@ -49,16 +49,14 @@ void SpriteStage::createVertexAndIndexBuffers() {
 /**
  * Update uniform variables for the shader program based on the given entity and texture.
  */
-void SpriteStage::activateShader(const Entity& entity, const std::string& texture) const {
+void MenuStage::activateShader(const Entity& entity, const std::string& texture) const {
     // set uniforms
     setUniformInt(shader, "albedo_tex", 0);
     setUniformInt(shader, "normal_tex", 1);
 
     setUniformFloatVec3(shader, "ambient_light", ambient_light_colour / 255.0f);
 
-
     setUniformInt(shader, "skip_lighting", registry.menuItems.has(entity));
-    setUniformInt(shader, "is_blackhole", registry.blackholes.has(entity));
 
     int point_lights_count = 0;
     for (const auto& point_light : registry.pointLights.entities) {
@@ -92,16 +90,16 @@ void SpriteStage::activateShader(const Entity& entity, const std::string& textur
  * Prepare for drawing by setting various OpenGL flags, setting and clearing the framebuffer,
  * and updating the viewport.
  */
-void SpriteStage::prepareDraw() const {
+void MenuStage::prepareDraw() const {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
     glUseProgram(shader);
-    setUniformInt(shader, "skip_lighting", 0);
+    setUniformInt(shader, "skip_lighting", 1);
     setUniformFloatMat3(shader, "projection", projection_matrix);
 
     glViewport(0, 0, native_width, native_height);
     glDepthRange(0.00001, 10);
-    glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 1.0);
+    glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 0.0);
     glClearDepth(10.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
@@ -129,7 +127,7 @@ void SpriteStage::prepareDraw() const {
  * Draw a given Entity which has a `Motion` and `Material`.
  * @param entity The sprite to render
  */
-void SpriteStage::drawSprite(const Entity& entity, float elapsed_ms) {
+void MenuStage::drawSprite(const Entity entity) {
     const auto& [position, angle, velocity, scale] = registry.motions.get(entity);
     const auto& texture = registry.materials.get(entity).texture;
 
@@ -144,44 +142,16 @@ void SpriteStage::drawSprite(const Entity& entity, float elapsed_ms) {
     setUniformFloatMat3(shader, "transform", transform.mat);
     setUniformFloatMat3(shader, "projection", projection_matrix);
 
-    if (registry.spriteSheets.has(entity)) {
-        SpriteSheet& ss = registry.spriteSheets.get(entity);
-        ss.timeElapsed += elapsed_ms;
+    // Default texture coordinates
+    setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
+    setUniformFloat(shader, "horizontal_offset", 0);
+    setUniformFloat(shader, "vertical_offset", 0);
 
-
-        if (registry.levers.has(entity)) { // IF animated sprite is a lever
-            animateLever(entity, ss);
-
-        } else { // If animated sprite is not a lever
-
-            // Update animation frame
-            if (ss.timeElapsed >= animation_speed) {
-                ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
-                ss.timeElapsed = 0.f;
-            }
-        }
-
-         // Calculate UV coord offset
-        float h_offset = ss.cellHeight * static_cast<float>(ss.currFrame) / ss.sheetWidth;
-        float v_offset = ss.cellWidth * static_cast<float>(ss.currState) / ss.sheetHeight;
-        vec2 cell_size = vec2(ss.cellWidth / ss.sheetWidth, ss.cellHeight / ss.sheetHeight);
-
-        setUniformFloat(shader, "horizontal_offset", h_offset);
-        setUniformFloat(shader, "vertical_offset", v_offset);
-        setUniformFloatVec2(shader, "cell_size", cell_size); 
-
-    } else {
-        // Default texture coordinates
-        setUniformFloatVec2(shader, "cell_size", vec2(1, 1));
-        setUniformFloat(shader, "horizontal_offset", 0);
-        setUniformFloat(shader, "vertical_offset", 0);
-    }
     checkGlErrors();
 
     // Get number of indices from index buffer, which has elements uint16_t
     GLint size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);
-    GLsizei num_indices = size / sizeof(uint16_t);
 
     // Drawing of num_indices/3 triangles specified in the index buffer
     glDrawElements(GL_TRIANGLES, std::size(textured_indices), GL_UNSIGNED_SHORT, nullptr);
@@ -189,40 +159,18 @@ void SpriteStage::drawSprite(const Entity& entity, float elapsed_ms) {
     checkGlErrors();
 }
 
-void SpriteStage::animateLever(const Entity& entity, SpriteSheet& ss) {
-    Lever& lever = registry.levers.get(entity);
-
-    // Update animation frame
-    if (ss.timeElapsed >= animation_speed) {
-        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_RIGHT &&
-            ss.currFrame < ss.animationFrames[ss.currState] - 1) {
-            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
-            ss.timeElapsed = 0.f;
-            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
-        }
-
-        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_LEFT && ss.currFrame > 0) {
-            ss.currFrame = (ss.currFrame - 1) % ss.animationFrames[ss.currState];
-            ss.timeElapsed = 0.f;
-            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
-        }
-
-        lever.state = (LEVER_STATES) ss.currFrame;
-    }
-}
-
-void SpriteStage::draw(float elapsed_ms) {
+void MenuStage::draw() {
     prepareDraw();
 
     // Draw all textured meshes that have a material and motion component
     for (const Entity& entity : registry.materials.entities) {
-        if (!registry.menuItems.has(entity)) {
-            drawSprite(entity, elapsed_ms);
+        if (registry.menuItems.has(entity)) {
+            drawSprite(entity);
         }
     }
 }
 
-SpriteStage::~SpriteStage() {
+MenuStage::~MenuStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteBuffers(1, &ibo);
 

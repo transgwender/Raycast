@@ -33,6 +33,8 @@ void setUniformFloatVec2(GLuint program, const char* name, vec2 value);
 
 void setUniformFloatVec3(GLuint program, const char* name, vec3 value);
 
+void setUniformFloatVec4(GLuint program, const char* name, vec4 value);
+
 void setUniformFloatMat3(GLuint program, const char* name, mat3 value);
 
 void setUniformFloatMat4(GLuint program, const char* name, mat4 value);
