@@ -1,0 +1,48 @@
+{
+    "objList": [
+        {
+            "name": "back button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        22.0,
+                        15.0
+                    ],
+                    "label": "Back",
+                    "scale": [
+                        30.0,
+                        15.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "mainmenu"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
+            "name": "Help",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        160,
+                        15
+                    ],
+                    "size": 96,
+                    "text": "How to play?",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": true
+                }
+            ]
+        }
+    ]
+}
