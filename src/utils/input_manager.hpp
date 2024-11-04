@@ -32,6 +32,9 @@ class InputManager {
         /// Additional helpers to filter entities/components based on input state
         std::vector<Entity> get_entities_at_mouse_pos();
 
+        /// Entities currently clicked
+        std::vector<Entity> active_entities;
+
     private:
         /// Internal data structures to keep track of input state
         std::unordered_map<int, int> key_states;

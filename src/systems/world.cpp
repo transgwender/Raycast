@@ -521,33 +521,32 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
         if (registry.highlightables.has(entity)) {
             registry.highlightables.get(entity).isHighlighted = true;
         }
+    }
 
-        // hanlde the mirror movements
-        if (input_manager.is_mouse_button_pressed(GLFW_MOUSE_BUTTON_LEFT)) {
-            Motion &clicked_motion = registry.motions.get(entity);
-            vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
+    // hanlde the mirror movements
+    for(auto entity : input_manager.active_entities) {
+        Motion &clicked_motion = registry.motions.get(entity);
+        vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
 
-            if (registry.rotateables.has(entity)) { // rotateable mirrors
-                // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
-                clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
-            }
+        if (registry.rotateables.has(entity)) { // rotateable mirrors
+            // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
+            clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
+        }
 
-            if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
-                OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity);
-
-                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate
-                // beyond the y-axis it flips so this check is necessary
-                if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
-                    clicked_motion.position = raycast::math::clampToLineSegment(
+        if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
+            OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity); 
+            // ideally the fist endpoint should correspond to the left endpoint, but if we roatate 
+            // beyond the y-axis it flips so this check is necessary
+            if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
+                clicked_motion.position = raycast::math::clampToLineSegment(
                         rails.firstEndpoint,
                         rails.secondEndpoint,
                         screenToWorld(mouse_position));
-                } else {
-                    clicked_motion.position = raycast::math::clampToLineSegment(
+            } else {
+                clicked_motion.position = raycast::math::clampToLineSegment(
                         rails.secondEndpoint,
                         rails.firstEndpoint,
                         screenToWorld(mouse_position));
-                }
             }
         }
     }
@@ -556,10 +555,11 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
     input_manager.update_mouse_button_state(key, action, mod, vec2(xpos, ypos));
 
-    auto entities = input_manager.get_entities_at_mouse_pos();
+    auto hovered_entities = input_manager.get_entities_at_mouse_pos();
     if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {
+        input_manager.active_entities.clear();
         // mouse initialized by clicked_entities
-        for (const Entity& entity : entities) {
+        for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));
             if (registry.changeScenes.has(entity)) {
                 sounds.play_sound("button-click.wav");
@@ -571,6 +571,14 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 sounds.play_sound("button-click.wav");
                 menus.try_close_menu();
                 return;
+            }
+        }
+    }
+
+    if (IS_PRESSED(GLFW_MOUSE_BUTTON_LEFT)) {
+        for (const Entity& entity : hovered_entities) {
+            if (registry.entitiesOnLinearRails.has(entity) || registry.rotateables.has(entity)) {
+                input_manager.active_entities.push_back(entity);
             }
         }
     }
