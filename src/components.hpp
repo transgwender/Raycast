@@ -281,7 +281,6 @@ struct SpriteSheet {
     std::vector<unsigned int> animationFrames;
 };
 
-
 enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, LEVER_STATES_COUNT };
 enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
 enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
@@ -300,3 +299,16 @@ struct Lever {
     // active_lever -- is the lever active when pushed right? or left?
     // affectedEntity -- which entity is affected by this lever?
 };
+
+
+struct ColoredVertex {
+    vec3 position;
+    vec3 color;
+};
+
+struct Mesh {
+    vec2 original_size = {1,1};
+    std::vector<ColoredVertex> vertices;
+    std::vector<uint16_t> vertex_indices;
+};
+

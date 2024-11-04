@@ -20,6 +20,7 @@ class CompositorStage {
     GLuint vao = 0;
 
     GLuint sprite_stage_texture = 0;
+    GLuint mesh_stage_texture = 0;
     GLuint menu_stage_texture = 0;
     GLuint particle_stage_texture = 0;
     GLuint text_stage_texture = 0;

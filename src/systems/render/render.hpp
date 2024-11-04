@@ -2,6 +2,7 @@
 
 #include "common.hpp"
 #include "compositor.hpp"
+#include "mesh.hpp"
 #include "particle.hpp"
 #include "shader.hpp"
 #include "sprite.hpp"
@@ -25,6 +26,7 @@ extern ShaderManager shader_manager;
  */
 class RenderSystem {
     SpriteStage sprite_stage;
+    MeshStage mesh_stage;
     ParticleStage particle_stage;
     MenuStage menu_stage;
     TextStage text_stage;

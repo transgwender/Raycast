@@ -1,7 +1,8 @@
 #include "world_init.hpp"
-#include "utils/math.hpp"
-#include "systems/physics.hpp"
 #include "ecs/registry.hpp"
+#include "systems/physics.hpp"
+#include "utils/math.hpp"
+#include "utils/mesh_utils.hpp"
 
 Entity createSprite(const Entity& entity, const vec2 position, const vec2 scale, float angle,
                     const std::string& textureName,
@@ -215,6 +216,13 @@ Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES sta
     zone.position = position;
     zone.type = ZONE_TYPE::ZONE_TYPE_COUNT;
     registry.zones.insert(leverEntity, zone);
-    
+
     return leverEntity;
+}
+
+Mesh createMesh(const std::string& mesh_name) {
+    const auto filename = mesh_path(mesh_name);
+    Mesh mesh{};
+    MeshUtils::loadFromOBJFile(filename, mesh.vertices, mesh.vertex_indices, mesh.original_size);
+    return mesh;
 }
