@@ -1,80 +1,339 @@
 {
-  "objList": [
-    {
-      "name": "level_id",
-      "data": [
+    "objList": [
         {
-          "type": "level",
-          "id": 1
+            "name": "level_id",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 1
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        90.0
+                    ],
+                    "scale": [
+                        320,
+                        200
+                    ],
+                    "texture": "background_cyber_2"
+                }
+            ]
+        },
+        {
+            "name": "platforms",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        180.0,
+                        150.0
+                    ],
+                    "scale": [
+                        180,
+                        120
+                    ],
+                    "texture": "platforms_1"
+                },
+                {
+                    "type": "collider",
+                    "width": 180,
+                    "height": 120,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        180.0,
+                        120.0
+                    ],
+                    "scale": [
+                        180,
+                        120
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "gear-1",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        60.0,
+                        155.0
+                    ],
+                    "scale": [
+                        12,
+                        12
+                    ],
+                    "angle": 0,
+                    "texture": "gear"
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        60.0,
+                        155.0
+                    ],
+                    "angle": 1.57
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotateable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rail help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        90.0,
+                        33.0
+                    ],
+                    "size": 32,
+                    "text": "<- Click and drag this mirror\n to move it along the rail",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "rail-1",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        54.0,
+                        32.0
+                    ],
+                    "scale": [
+                        50,
+                        3
+                    ],
+                    "angle": 0,
+                    "texture": "mirror_0"
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        54.0,
+                        32.0
+                    ],
+                    "angle": 0.785
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "on_linear_rails",
+                    "angle": 0,
+                    "length": 27
+                },
+                {
+                    "type": "lerpable",
+                    "should_switch_direction": false,
+                    "t": 0,
+                    "t_step": 0
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rotatable mirror help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        200.0,
+                        30.0
+                    ],
+                    "size": 32,
+                    "text": "Mirrors without a rail rotate!\n Click and drag to do so ->",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "gear-1",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        295.0,
+                        30.0
+                    ],
+                    "scale": [
+                        12,
+                        12
+                    ],
+                    "angle": 0,
+                    "texture": "gear"
+                }
+            ]
+        },
+        {
+            "name": "far-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        295.0,
+                        30.0
+                    ],
+                    "angle": 1.57
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotateable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        10.0,
+                        147.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "sprite_sheet",
+                    "position": [
+                        10.0,
+                        147.0
+                    ],
+                    "sheetWidth": 112,
+                    "sheetHeight": 16,
+                    "cellWidth": 16,
+                    "cellHeight": 16,
+                    "texture": "start_gem_spritesheet",
+                    "animationFrames": [ 7 ],
+                    "imageWidth": 16,
+                    "imageHeight": 16,
+                    "scale": [
+                        16.0,
+                        16.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        230.0,
+                        142.0
+                    ],
+                    "size": 32,
+                    "text": "Your goal is to\n reach this end zone ->",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        296.0,
+                        146.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "sprite_sheet",
+                    "position": [
+                        296.0,
+                        146.0
+                    ],
+                    "sheetWidth": 112,
+                    "sheetHeight": 16,
+                    "cellWidth": 16,
+                    "cellHeight": 16,
+                    "texture": "end_gem_spritesheet",
+                    "animationFrames": [ 7 ],
+                    "imageWidth": 16,
+                    "imageHeight": 16,
+                    "scale": [
+                        12.0,
+                        12.0
+                    ]
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "start_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            25.0,
-            90.0
-          ],
-          "zone_type": 0,
-          "angle": 0
-        },
-        {
-          "type": "sprite",
-          "position": [
-            25.0,
-            90.0
-          ],
-          "texture": "bubble_open",
-          "scale": [
-            12.0,
-            12.0
-          ],
-          "angle": 0.785398163
-        },
-        {
-          "type": "light_source",
-          "angle": 0
-        }
-      ]
-    },
-    {
-      "name": "end_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            310.0,
-            90.0
-          ],
-          "zone_type": 1,
-          "angle": 0
-        },
-        {
-          "type": "collider",
-          "width": 3,
-          "height": 3,
-          "bounds": 0
-        },
-        {
-          "type": "collideable"
-        },
-        {
-          "type": "sprite",
-          "position": [
-            300.0,
-            90.0
-          ],
-          "texture": "bubble_closed",
-          "scale": [
-            12.0,
-            12.0
-          ],
-          "angle": 0
-        }
-      ]
-    }
-  ]
+    ]
 }

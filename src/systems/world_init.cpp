@@ -61,7 +61,7 @@ Entity createLight(const Entity &entity, vec2 position, float dir) {
 
 Entity createMirror(const Entity& entity, vec2 position, float angle) {
     vec2 scale = vec2({5, 40});
-    createSprite(entity, position, scale, angle, "mirror");
+    createSprite(entity, position, scale, angle, "mirror_0");
     registry.reflectives.emplace(entity);
 
     // Initialize collider
@@ -72,7 +72,6 @@ Entity createMirror(const Entity& entity, vec2 position, float angle) {
     collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
     collider.width = scale.x;
     collider.height = scale.y;
-
 
     return entity;
 }

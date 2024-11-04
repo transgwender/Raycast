@@ -7,7 +7,7 @@
 #include <unordered_map>
 #include <string>
 
-constexpr float BGM_VOLUME_MULTIPLIER = 0.5;
+constexpr float BGM_VOLUME_MULTIPLIER = 0.3;
 const std::string BGM_FILENAME = "8BitCave.wav";
 
 class SoundSystem {
