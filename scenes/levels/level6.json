@@ -239,51 +239,6 @@
             ]
         },
         {
-            "name": "lever-linked stone",
-            "data": [
-                {
-                    "type": "lever",
-                    "position": [
-                        150.0,
-                        120.0
-                    ],
-                    "state": 5,
-                    "movementState": 0,
-                    "effect": 1,
-                    "activeLever": 0
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        290.0,
-                        110.0
-                    ],
-                    "scale": [
-                        60,
-                        40
-                    ],
-                    "texture": "crate"
-                },
-                {
-                    "type": "collider",
-                    "width": 60,
-                    "height": 40,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        290.0,
-                        110.0
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
             "name": "background",
             "data": [
                 {
