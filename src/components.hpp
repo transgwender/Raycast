@@ -34,7 +34,7 @@ struct MenuItem {};
 // A zone represents the start and end points of light.
 enum class ZONE_TYPE { START = 0, END = 1, ZONE_TYPE_COUNT };
 struct Zone {
-    vec2 position = {0, 0};
+    vec2 position;
     ZONE_TYPE type;
 };
 
@@ -242,6 +242,9 @@ struct Sprite {
 struct Mirror {
     vec2 position = {0, 0};
     float angle = 0;
+    std::string mirrorType;
+    float railLength = 0;
+    float railAngle = 0;
 };
 
 struct ButtonHelper {

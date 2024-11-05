@@ -7,7 +7,7 @@
 #include "render/render.hpp"
 
 Entity createSprite(const Entity &entity, vec2 position, vec2 scale, float angle, const std::string& textureName, const std::string& shaderName = "textured");
-Entity createMirror(const Entity& entity, vec2 position, float angle);
+Entity createMirror(const Entity& entity, const Mirror& mirror);
 
 Entity createLight(const Entity& entity, vec2 position, float dir);
 Entity createDashTheTurtle(const Entity& entity, vec2 position);
@@ -19,11 +19,11 @@ Entity createChangeSceneButton(const Entity& entity, vec2 position, vec2 scale, 
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth, float cellHeight, const std::vector<unsigned int>& animationFrames);
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
                          float cellHeight, const std::vector<unsigned int>& animationFrames,
-                         const std::string textureName = "turtle_sprite_sheet", float imageWidth = 0, float imageHeight = 0);
+                         const std::string& textureName = "turtle_sprite_sheet", float imageWidth = 0, float imageHeight = 0);
 
-Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
+Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
                    LEVER_STATES activeLever);
 void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, const float angle, const vec2& scale);
 
-void setZone(Entity entity, ZONE_TYPE zType, vec2 position);
-void initLinearRails(Entity entity, OnLinearRails rails);
+void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position);
+void initLinearRails(const Entity& entity, OnLinearRails);

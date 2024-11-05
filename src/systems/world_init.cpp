@@ -59,9 +59,31 @@ Entity createLight(const Entity &entity, vec2 position, float dir) {
     return entity;
 }
 
-Entity createMirror(const Entity& entity, vec2 position, float angle) {
+Entity createMirror(const Entity& entity, const Mirror& mirror) {
     vec2 scale = vec2({5, 40});
-    createSprite(entity, position, scale, angle, "mirror_0");
+
+    // Draw mirror attachment
+    OnLinearRails rails;
+    Rotateable rotateable;
+    const auto attachment = Entity();
+    if (mirror.mirrorType == "rotate") {
+        createSprite(attachment, mirror.position, vec2(12, 12), mirror.angle, "gear");
+    } else {    // Assume only other mirror type is a RAIL
+
+        rails.length = mirror.railLength;
+        rails.angle = mirror.railAngle;
+        createSprite(attachment, mirror.position, vec2(mirror.railLength * 2, 3), mirror.railAngle, "mirror_0");
+    }
+
+    // Draws actual mirror BEFORE registering rails/rotate
+    createSprite(entity, mirror.position, scale, mirror.angle, "mirror_0");
+
+    if (mirror.mirrorType == "rotate") {
+        registry.rotateables.insert(entity, rotateable);
+    } else {
+        initLinearRails(entity, rails);
+    }
+
     registry.reflectives.emplace(entity);
 
     // Initialize collider
@@ -148,10 +170,9 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
 }
 
 // imageHeight and imageWidth control the actual dimensions of the sprite when rendered onto the screen
-
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
                          float cellHeight, const std::vector<unsigned int>& animationFrames,
-                         const std::string textureName, float imageWidth, float imageHeight) {
+                         const std::string& textureName, float imageWidth, float imageHeight) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
@@ -166,18 +187,26 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
         createSprite(entity, position, vec2(imageWidth, imageHeight), 0, textureName);
     }
 
-    // TODO: add scale handling to flip direction of turtle when moving
     registry.spriteSheets.insert(entity, ss);
     return entity;
 }
 
-void setZone(Entity entity, ZONE_TYPE zType, vec2 position) {
-    Zone zone = registry.zones.emplace(entity);
+void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position) {
+    Zone zone{};
     zone.position = position;
     zone.type = zType;
+
+    registry.zones.insert(entity, zone);
+    if (zType == ZONE_TYPE::START) {
+        const std::vector<unsigned int> frames = {7};
+        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "start_gem_spritesheet");
+    } else if (zType == ZONE_TYPE::END) {
+        const std::vector<unsigned int> frames = {7};
+        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_gem_spritesheet");
+    }
 }
 
-void initLinearRails(Entity entity, OnLinearRails rails) {
+void initLinearRails(const Entity& entity, OnLinearRails rails) {
     Motion& motion = registry.motions.get(entity);
     auto direction = vec2(cos(rails.angle), sin(rails.angle));
     vec2 firstEndpoint = motion.position + rails.length * direction;
@@ -192,12 +221,14 @@ void initLinearRails(Entity entity, OnLinearRails rails) {
 // effect is the effect that the lever has on the affectedEntity when activated
 // activeLever is the state required to activate it
 
-Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
-                   LEVER_STATES activeLever) {
+Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
+    LEVER_STATES activeLever) {
 
     Entity leverEntity = Entity();
     std::vector<unsigned int> vec = {6};
-    createSpriteSheet(leverEntity, position, 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+    Entity ssEntity = createSpriteSheet(leverEntity, position, 192, 32, 32, 32, {6}, "lever_sprite_sheet", 20, 20);
+    SpriteSheet& ss = registry.spriteSheets.get(ssEntity);
+    ss.currFrame = (unsigned int) state;
     Lever lever{};
     lever.state = state;
     lever.movementState = LEVER_MOVEMENT_STATES::STILL;

@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "tutorial",
+            "name": "Tutorial",
             "data": [
                 {
                     "type": "level",
@@ -22,7 +22,7 @@
                         320,
                         200
                     ],
-                    "texture": "background_cyber_2"
+                    "texture": "background_cyber_1"
                 }
             ]
         },
@@ -65,24 +65,6 @@
             ]
         },
         {
-            "name": "gear-1",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        60.0,
-                        155.0
-                    ],
-                    "scale": [
-                        12,
-                        12
-                    ],
-                    "angle": 0,
-                    "texture": "gear"
-                }
-            ]
-        },
-        {
             "name": "rotate-mirror",
             "data": [
                 {
@@ -91,13 +73,11 @@
                         60.0,
                         155.0
                     ],
-                    "angle": 1.57
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
                 },
                 {
                     "type": "highlightable",
@@ -126,24 +106,6 @@
             ]
         },
         {
-            "name": "rail-1",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        54.0,
-                        35.0
-                    ],
-                    "scale": [
-                        50,
-                        3
-                    ],
-                    "angle": 0,
-                    "texture": "mirror_0"
-                }
-            ]
-        },
-        {
             "name": "move-mirror",
             "data": [
                 {
@@ -152,21 +114,12 @@
                         54.0,
                         35.0
                     ],
-                    "angle": 0.785
+                    "angle": 0.785,
+                    "rail-length": 27,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 27
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
                 },
                 {
                     "type": "highlightable",
@@ -195,24 +148,6 @@
             ]
         },
         {
-            "name": "gear-1",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        295.0,
-                        35.0
-                    ],
-                    "scale": [
-                        12,
-                        12
-                    ],
-                    "angle": 0,
-                    "texture": "gear"
-                }
-            ]
-        },
-        {
             "name": "far-rotate-mirror",
             "data": [
                 {
@@ -221,7 +156,8 @@
                         295.0,
                         35.0
                     ],
-                    "angle": 1.57
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
@@ -246,26 +182,6 @@
                     ],
                     "zone_type": 0,
                     "angle": 30
-                },
-                {
-                    "type": "sprite_sheet",
-                    "position": [
-                        10.0,
-                        147.0
-                    ],
-                    "sheetWidth": 112,
-                    "sheetHeight": 16,
-                    "cellWidth": 16,
-                    "cellHeight": 16,
-                    "texture": "start_gem_spritesheet",
-                    "animationFrames": [ 7 ],
-                    "imageWidth": 16,
-                    "imageHeight": 16,
-                    "scale": [
-                        16.0,
-                        16.0
-                    ],
-                    "angle": 0
                 },
                 {
                     "type": "light_source",
@@ -313,25 +229,6 @@
                 },
                 {
                     "type": "collideable"
-                },
-                {
-                    "type": "sprite_sheet",
-                    "position": [
-                        296.0,
-                        146.0
-                    ],
-                    "sheetWidth": 112,
-                    "sheetHeight": 16,
-                    "cellWidth": 16,
-                    "cellHeight": 16,
-                    "texture": "end_gem_spritesheet",
-                    "animationFrames": [ 7 ],
-                    "imageWidth": 16,
-                    "imageHeight": 16,
-                    "scale": [
-                        12.0,
-                        12.0
-                    ]
                 }
             ]
         }

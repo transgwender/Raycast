@@ -126,18 +126,17 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
     registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
 
     if (isInLevel() && shouldStep()) {
-        ECSRegistry& test_registry = registry;
+        // ECSRegistry& test_registry = registry;
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
 
         for (int i = 0; i < registry.levers.components.size(); i++) {
-            auto& leverEntity = registry.levers.entities[i];
+            // auto& leverEntity = registry.levers.entities[i];
             auto& lever = registry.levers.components[i];
             if ((int) lever.state == (int) lever.activeLever) {
                 if (lever.effect == LEVER_EFFECTS::REMOVE) {
                     registry.remove_all_components_of(lever.affectedEntity);
                 }
             }
-        
         }
 
         for (int i = 0; i < registry.lightRays.components.size(); i++) {
@@ -554,8 +553,6 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
             }
         }
     }
-
-
 }
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
@@ -600,9 +597,8 @@ void WorldSystem::updateDash() {
             throw std::runtime_error("Error: Sprite sheet does not exist. Please make sure to add the sprite sheet to the level JSON.");
         }
 
-        Entity& ss_entity = registry.spriteSheets.entities.front();
-        SpriteSheet& ss = registry.spriteSheets.get(ss_entity);
-        Motion& ss_motion = registry.motions.get(ss_entity);
+        SpriteSheet& ss = registry.spriteSheets.get(dashEntity);
+        Motion& ss_motion = registry.motions.get(dashEntity);
 
         if (dash_state == DASH_STATES::WALK) {
             // vec2 displacement = {(dm.position.x - ray.x), (dm.position.y - ray.y)};
@@ -627,7 +623,6 @@ void WorldSystem::updateDash() {
         } else if (dash_state == DASH_STATES::STARE) {
             dm.velocity = {0, 0};
             ss.currState = static_cast<unsigned int>(DASH_STATES::STARE);
-
         } else if (dash_state == DASH_STATES::IDLE) {
             dm.velocity = {0, 0};
             ss.currState = static_cast<unsigned int>(DASH_STATES::IDLE);

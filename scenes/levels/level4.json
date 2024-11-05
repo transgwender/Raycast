@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "level_id",
+            "name": "Black Hole 2",
             "data": [
                 {
                     "type": "level",
@@ -22,41 +22,7 @@
                         320,
                         180
                     ],
-                    "texture": "background"
-                }
-            ]
-        },
-        {
-            "name": "tree0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        55.0,
-                        100.0
-                    ],
-                    "scale": [
-                        59,
-                        152
-                    ],
-                    "texture": "tree0"
-                }
-            ]
-        },
-        {
-            "name": "leaves",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        25.0
-                    ],
-                    "scale": [
-                        320,
-                        54
-                    ],
-                    "texture": "leaves0"
+                    "texture": "background_cyber_3"
                 }
             ]
         },
@@ -65,14 +31,14 @@
             "data": [
                 {
                     "type": "blackhole",
-                    "mass": 5.0,
+                    "mass": 5,
                     "schwarzchild_radius": 24.0
                 },
                 {
                     "type": "sprite",
                     "position": [
-                        120.0,
-                        40.0
+                        170.0,
+                        104.0
                     ],
                     "texture": "light",
                     "scale": [
@@ -86,15 +52,15 @@
                 },
                 {
                     "type": "collider",
-                    "width": 10.0,
-                    "height": 10.0,
-                    "bounds": 1
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
                 },
                 {
                     "type": "zone",
                     "position": [
-                        120.0,
-                        40.0
+                        170.0,
+                        104.0
                     ],
                     "scale": [
                         60,
@@ -105,231 +71,19 @@
             ]
         },
         {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        0,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        32,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        64,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        96,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        128,
-                        180
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        192,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        224,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        256,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground1"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        288,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
-            "name": "ground0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        320,
-                        180.0
-                    ],
-                    "scale": [
-                        32,
-                        34
-                    ],
-                    "texture": "ground0"
-                }
-            ]
-        },
-        {
             "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        60.0,
+                        80.0,
                         155.0
                     ],
-                    "angle": 1.57
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "far-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        295.0,
-                        30.0
-                    ],
-                    "angle": 1.57
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
                 },
                 {
                     "type": "highlightable",
@@ -344,27 +98,14 @@
                     "type": "zone",
                     "position": [
                         20.0,
-                        140.0
+                        100.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
-                    "type": "sprite",
-                    "position": [
-                        20.0,
-                        140.0
-                    ],
-                    "texture": "bubble_open",
-                    "scale": [
-                        12.0,
-                        12.0
-                    ],
-                    "angle": 0.785398163
-                },
-                {
                     "type": "light_source",
-                    "angle": 0
+                    "angle": 0.7
                 }
             ]
         },
@@ -375,7 +116,7 @@
                     "type": "zone",
                     "position": [
                         300.0,
-                        140.0
+                        45.0
                     ],
                     "zone_type": 1,
                     "angle": 0
@@ -388,18 +129,6 @@
                 },
                 {
                     "type": "collideable"
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        300.0,
-                        140.0
-                    ],
-                    "texture": "bubble_closed",
-                    "scale": [
-                        12.0,
-                        12.0
-                    ]
                 }
             ]
         }

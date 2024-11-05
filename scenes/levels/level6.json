@@ -1,422 +1,332 @@
 {
-    "objList": [
+  "objList": [
+    {
+      "name": "level_id",
+      "data": [
         {
-            "name": "level_id -- Thread the Needle",
-            "data": [
-                {
-                    "type": "level",
-                    "id": 6
-                }
-            ]
-        },
-        {
-            "name": "background",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        90.0
-                    ],
-                    "scale": [
-                        320,
-                        180
-                    ],
-                    "texture": "background"
-                }
-            ]
-        },
-        {
-            "name": "tree0",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        55.0,
-                        105.0
-                    ],
-                    "scale": [
-                        59,
-                        152
-                    ],
-                    "texture": "tree0"
-                }
-            ]
-        },
-        {
-            "name": "leaves",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        27.0
-                    ],
-                    "scale": [
-                        320,
-                        54
-                    ],
-                    "texture": "leaves0"
-                }
-            ]
-        },
-        {
-            "name": "lower_left_spike",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        130.0,
-                        120.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "texture": "stones"
-                },
-                {
-                    "type": "collider",
-                    "width": 260,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        130.0,
-                        120.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "middle_right_spike",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "texture": "stones"
-                },
-                {
-                    "type": "collider",
-                    "width": 260,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "bottom_right_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        290.0,
-                        155.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_right_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        290.0,
-                        95.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        20.0,
-                        80.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "rotateable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_left_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        55.0,
-                        15.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        55.0,
-                        15.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_second_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        120.0,
-                        55.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_second_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        120.0,
-                        55.0
-                    ],
-                    "angle": 1.5708
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_third_rail",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        170.0,
-                        15.0
-                    ],
-                    "scale": [
-                        70,
-                        2
-                    ],
-                    "angle": 0,
-                    "texture": "mirror"
-                }
-            ]
-        },
-        {
-            "name": "top_third_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        170.0,
-                        15.0
-                    ],
-                    "angle": 1.1
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "on_linear_rails",
-                    "angle": 0,
-                    "length": 35
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "start_zone",
-            "data": [
-                {
-                    "type": "zone",
-                    "position": [
-                        20.0,
-                        150.0
-                    ],
-                    "zone_type": 0,
-                    "angle": 30
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        20.0,
-                        150.0
-                    ],
-                    "texture": "bubble_open",
-                    "scale": [
-                        12.0,
-                        12.0
-                    ],
-                    "angle": 0.785398163
-                },
-                {
-                    "type": "light_source",
-                    "angle": 0
-                }
-            ]
-        },
-        {
-            "name": "end_zone",
-            "data": [
-                {
-                    "type": "zone",
-                    "position": [
-                        270.0,
-                        35.0
-                    ],
-                    "zone_type": 1,
-                    "angle": 0
-                },
-                {
-                    "type": "collider",
-                    "width": 3,
-                    "height": 3,
-                    "bounds": 0
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        270.0,
-                        35.0
-                    ],
-                    "texture": "bubble_closed",
-                    "scale": [
-                        12.0,
-                        12.0
-                    ]
-                }
-            ]
+          "type": "level",
+          "id": 6
         }
-    ]
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [
+            320,
+            180
+          ],
+          "texture": "background_4"
+        }
+      ]
+    },
+    {
+      "name": "platform",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            180.0,
+            190.0
+          ],
+          "scale": [
+            180,
+            120
+          ],
+          "texture": "platforms_1"
+        },
+        {
+          "type": "collider",
+          "width": 180,
+          "height": 120,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            180.0,
+            190.0
+          ],
+          "scale": [
+            180,
+            120
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "beam",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            95.0,
+            120.0
+          ],
+          "scale": [
+            10,
+            130
+          ],
+          "texture": "beam-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 130,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            95.0,
+            120.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            60.0,
+            155.0
+          ],
+          "angle": 0.5,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "move-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            40.0,
+            30.0
+          ],
+          "angle": 0.785,
+          "rail-length": 25,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "lerpable",
+          "should_switch_direction": false,
+          "t": 0,
+          "t_step": 0
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "far-rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            295.0,
+            30.0
+          ],
+          "angle": 1.57,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            150.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            293.0,
+            160.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "turtle",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            180.0,
+            114.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [ 12, 10, 4, 6, 5, 10 ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [ 10000, 10000 ]
+        },
+        {
+          "type": "collider",
+          "width": 16,
+          "height": 32,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "gravity"
+        }
+      ]
+    },
+    {
+      "name": "minisun",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            120.0,
+            115.0
+          ],
+          "texture": "minisun_off",
+          "scale": [
+            20.0,
+            20.0
+          ],
+          "angle": 0
+        },
+        {
+          "type": "minisun",
+          "lit": false,
+          "lit_duration": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "width": 20,
+          "height": 20,
+          "bounds": 0
+        },
+        {
+          "type": "zone",
+          "position": [
+            240.0,
+            60.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "lever-linked stone",
+      "data": [
+        {
+          "type": "lever",
+          "position": [ 150.0, 120.0 ],
+          "state": 5,
+          "movementState": 0,
+          "effect": 1,
+          "activeLever": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            290.0,
+            110.0
+          ],
+          "scale": [
+            60,
+            40
+          ],
+          "texture": "crate"
+        },
+        {
+          "type": "collider",
+          "width": 60,
+          "height": 40,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            290.0,
+            110.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    }
+  ]
 }

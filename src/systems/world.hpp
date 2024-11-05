@@ -16,7 +16,7 @@
 #include "menu.hpp"
 #include "utils/input_manager.hpp"
 
-constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;
+constexpr size_t LIGHT_SPAWN_DELAY_MS = 500.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
 constexpr size_t MAX_LIGHT_ON_SCREEN = 20;
 

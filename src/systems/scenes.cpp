@@ -67,17 +67,13 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "change_scene") {
                         PARSE_COMPONENT(ChangeScene, changeScenes);
                     } else if (type == "zone") {
-                        PARSE_COMPONENT(Zone, zones);
+                        Zone c{};
+                        data.get_to(c);
+                        setZone(entity, c.type, c.position);
                     } else if (type == "light_source") {
                         PARSE_COMPONENT(LightSource, lightSources);
-                    } else if (type == "on_linear_rails") {
-                        OnLinearRails lr{};
-                        data.get_to(lr);
-                        initLinearRails(entity, lr);
                     } else if (type == "lerpable") {
                         PARSE_COMPONENT(Lerpable, lerpables);
-                    } else if (type == "rotateable") {
-                        PARSE_COMPONENT(Rotateable, rotateables);
                     } else if (type == "reflective") {
                         PARSE_COMPONENT(Reflective, reflectives);
                     } else if (type == "level") {
@@ -85,7 +81,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "mirror") {
                         Mirror c{};
                         data.get_to(c);
-                        createMirror(entity, c.position, c.angle);
+                        createMirror(entity, c);
                     } else if (type == "highlightable") {
                         PARSE_COMPONENT(Highlightable, highlightables);
                     } else if (type == "level_select") {

@@ -48,7 +48,7 @@ inline void to_json(json& j, const Zone& c) {
     j = json{
         {"type", "zone"},
         {"position", c.position},
-        {"zone_type", (ZONE_TYPE)c.type},
+        {"zone_type", static_cast<ZONE_TYPE>(c.type)},
     };
 }
 
@@ -63,18 +63,6 @@ inline void to_json(json& j, const LightSource& c) {
 }
 inline void from_json(const json& j, LightSource& c) { j.at("angle").get_to(c.angle); }
 
-// OnLinearRails
-inline void to_json(json& j, const OnLinearRails& r) {
-    j = json{{"type", "on_linear_rails"},
-             {"angle", (float)r.angle},
-             {"length"},
-             (float)r.length};
-}
-inline void from_json(const json& j, OnLinearRails& r) {
-    j.at("angle").get_to(r.angle);
-    j.at("length").get_to(r.length);
-}
-
 // LinearlyInterpolatable
 inline void from_json(const json& j, Lerpable& lr) {
     j.at("t").get_to(lr.t);
@@ -86,17 +74,6 @@ inline void to_json(json& j, const Lerpable& lr) {
              {"should_switch_direction", lr.should_switch_direction},
              {"t_step", lr.t_step}};
 }
-
-// Rotateable
-inline void to_json(json& j, const Rotateable& c) {
-    (void)c;
-    j = json{{"type", "rotateable"}};
-}
-inline void from_json(const json& j, Rotateable& c) {
-    (void)j;
-    (void)c;
-}
-
 
 inline void to_json(json& j, const Level& c) {
     j = json{ {"type", "level"}, {"id", c.id} };
@@ -147,12 +124,37 @@ inline void from_json(const json& j, Sprite& c) {
 }
 
 inline void to_json(json& j, const Mirror& c) {
-    j = json{ {"type", "mirror"}, {"position", c.position}, {"angle", c.angle} };
+    j = json{
+        {"type", "mirror"},
+        {"position", c.position},
+        {"angle", c.angle},
+        {"mirror-type", c.mirrorType},
+        {"rail-length", c.railLength},
+        {"rail-angle", c.railAngle},
+    };
 }
 
 inline void from_json(const json& j, Mirror& c) {
     j.at("position").get_to(c.position);
     j.at("angle").get_to(c.angle);
+
+    if (j.contains("mirror-type")) {
+        j.at("mirror-type").get_to(c.mirrorType);
+    } else {
+        c.mirrorType = "rails";
+    }
+
+    if (j.contains("rail-length")) {
+        j.at("rail-length").get_to(c.railLength);
+    } else {
+        c.railLength = 0;
+    }
+
+    if (j.contains("rail-angle")) {
+        j.at("rail-angle").get_to(c.railAngle);
+    } else {
+        c.railAngle = 0;
+    }
 }
 
 inline void to_json(json& j, const PointLight& c) {

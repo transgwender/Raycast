@@ -61,4 +61,5 @@ void AISystem::updateDash(float elapsed_ms) {
     }
 
     (void)elapsed_ms;
+    (void)timeAccumulator;
 }
