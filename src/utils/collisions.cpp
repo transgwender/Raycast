@@ -198,10 +198,6 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
             // LOG_INFO("Num vertices: {}", NUM_VERTICES);
             for (uint i = 0; i < NUM_VERTICES; i += 3)
             {
-                if (registry.lightRays.has(e2) || registry.lightRays.has(e1)) {
-                    LOG_INFO("Checking face {}", i);
-                    LOG_INFO("Mesh angle: {}", mesh_motion.angle);
-                }
                 std::vector<ColoredVertex> curr_face = {
                     mesh.vertices[mesh.vertex_indices[i + 0]],
                     mesh.vertices[mesh.vertex_indices[i + 1]],

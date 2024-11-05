@@ -270,6 +270,10 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         minisun.lit = true;
         LightUp l;
         registry.litEntities.insert(minisun_entity, l);
+    } else {
+        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
+        minisun_light.counter_ms = LIGHT_TIMER_MS;
+
     }
 }
 
