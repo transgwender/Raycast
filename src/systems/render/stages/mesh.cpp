@@ -121,6 +121,15 @@ void MeshStage::drawMesh(const Entity& entity) {
     // Setting uniform values to the currently bound program
     setUniformFloatMat3(shader, "transform", transform.mat);
 
+    // Checking to see if we should light up this mesh 
+    GLint light_up_uloc = glGetUniformLocation(shader, "light_up");
+    assert(light_up_uloc >= 0);
+    if (registry.litEntities.has(entity)) {
+        glUniform1i(light_up_uloc, 1);
+    } else {
+        glUniform1i(light_up_uloc, 0);
+    }
+
     // Drawing of num_indices/3 triangles specified in the index buffer
     GLint size = 0;
     glGetBufferParameteriv(GL_ELEMENT_ARRAY_BUFFER, GL_BUFFER_SIZE, &size);

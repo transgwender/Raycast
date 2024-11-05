@@ -315,3 +315,6 @@ struct Mesh {
     std::vector<uint16_t> vertex_indices;
 };
 
+struct LightUp {
+    float counter_ms = 5000;
+};

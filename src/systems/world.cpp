@@ -154,14 +154,14 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         for (int i = 0; i < registry.minisuns.components.size(); i++) {
             auto& minisunEntity = registry.minisuns.entities[i];
             auto& minisun = registry.minisuns.components[i];
-            if (minisun.lit) {
-                if (minisun.lit_duration > 0) {
-                    minisun.lit_duration -= elapsed_ms_since_last_update;
+            if (registry.litEntities.has(minisunEntity)) {
+                LightUp &light = registry.litEntities.get(minisunEntity);
+                if (light.counter_ms > 0) {
+                    light.counter_ms -= elapsed_ms_since_last_update;
                 } else {
+                    registry.litEntities.remove(minisunEntity);
+                    auto &minisun = registry.minisuns.get(minisunEntity);
                     minisun.lit = false;
-                    registry.pointLights.remove(minisunEntity);
-                    registry.materials.remove(minisunEntity);
-                    registry.materials.insert(minisunEntity, {"minisun_off", "textured"});
                 } 
             }
         }
@@ -265,17 +265,11 @@ void WorldSystem::handle_collisions() {
 }
 
 void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
-    registry.minisuns.get(minisun_entity).lit_duration = 5000;
-    if (!registry.minisuns.get(minisun_entity).lit) {
-        registry.minisuns.get(minisun_entity).lit = true;
-
-        registry.materials.remove(minisun_entity);
-        registry.materials.insert(minisun_entity, {"light", "textured"});
-
-        PointLight& point_light = registry.pointLights.emplace(minisun_entity);
-        point_light.diffuse = 10.0f * vec3(255, 233, 87);
-        point_light.linear = 0.060f;
-        point_light.quadratic = 0.0100;
+    if (!registry.litEntities.has(minisun_entity)) {
+        auto &minisun = registry.minisuns.get(minisun_entity);
+        minisun.lit = true;
+        LightUp l;
+        registry.litEntities.insert(minisun_entity, l);
     }
 }
 
