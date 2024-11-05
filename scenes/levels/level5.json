@@ -128,7 +128,7 @@
                         10
                     ],
                     "angle": 1.5707963268,
-                    "texture": "beam"
+                    "texture": "beam2"
                 },
                 {
                     "type": "collider",
@@ -167,7 +167,7 @@
                         10
                     ],
                     "angle": 1.5707963268,
-                    "texture": "beam"
+                    "texture": "beam2"
                 },
                 {
                     "type": "collider",

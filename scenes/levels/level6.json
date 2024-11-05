@@ -77,7 +77,7 @@
             10,
             130
           ],
-          "texture": "beam-vert"
+          "texture": "beam2-vert"
         },
         {
           "type": "collider",
@@ -250,17 +250,17 @@
       "name": "minisun",
       "data": [
         {
-          "type": "sprite",
+          "type": "mesh",
+          "path": "star.obj",
           "position": [
-            120.0,
-            115.0
+            120,
+            112
           ],
-          "texture": "minisun_off",
+          "angle": 0,
           "scale": [
-            20.0,
-            20.0
-          ],
-          "angle": 0
+            20,
+            20
+          ]
         },
         {
           "type": "minisun",
@@ -271,18 +271,32 @@
           "type": "collideable"
         },
         {
-          "type": "collider",
-          "width": 20,
-          "height": 20,
-          "bounds": 0
-        },
-        {
           "type": "zone",
           "position": [
             240.0,
             60.0
           ],
           "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "minisun help text",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            210.0,
+            120.0
+          ],
+          "size": 32,
+          "text": "<< HINT: sea turtles are attracted\n to large bodies of light",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "centered": false
         }
       ]
     },
@@ -300,19 +314,19 @@
         {
           "type": "sprite",
           "position": [
-            290.0,
-            110.0
+            315.0,
+            137.0
           ],
           "scale": [
-            60,
-            40
+            90,
+            10
           ],
-          "texture": "crate"
+          "texture": "beam2"
         },
         {
           "type": "collider",
-          "width": 60,
-          "height": 40,
+          "width": 90,
+          "height": 10,
           "bounds": 1
         },
         {
@@ -321,8 +335,8 @@
         {
           "type": "zone",
           "position": [
-            290.0,
-            110.0
+            315.0,
+            137.0
           ],
           "zone_type": 3
         }

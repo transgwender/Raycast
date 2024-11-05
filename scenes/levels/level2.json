@@ -39,7 +39,7 @@
                         260,
                         10
                     ],
-                    "texture": "beam"
+                    "texture": "beam2"
                 },
                 {
                     "type": "collider",
@@ -77,7 +77,7 @@
                         260,
                         10
                     ],
-                    "texture": "beam"
+                    "texture": "beam2"
                 },
                 {
                     "type": "collider",
