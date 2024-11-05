@@ -76,7 +76,7 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
     }
 
     // Draws actual mirror BEFORE registering rails/rotate
-    createSprite(entity, mirror.position, scale, mirror.angle, "mirror_0");
+    createSprite(entity, mirror.position, scale, mirror.angle, "mirror_1");
 
     if (mirror.mirrorType == "rotate") {
         registry.rotateables.insert(entity, rotateable);
