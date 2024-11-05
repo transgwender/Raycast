@@ -128,6 +128,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         PARSE_COMPONENT(Text, texts);
                     } else if (type == "lever") { // This is used to attach a lever entity that can exhibit some effect on the CURRENT ENTITY
                         createLever(entity, data["position"], data["state"], data["effect"], data["activeLever"]);
+                    } else if (type == "mesh") {
+                        initMesh(entity, data["path"], data["position"], data["angle"], data["scale"]);
                     }
                 }
             }

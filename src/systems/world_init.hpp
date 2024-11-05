@@ -1,7 +1,9 @@
 #pragma once
 
+#include "ai.hpp"
 #include "common.hpp"
 #include "ecs/ecs.hpp"
+#include "math.hpp"
 #include "render/render.hpp"
 
 Entity createSprite(const Entity &entity, vec2 position, vec2 scale, float angle, const std::string& textureName, const std::string& shaderName = "textured");
@@ -21,7 +23,7 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
 
 Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
                    LEVER_STATES activeLever);
-Mesh createMesh(const std::string& mesh_name);
+void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, const float angle, const vec2& scale);
 
 void setZone(Entity entity, ZONE_TYPE zType, vec2 position);
 void initLinearRails(Entity entity, OnLinearRails rails);

@@ -193,7 +193,7 @@ void initLinearRails(Entity entity, OnLinearRails rails) {
 // activeLever is the state required to activate it
 
 Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
-    LEVER_STATES activeLever) {
+                   LEVER_STATES activeLever) {
 
     Entity leverEntity = Entity();
     std::vector<unsigned int> vec = {6};
@@ -218,10 +218,25 @@ Entity createLever(Entity affectedEntity, const vec2& position, LEVER_STATES sta
 
     return leverEntity;
 }
-
-Mesh createMesh(const std::string& mesh_name) {
+void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, const float angle,
+              const vec2& scale) {
     const auto filename = mesh_path(mesh_name);
+    // Load mesh
     Mesh mesh{};
     MeshUtils::loadFromOBJFile(filename, mesh.vertices, mesh.vertex_indices, mesh.original_size);
-    return mesh;
+    registry.meshes.insert(entity, mesh);
+
+    // Initialize mesh motion
+    Motion& mesh_motion = registry.motions.emplace(entity);
+    mesh_motion.position = position;
+    mesh_motion.angle = angle;
+    mesh_motion.scale = scale * mesh.original_size;
+
+    // Initialize mesh collider
+    Collider& collider = registry.colliders.emplace(entity);
+    collider.angle = angle;
+    collider.bounds_type = BOUNDS_TYPE::MESH;
+    collider.height = mesh_motion.scale.y;
+    collider.width = mesh_motion.scale.x;
+    collider.user_interaction_bounds_type = BOUNDS_TYPE::MESH;
 }

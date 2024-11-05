@@ -61,7 +61,7 @@ struct Motion {
 };
 
 // Represents the different types of bounding boxes
-enum class BOUNDS_TYPE { RADIAL = 0, RECTANGULAR = 1, POINT = 2 };
+enum class BOUNDS_TYPE { RADIAL = 0, RECTANGULAR = 1, POINT = 2, MESH = 3 };
 
 // Represents an object that is able to collide with a specific type of bounding box
 struct Collider {

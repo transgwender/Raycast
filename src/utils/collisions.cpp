@@ -168,7 +168,6 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
             return 0;
         }
 
-
         // Transform bounding points to screen positions
         for (vec2& point : m1_bounding_points) {
             point += motion1.position;
@@ -177,13 +176,135 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
             point += motion2.position;
         }
 
-        // Both colliders rectangular
+        // mesh-rectangle collisions
+        if (collider2.bounds_type == BOUNDS_TYPE::MESH
+            && (collider1.bounds_type == BOUNDS_TYPE::RECTANGULAR || collider1.bounds_type == BOUNDS_TYPE::RADIAL) ||
+            collider1.bounds_type == BOUNDS_TYPE::MESH
+            && (collider2.bounds_type == BOUNDS_TYPE::RECTANGULAR || collider2.bounds_type == BOUNDS_TYPE::RADIAL)) {
+            // LOG_INFO("Mesh collision possible — rectangular-mesh, Positions: ({}, {}), ({}, {})",
+                // motion1.position.x, motion1.position.y, motion2.position.x, motion2.position.y);
+            float axis_angles[5];
+            Mesh& mesh = collider2.bounds_type == BOUNDS_TYPE::MESH ? registry.meshes.get(e2) : registry.meshes.get(e1);
+            std::array<vec2, 4> rect_bounding_points = collider2.bounds_type == BOUNDS_TYPE::MESH ? m1_bounding_points : m2_bounding_points;
+            Motion& mesh_motion = collider2.bounds_type == BOUNDS_TYPE::MESH ? motion2 : motion1;
+            Motion& rect_motion = collider2.bounds_type == BOUNDS_TYPE::MESH ? motion1 : motion2;
+            // rectangular mesh axes
+            axis_angles[0] = rect_motion.angle;
+            axis_angles[1] = M_PI_2 + rect_motion.angle;
+
+            bool separated = true;
+
+            uint NUM_VERTICES = mesh.vertex_indices.size();
+            // LOG_INFO("Num vertices: {}", NUM_VERTICES);
+            for (uint i = 0; i < NUM_VERTICES; i += 3)
+            {
+                if (registry.lightRays.has(e2) || registry.lightRays.has(e1)) {
+                    LOG_INFO("Checking face {}", i);
+                    LOG_INFO("Mesh angle: {}", mesh_motion.angle);
+                }
+                std::vector<ColoredVertex> curr_face = {
+                    mesh.vertices[mesh.vertex_indices[i + 0]],
+                    mesh.vertices[mesh.vertex_indices[i + 1]],
+                    mesh.vertices[mesh.vertex_indices[i + 2]]};
+                Transform transform;
+
+                transform.rotate(mesh_motion.angle);
+                for (ColoredVertex &v : curr_face)
+                {
+                    v.position = vec3(
+                            (v.position.x * mesh_motion.scale.x),
+                            (v.position.y * mesh_motion.scale.y),
+                            1.f);
+                    v.position = transform.mat * v.position;
+                    v.position += vec3{mesh_motion.position.x, mesh_motion.position.y, 0};
+                }
+                std::vector<vec2> face_points = {
+                    vec2(curr_face[0].position.x, curr_face[0].position.y),
+                    vec2(curr_face[1].position.x, curr_face[1].position.y),
+                    vec2(curr_face[2].position.x, curr_face[2].position.y)};
+
+                // calculate the axis angle for each edge of the triangular face
+                axis_angles[2] = atan2(face_points[1].x - face_points[0].x, face_points[0].y - face_points[1].y);
+                axis_angles[3] = atan2(face_points[2].x - face_points[0].x, face_points[0].y - face_points[2].y);
+                axis_angles[4] = atan2(face_points[2].x - face_points[1].x, face_points[1].y - face_points[2].y);
+                separated = false;
+                for (float& angle : axis_angles) {
+                    separated |= no_overlap(rect_bounding_points, {face_points[0],
+                        face_points[1], face_points[2], face_points[2]}, angle);
+                }
+                if (!separated) {
+                    return 1;
+                }
+            }
+            return 0;
+        }
+
+        //
+        // // second collider is a mesh, first collider is radial
+        // if (collider2.bounds_type == BOUNDS_TYPE::MESH
+        //     && collider1.bounds_type == BOUNDS_TYPE::RADIAL || collider1.bounds_type == BOUNDS_TYPE::POINT) {
+        //     Mesh& mesh2 = registry.meshes.get(e2);
+        //
+        //     uint NUM_VERTICES = mesh2.vertex_indices.size();
+        //     for (uint i = 0; i < NUM_VERTICES; i += 3)
+        //     {
+        //         std::vector<ColoredVertex> curr_face = {
+        //             mesh2.vertices[mesh2.vertex_indices[i + 0]],
+        //             mesh2.vertices[mesh2.vertex_indices[i + 1]],
+        //             mesh2.vertices[mesh2.vertex_indices[i + 2]]};
+        //         Transform transform;
+        //         transform.rotate(motion2.angle);
+        //         for (ColoredVertex &v : curr_face)
+        //         {
+        //             v.position = vec3(
+        //                     motion2.position.x + (v.position.x * motion2.scale.x),
+        //                     motion2.position.y + (v.position.y * motion2.scale.y),
+        //                     1.f);
+        //             v.position = transform.mat * v.position;
+        //         }
+        //         std::vector<vec2> face_points = {
+        //             vec2(curr_face[0].position.x, curr_face[0].position.y),
+        //             vec2(curr_face[1].position.x, curr_face[1].position.y),
+        //             vec2(curr_face[2].position.x, curr_face[2].position.y)};
+        //
+        //         // Calculate area of the face
+        //         vec2 v0 = face_points[0];
+        //         vec2 v1 = face_points[1] - v0;
+        //         vec2 v2 = face_points[2] - v0;
+        //         // calculate area (note: calculated area is twice actual area)
+        //         float total_area = sqrt(dot(v1,v1) * dot(v2,v2)
+        //                 - (dot(v1,v2) * dot(v1,v2)));
+        //
+        //         // mesh 1 inside mesh 2
+        //         vec2 point = motion1.position;
+        //         // calculate sum of areas of triangles created from point to
+        //         // two of the current mesh triangle areas
+        //         float sub_area = 0.f;
+        //         // v0->v1->point triangle
+        //         sub_area += sqrt(dot(point - v0,point - v0) * dot(v1 - v0,v1 - v0)
+        //         - (dot(point - v0, v1 - v0) * (dot(point - v0, v1 - v0))));
+        //         // v0->v2->point triangle
+        //         sub_area += sqrt(dot(point - v0,point - v0) * dot(v2 - v0,v2 - v0)
+        //         - (dot(point - v0, v2 - v0) * (dot(point - v0, v2 - v0))));
+        //         // v2->v2->point triangle
+        //         sub_area += sqrt(dot(v1 - point, v1 - point) * dot(v1 - v2,v1 - v2)
+        //         - (dot(v1 - point, v1 - v2) * (dot(v1 - point, v1 - v2))));
+        //         if (sub_area <= total_area) {
+        //             return 1;
+        //         }
+        //     }
+        //     return 0;
+        // }
+
+
+        // Else assume both colliders rectangular
         // define all axis angles (normals to edges)
         float axis_angles[4];
         axis_angles[0] = motion1.angle;
         axis_angles[1] = M_PI_2 + motion1.angle;
         axis_angles[2] = motion2.angle;
         axis_angles[3] = M_PI_2 + motion2.angle;
+
         // see if an overlap exists in any of the axes
         for (float& angle : axis_angles) {
             if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
@@ -191,13 +312,6 @@ int Collisions::collides(const Entity& e1, const Entity& e2, bool user_interacti
                 return 0;
             }
         }
-        if (user_interaction == false) {
-            // LOG_INFO("Collision detected between motion with position ({}, {}) and "
-            //       "motion with position ({}, {})",
-            //       motion1.position.x, motion1.position.y, motion2.position.x,
-            //       motion2.position.y);
-        }
-
         return 1;
     }
     return 0;
