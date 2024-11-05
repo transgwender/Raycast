@@ -1,71 +1,236 @@
 {
-  "objList": [
-    {
-      "name": "level_id",
-      "data": [
+    "objList": [
         {
-          "type": "level",
-          "id": 1
-        }
-      ]
-    },
-    {
-      "name": "start_zone",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            10.0,
-            90.0
-          ],
-          "texture": 2,
-          "scale": [
-            128.0,
-            128.0
-          ],
-          "angle": 0.785398163
+            "name": "Tutorial",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 1
+                }
+            ]
         },
         {
-          "type": "zone",
-          "position": [
-            10.0,
-            90.0
-          ],
-          "zone_type": 0,
-          "angle": 30
+            "name": "background",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        90.0
+                    ],
+                    "scale": [
+                        320,
+                        200
+                    ],
+                    "texture": "background_cyber_1"
+                }
+            ]
         },
         {
-          "type": "light_source",
-          "angle": 30
-        }
-      ]
-    },
-    {
-      "name": "end_zone",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            300.0,
-            90.0
-          ],
-          "texture": 3,
-          "scale": [
-            20.0,
-            200.0
-          ],
-          "angle": 0.785398163
+            "name": "platforms",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        180.0,
+                        150.0
+                    ],
+                    "scale": [
+                        180,
+                        120
+                    ],
+                    "texture": "platforms_1"
+                },
+                {
+                    "type": "collider",
+                    "width": 180,
+                    "height": 120,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        180.0,
+                        120.0
+                    ],
+                    "scale": [
+                        180,
+                        120
+                    ],
+                    "zone_type": 3
+                }
+            ]
         },
         {
-          "type": "zone",
-          "position": [
-            300.0,
-            90.0
-          ],
-          "zone_type": 1,
-          "angle": 0
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        60.0,
+                        155.0
+                    ],
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rail help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        90.0,
+                        26.0
+                    ],
+                    "size": 32,
+                    "text": "<< Click and drag to SLIDE\n mirror with rails",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        54.0,
+                        35.0
+                    ],
+                    "angle": 0.785,
+                    "rail-length": 27,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rotatable mirror help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        215.0,
+                        32.0
+                    ],
+                    "size": 32,
+                    "text": "Click and drag to ROTATE\n mirror with gears >>",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "far-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        295.0,
+                        35.0
+                    ],
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotateable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        10.0,
+                        147.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        212.0,
+                        148.0
+                    ],
+                    "size": 32,
+                    "text": "GOAL: Guide light to end zone >>",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        296.0,
+                        146.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
         }
-      ]
-    }
-  ]
+    ]
 }

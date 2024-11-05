@@ -33,22 +33,17 @@
           ]
         },
         {
+          "type": "collider",
+          "bounds": 1,
+          "width": 96,
+          "height": 32
+        },
+        {
           "type": "interactable"
         },
         {
           "type": "change_scene",
           "scene": "mainmenu"
-        },
-        {
-          "type": "bounding_box",
-          "position": [
-            162.5,
-            125.0
-          ],
-          "scale": [
-            96.0,
-            32.0
-          ]
         },
         {
           "type": "highlightable",

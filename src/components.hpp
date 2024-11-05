@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "texture.hpp"
 
 // Main data relevant to the level
 struct Scene {
@@ -8,7 +9,21 @@ struct Scene {
 };
 
 // A level is also a scene, but it may store additional information.
-struct Level {};
+struct Level {
+    int id = 1;
+};
+
+// Scene should generate buttons
+struct LevelSelect {};
+
+// Is a menu currently open?
+struct Menu {
+    bool canClose = false;
+    bool shouldBlockSteps = false;
+    bool shouldBlockInput = false;
+};
+
+struct MenuItem {};
 
 ////////////////////////////////////////////////////////////////
 ///
@@ -19,15 +34,8 @@ struct Level {};
 // A zone represents the start and end points of light.
 enum class ZONE_TYPE { START = 0, END = 1, ZONE_TYPE_COUNT };
 struct Zone {
-    vec2 position = {0, 0};
+    vec2 position;
     ZONE_TYPE type;
-};
-
-// Entities that are `renderable` are visible in scenes.
-struct Renderable {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-    float angle = 0;
 };
 
 // Light source captures the characteristics of a source of light, such as the
@@ -35,6 +43,9 @@ struct Renderable {
 struct LightSource {
     float angle = 0;
 };
+
+// Mouse cursor
+struct Mouse {};
 
 struct Light {
     Entity last_reflected;
@@ -47,13 +58,39 @@ struct Motion {
     float angle = 0;
     vec2 velocity = {0, 0};
     vec2 scale = {10, 10};
-    bool collides = true;
+};
+
+// Represents the different types of bounding boxes
+enum class BOUNDS_TYPE { RADIAL = 0, RECTANGULAR = 1, POINT = 2, MESH = 3 };
+
+// Represents an object that is able to collide with a specific type of bounding box
+struct Collider {
+    BOUNDS_TYPE bounds_type = BOUNDS_TYPE::RADIAL;
+    BOUNDS_TYPE user_interaction_bounds_type = BOUNDS_TYPE::RECTANGULAR;
+    std::array<vec2, 4> rotated_bounds = {};
+    bool needs_update = true;
+    float width = 1.f;
+    float height = 1.f;
+    float angle = 0.f;
+};
+
+// Actively collideable
+struct Collideable {};
+
+// Actively interactable
+struct Interactable {};
+
+struct MiniSun {
+    bool lit = false;
+    float lit_duration = 0;
 };
 
 // Structure to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
     Entity other; // The second object involved in the collision.
+    int side = 0; // side (1 for y, 2 for x) the collision occurrs on
+    float overlap = 0.f; // amount the two objects overlap
     explicit Collision(Entity& other) { this->other = other; };
 };
 
@@ -64,19 +101,16 @@ struct Highlightable {
 // Object is reflective
 struct Reflective {};
 
-struct Interactable {};
+struct ButtonFlag {}; // Indicates it's a button, menu
 
 // Represents a transition to another scene.
 struct ChangeScene {
     std::string scene;
 };
 
-// Represents the bounding box for the entity it is applied to -- used to detect
-// collisions.
-struct BoundingBox {
-    vec2 position = {0, 0};
-    vec2 scale = {10, 10};
-};
+struct ResumeGame {};
+
+struct Gravity {};
 
 /**
  * Single Vertex Buffer element for textured sprites (textured.vs.glsl)
@@ -132,6 +166,69 @@ struct PointLight {
 };
 
 /**
+ * Component for displaying text on screen.
+ */
+struct Text {
+    std::string text;
+    /** Position of the text. The position is based in the bottom left corner of the first character of the text. */
+    vec2 position;
+    unsigned int size;
+    /** Color channel values are in range [0, 255] */
+    vec3 color = vec3(255, 255, 255);
+    bool centered;
+};
+
+/**
+ * A single particle. You probably don't want to instantiate this yourself, but rather use a `ParticleSpawner` instance.
+ * Choice of parameters here and in `ParticleSpawner` based on Godot's CPUParticles2D.
+ */
+struct Particle {
+    TextureHandle texture;
+    vec2 position;
+    vec4 color = {255, 255, 0, 255.0};
+    vec2 scale = {24, 24};
+    float angle = 0.f;
+    vec2 linear_velocity = {0.0, 5.0};
+    float spin_velocity = 0.0f;
+    float scale_change = 0.0f;
+    float alpha_fall_off = 0.0f;
+    float lifetime = 1.0;
+};
+
+/** Object that spawns particles according to various parameters. */
+struct ParticleSpawner {
+    /** The texture ID of the texture that all spawned particles will take. */
+    TextureHandle texture;
+    /** The position of the spawner. */
+    vec2 position;
+    /** The initial speed of the spawned particles. */
+    float initial_speed;
+    /** Controls the rate in which the particle spins, in radians/sec */
+    float spin_velocity;
+    /**
+     * The direction the spawner is facing. This will combine with the `spread` property to determine the initial
+     * direction of the particles.
+     */
+    vec2 direction;
+    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0, 255]. */
+    vec4 color = vec4(255, 255, 255, 255);
+    /** The angle range that the spawner sends particles in. */
+    float spread;
+    /** Controls the initial scale of the particles. */
+    vec2 initial_scale;
+    /** Controls how many units of scale the particle loses/gains per second. Zero for no change. */
+    float scale_change;
+    /** Controls how much the alpha channel of the texture's color decreases per second. Keep in mind that alpha channel values are in range [0, 255]*/
+    float alpha_fall_off = 0.0f;
+    /** How long (in seconds) a spawned particle will live before being deleted. */
+    float lifetime;
+    /** The max number of particles from this spawner that should exist at any given time (may be off +/- 1). */
+    float max_particles;
+
+    float _cooldown = 0.0f;
+};
+
+/**
  * This is used more as a general purpose helper for constructing more complex objects like sprites.
  * Not a component in its own right.
  * TODO: Move to its own file
@@ -146,4 +243,79 @@ struct Sprite {
 struct Mirror {
     vec2 position = {0, 0};
     float angle = 0;
+    std::string mirrorType;
+    float railLength = 0;
+    float railAngle = 0;
+};
+
+struct ButtonHelper {
+    vec2 position = {0, 0};
+    vec2 scale = {10, 10};
+    std::string label;
+};
+
+struct Blackhole {
+    float mass;
+    // NOTE: You may notice that we do not need to use the schwarzchild radius at all in our blackhole calculations since it naturally
+    // shows up in the equations that are used. It is still included here to help with level design, in particular all light rays at a 
+    // distance of >= 2.6 schwartzchild radius from the blackhole will not get sucked in (assuming speed of light >= 50).
+    float schwarzchild_radius;
+};
+
+enum class DASH_STATES { BITE, STARE, WALK, IDLE, YAWN, HIDE, DASH_ACTIONS_COUNT };
+struct DashTheTurtle {
+    DASH_STATES behavior;
+    bool tired = false;
+    vec2 nearestLightRayDirection;
+};
+
+struct SpriteSheet {
+    vec2 position = {0, 0};
+    float sheetWidth;
+    float sheetHeight;
+    float cellWidth;
+    float cellHeight;
+    unsigned int currFrame = 0;
+    unsigned int currState = 0;
+    float timeElapsed = 0.f;
+    bool animationActive = false;
+
+    // Index -> different animation states
+    // Value -> Number of frames in that animation
+    std::vector<unsigned int> animationFrames;
+};
+
+enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, LEVER_STATES_COUNT };
+enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
+enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
+
+
+struct Lever {
+    LEVER_STATES state;
+    LEVER_MOVEMENT_STATES movementState;
+    LEVER_EFFECTS effect;
+    LEVER_STATES activeLever;
+    Entity affectedEntity;
+
+    // lever_state -- is it pushed all the way right, all the way left, or somewhere in the middle?
+    // lever_movement_states -- is the lever currently being pushed in a certain direction? If so, which direction?
+    // lever_effect -- what effect does the lever have when active on the affected entity?
+    // active_lever -- is the lever active when pushed right? or left?
+    // affectedEntity -- which entity is affected by this lever?
+};
+
+
+struct ColoredVertex {
+    vec3 position;
+    vec3 color;
+};
+
+struct Mesh {
+    vec2 original_size = {1,1};
+    std::vector<ColoredVertex> vertices;
+    std::vector<uint16_t> vertex_indices;
+};
+
+struct LightUp {
+    float counter_ms = LIGHT_TIMER_MS;
 };

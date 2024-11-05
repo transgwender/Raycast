@@ -8,8 +8,16 @@
 // A simple physics system that moves rigid bodies and checks for collision
 class PhysicsSystem {
   public:
-    void step(float elapsed_ms);
+    /// Gravitational constant for our 2D light-maze world
+    static const float GravitationalConstant;
+    /// Speed of light for our 2D light-maze world
+    static const float SpeedOfLight;
 
+    void step(float elapsed_ms);
+    void detect_collisions();
     PhysicsSystem() = default;
+  private:
+
+    bool shouldStep();
 };
 

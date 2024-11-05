@@ -43,34 +43,12 @@ inline void to_json(json& j, const ChangeScene& c) {
 
 inline void from_json(const json& j, ChangeScene& c) { j.at("scene").get_to(c.scene); }
 
-// Interactable
-inline void to_json(json& j, const Interactable& c) {
-    (void)c;
-    j = json{{"type", "interactable"}};
-}
-
-inline void from_json(const json& j, Interactable& c) {
-    (void)j;
-    (void)c;
-}
-
-// BoundingBox
-inline void to_json(json& j, const BoundingBox& c) {
-    j = json{{"type", "bounding_box"},
-             {"position", c.position.x},
-             {"scale", c.scale}};
-}
-inline void from_json(const json& j, BoundingBox& c) {
-    j.at("position").get_to(c.position);
-    j.at("scale").get_to(c.scale);
-}
-
 // Zone
 inline void to_json(json& j, const Zone& c) {
     j = json{
         {"type", "zone"},
         {"position", c.position},
-        {"zone_type", (ZONE_TYPE)c.type},
+        {"zone_type", static_cast<ZONE_TYPE>(c.type)},
     };
 }
 
@@ -85,18 +63,6 @@ inline void to_json(json& j, const LightSource& c) {
 }
 inline void from_json(const json& j, LightSource& c) { j.at("angle").get_to(c.angle); }
 
-// OnLinearRails
-inline void to_json(json& j, const OnLinearRails& r) {
-    j = json{{"type", "on_linear_rails"},
-             {"angle", (float)r.angle},
-             {"length"},
-             (float)r.length};
-}
-inline void from_json(const json& j, OnLinearRails& r) {
-    j.at("angle").get_to(r.angle);
-    j.at("length").get_to(r.length);
-}
-
 // LinearlyInterpolatable
 inline void from_json(const json& j, Lerpable& lr) {
     j.at("t").get_to(lr.t);
@@ -109,25 +75,12 @@ inline void to_json(json& j, const Lerpable& lr) {
              {"t_step", lr.t_step}};
 }
 
-// Rotateable
-inline void to_json(json& j, const Rotateable& c) {
-    (void)c;
-    j = json{{"type", "rotateable"}};
-}
-inline void from_json(const json& j, Rotateable& c) {
-    (void)j;
-    (void)c;
-}
-
-
 inline void to_json(json& j, const Level& c) {
-    (void)c;
-    j = json{ {"type", "level"} };
+    j = json{ {"type", "level"}, {"id", c.id} };
 }
 
 inline void from_json(const json& j, Level& c) {
-    (void)j;
-    (void)c;
+    j.at("id").get_to(c.id);
 }
 
 inline void to_json(json& j, const Reflective& c) {
@@ -136,6 +89,17 @@ inline void to_json(json& j, const Reflective& c) {
 }
 
 inline void from_json(const json& j, Reflective& c) {
+    (void)j;
+    (void)c;
+}
+
+
+inline void to_json(json& j, const LevelSelect& c) {
+    (void)c;
+    j = json{{"type", "level_select"}};
+}
+
+inline void from_json(const json& j, LevelSelect& c) {
     (void)j;
     (void)c;
 }
@@ -160,12 +124,37 @@ inline void from_json(const json& j, Sprite& c) {
 }
 
 inline void to_json(json& j, const Mirror& c) {
-    j = json{ {"type", "mirror"}, {"position", c.position}, {"angle", c.angle} };
+    j = json{
+        {"type", "mirror"},
+        {"position", c.position},
+        {"angle", c.angle},
+        {"mirror-type", c.mirrorType},
+        {"rail-length", c.railLength},
+        {"rail-angle", c.railAngle},
+    };
 }
 
 inline void from_json(const json& j, Mirror& c) {
     j.at("position").get_to(c.position);
     j.at("angle").get_to(c.angle);
+
+    if (j.contains("mirror-type")) {
+        j.at("mirror-type").get_to(c.mirrorType);
+    } else {
+        c.mirrorType = "rails";
+    }
+
+    if (j.contains("rail-length")) {
+        j.at("rail-length").get_to(c.railLength);
+    } else {
+        c.railLength = 0;
+    }
+
+    if (j.contains("rail-angle")) {
+        j.at("rail-angle").get_to(c.railAngle);
+    } else {
+        c.railAngle = 0;
+    }
 }
 
 inline void to_json(json& j, const PointLight& c) {
@@ -192,3 +181,159 @@ inline void to_json(json& j, const Highlightable& c) {
 inline void from_json(const json& j, Highlightable& c) {
     j.at("isHighlighted").get_to(c.isHighlighted);
 }
+
+inline void to_json(json& j, const DashTheTurtle& c) {
+    j = json{{"type", "dashTheTurtle"}, {"behavior", c.behavior}, {"minimumDisplacement", c.nearestLightRayDirection}};
+}
+
+inline void from_json(const json& j, DashTheTurtle& c) {
+
+    j.at("behavior").get_to(c.behavior);
+    j.at("minimumDisplacement").get_to(c.nearestLightRayDirection);
+}
+
+inline void to_json(json& j, const Motion& c) {
+    j = json{{"type", "motion"},
+             {"position", c.position},
+             {"velocity", c.velocity},
+             {"scale", c.scale},
+             {"angle", c.angle}}; //, {"collides", c.collides}};
+}
+
+inline void from_json(const json& j, Motion& c) {
+    j.at("position").get_to(c.position);
+    j.at("velocity").get_to(c.velocity);
+    j.at("scale").get_to(c.scale);
+    j.at("angle").get_to(c.angle);
+    // j.at("collides").get_to(c.collides);
+}
+
+inline void to_json(json& j, const ButtonHelper& c) {
+    j = json{{"type", "button"}, {"position", c.position}, {"scale", c.scale}, {"label", c.label}};
+}
+
+inline void from_json(const json& j, ButtonHelper& c) {
+    j.at("position").get_to(c.position);
+    j.at("scale").get_to(c.scale);
+    j.at("label").get_to(c.label);
+}
+
+inline void to_json(json& j, const Collider& c) {
+    j = json{{{"type", "collider"},
+        {"bounds", c.bounds_type},
+        {"width"}, c.width},
+        {"height", c.height}
+    };
+}
+
+inline void from_json(const json& j, Collider& c) {
+    j.at("bounds").get_to(c.bounds_type);
+    j.at("width").get_to(c.width);
+    j.at("height").get_to(c.height);
+}
+
+// Collideable
+inline void to_json(json& j, const Collideable& c) {
+    (void)c;
+    j = json{{"type", "collideable"}};
+}
+inline void from_json(const json& j, Collideable& c) {
+    (void)j;
+    (void)c;
+}
+
+// Interactable
+inline void to_json(json& j, const Interactable& c) {
+    (void)c;
+    j = json{{"type", "interactable"}};
+}
+
+inline void from_json(const json& j, Interactable& c) {
+    (void)j;
+    (void)c;
+}
+
+// Blackhole 
+inline void to_json(json& j, const Blackhole& bh) {
+    j = json{
+        {"type", "blackhole"},
+        {"mass", bh.mass},
+        {"schwarzchild_radius", bh.schwarzchild_radius}
+    };
+}
+
+inline void from_json(const json& j, Blackhole& bh) {
+    j.at("mass").get_to(bh.mass);
+    j.at("schwarzchild_radius").get_to(bh.schwarzchild_radius);
+} 
+inline void to_json(json& j, const SpriteSheet& c) {
+    j = json{
+        {"type", "sprite_sheet"},
+        {"position", c.position},
+        {"sheetWidth", c.sheetWidth},
+        {"sheetHeight", c.sheetWidth },
+        { "cellWidth", c.cellWidth},
+        {"cellHeight", c.cellHeight},
+        {"animationFrames", c.animationFrames}
+    };
+}
+
+inline void from_json(const json& j, SpriteSheet& c) {
+    j.at("position").get_to(c.position);
+    j.at("sheetWidth").get_to(c.sheetWidth);
+    j.at("sheetHeight").get_to(c.sheetHeight);
+    j.at("cellWidth").get_to(c.cellWidth);
+    j.at("cellHeight").get_to(c.cellHeight);
+    j.at("animationFrames").get_to(c.animationFrames);
+}
+
+inline void to_json(json& j, const MiniSun& c) {
+    j = json{{"type", "minisun"},
+             {"lit", c.lit},
+             {"lit_duration", c.lit_duration}};
+}
+
+inline void from_json(const json& j, MiniSun& c) {
+    j.at("lit").get_to(c.lit);
+    j.at("lit_duration").get_to(c.lit_duration);
+}
+
+inline void to_json(json& j, const Text& c) {
+    j = json{
+        {"type", "text"},
+        {"position", c.position},
+        {"size", c.size},
+        {"text", c.text },
+        {"color", c.color},
+        {"centered", c.centered}
+    };
+}
+
+inline void from_json(const json& j, Text& c) {
+    j.at("position").get_to(c.position);
+    j.at("size").get_to(c.size);
+    j.at("text").get_to(c.text);
+    j.at("color").get_to(c.color);
+    j.at("centered").get_to(c.centered);
+}
+
+inline void to_json(json& j, const MenuItem& c) {
+    (void)c;
+    j = json{{"type", "menu_item"}};
+}
+
+inline void from_json(const json& j, MenuItem& c) {
+    (void)j;
+    (void)c;
+}
+
+inline void to_json(json& j, const Gravity& c) {
+    (void)c;
+    j = json{{"type", "gravity"}};
+}
+
+inline void from_json(const json& j, Gravity& c) {
+    (void)j;
+    (void)c;
+}
+

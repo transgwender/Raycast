@@ -1,74 +1,44 @@
 #pragma once
 
+#include "common.hpp"
+#include "compositor.hpp"
+#include "mesh.hpp"
+#include "particle.hpp"
 #include "shader.hpp"
+#include "sprite.hpp"
+#include "stages/menu.hpp"
+#include "stages/text.hpp"
 #include "texture.hpp"
-#include "util.hpp"
 
-#include <array>
+/**
+ * Global texture manager. There should only be one instance of this.
+ */
+extern TextureManager texture_manager;
 
-#include "../../common.hpp"
-#include "../../components.hpp"
-#include "../../ecs/ecs.hpp"
+/**
+ * Global shader manager. There should only be one instance of this.
+ */
+extern ShaderManager shader_manager;
 
-enum class GEOMETRY_BUFFER {
-    SPRITE,
-    SCREEN_TRIANGLE,
-    GEOMETRY_COUNT,
-};
-constexpr int geometry_count = (int)GEOMETRY_BUFFER::GEOMETRY_COUNT;
-
-// System responsible for setting up OpenGL and for rendering all the
-// visual entities in the game
+/**
+ * System responsible for setting up OpenGL and for rendering all the
+ * visual entities in the game.
+ */
 class RenderSystem {
-    TextureManager texture_manager;
-    ShaderManager shader_manager;
-    mat3 projection = createProjectionMatrix();
+    SpriteStage sprite_stage;
+    MeshStage mesh_stage;
+    ParticleStage particle_stage;
+    MenuStage menu_stage;
+    TextStage text_stage;
+    CompositorStage composite_stage;
 
-    std::array<GLuint, geometry_count> vertex_buffers = {};
-    std::array<GLuint, geometry_count> index_buffers = {};
-
-  public:
-    // Initialize the window
-    bool init(GLFWwindow* window);
-
-    template <class T>
-    void bindVBOAndIBO(GEOMETRY_BUFFER gid, std::vector<T> vertices,
-                       std::vector<uint16_t> indices);
-
-    void initializeGlTextures();
-
-    void initializeGlEffects();
-
-    void initializeGlGeometryBuffers();
-    // Initialize the screen texture used as intermediate render target
-    // The draw loop first renders to this texture, then it is used for the wind
-    // shader
-    bool initScreenTexture();
-
-    // Destroy resources associated to one or all entities created by the system
-    ~RenderSystem();
-
-    // Draw all entities
-    void draw();
-
-  private:
-    // Internal drawing functions for each entity type
-    void activeTexturedShader(const Entity entity, const std::string& texture, GLuint program) const;
-    void drawTexturedMesh(Entity entity) const;
-    void drawToScreen() const;
-
-    // Window handle
+    /** Window handle */
     GLFWwindow* window = nullptr;
 
-    // Screen texture handles
-    GLuint frame_buffer = 0;
-    GLuint off_screen_render_buffer_color = 0;
-    GLuint off_screen_render_buffer_depth = 0;
+  public:
+    /** Initialize the window. */
+    void init(GLFWwindow* window);
 
-    vec3 ambientLightColour = 0.7f * vec3(156, 194, 255);
-
-    Entity screen_state_entity;
+    /** Draw all visible, renderable entities. */
+    void draw(float elapsed_ms);
 };
-
-bool loadShader(const std::string& vs_path, const std::string& fs_path,
-                GLuint& out_program);

@@ -1,60 +1,85 @@
 {
-  "objList": [
-    {
-      "name": "logo",
-      "data": [
+    "objList": [
         {
-          "type": "sprite",
-          "position": [
-            160.0,
-            60.0
-          ],
-          "texture": "logo",
-          "scale": [
-            155.0,
-            43.0
-          ]
+            "name": "logo",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        60.0
+                    ],
+                    "texture": "logo",
+                    "scale": [
+                        155.0,
+                        43.0
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "play_button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        160.0,
+                        115.0
+                    ],
+                    "label": "Start",
+                    "scale": [
+                        96.0,
+                        32.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "levelmenu"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
+            "name": "Team name",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        160,
+                        20
+                    ],
+                    "size": 96,
+                    "text": "Lightbox Presents:",
+                    "color": [
+                        210,
+                        210,
+                        210
+                    ],
+                    "centered": true
+                }
+            ]
+        },
+        {
+            "name": "Members",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        2,
+                        140
+                    ],
+                    "size": 32,
+                    "text": "UBC CPSC 427 - 2024W1\nProject Group 03:\n\nArpit Kumar\nGwendolyn Kornak\nJackson Li\nJocelyn Baker\nMuhammad Assad\nSuraj Emmattiparambil",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "centered": false
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "play_button",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            160.0,
-            120.0
-          ],
-          "texture": "button_start",
-          "scale": [
-            96.0,
-            32.0
-          ]
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "change_scene",
-          "scene": "m1-demo"
-        },
-        {
-          "type": "bounding_box",
-          "position": [
-            160.0,
-            120.0
-          ],
-          "scale": [
-            96.0,
-            32.0
-          ]
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": true
-        }
-      ]
-    }
-  ]
+    ]
 }

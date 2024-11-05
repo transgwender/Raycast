@@ -1,10 +1,10 @@
 #include "shader.hpp"
 #include "common.hpp"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <filesystem>
 
 bool compileShader(const GLuint shader) {
     glCompileShader(shader);
@@ -27,14 +27,12 @@ bool compileShader(const GLuint shader) {
     return true;
 }
 
-bool loadShader(const std::string& vs_path, const std::string& fs_path,
-                GLuint& out_program) {
+bool loadShader(const std::string& vs_path, const std::string& fs_path, GLuint& out_program) {
     // Opening files
     std::ifstream vs_is(vs_path);
     std::ifstream fs_is(fs_path);
     if (!vs_is.good() || !fs_is.good()) {
-        fprintf(stderr, "Failed to load shader files %s, %s", vs_path.c_str(),
-                fs_path.c_str());
+        fprintf(stderr, "Failed to load shader files %s, %s", vs_path.c_str(), fs_path.c_str());
         return false;
     }
 
@@ -61,7 +59,7 @@ bool loadShader(const std::string& vs_path, const std::string& fs_path,
         return false;
     }
     if (!compileShader(fragment)) {
-        fprintf(stderr, "Vertex compilation failed");
+        fprintf(stderr, "Fragment compilation failed");
         return false;
     }
 
@@ -99,25 +97,12 @@ bool loadShader(const std::string& vs_path, const std::string& fs_path,
     return true;
 }
 
-void ShaderManager::init() {
-    for (const auto& entry : std::filesystem::directory_iterator(shader_path(""))) {
-        const auto& path = entry.path();
-        const std::string path_string = path.stem().string();
-        const std::string shader_name =
-            path_string.substr(0, path_string.find_first_of('.'));
-        if (shaders.find(shader_name) == shaders.end()) {
-            add(shader_name);
-        }
-    }
-}
-
 ShaderHandle ShaderManager::add(const std::string& name) {
     const std::string vs_path = shader_path(name + ".vs.glsl");
     const std::string fs_path = shader_path(name + ".fs.glsl");
     GLuint program;
     if (!loadShader(vs_path, fs_path, program)) {
-        std::cout << "Failed to load shader at paths " << vs_path << " and "
-                  << fs_path << std::endl;
+        std::cout << "Failed to load shader at paths " << vs_path << " and " << fs_path << std::endl;
         assert(false);
     }
     shaders[name] = program;
@@ -134,20 +119,57 @@ ShaderHandle ShaderManager::get(const std::string& name) const {
     return shaders.at(name);
 }
 
+void ShaderManager::init() {
+    if (initialized)
+        return;
+    for (const auto& entry : std::filesystem::directory_iterator(shader_path(""))) {
+        const auto& path = entry.path();
+        const std::string path_string = path.stem().string();
+        const std::string shader_name = path_string.substr(0, path_string.find_first_of('.'));
+        if (shaders.find(shader_name) == shaders.end()) {
+            add(shader_name);
+        }
+    }
+    initialized = true;
+}
+
 ShaderManager::~ShaderManager() {
     for (const auto& [_, program] : shaders) {
         glDeleteProgram(program);
     }
 }
 
+void setUniformInt(const GLuint program, const char* name, const int value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniform1i(location, value);
+}
 
 void setUniformFloat(const GLuint program, const char* name, float value) {
     const GLint location = glGetUniformLocation(program, name);
     glUniform1f(location, value);
 }
 
-void setUniformFloatVec3(const GLuint program, const char* name,
-                         const vec3 value) {
+void setUniformFloatVec2(GLuint program, const char* name, vec2 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniform2fv(location, 1, (float*)&value);
+}
+
+void setUniformFloatVec3(const GLuint program, const char* name, const vec3 value) {
     const GLint location = glGetUniformLocation(program, name);
     glUniform3fv(location, 1, (float*)&value);
+}
+
+void setUniformFloatVec4(const GLuint program, const char* name, const vec4 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniform4fv(location, 1, (float*)&value);
+}
+
+void setUniformFloatMat3(const GLuint program, const char* name, const mat3 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniformMatrix3fv(location, 1, GL_FALSE, (float*)&value);
+}
+
+void setUniformFloatMat4(const GLuint program, const char* name, const mat4 value) {
+    const GLint location = glGetUniformLocation(program, name);
+    glUniformMatrix4fv(location, 1, GL_FALSE, (float*)&value);
 }

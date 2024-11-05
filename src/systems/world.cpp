@@ -1,16 +1,20 @@
 #include "world.hpp"
+
+#include "collisions.h"
 #include "world_init.hpp"
 
 #include <SDL.h>
 #include <cassert>
 #include <fstream>
 #include <iostream>
-#include <sstream>
 
 #include "components_json.hpp"
 #include "logging/log.hpp"
+#include "systems/menu.hpp"
 #include "systems/physics.hpp"
-#include "systems/rails.hpp"
+#include "utils/math.hpp"
+
+#include <utils.h>
 
 // create the light-maze world
 WorldSystem::WorldSystem() : next_light_spawn(0.f) {
@@ -20,10 +24,7 @@ WorldSystem::WorldSystem() : next_light_spawn(0.f) {
 
 WorldSystem::~WorldSystem() {
     // Destroy music components
-    if (background_music != nullptr)
-        Mix_FreeMusic(background_music);
-
-    Mix_CloseAudio();
+    sounds.free_sounds();
 
     // Destroy all created components
     registry.clear_all_components();
@@ -86,63 +87,57 @@ GLFWwindow* WorldSystem::create_window() {
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
 
-    // Loading music and sounds with SDL
-    if (SDL_Init(SDL_INIT_AUDIO) < 0) {
-        LOG_ERROR("Failed to initialize SDL Audio");
-        return nullptr;
-    }
-
-    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) == -1) {
-        LOG_ERROR("Failed to open audio device");
-        return nullptr;
-    }
-
-    reflection_sfx = Mix_LoadWAV(audio_path("light-ping.wav").c_str());
-
-    click_sfx = Mix_LoadWAV(audio_path("click.wav").c_str());
-    click_sfx->volume = MIX_MAX_VOLUME * 0.3;
-    background_music = Mix_LoadMUS(audio_path("8BitCave.wav").c_str());
-
-    if (background_music == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("8BitCave.wav").c_str());
-        return nullptr;
-    }
-
-    if (reflection_sfx == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("light-ping.wav").c_str());
-        return nullptr;
-    }
-
-    if (click_sfx == nullptr) {
-        LOG_ERROR("Failed to load sounds. {} make sure the data "
-                  "directory is present",
-                  audio_path("click.wav").c_str());
-        return nullptr;
-    }
+    SoundSystem::init();
 
     return window;
 }
 
 void WorldSystem::init() {
     scenes.init(scene_state_entity);
-
-    Mix_PlayMusic(background_music, -1);
-    Mix_VolumeMusic(0.2 * MIX_MAX_VOLUME);
-    LOG_INFO("Loaded music");
+    sounds.load_all_sounds();
 
     // Set all states to default
     restart_game();
 }
 
+bool WorldSystem::isInLevel() {
+    assert(registry.levels.size() <= 1);
+    return !registry.levels.components.empty();
+}
+
+bool WorldSystem::shouldStep() {
+    if (menus.is_menu_open()) {
+        return !registry.menus.components.front().shouldBlockSteps;
+    }
+    return true;
+}
+
+bool WorldSystem::shouldAllowInput() {
+    if (menus.is_menu_open()) {
+        return !registry.menus.components.front().shouldBlockInput;
+    }
+    return true;
+}
+
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
-    float speed = 100;
-    if (!registry.levels.components.empty()) {
+    // update frame rate value
+    const int fps_value = Utils::fps(elapsed_ms_since_last_update);
+    registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
+
+    if (isInLevel() && shouldStep()) {
+        // ECSRegistry& test_registry = registry;
         next_light_spawn -= elapsed_ms_since_last_update * current_speed;
+
+        for (int i = 0; i < registry.levers.components.size(); i++) {
+            // auto& leverEntity = registry.levers.entities[i];
+            auto& lever = registry.levers.components[i];
+            if ((int) lever.state == (int) lever.activeLever) {
+                if (lever.effect == LEVER_EFFECTS::REMOVE) {
+                    registry.remove_all_components_of(lever.affectedEntity);
+                }
+            }
+        }
 
         for (int i = 0; i < registry.lightRays.components.size(); i++) {
             auto& lightEntity = registry.lightRays.entities[i];
@@ -150,13 +145,28 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             if (light.last_reflected_timeout > 0)
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
             Motion& motion = registry.motions.get(lightEntity);
-            if (motion.position.x < 0 || motion.position.x > window_width_px || motion.position.y < 0 ||
-                motion.position.y > window_height_px) {
+            if (motion.position.x < -15 || motion.position.x > native_width + 15 || motion.position.y < -15 ||
+                motion.position.y > native_height + 15) {
                 registry.remove_all_components_of(lightEntity);
             }
         }
 
-        if (registry.lightRays.components.size() <= MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
+        for (int i = 0; i < registry.minisuns.components.size(); i++) {
+            auto& minisunEntity = registry.minisuns.entities[i];
+            auto& minisun = registry.minisuns.components[i];
+            if (registry.litEntities.has(minisunEntity)) {
+                LightUp &light = registry.litEntities.get(minisunEntity);
+                if (light.counter_ms > 0) {
+                    light.counter_ms -= elapsed_ms_since_last_update;
+                } else {
+                    registry.litEntities.remove(minisunEntity);
+                    auto &minisun = registry.minisuns.get(minisunEntity);
+                    minisun.lit = false;
+                }
+            }
+        }
+
+        if (registry.lightRays.components.size() < MAX_LIGHT_ON_SCREEN && next_light_spawn < 0.f) {
             // reset timer
             next_light_spawn = LIGHT_SPAWN_DELAY_MS;
 
@@ -168,12 +178,18 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 float angle = registry.lightSources.components[i].angle;
 
                 const auto entity = Entity();
-                createLight(entity, position, vec2(cos(-angle * M_PI / 180) * speed, sin(-angle * M_PI / 180) * speed));
+                createLight(entity, position, angle);
             }
         }
-    }
 
-    rails.step(elapsed_ms_since_last_update);
+        for (int i = 0; i < registry.gravities.components.size(); i++) {
+            auto& gravityEntity = registry.gravities.entities[i];
+            auto& motion = registry.motions.get(gravityEntity);
+            motion.velocity.y += gravity;
+        }
+
+        updateDash();
+    }
 
     return true;
 }
@@ -203,7 +219,13 @@ void WorldSystem::restart_game() {
         LOG_ERROR("Hmm, there should have been a scene state entity defined.");
     }
 
-    rails.init(); // TODO: It feels weird having an init in a reset. Maybe change this to be reset?
+    if (!registry.levelSelects.components.empty()) {
+        menus.generate_level_select_buttons((int)scenes.level_count());
+    }
+
+    // add frame counter
+    frame_rate_entity = Entity();
+    registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -218,18 +240,41 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+
+        if (registry.turtles.has(collisionsRegistry.entities[i]) && !registry.lightRays.has(collisionsRegistry.components[i].other)) {
+            handle_turtle_collisions(i);
+            continue;
+        }
         // for now, only handle collisions involving light ray as other object
         if (!registry.lightRays.has(collisionsRegistry.components[i].other) ||
             registry.lightRays.has(collisionsRegistry.entities[i]))
             continue;
         if (registry.reflectives.has(collisionsRegistry.entities[i])) {
-            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other,
+                              collisionsRegistry.components[i].side, collisionsRegistry.components[i].overlap);
         } else {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            if (registry.minisuns.has(collisionsRegistry.entities[i])) {
+                handle_minisun_collision(collisionsRegistry.entities[i]);
+
+            }
         }
     }
     // Remove all collisions from this simulation step
     registry.collisions.clear();
+}
+
+void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
+    if (!registry.litEntities.has(minisun_entity)) {
+        auto &minisun = registry.minisuns.get(minisun_entity);
+        minisun.lit = true;
+        LightUp l;
+        registry.litEntities.insert(minisun_entity, l);
+    } else {
+        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
+        minisun_light.counter_ms = LIGHT_TIMER_MS;
+
+    }
 }
 
 // When colliding entities to not reflect, if one of the entities
@@ -238,30 +283,45 @@ void WorldSystem::handle_collisions() {
 // Invariant: other is a light ray
 void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
     assert(registry.lightRays.has(other));
-    if (registry.zones.has(collider))
+    if (registry.zones.has(collider)) {
         switch (registry.zones.get(collider).type) {
         case ZONE_TYPE::END: {
             LOG_INFO("Level beaten!");
-            std::string next_scene = "gamefinish";
-            change_scene(next_scene);
+            //            std::string next_scene = "gamefinish";
+            //            change_scene(next_scene);
+            assert(registry.levels.size() == 1);
+            Level& level = registry.levels.components.front();
+            if (registry.menus.components.empty()) {
+                menus.generate_level_win_popup(level.id, (int)scenes.level_count());
+                sounds.play_sound("win.wav");
+            }
+            //            registry.remove_all_components_of(other);
             break;
         }
         case ZONE_TYPE::START: {
             return;
         }
         default: {
-            // TODO: should be different noise from reflection
-            Mix_PlayChannel(-1, reflection_sfx, 0);
-            LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            sounds.play_sound("light-collision.wav");
+            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
             break;
         }
         }
+    } else {
+        // TEMP FIX regarding awkward turtle collision box: TODO
+        if (!registry.turtles.has(collider)) {
+            sounds.play_sound("light-collision.wav");
+            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            registry.remove_all_components_of(other);
+        }
+    }
 }
 
 // Reflect light ray based on collision normal
 // Invariant: other is a light ray
-void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
+// Side: 1 if y side, 2 if x side
+void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap) {
     assert(registry.lightRays.has(reflected));
     Light& light = registry.lightRays.get(reflected);
     // don't reflect off of same mirror twice
@@ -270,24 +330,124 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected) {
         return;
     }
 
-    Mix_PlayChannel(-1, reflection_sfx, 0);
-
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
-    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + M_PI_2),
-                                      sin(reflective_surface_motion.angle + M_PI_2)};
+    float angle_addition = M_PI_2;
+    if (side == 1) {
+        // LOG_INFO("y-Side reflection\n");
+        angle_addition = M_PI_2;
+    }
+    if (side == 2) {
+        // LOG_INFO("x-Side reflection\n");
+        angle_addition = 0.f;
+    }
+    vec2 reflective_surface_normal = {cos(reflective_surface_motion.angle + angle_addition),
+                                      sin(reflective_surface_motion.angle + angle_addition)};
     float angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                           atan2(light_motion.velocity.y, light_motion.velocity.x);
-    std::cout << angle_between * 180.f / M_PI << std::endl;
     vec2 reflected_velocity = -light_motion.velocity +
                               2.f * dot(light_motion.velocity, reflective_surface_normal) * reflective_surface_normal;
+    // Check whether reflected velocity points towards centre of rectangle — bad reflection!
+    vec2 light_to_reflective = vec2(light_motion.position - reflective_surface_motion.position);
+    if (dot(reflected_velocity, light_to_reflective) < dot(light_motion.velocity, light_to_reflective)) {
+        LOG_INFO("Reflection edge case -- abort reflection\n");
+        return;
+    }
+    // Play reflection sound
+    sounds.play_sound("light-collision.wav");
+
+    // Correct light position with overlap
+    light_motion.position -= normalize(light_motion.velocity) * overlap;
+
+    // Update motion
     light_motion.velocity = reflected_velocity;
     light.last_reflected = reflective;
     light.last_reflected_timeout = DOUBLE_REFLECTION_TIMEOUT;
     angle_between = atan2(reflective_surface_normal.y, reflective_surface_normal.x) -
                     atan2(light_motion.velocity.y, light_motion.velocity.x);
     light_motion.angle -= 2 * angle_between;
-    std::cout << angle_between * 180.f / M_PI << std::endl;
+}
+
+// if the turtle collides against a wall, stop the turtle from moving further
+void WorldSystem::handle_turtle_collisions(int i) {
+
+    auto& collisionsRegistry = registry.collisions;
+    Entity turtle = collisionsRegistry.entities[i];
+    Entity other = collisionsRegistry.components[i].other;
+
+    // TODO: Rough patch to handle TRIPLE COLLISIONS... might want to improve in the future
+    if (!registry.motions.has(other) || !registry.colliders.has(other)) {
+        return;
+    }
+    Motion& turtle_motion = registry.motions.get(turtle);
+    Collider& turtle_collider = registry.colliders.get(turtle);
+    Motion& barrier_motion = registry.motions.get(other);
+    Collider& barrier_collider = registry.colliders.get(other);
+
+    float turtleLeft = turtle_motion.position.x - turtle_collider.width / 2;
+    float turtleRight = turtle_motion.position.x + turtle_collider.width / 2;
+    float turtleTop = turtle_motion.position.y - turtle_collider.height / 2;
+    float turtleBottom = turtle_motion.position.y + turtle_collider.height / 2;
+
+    float barrierLeft = barrier_motion.position.x - barrier_collider.width / 2;
+    float barrierRight = barrier_motion.position.x + barrier_collider.width / 2;
+    float barrierTop = barrier_motion.position.y - barrier_collider.height / 2;
+    float barrierBottom = barrier_motion.position.y + barrier_collider.height / 2;
+
+
+    float overlapX = std::min(turtleRight, barrierRight) - std::max(turtleLeft, barrierLeft);
+    float overlapY = std::min(turtleBottom, barrierBottom) - std::max(turtleTop, barrierTop);
+
+
+    // Check to see collision penetration, is there more overlap on the x-axis or the y-axis? Resolve the collision on the axis with the most overlap
+    if (abs(overlapX) < abs(overlapY)) {
+         if (turtle_motion.position.x < barrier_motion.position.x) {
+            // Place the turtle to the left of the barrier
+            turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
+
+            // If the "barrier" is a lever, push it to the right!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
+                DashTheTurtle& t = registry.turtles.get(turtle);
+                t.tired = true;
+                t.behavior = DASH_STATES::IDLE;
+            }
+        }
+         if (turtle_motion.position.x > barrier_motion.position.x) {
+            // Place the turtle to the right of the barrier
+            turtle_motion.position.x =
+                 barrier_motion.position.x + abs(barrier_collider.width / 2) + abs(turtle_collider.width / 2) - 0.01f;
+
+            // If the "barrier" is a lever, push it to the left!
+            if (registry.levers.has(other)) {
+                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
+                DashTheTurtle& t = registry.turtles.get(turtle);
+                t.tired = true;
+                t.behavior = DASH_STATES::IDLE;
+            }
+        }
+
+    } else {
+        if (turtle_motion.position.y < barrier_motion.position.y) {
+            turtle_motion.position.y =
+                barrier_motion.position.y - abs(barrier_collider.height / 2) - abs(turtle_collider.height / 2) - 0.01f;
+        }
+        if (turtle_motion.position.y > barrier_motion.position.y) {
+            turtle_motion.position.y =
+                barrier_motion.position.y + abs(barrier_collider.height / 2) + abs(turtle_collider.height / 2) + 0.01f;
+        }
+        turtle_motion.velocity.y = 0;
+    }
+
+    // Move to the left of barrier
+    //if (turtle_motion.position.x < barrier_motion.position.x) {
+    //    // registry.sprite
+    //    turtle_motion.position.x = barrier_motion.position.x - barrier_motion.scale.x / 2 - abs(turtle_collider.width / 2);
+    //}
+    //if (turtle_motion.position.x > barrier_motion.position.x) {
+    //    turtle_motion.position.x =
+    //        barrier_motion.position.x + barrier_motion.scale.x / 2 + abs(turtle_collider.width / 2);
+    //}
 }
 
 // Should the game be over?
@@ -295,20 +455,52 @@ bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); 
 
 // On key callback
 void WorldSystem::on_key(int key, int, int action, int mod) {
+    input_manager.update_key_state(key, action, mod);
+
     // Resetting game
-    if (action == GLFW_RELEASE && key == GLFW_KEY_R) {
+    if (IS_RELEASED(GLFW_KEY_R)) {
         int w, h;
         glfwGetWindowSize(window, &w, &h);
-
         restart_game();
     }
 
+    if (IS_PRESSED(GLFW_KEY_M)) {
+        if (music_muted) {
+            Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
+        } else {
+            Mix_VolumeMusic(0);
+        }
+        music_muted = !music_muted;
+    }
+
+
+    // Pausing
+    if (IS_RELEASED(GLFW_KEY_ESCAPE)) {
+        assert(registry.menus.size() <= 1);
+        if (registry.menus.size() == 0) {
+            assert(registry.menus.size() <= 1);
+            if (registry.levels.size() > 0) {
+                Level& level = registry.levels.components.front();
+                menus.generate_pause_popup(level.id);
+            }
+        } else {
+            Menu& menu = registry.menus.components.front();
+            if (menu.canClose) {
+                menus.try_close_menu();
+            }
+        }
+    }
+
+    if (IS_RELEASED(GLFW_KEY_F)) {
+        frame_rate_enabled = !frame_rate_enabled;
+    }
+
     // Control the current speed with `<` `>`
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_COMMA) {
+    if (IS_RELEASED_WITH_SHIFT(GLFW_KEY_COMMA)) {
         current_speed -= 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
-    if (action == GLFW_RELEASE && (mod & GLFW_MOD_SHIFT) && key == GLFW_KEY_PERIOD) {
+    if (IS_RELEASED_WITH_SHIFT(GLFW_KEY_PERIOD)) {
         current_speed += 0.1f;
         LOG_INFO("Current speed = {}", current_speed);
     }
@@ -318,91 +510,123 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
 void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.entities[0]).position = position; }
 
 void WorldSystem::on_mouse_move(vec2 mouse_position) {
-    vec2 world_pos = screenToWorld(mouse_position);
-    for (Entity entity : registry.interactables.entities) {
-        Motion& motion = registry.motions.get(entity);
-        // Handle buttons separately — just keep piling on jank!
-        if (registry.changeScenes.has(entity) &&
-            (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
-            (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
-            (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
-            (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-            if (registry.highlightables.has(entity)) {
+    input_manager.update_mouse_position(mouse_position);
+
+    auto hovered_entities = input_manager.get_entities_at_mouse_pos();
+    for (auto& highlightable : registry.highlightables.components) {
+        highlightable.isHighlighted = false;
+    }
+
+    for (Entity entity : hovered_entities) {
+        if (registry.highlightables.has(entity)) {
+            if (shouldAllowInput() || registry.menuItems.has(entity)) {
                 registry.highlightables.get(entity).isHighlighted = true;
             }
-            return;
         }
-        if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
-                < dot(motion.scale/2.f, motion.scale/2.f)) {
-            if (registry.highlightables.has(entity)) {
-                registry.highlightables.get(entity).isHighlighted = true;
+    }
+
+    if(shouldAllowInput()) {
+        // hanlde the mirror movements
+        for(auto entity : input_manager.active_entities) {
+            Motion &clicked_motion = registry.motions.get(entity);
+            vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
+
+            if (registry.rotateables.has(entity)) { // rotateable mirrors
+                // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
+                clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
             }
-        } else {
-            if (registry.highlightables.has(entity)) {
-                registry.highlightables.get(entity).isHighlighted = false;
+
+            if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
+                OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity);
+                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate
+                // beyond the y-axis it flips so this check is necessary
+                if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
+                    clicked_motion.position = raycast::math::clampToLineSegment(
+                        rails.firstEndpoint,
+                        rails.secondEndpoint,
+                        screenToWorld(mouse_position));
+                } else {
+                    clicked_motion.position = raycast::math::clampToLineSegment(
+                        rails.secondEndpoint,
+                        rails.firstEndpoint,
+                        screenToWorld(mouse_position));
+                }
             }
         }
     }
 }
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
-    if (action == GLFW_RELEASE && key == GLFW_MOUSE_BUTTON_LEFT) {
-        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
-        LOG_INFO("({}, {})", xpos, ypos);
-        for (Entity entity : registry.interactables.entities) {
+    input_manager.update_mouse_button_state(key, action, mod, vec2(xpos, ypos));
+
+    auto hovered_entities = input_manager.get_entities_at_mouse_pos();
+    if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {
+        input_manager.active_entities.clear();
+        // mouse initialized by clicked_entities
+        for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));
-            Motion& motion = registry.motions.get(entity);
-            // Handle buttons separately — just keep piling on jank!
-            if (registry.changeScenes.has(entity) &&
-                (motion.position + abs(motion.scale/2.f)).y > world_pos.y &&
-                (motion.position + abs(motion.scale/2.f)).x > world_pos.x &&
-                (motion.position - abs(motion.scale/2.f)).x < world_pos.x &&
-                (motion.position - abs(motion.scale/2.f)).y < world_pos.y) {
-                Mix_PlayChannel(1, click_sfx, 0);
+            if (registry.changeScenes.has(entity)) {
+                sounds.play_sound("button-click.wav");
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
                 return;
-                }
-            if (!registry.changeScenes.has(entity) && dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale/2.f, motion.scale/2.f)) {
-                    if (registry.rotateables.has(entity)) {
-
-                        // Rotate the entity.
-                        LOG_INFO("Something should be rotating.")
-                        Motion& e_motion = registry.motions.get(entity);
-
-                        // TODO: use lerp too smoothly rotate
-                        float ANGLE_TO_ROTATE = 5 * (M_PI / 180);
-                        e_motion.angle += motion.position.x > world_pos.x ? -ANGLE_TO_ROTATE : ANGLE_TO_ROTATE;
-                    }
-
-                    if (registry.lerpables.has(entity)) {
-                        Lerpable& e_lr = registry.lerpables.get(entity);
-                        e_lr.t_step = 0;
-                    }
-                }
+            }
+            if (registry.resumeGames.has(entity)) {
+                sounds.play_sound("button-click.wav");
+                menus.try_close_menu();
+                return;
+            }
         }
     }
-    if (action == GLFW_PRESS && key == GLFW_MOUSE_BUTTON_LEFT) {
-        vec2 world_pos = screenToWorld(vec2(xpos, ypos));
-        LOG_INFO("({}, {})", xpos, ypos);
-        for (Entity entity : registry.interactables.entities) {
-            Motion& motion = registry.motions.get(entity);
-            if (dot(world_pos - motion.position, world_pos - motion.position)
-                    < dot(motion.scale/2.f, motion.scale/2.f)) {
-                Mix_PlayChannel(1, click_sfx, 0);
-                if (registry.entitiesOnLinearRails.has(entity)) {
-                    LOG_INFO("Moving entity on linear rail.");
-                    OnLinearRails& e_rails = registry.entitiesOnLinearRails.get(entity);
-                    Lerpable& e_lr = registry.lerpables.get(entity);
-                    int which_direction = dot(motion.position - world_pos, e_rails.direction);
-                    if (which_direction > 0) {
-                        e_lr.t_step = -0.5;
-                    } else if (which_direction < 0) {
-                        e_lr.t_step = 0.5;
-                    }
+
+    if (IS_PRESSED(GLFW_MOUSE_BUTTON_LEFT)) {
+        for (const Entity& entity : hovered_entities) {
+            if (registry.entitiesOnLinearRails.has(entity) || registry.rotateables.has(entity)) {
+                input_manager.active_entities.push_back(entity);
+            }
+        }
+    }
+}
+
+void WorldSystem::updateDash() {
+    for (const Entity& dashEntity : registry.turtles.entities) {
+        DASH_STATES dash_state = registry.turtles.get(dashEntity).behavior;
+        vec2 ray = registry.turtles.get(dashEntity).nearestLightRayDirection;
+        Motion& dm = registry.motions.get(dashEntity);
+
+        if (registry.spriteSheets.components.empty()) {
+            throw std::runtime_error("Error: Sprite sheet does not exist. Please make sure to add the sprite sheet to the level JSON.");
+        }
+
+        SpriteSheet& ss = registry.spriteSheets.get(dashEntity);
+        Motion& ss_motion = registry.motions.get(dashEntity);
+
+        if (dash_state == DASH_STATES::WALK) {
+            // vec2 displacement = {(dm.position.x - ray.x), (dm.position.y - ray.y)};
+            ss.currState = static_cast<unsigned int>(DASH_STATES::WALK);
+            if (ray.x > 0) {
+                dm.velocity.x = -dashSpeed;
+                if (ss_motion.scale.x > 0) {
+                    ss_motion.scale.x = -ss_motion.scale.x;  // Flip if currently positive
+                }
+            } else if (ray.x < 0) {
+                dm.velocity.x = dashSpeed;
+                if (ss_motion.scale.x < 0) {
+                    ss_motion.scale.x = -ss_motion.scale.x;  // Flip if currently negative
                 }
             }
+
+            // if (dm.position.x < 100) {
+            //     int w = 0;
+            //     w++;
+            // }
+
+        } else if (dash_state == DASH_STATES::STARE) {
+            dm.velocity = {0, 0};
+            ss.currState = static_cast<unsigned int>(DASH_STATES::STARE);
+        } else if (dash_state == DASH_STATES::IDLE) {
+            dm.velocity = {0, 0};
+            ss.currState = static_cast<unsigned int>(DASH_STATES::IDLE);
         }
     }
 }

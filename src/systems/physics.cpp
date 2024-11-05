@@ -1,144 +1,103 @@
 #include "systems/physics.hpp"
+
+#include "collisions.h"
 #include "logging/log.hpp"
 #include "utils/math.hpp"
+#include "utils/time.hpp"
 #include "world_init.hpp"
-#include "systems/rails.hpp"
 #include <climits>
 #include <iostream>
 
-const float ONE_SECOND = 1000.f;
+// NOTE: of course these values deviate from the "real world" values and have been scaled to make sense in our little light maze 
+// world -- for our purposes they lead to realistic behaviour
+const float PhysicsSystem::GravitationalConstant = 8;
+const float PhysicsSystem::SpeedOfLight = 100;
 
-// Returns the local bounding coordinates (bottom left and top right)
-// scaled by the current size of the entity
-// rotated by the entity's current rotation, relative to the origin
-std::array<vec2, 4> get_bounding_points(const Motion& motion) {
-    // get vectors to top right of origin-located bounding rectangle
-    vec2 top_right = vec2(abs(motion.scale.x) / 2.f, abs(motion.scale.y) / 2.f);
-    vec2 bottom_right{top_right.x, -top_right.y};
-    vec2 bottom_left{-top_right.x, -top_right.y};
-    vec2 top_left{-top_right.x, top_right.y};
-
-    // calculate rotation matrix
-    float cos = ::cos(motion.angle);
-    float sin = ::sin(motion.angle);
-    mat2 rotation_matrix = mat2(cos, sin, -sin, cos);
-
-    // rotate points about the origin by motion's angle
-    top_right = rotation_matrix * top_right;
-    bottom_right = rotation_matrix * bottom_right;
-    bottom_left = rotation_matrix * bottom_left;
-    top_left = rotation_matrix * top_left;
-    // bottom left and top left corners of rectangle are
-    // -top_right and -bottom_right respectively (by math)
-    return {top_right, bottom_right, bottom_left, top_left};
-}
-
-// Returns the minimum and maximum magnitudes of points
-// projected onto an axis as a vec2
-vec2 get_projected_min_max(const std::array<vec2, 4>& bounding_points,
-						   const vec2 axis) {
-	vec2 min_max = {INT_MAX, INT_MIN};
-	for (const vec2& point : bounding_points) {
-		float projected = dot(point, axis);
-		min_max = {min(projected, min_max.x), max(projected, min_max.y)};
-	}
-	return min_max;
-}
-
-// Returns true if neither vector has a component between those of the
-// other vector, implying no overlap
-// Invariant: assume the vectors contain minimum and maximum
-// values for points projected onto an axis in their x and y
-// fields respectively
-bool no_overlap(std::array<vec2, 4> m1_bounding_points,
-				std::array<vec2, 4> m2_bounding_points,
-				float angle) {
-	vec2 axis = {::cos(angle), ::sin(angle)};
-	vec2 m1_min_max = get_projected_min_max(m1_bounding_points, axis);
-	vec2 m2_min_max = get_projected_min_max(m2_bounding_points, axis);
-	return m1_min_max.x > m2_min_max.y || m1_min_max.y < m2_min_max.x;
-}
-
-// Returns true if motion1 and motion2 are overlapping using a coarse
-// step with radial boundaries and a fine step with the separating axis theorem
-bool collides(const Motion& motion1, const Motion& motion2) {
-    // see if the distance between centre points of motion1 and motion2
-    // are within the maximum possible distance for them to be touching
-    vec2 dp = motion1.position - motion2.position;
-    float dist_squared = dot(dp, dp);
-    float max_possible_collision_distance =
-        (dot(motion1.scale, motion1.scale) +
-         dot(motion2.scale, motion2.scale)) /
-        2.f;
-    // radial boundary-based estimate
-    if (dist_squared < max_possible_collision_distance) {
-        // LOG_INFO("Collision possible. Refining...");
-        // move points to their screen location
-        std::array<vec2, 4> m1_bounding_points = get_bounding_points(motion1);
-        for (vec2& point : m1_bounding_points) {
-            point += motion1.position;
-        }
-        std::array<vec2, 4> m2_bounding_points = get_bounding_points(motion2);
-        for (vec2& point : m2_bounding_points) {
-            point += motion2.position;
-        }
-        // define all axis angles (normals to edges)
-        float axis_angles[4];
-        axis_angles[0] = motion1.angle;
-        axis_angles[1] = M_PI_2 + motion1.angle;
-        axis_angles[2] = motion2.angle;
-        axis_angles[3] = M_PI_2 + motion2.angle;
-        // see if an overlap exists in any of the axes
-        for (float& angle : axis_angles) {
-            if (no_overlap(m1_bounding_points, m2_bounding_points, angle)) {
-                // LOG_INFO("No collision!");
-                return false;
-            }
-        }
-        // LOG_INFO("Collision detected between motion with position ({}, {}) and "
-        //          "motion with position ({}, {})",
-        //          motion1.position.x, motion1.position.y, motion2.position.x,
-        //          motion2.position.y);
-        return true;
+bool PhysicsSystem::shouldStep() {
+    assert(registry.menus.size() <= 1);
+    if (!registry.menus.components.empty()) {
+        return !registry.menus.components.front().shouldBlockSteps;
     }
-    return false;
+    return true;
 }
 
 /**
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
-  auto& motion_registry = registry.motions;
+    if(!shouldStep()) return;
 
-  for (uint i = 0; i < motion_registry.size(); i++) {
-    Motion& motion = motion_registry.components[i];
-    float t = elapsed_ms / ONE_SECOND;
-    motion.position.x += t * motion.velocity.x;
-    motion.position.y += t * motion.velocity.y;
-  }
+    const float t = elapsed_ms / raycast::time::ONE_SECOND_IN_MS;
+    auto& motion_registry = registry.motions;
 
-  // check for collisions between entities that collide
-  ComponentContainer<Motion> &motion_container = registry.motions;
-  for(uint i = 0; i<motion_container.components.size(); i++)
-  {
-    Motion& motion_i = motion_container.components[i];
-    Entity entity_i = motion_container.entities[i];
-    if (motion_i.collides) {
-      // start collision detection from next entity (to avoid self-, repeated-comparisons)
-      for(uint j = i+1; j<motion_container.components.size(); j++) {
-        Motion& motion_j = motion_container.components[j];
-        if (motion_j.collides && collides(motion_i, motion_j))
-        {
-          Entity entity_j = motion_container.entities[j];
-          // create a collisions event for each entity colliding with other
-          // (to ensure both orders exist for later collision handling)
-          // NOTE: stubbed with REFLECTIVE collisions for now
-          // std::cout << "COLLISION!" << std::endl;
-          // std::cout <<entity_i << ", " << entity_j << std::endl;
-          registry.collisions.emplace_with_duplicates(entity_i, entity_j);
-          registry.collisions.emplace_with_duplicates(entity_j, entity_i);
+    for (uint i = 0; i < motion_registry.size(); i++) {
+        Motion& motion = motion_registry.components[i];
+        Entity& entity = motion_registry.entities[i];
+        motion.position.x += t * motion.velocity.x;
+        motion.position.y += t * motion.velocity.y;
+        // if motion entity has a collider, require an update if entity moved
+        if (registry.colliders.has(entity)
+            && (dot(motion.velocity, motion.velocity) > 0
+                || motion.angle != registry.colliders.get(entity).angle)) {
+            registry.colliders.get(entity).needs_update = true;
         }
-      }
     }
-  }
+
+    // exert pull towards blackhole(s)
+    for (uint i = 0; i < registry.blackholes.size(); i++) {
+        // NOTE: Blackholes exert a force across the entire level -- this may be refactored by having a radius inside which a force should be exerted.
+        //       We opted against this since the pulling force is inversely proportional to the distance between the light and the blackhole -- so if
+        //       the light is really far away, the force on it is negligible. Also note that the blackhole only exerts a force on the light and nothing else.
+
+        Entity blackhole_entity = registry.blackholes.entities[i];
+        Blackhole &blackhole = registry.blackholes.components[i];
+        Motion &blackhole_motion = registry.motions.get(blackhole_entity);
+
+        uint light_rays_count = registry.lightRays.size();
+        for (uint j = 0; j < light_rays_count; j++) {
+            Entity light_ray_entity = registry.lightRays.entities[j];
+            Motion &light_ray_motion = registry.motions.get(light_ray_entity);
+
+            // Now, these aren't very _realistic_ calculations in that they do not model relativity and all that stuff that a really smart guy named Albert Einstein
+            // worked on. But they do try to mimic relativity and are not as naive as a Newtonian model of a blackhole. This means that the path that the light follows is 
+            // actually fairly realistic (it respects the ratios of the schwarzchild radius at which light should be sucked in vs when it should escape without having to
+            // cheat and hardcode them!). The formulas we used are credited to Chris Orban from STEMCoding. See this link: https://www.asc.ohio-state.edu/orban.14/stemcoding/blackhole.html
+
+            // TODO: Summarize math in README.md for Peyton
+            vec2 to_blackhole = blackhole_motion.position - light_ray_motion.position;
+            float theta = raycast::math::heading(to_blackhole);
+            float distance_to_blackhole = glm::length(to_blackhole);
+            float force_gravity = PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * distance_to_blackhole);
+            float delta_theta = -force_gravity * (15.0 / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
+            delta_theta /= std::abs(1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
+            light_ray_motion.angle += delta_theta;
+            light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);
+            light_ray_motion.velocity = raycast::math::set_mag(light_ray_motion.velocity, PhysicsSystem::SpeedOfLight);
+        }
+    }
+}
+
+// check for collisions between entities that collide
+void PhysicsSystem::detect_collisions() {
+    ComponentContainer<Collideable>& collideable_registry = registry.collideables;
+    for (uint i = 0; i < collideable_registry.components.size(); i++) {
+        Entity entity_i = collideable_registry.entities[i];
+        // start collision detection from next entity (to avoid self-, repeated-comparisons)
+        for (uint j = i + 1; j < collideable_registry.components.size(); j++) {
+            Entity entity_j = collideable_registry.entities[j];
+            // create a collisions event for each entity colliding with other
+            // (to ensure both orders exist for later collision handling)
+            vec2 collision = Collisions::overlap(entity_i, entity_j);
+            if (collision.x != 0) {
+                // LOG_INFO("Collision detected\n");
+                Collision& c1 = registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                Collision& c2 = registry.collisions.emplace_with_duplicates(entity_j, entity_i);
+
+                c1.side = collision.x;
+                c2.side = collision.x;
+                c1.overlap = collision.y;
+                c2.overlap = collision.y;
+            }
+        }
+    }
 }

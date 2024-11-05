@@ -3,6 +3,7 @@
 #include "common.hpp"
 #include "components_json.hpp"
 #include "json.hpp"
+#include "menu.hpp"
 #include "registry.hpp"
 #include "world_init.hpp"
 
@@ -31,6 +32,13 @@ void SceneSystem::init(Entity &scene_state_entity) {
     }
 
     scene_paths.insert(levels.begin(), levels.end());
+
+    folder = scene_path("test");
+    for (const auto& entry : fs::directory_iterator(folder)) {
+        const auto& path = entry.path();
+        auto filename = entry.path().filename().replace_extension();
+        scene_paths.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
+    }
 }
 
 // Attempts to parse a specified scene. Returns true if successful. False if
@@ -56,22 +64,16 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         Sprite c{};
                         data.get_to(c);
                         createSprite(entity, c.position, c.scale, c.angle, c.texture);
-                    } else if (type == "interactable") {
-                        PARSE_COMPONENT(Interactable, interactables);
                     } else if (type == "change_scene") {
                         PARSE_COMPONENT(ChangeScene, changeScenes);
-                    } else if (type == "bounding_box") {
-                        PARSE_COMPONENT(BoundingBox, boundingBoxes);
                     } else if (type == "zone") {
-                        PARSE_COMPONENT(Zone, zones);
+                        Zone c{};
+                        data.get_to(c);
+                        setZone(entity, c.type, c.position);
                     } else if (type == "light_source") {
                         PARSE_COMPONENT(LightSource, lightSources);
-                    } else if (type == "on_linear_rails") {
-                        PARSE_COMPONENT(OnLinearRails, entitiesOnLinearRails);
                     } else if (type == "lerpable") {
                         PARSE_COMPONENT(Lerpable, lerpables);
-                    } else if (type == "rotateable") {
-                        PARSE_COMPONENT(Rotateable, rotateables);
                     } else if (type == "reflective") {
                         PARSE_COMPONENT(Reflective, reflectives);
                     } else if (type == "level") {
@@ -79,23 +81,70 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     } else if (type == "mirror") {
                         Mirror c{};
                         data.get_to(c);
-                        createMirror(entity, c.position, c.angle);
+                        createMirror(entity, c);
                     } else if (type == "highlightable") {
                         PARSE_COMPONENT(Highlightable, highlightables);
+                    } else if (type == "level_select") {
+                        PARSE_COMPONENT(LevelSelect, levelSelects);
+                    } else if (type == "dash_the_turtle") {
+                        //createDashTheTurtle(entity, data["position"]);
+                        PARSE_COMPONENT(DashTheTurtle, turtles);
+                        // int x = registry.motions.has(entity);
+                        // printf("Your boolean variable is: %s\n", x ? "true" : "false");
+                    } else if (type == "button") {
+                        ButtonHelper c{};
+                        data.get_to(c);
+                        createEmptyButton(entity, c.position, c.scale, c.label);
+                    } else if (type == "collider") {
+                        PARSE_COMPONENT(Collider, colliders);
+                    } else if (type == "collideable") {
+                        PARSE_COMPONENT(Collideable, collideables);
+                    } else if (type == "interactable") {
+                        PARSE_COMPONENT(Interactable, interactables);
+                    } else if (type == "blackhole") {
+                        PARSE_COMPONENT(Blackhole, blackholes);
+                        // the blackhole is itself a point light source as well
+                        PointLight& point_light = registry.pointLights.emplace(entity);
+                        point_light.diffuse = 6.0f * vec3(255, 233, 87);
+                        point_light.linear = -0.25f; // the render magic lies in this value
+                        point_light.quadratic = 0.01;
+                    } else if (type == "sprite_sheet") {
+                        SpriteSheet ss{};
+                        data.get_to(ss);
+                        createSpriteSheet(entity, ss.position, ss.sheetWidth, ss.sheetHeight, ss.cellWidth,
+                                          ss.cellHeight, ss.animationFrames, data["texture"], data["imageWidth"],
+                                          data["imageHeight"]);
+                    } else if (type == "minisun") {
+                        PARSE_COMPONENT(MiniSun, minisuns);
+                    } else if (type == "gravity") {
+                        PARSE_COMPONENT(Gravity, gravities);
+                    } else if (type == "menu_item") {
+                        PARSE_COMPONENT(MenuItem, menuItems);
+                    } else if (type == "text") {
+                        PARSE_COMPONENT(Text, texts);
+                    } else if (type == "lever") { // This is used to attach a lever entity that can exhibit some effect on the CURRENT ENTITY
+                        createLever(entity, data["position"], data["state"], data["effect"], data["activeLever"]);
+                    } else if (type == "mesh") {
+                        initMesh(entity, data["path"], data["position"], data["angle"], data["scale"]);
                     }
                 }
             }
+        // catches all errors deriving from the standard exception class, this is better than a catch(...) statement since it gives
+        // us information about the error via e.what()
+        } catch (const std::exception& e) {
+            LOG_ERROR("Parsing file {} failed with error: {}\n", filename, e.what());
+            return false;
+        
+        // catches any other error -- practically this case should never be reached since its good practice to have all errors extend the std::exception class
         } catch (...) {
-            LOG_ERROR("Parsing file failed for file; {}", filename);
-            std::cout << "ERROR: issue with the formatting of the file: "
-                      << filename << std::endl;
+            LOG_ERROR("Parsing file {} failed with an unknown error, check formatting\n", filename);
             return false;
         }
     }
     else {
-        LOG_ERROR("Failed to open file: {}", filename);
+        LOG_ERROR("Failed to open file: {}\n", filename);
     }
-    return true;
 
-    LOG_INFO("Successfully loaded scene");
+    LOG_INFO("Successfully loaded scene\n");
+    return true;
 }

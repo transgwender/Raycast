@@ -53,6 +53,33 @@ inline bool definitelyLessThan(float a, float b) {
   return t;
 }
 
+/// @brief returns the angle between the vector `vec` and the positive x-axis in radians
+inline float heading(vec2 vec) {
+    return atan2(vec.y, vec.x);
+}
+
+/// @brief returns a normalized vector pointing the direction of theta (reference from +x-axis)
+inline vec2 from_angle(float theta) {
+    return vec2(::cos(theta), ::sin(theta));
+}
+
+/// @brief returns a vector pointing in the same direction as vec but with magnitude set to mag
+inline vec2 set_mag(vec2 vec, float mag) {
+    return glm::normalize(vec) * mag;
+}
+
+/// @brief project vector a onto vector b
+inline vec2 project(vec2 a, vec2 b) {
+    return (glm::dot(a,b) / glm::dot(b,b)) * b;
+}
+
+/// @brief project points on the line segment between start and end and clamps to be strictly on this line
+inline vec2 clampToLineSegment(vec2 start, vec2 end, vec2 point) {
+    vec2 dir = end - start;
+    float t = glm::dot(point - start, dir) / glm::dot(dir, dir);
+    t = glm::clamp(t, 0.0f, 1.0f);
+    return start + t * dir;
+}
 
 } // namespace math
 } // namespace raycast

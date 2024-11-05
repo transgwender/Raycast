@@ -15,8 +15,7 @@ class ECSRegistry {
     ComponentContainer<Collision> collisions;
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
-    ComponentContainer<BoundingBox> boundingBoxes;
-    ComponentContainer<Renderable> renderables;
+    ComponentContainer<ResumeGame> resumeGames;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
     ComponentContainer<Light> lightRays;
@@ -28,6 +27,24 @@ class ECSRegistry {
     ComponentContainer<Lerpable> lerpables;
     ComponentContainer<Rotateable> rotateables;
     ComponentContainer<Highlightable> highlightables;
+    ComponentContainer<Collider> colliders;
+    ComponentContainer<Collideable> collideables;
+    ComponentContainer<Menu> menus;
+    ComponentContainer<MenuItem> menuItems;
+    ComponentContainer<LevelSelect> levelSelects;
+    ComponentContainer<DashTheTurtle> turtles;
+    ComponentContainer<ButtonFlag> buttons;
+    ComponentContainer<Text> texts;
+    ComponentContainer<Mouse> mice;
+    ComponentContainer<Blackhole> blackholes;
+    ComponentContainer<SpriteSheet> spriteSheets;
+    ComponentContainer<MiniSun> minisuns;
+    ComponentContainer<Gravity> gravities;
+    ComponentContainer<Lever> levers;
+    ComponentContainer<Particle> particles;
+    ComponentContainer<ParticleSpawner> particleSpawners;
+    ComponentContainer<Mesh> meshes;
+    ComponentContainer<LightUp> litEntities;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -37,8 +54,7 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
-        registry_list.push_back(&boundingBoxes);
-        registry_list.push_back(&renderables);
+        registry_list.push_back(&resumeGames);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);
         registry_list.push_back(&lightRays);
@@ -50,6 +66,24 @@ class ECSRegistry {
         registry_list.push_back(&lerpables);
         registry_list.push_back(&rotateables);
         registry_list.push_back(&highlightables);
+        registry_list.push_back(&colliders);
+        registry_list.push_back(&collideables);
+        registry_list.push_back(&menus);
+        registry_list.push_back(&menuItems);
+        registry_list.push_back(&levelSelects);
+        registry_list.push_back(&turtles);
+        registry_list.push_back(&buttons);
+        registry_list.push_back(&texts);
+        registry_list.push_back(&mice);
+        registry_list.push_back(&blackholes);
+        registry_list.push_back(&spriteSheets);
+        registry_list.push_back(&minisuns);
+        registry_list.push_back(&gravities);
+        registry_list.push_back(&levers);
+        registry_list.push_back(&particles);
+        registry_list.push_back(&particleSpawners);
+        registry_list.push_back(&meshes);
+        registry_list.push_back(&litEntities);
     }
 
     void clear_all_components() {

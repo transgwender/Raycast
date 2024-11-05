@@ -23,6 +23,8 @@ in vec3 frag_pos;
 uniform sampler2D albedo_tex;
 uniform sampler2D normal_tex;
 uniform bool highlight;
+uniform bool skip_lighting;
+uniform bool is_blackhole;
 
 uniform vec3 ambient_light;
 
@@ -55,6 +57,19 @@ vec3 calculate_point_light(PointLight light) {
 }
 
 void main() {
+    if (skip_lighting) {
+        color = texture(albedo_tex, tex_coord);
+        if (highlight) {
+            color += vec4(vec3(0.18), 0.0);
+        }
+        return;
+    }
+
+    if (is_blackhole) {
+        color = vec4(0.0, 0.0, 0.0, 0.0);
+        return;
+    }
+
     vec3 result = calculate_ambient_light();
     for (int i = 0; i < point_lights_count; i++) {
         result += calculate_point_light(point_lights[i]);
@@ -64,5 +79,5 @@ void main() {
         result += vec3(0.18);
     }
 
-	color = vec4(result, (texture(albedo_tex, tex_coord)).w);
+    color = vec4(result, (texture(albedo_tex, tex_coord)).w);
 }
