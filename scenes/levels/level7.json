@@ -94,7 +94,7 @@
                 {
                     "type": "mirror",
                     "position": [
-                        112.9980468,
+                        113.43534469,
                         90.0
                     ],
                     "angle": 0.785,
@@ -111,15 +111,15 @@
             ]
         },
         {
-            "name": "start-mirror",
+            "name": "bottom_right_mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        207.0019532,
+                        206.56465531,
                         90.0
                     ],
-                    "angle": 0.785,
+                    "angle": 1.085,
                     "rail-length": 25,
                     "rail-angle": 0
                 },
@@ -139,13 +139,13 @@
                     "type": "sprite",
                     "position": [
                         273.5,
-                        5.4079122012
+                        -5.4079122012
                     ],
                     "scale": [
                         100,
                         10
                     ],
-                    "angle": 1.7816253719,
+                    "angle": 1.8286774465,
                     "texture": "beam2"
                 },
                 {
@@ -184,7 +184,7 @@
                         100,
                         10
                     ],
-                    "angle": 1.7816253719,
+                    "angle": 1.8286774465,
                     "texture": "beam2"
                 },
                 {
@@ -216,14 +216,14 @@
                 {
                     "type": "sprite",
                     "position": [
-                        229.4072934014,
-                        209.0
+                        224.5072934014,
+                        207.7
                     ],
                     "scale": [
                         100,
                         10
                     ],
-                    "angle": 1.7816253719,
+                    "angle": 1.8286774465,
                     "texture": "beam2"
                 },
                 {
@@ -255,7 +255,7 @@
                 {
                     "type": "mirror",
                     "position": [
-                        109.586914,
+                        108.917,
                         40.0
                     ],
                     "angle": 0.785,
@@ -277,11 +277,12 @@
                 {
                     "type": "mirror",
                     "position": [
-                        210.413086,
+                        211.083,
                         40.0
                     ],
-                    "angle": 0.785,
-                    "mirror-type": "rotate"
+                    "angle": 0.685,
+                    "rail-length": 25,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
