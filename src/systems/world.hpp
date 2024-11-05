@@ -54,7 +54,7 @@ class WorldSystem {
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
 
     // Handle different collision cases
-    void handle_reflection(Entity& reflective, Entity& reflected, int side);
+    void handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap);
     void handle_non_reflection(Entity& collider, Entity& other);
     void handle_turtle_collisions(int i);
 

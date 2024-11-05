@@ -64,6 +64,8 @@ const int window_height_px = 720;
 static int native_width = 320;
 static int native_height = 180;
 
+static bool debug = false;
+
 static int LIGHT_TIMER_MS = 5000;
 
 #ifndef M_PI

@@ -91,7 +91,7 @@ std::vector<Entity> InputManager::get_entities_at_mouse_pos() {
     Motion& mouse_motion = registry.motions.get(mouse);
     mouse_motion.position = screenToWorld(mouse_position);
     for (int i = 0; i < registry.interactables.size(); i++) {
-        if (Collisions::collides(mouse, registry.interactables.entities[i], true))
+        if (Collisions::overlap(mouse, registry.interactables.entities[i], true).x == 1)
             entities.push_back(registry.interactables.entities[i]);
     }
     return entities;
