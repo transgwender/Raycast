@@ -135,9 +135,9 @@ vec2 Collisions::overlap(const Entity& e1, const Entity& e2, bool user_interacti
                 // move radial object back that amount along its velocity vector
                 vec2 overlap = {collider2.width/2.f + radius1/2.f - first_quadrant_circle.x,
                     collider2.height/2.f + radius1/2.f - first_quadrant_circle.y};
-                LOG_INFO("Overlap: ({}, {})\n", overlap.x, overlap.y);
+                // LOG_INFO("Overlap: ({}, {})\n", overlap.x, overlap.y);
                 float overlap_magnitude = min(overlap.x, overlap.y);
-                LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
+                // LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
                 if (false_rotated_circle.x < collider2.width && false_rotated_circle.x > -collider2.width) {
                     if (false_rotated_circle.y > collider2.height/2.f
                         || false_rotated_circle.y < -collider2.height/2.f) {
@@ -169,7 +169,7 @@ vec2 Collisions::overlap(const Entity& e1, const Entity& e2, bool user_interacti
                 vec2 overlap = {collider1.width/2.f + radius2/2.f - first_quadrant_circle.x,
                     collider1.height/2.f + radius2/2.f - first_quadrant_circle.y};
                 float overlap_magnitude = min(overlap.x, overlap.y) * 1.01;
-                LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
+                // LOG_INFO("Overlap: ({}, {}), magnitude: {}\n", overlap.x, overlap.y, overlap_magnitude);
                 if (false_rotated_circle.x < collider1.width && false_rotated_circle.x > -collider1.width) {
                     if (false_rotated_circle.y > collider1.height/2.f
                         || false_rotated_circle.y < -collider1.height/2.f) {
