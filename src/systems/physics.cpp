@@ -29,7 +29,6 @@ void PhysicsSystem::step(float elapsed_ms) {
 
     const float t = elapsed_ms / raycast::time::ONE_SECOND_IN_MS;
     auto& motion_registry = registry.motions;
-    ComponentContainer<Collideable>& collideable_registry = registry.collideables;
 
     for (uint i = 0; i < motion_registry.size(); i++) {
         Motion& motion = motion_registry.components[i];
@@ -41,23 +40,6 @@ void PhysicsSystem::step(float elapsed_ms) {
             && (dot(motion.velocity, motion.velocity) > 0
                 || motion.angle != registry.colliders.get(entity).angle)) {
             registry.colliders.get(entity).needs_update = true;
-        }
-    }
-
-    // check for collisions between entities that collide
-    for (uint i = 0; i < collideable_registry.components.size(); i++) {
-        Entity entity_i = collideable_registry.entities[i];
-        // start collision detection from next entity (to avoid self-, repeated-comparisons)
-        for (uint j = i + 1; j < collideable_registry.components.size(); j++) {
-            Entity entity_j = collideable_registry.entities[j];
-            // create a collisions event for each entity colliding with other
-            // (to ensure both orders exist for later collision handling)
-            int collision = Collisions::collides(entity_i, entity_j);
-            if (collision > 0) {
-                // LOG_INFO("Collision detected\n");
-                registry.collisions.emplace_with_duplicates(entity_i, entity_j).side = collision;
-                registry.collisions.emplace_with_duplicates(entity_j, entity_i).side = collision;
-            }
         }
     }
 
@@ -91,6 +73,26 @@ void PhysicsSystem::step(float elapsed_ms) {
             light_ray_motion.angle += delta_theta;
             light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);
             light_ray_motion.velocity = raycast::math::set_mag(light_ray_motion.velocity, PhysicsSystem::SpeedOfLight);
+        }
+    }
+}
+
+// check for collisions between entities that collide
+void PhysicsSystem::detect_collisions() {
+    ComponentContainer<Collideable>& collideable_registry = registry.collideables;
+    for (uint i = 0; i < collideable_registry.components.size(); i++) {
+        Entity entity_i = collideable_registry.entities[i];
+        // start collision detection from next entity (to avoid self-, repeated-comparisons)
+        for (uint j = i + 1; j < collideable_registry.components.size(); j++) {
+            Entity entity_j = collideable_registry.entities[j];
+            // create a collisions event for each entity colliding with other
+            // (to ensure both orders exist for later collision handling)
+            int collision = Collisions::collides(entity_i, entity_j);
+            if (collision > 0) {
+                // LOG_INFO("Collision detected\n");
+                registry.collisions.emplace_with_duplicates(entity_i, entity_j).side = collision;
+                registry.collisions.emplace_with_duplicates(entity_j, entity_i).side = collision;
+            }
         }
     }
 }

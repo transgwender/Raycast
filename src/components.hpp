@@ -316,5 +316,5 @@ struct Mesh {
 };
 
 struct LightUp {
-    float counter_ms = 5000;
+    float counter_ms = LIGHT_TIMER_MS;
 };

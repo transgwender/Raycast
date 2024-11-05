@@ -14,6 +14,7 @@ class PhysicsSystem {
     static const float SpeedOfLight;
 
     void step(float elapsed_ms);
+    void detect_collisions();
     PhysicsSystem() = default;
   private:
 
