@@ -57,11 +57,11 @@ void MenuSystem::generate_level_win_popup(int levelCurrent, int levelCount) {
         registry.menuItems.emplace(popup_background);
 
         Entity restart_button = Entity();
-        createChangeSceneButton(restart_button, vec2(xPos - 30, yPos), vec2(50, 50), "Restart", "button_square", "level" + std::to_string(levelCurrent));
+        createChangeSceneButton(restart_button, vec2(xPos - 30, yPos), vec2(50, 50), "Restart", "button_square", "level" + std::to_string(levelCurrent), {0, 0, 0});
         registry.menuItems.emplace(restart_button);
 
         Entity main_menu_button = Entity();
-        createChangeSceneButton(main_menu_button, vec2(xPos + 30, yPos), vec2(50, 50), "Main Menu", "button_square", "mainmenu");
+        createChangeSceneButton(main_menu_button, vec2(xPos + 30, yPos), vec2(50, 50), "Main Menu", "button_square", "mainmenu", {0, 0, 0});
         registry.menuItems.emplace(main_menu_button);
     }
 
