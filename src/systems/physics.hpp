@@ -18,6 +18,6 @@ class PhysicsSystem {
     PhysicsSystem() = default;
   private:
 
-    bool shouldStep();
+    static bool shouldStep();
 };
 

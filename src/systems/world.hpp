@@ -89,9 +89,8 @@ class WorldSystem {
     bool frame_rate_enabled = true;
 
     bool shouldStep();
-    bool isInLevel();
+    bool shouldAllowInput();
+    static bool isInLevel();
 
     void updateDash();
-
-    bool shouldAllowInput();
 };

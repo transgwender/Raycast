@@ -83,6 +83,7 @@ GLFWwindow* WorldSystem::create_window() {
         glfwGetCursorPos(wnd, &xpos, &ypos);
         ((WorldSystem*)glfwGetWindowUserPointer(wnd))->on_mouse_button(_0, _1, _2, xpos, ypos);
     };
+
     glfwSetKeyCallback(window, key_redirect);
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
@@ -109,6 +110,7 @@ bool WorldSystem::shouldStep() {
     if (menus.is_menu_open()) {
         return !registry.menus.components.front().shouldBlockSteps;
     }
+
     return true;
 }
 
@@ -240,6 +242,8 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+
+        // TODO: handle portal collision
 
         if (registry.turtles.has(collisionsRegistry.entities[i]) && !registry.lightRays.has(collisionsRegistry.components[i].other)) {
             handle_turtle_collisions(i);
