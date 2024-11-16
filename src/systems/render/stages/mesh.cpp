@@ -123,9 +123,21 @@ void MeshStage::drawMesh(const Entity& entity) {
 
     // Checking to see if we should light up this mesh 
     GLint light_up_uloc = glGetUniformLocation(shader, "light_up");
+    GLint is_minisun_uloc = glGetUniformLocation(shader, "is_minisun");
+    GLint light_level_uloc = glGetUniformLocation(shader, "light_level");
     assert(light_up_uloc >= 0);
-
-    glUniform1i(light_up_uloc, registry.litEntities.has(entity));
+    assert(is_minisun_uloc >= 0);
+    assert(light_level_uloc >= 0);
+    if (registry.minisuns.has(entity)) {
+        glUniform1i(light_up_uloc, 0);
+        glUniform1i(is_minisun_uloc, 1);
+        glUniform1f(light_level_uloc, registry.minisuns.get(entity).light_level_percentage);
+    } else {
+        glUniform1i(light_up_uloc, registry.litEntities.has(entity));
+        glUniform1i(is_minisun_uloc, 0);
+        glUniform1f(light_level_uloc, 0.0f);
+    }
+    
 
     // Drawing of num_indices/3 triangles specified in the index buffer
     GLint size = 0;
