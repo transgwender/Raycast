@@ -93,9 +93,11 @@ GLFWwindow* WorldSystem::create_window() {
     return window;
 }
 
-void WorldSystem::init() {
+void WorldSystem::init(PersistenceSystem *persistence_ptr) {
     scenes.init(scene_state_entity);
     sounds.load_all_sounds();
+    this->persistence = persistence_ptr;
+    menus.init(persistence_ptr);
 
     // Set all states to default
     restart_game();
@@ -297,6 +299,8 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             Level& level = registry.levels.components.front();
             if (registry.menus.components.empty()) {
                 menus.generate_level_win_popup(level.id, (int)scenes.level_count());
+                persistence->set_beaten(level.id);
+                persistence->set_accessible(level.id + 1);
                 sounds.play_sound("win.wav");
             }
             //            registry.remove_all_components_of(other);
@@ -579,6 +583,17 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 sounds.play_sound("button-click.wav");
                 menus.try_close_menu();
                 return;
+            }
+            if (registry.deleteDatas.has(entity)) {
+                auto &d = registry.deleteDatas.get(entity);
+                auto &text = registry.texts.get(entity);
+                if (d.isDoubleChecking) {
+                    persistence->clear_data();
+                    text.text = "Deleted";
+                } else {
+                    d.isDoubleChecking = true;
+                    text.text = "Are you sure?";
+                }
             }
         }
     }

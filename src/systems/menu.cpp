@@ -1,11 +1,12 @@
 #include "menu.hpp"
 #include "ecs.hpp"
+#include "mesh_utils.hpp"
 #include "registry.hpp"
 #include "scenes.hpp"
 #include "world_init.hpp"
 
 void MenuSystem::generate_level_select_buttons(int levelCount) {
-    int columnMax = 6;
+    int columnMax = 9;
     int left = native_width/2 - 3*40;
     int top = 40;
 
@@ -17,6 +18,15 @@ void MenuSystem::generate_level_select_buttons(int levelCount) {
         int yPos = top + 30*((i-1)/columnMax);
         createChangeSceneButton(level, vec2(xPos, yPos), vec2(20, 20), label, "button_square", tag, {0, 0, 0});
         registry.menuItems.emplace(level);
+        if (!persistence->get_is_accessible(i)) {
+            registry.interactables.remove(level);
+        }
+        if (persistence->get_is_locked(i)) {
+            createSprite(Entity(), vec2(xPos, yPos + 10), vec2(30, 30), 0, "lock");
+        }
+        if (persistence->get_is_beaten(i)) {
+            createSprite(Entity(), vec2(xPos, yPos), vec2(30, 30), 0, "star");
+        }
     }
 
     Menu& menu = registry.menus.emplace(Entity()); // Menu Active
@@ -118,4 +128,8 @@ bool MenuSystem::try_close_menu() {
         }
     }
     return false;
+}
+
+void MenuSystem::init(PersistenceSystem *persistence_ptr) {
+    this->persistence = persistence_ptr;
 }

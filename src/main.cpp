@@ -14,7 +14,7 @@ using Clock = std::chrono::high_resolution_clock;
 
 #define FIXED_UPDATE_MS 2
 
-bool window_focused;
+bool window_focused = true;
 
 int main() {
     // Global systems
@@ -23,6 +23,7 @@ int main() {
     PhysicsSystem physics;
     AISystem ai;
     ParticleSystem particles;
+    PersistenceSystem persistence;
 
     // Initialize default logger
     raycast::logging::LogManager log_manager;
@@ -52,7 +53,8 @@ int main() {
 
     // Initialize the main systems
     renderer.init(window);
-    world.init();
+    persistence.init();
+    world.init(&persistence);
     particles.init();
 
     float remainder = 0;
@@ -84,6 +86,8 @@ int main() {
             renderer.draw(elapsed_ms);
         }
     }
+
+    persistence.try_write_save();
 
     return EXIT_SUCCESS;
 }

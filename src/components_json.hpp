@@ -337,3 +337,12 @@ inline void from_json(const json& j, Gravity& c) {
     (void)c;
 }
 
+inline void to_json(json& j, const DeleteData& c) {
+    (void)c;
+    j = json{{"type", "delete_data"}};
+}
+
+inline void from_json(const json& j, DeleteData& c) {
+    (void)j;
+    (void)c;
+}

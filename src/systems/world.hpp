@@ -10,6 +10,7 @@
 #include "registry.hpp"
 
 // Systems
+#include "persistence.hpp"
 #include "background.hpp"
 #include "menu.hpp"
 #include "physics.hpp"
@@ -29,7 +30,7 @@ class WorldSystem {
     GLFWwindow* create_window();
 
     // Entrypoint to the game
-    void init();
+    void init(PersistenceSystem *persistence_ptr);
 
     // Releases all associated resources
     ~WorldSystem();
@@ -94,4 +95,6 @@ class WorldSystem {
     static bool isInLevel();
 
     void updateDash();
+  
+    PersistenceSystem *persistence;
 };

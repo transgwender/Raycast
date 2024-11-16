@@ -110,6 +110,10 @@ struct ChangeScene {
 
 struct ResumeGame {};
 
+struct DeleteData {
+    bool isDoubleChecking = false;
+};
+
 struct Gravity {};
 
 /**

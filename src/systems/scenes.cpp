@@ -128,6 +128,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         createLever(entity, data["position"], data["state"], data["effect"], data["activeLever"]);
                     } else if (type == "mesh") {
                         initMesh(entity, data["path"], data["position"], data["angle"], data["scale"]);
+                    } else if (type == "delete_data") {
+                        PARSE_COMPONENT(DeleteData, deleteDatas);
                     } else if (type == "background") {
                         std::string background_tag;
                         data["id"].get_to(background_tag);
