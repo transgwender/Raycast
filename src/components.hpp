@@ -83,7 +83,13 @@ struct Interactable {};
 struct MiniSun {
     bool lit = false;
     float lit_duration = 0;
+    float light_level_percentage = 0;
 };
+
+struct LightUp {
+    float counter_ms = LIGHT_TIMER_MS;
+};
+
 
 // Structure to store collision information
 struct Collision {
@@ -180,15 +186,12 @@ struct PointLight {
     float constant = 1.0;
 };
 
-/**
- * Component for displaying text on screen.
- */
+
+
 struct Text {
     std::string text;
-    /** Position of the text. The position is based in the bottom left corner of the first character of the text. */
     vec2 position;
     unsigned int size;
-    /** Color channel values are in range [0, 255] */
     vec3 color = vec3(255, 255, 255);
     bool centered;
 };
@@ -333,6 +336,3 @@ struct Mesh {
     std::vector<uint16_t> vertex_indices;
 };
 
-struct LightUp {
-    float counter_ms = LIGHT_TIMER_MS;
-};

@@ -163,10 +163,14 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                 if (light.counter_ms > 0) {
                     light.counter_ms -= elapsed_ms_since_last_update;
                 } else {
-                    registry.litEntities.remove(minisunEntity);
-                    auto &minisun = registry.minisuns.get(minisunEntity);
-                    minisun.lit = false;
-                }
+                    minisun.light_level_percentage = clamp(minisun.light_level_percentage - 0.01f, 0.0f, 1.0f);
+                    if (minisun.light_level_percentage <= 0.0f) {
+                        registry.litEntities.remove(minisunEntity);
+                        minisun.lit = false;
+                    } else {
+                        light.counter_ms = LIGHT_TIMER_MS;
+                    }
+                } 
             }
         }
 
@@ -275,10 +279,13 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         auto &minisun = registry.minisuns.get(minisun_entity);
         minisun.lit = true;
         LightUp l;
+        minisun.light_level_percentage = 0.2f;
         registry.litEntities.insert(minisun_entity, l);
     } else {
         LightUp& minisun_light = registry.litEntities.get(minisun_entity);
         minisun_light.counter_ms = LIGHT_TIMER_MS;
+        auto& minisun = registry.minisuns.get(minisun_entity);
+        minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.2f, 0.0f, 1.0f);
 
     }
 }

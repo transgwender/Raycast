@@ -10,7 +10,7 @@
 
 // NOTE: of course these values deviate from the "real world" values and have been scaled to make sense in our little light maze 
 // world -- for our purposes they lead to realistic behaviour
-const float PhysicsSystem::GravitationalConstant = 8;
+const float PhysicsSystem::GravitationalConstant = 4;
 const float PhysicsSystem::SpeedOfLight = 100;
 
 bool PhysicsSystem::shouldStep() {

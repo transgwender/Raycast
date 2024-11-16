@@ -8,6 +8,8 @@ in vec2 vpos; // Distance from local origin
 uniform sampler2D sampler0;
 uniform vec3 fcolor;
 uniform int light_up;
+uniform bool is_minisun;
+uniform float light_level;
 
 // Output color
 layout(location = 0) out vec4 color;
@@ -20,4 +22,11 @@ void main() {
 		// 0.8 is just to make it not too strong
 		color.xyz += vec3(1.0, 1.0, 0.0);
 	}
+
+	if (is_minisun)
+	{
+		// 0.8 is just to make it not too strong
+		color.xyz += vec3(light_level * 1.0, light_level * 1.0, 0.0);
+	}
+
 }
