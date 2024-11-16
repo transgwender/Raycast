@@ -13,16 +13,8 @@
             "name": "background",
             "data": [
                 {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        90.0
-                    ],
-                    "scale": [
-                        320,
-                        180
-                    ],
-                    "texture": "background_cyber_3"
+                    "type": "background",
+                    "id": "cyber_3"
                 }
             ]
         },

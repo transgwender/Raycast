@@ -1,6 +1,7 @@
 #pragma once
 
 // internal
+#include "background.hpp"
 #include "common.hpp"
 #include "render.hpp"
 #include <map>
@@ -17,6 +18,8 @@ class SceneSystem {
     }
 
   private:
+    BackgroundSystem background;
+
     std::map<std::string, std::string> levels {
         // dynamically allocated
     };

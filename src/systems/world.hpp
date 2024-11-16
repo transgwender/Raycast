@@ -10,10 +10,11 @@
 #include "registry.hpp"
 
 // Systems
-#include "physics.hpp"
-#include "sounds.hpp"
-#include "scenes.hpp"
+#include "background.hpp"
 #include "menu.hpp"
+#include "physics.hpp"
+#include "scenes.hpp"
+#include "sounds.hpp"
 #include "utils/input_manager.hpp"
 
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;

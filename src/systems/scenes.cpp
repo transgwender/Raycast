@@ -39,6 +39,8 @@ void SceneSystem::init(Entity &scene_state_entity) {
         auto filename = entry.path().filename().replace_extension();
         scene_paths.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
     }
+
+    background.init();
 }
 
 // Attempts to parse a specified scene. Returns true if successful. False if
@@ -126,6 +128,10 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         createLever(entity, data["position"], data["state"], data["effect"], data["activeLever"]);
                     } else if (type == "mesh") {
                         initMesh(entity, data["path"], data["position"], data["angle"], data["scale"]);
+                    } else if (type == "background") {
+                        std::string background_tag;
+                        data["id"].get_to(background_tag);
+                        background.try_parse_background(background_tag);
                     }
                 }
             }

@@ -57,6 +57,9 @@ inline std::string sfx_dir_path() {
 inline std::string font_path(const std::string& name) {
     return data_path() + "/fonts/" + name;
 }
+inline std::string background_path(const std::string& name) {
+    return data_path() + "/backgrounds/" + name;
+}
 
 const int window_width_px = 1280;
 const int window_height_px = 720;
