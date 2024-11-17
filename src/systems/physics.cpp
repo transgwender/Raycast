@@ -12,7 +12,7 @@
 // world -- for our purposes they lead to realistic behaviour
 const float PhysicsSystem::GravitationalConstant = 8;
 const float PhysicsSystem::SpeedOfLight = 100;
-const float PhysicsSystem::MaxOrbitDistance = 20;
+const float PhysicsSystem::MaxOrbitDistance = 30;
 const float PhysicsSystem::MaxOrbitAngle = M_PI_2 / 2; // RADIANS
 const float PhysicsSystem::MaxAngleToTravel = M_PI;
 
