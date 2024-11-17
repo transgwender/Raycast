@@ -54,6 +54,7 @@ class WorldSystem {
     void on_mouse_move(vec2 pos);
     std::vector<Entity> clicked_entities(double xpos, double ypos);
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
+    void on_resize(int width, int height);
 
     // Handle different collision cases
     void handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap);

@@ -4,22 +4,24 @@
 #include "shader.hpp"
 #include "util.hpp"
 
+/**
+* Render all sprites in the world excluding text.
+*/
 class SpriteStage {
     /**
      * Intermediate frame texture. All drawing for this stage will be output to this texture
      */
-    GLuint frame_texture = 0;
+    TextureHandle world_texture = 0;
+    TextureHandle ui_texture = 0;
     GLuint frame_buffer = 0;
+
+    ShaderHandle shader = 0;
 
     GLuint vbo = 0;
     GLuint ibo = 0;
     GLuint vao = 0;
 
-    ShaderHandle shader = 0;
-
     mat3 projection_matrix = createProjectionMatrix();
-
-    float animation_speed = 240.f;
 
     /**
      * Vertex data for a textured quad. Each vertex contains position and UV coordinates
@@ -39,11 +41,9 @@ class SpriteStage {
 
     void prepareDraw() const;
 
-    void activateShader(const Entity& entity, const std::string& texture) const;
+    void activateShader(const Entity& entity, const Motion& motion, const Material& material) const;
 
-    void drawSprite(const Entity& entity, float elapsed_ms);
-
-    void animateLever(const Entity& entity, SpriteSheet& ss);
+    void drawSprite(const Entity& entity, const Material& material) const;
 
   public:
     void init();
@@ -51,7 +51,9 @@ class SpriteStage {
     /**
      * Draw all renderable sprites onto the screen.
      */
-    void draw(float elapsed_ms);
+    void draw() const;
+
+    void updateShaders();
 
     ~SpriteStage();
 };

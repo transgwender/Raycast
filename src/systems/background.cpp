@@ -46,7 +46,7 @@ bool BackgroundSystem::try_parse_background(std::string& background_tag) {
                 data["scale"][0].get_to(scale.x);
                 data["scale"][1].get_to(scale.y);
                 data["texture"].get_to(texture);
-                createSprite(Entity(), position, scale, 0, texture);
+                createSprite(Entity(), position, scale, 0, texture, BACKGROUND);
             }
             // catches all errors deriving from the standard exception class, this is better than a catch(...) statement since it gives
             // us information about the error via e.what()

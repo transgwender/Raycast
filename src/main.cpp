@@ -1,4 +1,5 @@
 #define GL3W_IMPLEMENTATION
+#include "animation.hpp"
 #include "logging/log.hpp"
 #include "logging/log_manager.hpp"
 #include "particles.hpp"
@@ -6,6 +7,7 @@
 #include "systems/physics.hpp"
 #include "systems/render/render.hpp"
 #include "systems/world.hpp"
+#include "utils.h"
 #include <chrono>
 #include <gl3w.h>
 #include <iostream>
@@ -22,6 +24,7 @@ int main() {
     RenderSystem renderer;
     PhysicsSystem physics;
     AISystem ai;
+    AnimationSystem animation;
     ParticleSystem particles;
     PersistenceSystem persistence;
 
@@ -81,6 +84,7 @@ int main() {
                 world.handle_collisions();
             }
             ai.step(elapsed_ms);
+            animation.step(elapsed_ms);
             remainder = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
             particles.step(elapsed_ms);
             renderer.draw(elapsed_ms);

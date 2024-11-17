@@ -20,6 +20,7 @@ uniform vec2 cell_size;
 void main() {
 	tex_coord = (cell_size * in_texcoord) + vec2(horizontal_offset, vertical_offset);
 	frag_pos = transform * vec3(in_position.xy, 1.0);
+	frag_pos.z = in_position.z;
 	vec3 pos = projection * transform * vec3(in_position.xy, 1.0);
 	gl_Position = vec4(pos.xy, in_position.z, 1.0);
 }

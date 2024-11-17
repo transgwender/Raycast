@@ -21,14 +21,14 @@ void CompositorStage::createVertexAndIndexBuffers() {
 void CompositorStage::init(GLFWwindow* window_arg) {
     window = window_arg;
     createVertexAndIndexBuffers();
-    compositor_shader = shader_manager.get("compositor");
 
     // get a reference to the frame textures from the other pipeline stages.
-    sprite_stage_texture = texture_manager.get("$sprite_stage");
-    mesh_stage_texture = texture_manager.get("$mesh_stage");
-    menu_stage_texture = texture_manager.get("$menu_stage");
-    particle_stage_texture = texture_manager.get("$particle_stage");
-    text_stage_texture = texture_manager.get("$text_stage");
+    world_texture = texture_manager.get("$world_texture");
+    ui_texture = texture_manager.get("$ui_texture");
+    world_text_texture = texture_manager.get("$world_text");
+    ui_text_texture = texture_manager.get("$ui_text");
+
+    updateShaders();
 
     // create vao
     glGenVertexArrays(1, &vao);
@@ -36,23 +36,21 @@ void CompositorStage::init(GLFWwindow* window_arg) {
 
 void CompositorStage::setupTextures() const {
     static const char* texture_names[] = {
-        "sprite_stage_tex",
-        "mesh_stage_tex",
-        "menu_stage_tex",
-        "particle_stage_tex",
-        "text_stage_tex",
+        "world",
+        "ui",
+        "world_text",
+        "ui_text",
     };
 
     static GLuint textures[] = {
-        sprite_stage_texture,
-        mesh_stage_texture,
-        menu_stage_texture,
-        particle_stage_texture,
-        text_stage_texture,
+        world_texture,
+        ui_texture,
+        world_text_texture,
+        ui_text_texture
     };
 
     for (int i = 0; i < std::size(texture_names); i++) {
-        const auto location = glGetUniformLocation(compositor_shader, texture_names[i]);
+        const auto location = glGetUniformLocation(shader, texture_names[i]);
         glUniform1i(location, i);
 
         glActiveTexture(GL_TEXTURE0 + i);
@@ -61,14 +59,14 @@ void CompositorStage::setupTextures() const {
 }
 
 void CompositorStage::draw() const {
-    glUseProgram(compositor_shader);
+    glUseProgram(shader);
 
     int w, h;
     glfwGetFramebufferSize(window, &w, &h);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, w, h);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glDepthRange(0, 10);
-    glClearColor(1.f, 0, 0, 1.0);
+    glClearColor(0.f, 0, 0, 0.0);
     glClearDepth(1.f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     // Enabling alpha channel for textures
@@ -81,10 +79,10 @@ void CompositorStage::draw() const {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
     // Set clock
-    setUniformFloat(compositor_shader, "time", static_cast<float>(glfwGetTime() * 10.0f));
+    setUniformFloat(shader, "time", static_cast<float>(glfwGetTime() * 10.0f));
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)
-    GLint position_location = glGetAttribLocation(compositor_shader, "in_position");
+    GLint position_location = glGetAttribLocation(shader, "in_position");
     glEnableVertexAttribArray(position_location);
     glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(vec3), (void*)nullptr);
 
@@ -97,6 +95,10 @@ void CompositorStage::draw() const {
 
     glBindVertexArray(0);
     glUseProgram(0);
+}
+
+void CompositorStage::updateShaders() {
+    shader = shader_manager.get("compositor");
 }
 
 CompositorStage::~CompositorStage() {

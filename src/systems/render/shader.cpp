@@ -101,10 +101,25 @@ ShaderHandle ShaderManager::add(const std::string& name) {
     const std::string vs_path = shader_path(name + ".vs.glsl");
     const std::string fs_path = shader_path(name + ".fs.glsl");
     GLuint program;
-    if (!loadShader(vs_path, fs_path, program)) {
-        std::cout << "Failed to load shader at paths " << vs_path << " and " << fs_path << std::endl;
-        assert(false);
+
+    bool shader_compile_success = loadShader(vs_path, fs_path, program);
+    if (!shader_compile_success) {
+        LOG_ERROR("Failed to load shader at paths {} and {} ", vs_path, fs_path);
+        if (shaders.find(name) == shaders.end()) {
+            // the shader compilation failed, and there's no existing
+            // valid version of this shader program. abort.
+            LOG_ERROR("Fatal: shader compilation failed.");
+            assert(false);
+        }
+        LOG_WARN("Shader compilation failed, using existing shader program for {}", name);
+        return shaders[name];
     }
+
+    if (shaders.find(name) != shaders.end()) {
+        LOG_INFO("Updating shader '{}'", name);
+        glDeleteProgram(shaders[name]);
+    }
+
     shaders[name] = program;
     return program;
 }
@@ -119,13 +134,38 @@ ShaderHandle ShaderManager::get(const std::string& name) const {
     return shaders.at(name);
 }
 
+bool ShaderManager::update() {
+    bool shaders_updated = false;
+    const auto shaders_folder = std::filesystem::directory_entry(shader_path(""));
+    if (last_shaders_write_time != shaders_folder.last_write_time()) {
+        last_shaders_write_time = shaders_folder.last_write_time();
+        shaders_updated = true;
+        for (const auto& entry : std::filesystem::directory_iterator(shader_path(""))) {
+            const auto& path = entry.path();
+            const std::string path_string = path.stem().string();
+            const std::string shader_name = path_string.substr(0, path_string.find_first_of('.'));
+
+            if (entry.last_write_time() > write_times[path_string]) {
+                add(shader_name);
+                write_times[path_string] = entry.last_write_time();
+            }
+        }
+    }
+    return shaders_updated;
+}
+
 void ShaderManager::init() {
     if (initialized)
         return;
+
+    const auto shaders_folder = std::filesystem::directory_entry(shader_path(""));
+    last_shaders_write_time = shaders_folder.last_write_time();
+
     for (const auto& entry : std::filesystem::directory_iterator(shader_path(""))) {
         const auto& path = entry.path();
         const std::string path_string = path.stem().string();
         const std::string shader_name = path_string.substr(0, path_string.find_first_of('.'));
+        write_times[path_string] = entry.last_write_time();
         if (shaders.find(shader_name) == shaders.end()) {
             add(shader_name);
         }

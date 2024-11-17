@@ -26,9 +26,8 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     texture_manager.init();
     shader_manager.init();
 
-    sprite_stage.init();
+    world_stage.init();
     mesh_stage.init();
-    menu_stage.init();
     particle_stage.init();
     text_stage.init();
     composite_stage.init(window);
@@ -36,15 +35,40 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     checkGlErrors();
 }
 
+void RenderSystem::updateShaders() {
+    world_stage.updateShaders();
+    mesh_stage.updateShaders();
+    particle_stage.updateShaders();
+    text_stage.updateShaders();
+    composite_stage.updateShaders();
+}
+
+void RenderSystem::updateTextures() {
+    for (auto& material : registry.materials.components) {
+        material.texture.albedo = texture_manager.get(material.texture.name);
+        material.texture.normal = texture_manager.getNormal(material.texture.name);
+    }
+}
+
 /**
  * Render our game world
  * http://www.opengl-tutorial.org/intermediate-tutorials/tutorial-14-render-to-texture/
  */
 void RenderSystem::draw(float elapsed_ms) {
-    sprite_stage.draw(elapsed_ms);
+    hot_reload_time += elapsed_ms;
+    if (hot_reload_time > hot_reload_interval) {
+        hot_reload_time = 0.0;
+        if (texture_manager.update()) {
+            updateTextures();
+        }
+        if (shader_manager.update()) {
+            updateShaders();
+        }
+    }
+
+    world_stage.draw();
     mesh_stage.draw();
     particle_stage.draw();
-    menu_stage.draw();
     text_stage.draw();
     composite_stage.draw();
 

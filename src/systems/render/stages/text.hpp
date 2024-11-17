@@ -1,6 +1,7 @@
 #pragma once
 #include "../shader.hpp"
 #include "common.hpp"
+#include "components.hpp"
 
 struct Character {
     unsigned int texture;
@@ -21,14 +22,15 @@ class TextStage {
     GLuint vbo = 0;
 
     GLuint frame_buffer = 0;
-    GLuint frame_texture = 0;
+    TextureHandle world_text_texture = 0;
+    TextureHandle ui_text_texture = 0;
+
+    ShaderHandle shader = 0;
 
     // render text at this specific resolution.
     // this is much higher than 320x180, so the text will look sharper
     const int frame_width = 1280;
     const int frame_height = 720;
-
-    ShaderHandle text_shader = 0;
 
     mat4 projection_matrix = {};
 
@@ -53,7 +55,7 @@ class TextStage {
 
     void prepareDraw();
 
-    void renderText(const std::string& text, float x, float y, unsigned int size, vec3 color, bool centered);
+    void renderText(const Text& text, float x, float y);
 
   public:
     /**
@@ -64,6 +66,8 @@ class TextStage {
     void init();
 
     void draw();
+
+    void updateShaders();
 
     ~TextStage();
 };

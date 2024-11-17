@@ -2,16 +2,17 @@
 
 #include "common.hpp"
 #include "components.hpp"
+#include "shader.hpp"
 #include "util.hpp"
 
 class ParticleStage {
     GLuint frame_buffer = 0;
-    GLuint frame_texture = 0;
+    TextureHandle frame_texture = 0;
+
+    ShaderHandle shader = 0;
 
     GLuint vbo = 0;
     GLuint vao = 0;
-
-    GLuint shader = 0;
 
     mat3 projection_matrix = createProjectionMatrix();
 
@@ -34,7 +35,9 @@ class ParticleStage {
   public:
     void init();
 
-    void draw();
+    void draw() const;
+
+    void updateShaders();
 
     ~ParticleStage();
 };

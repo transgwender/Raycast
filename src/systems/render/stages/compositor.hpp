@@ -1,6 +1,7 @@
 #pragma once
 #include "common.hpp"
 #include "shader.hpp"
+#include "texture.hpp"
 
 /**
  * Composites all other frames into one final frame.
@@ -19,13 +20,12 @@ class CompositorStage {
     GLuint ibo = 0;
     GLuint vao = 0;
 
-    GLuint sprite_stage_texture = 0;
-    GLuint mesh_stage_texture = 0;
-    GLuint menu_stage_texture = 0;
-    GLuint particle_stage_texture = 0;
-    GLuint text_stage_texture = 0;
+    TextureHandle world_texture = 0;
+    TextureHandle ui_texture = 0;
+    TextureHandle world_text_texture = 0;
+    TextureHandle ui_text_texture = 0;
 
-    ShaderHandle compositor_shader = 0;
+    ShaderHandle shader = 0;
 
     GLFWwindow* window = nullptr;
 
@@ -43,6 +43,8 @@ class CompositorStage {
      * Composite all frames from this pipeline iteration into a single frame and apply scaling.
      */
     void draw() const;
+
+    void updateShaders();
 
     ~CompositorStage();
 };

@@ -1,6 +1,9 @@
 #include "common.hpp"
 #include <iostream>
 
+int window_width_px = 1280;
+int window_height_px = 720;
+
 // Note, we could also use the functions from GLM but we write the
 // transformations here to show the uderlying math
 void Transform::scale(vec2 scale) {

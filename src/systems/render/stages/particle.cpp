@@ -20,12 +20,7 @@ void ParticleStage::init() {
     // create a new vao
     glGenVertexArrays(1, &vao);
 
-    // create a new screen texture and bind it to our new framebuffer
-    glGenTextures(1, &frame_texture);
-    glBindTexture(GL_TEXTURE_2D, frame_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    frame_texture = texture_manager.get("$world_texture");
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
 
     // go back to the default framebuffer
@@ -33,21 +28,18 @@ void ParticleStage::init() {
 
     checkGlErrors();
 
-    shader = shader_manager.get("particle");
-
     createVertexAndIndexBuffers();
 
     glBindVertexArray(vao);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, nullptr);
 
+    updateShaders();
+
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     checkGlErrors();
-
-    // add this stage's frame texture to the texture manager
-    texture_manager.add("$particle_stage", frame_texture);
 }
 
 /**
@@ -59,10 +51,6 @@ void ParticleStage::prepareDraw() const {
     glUseProgram(shader);
     setUniformFloatMat3(shader, "projection", projection_matrix);
     glViewport(0, 0, native_width, native_height);
-    glDepthRange(0.00001, 10);
-    glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 0.0);
-    glClearDepth(10.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
@@ -80,7 +68,7 @@ void ParticleStage::activateShader(const Particle& particle) const {
     setUniformFloatVec4(shader, "texture_color", particle.color / 255.0f);
 }
 
-void ParticleStage::draw() {
+void ParticleStage::draw() const {
     prepareDraw();
 
     glBindVertexArray(vao);
@@ -98,6 +86,10 @@ void ParticleStage::draw() {
 
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     }
+}
+
+void ParticleStage::updateShaders() {
+    shader = shader_manager.get("particle");
 }
 
 ParticleStage::~ParticleStage() {

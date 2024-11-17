@@ -8,9 +8,8 @@ class MeshStage {
     /**
      * Intermediate frame texture. All drawing for this stage will be output to this texture
      */
-    GLuint frame_texture = 0;
+    TextureHandle frame_texture = 0;
     GLuint frame_buffer = 0;
-
     ShaderHandle shader = 0;
 
     mat3 projection_matrix = createProjectionMatrix();
@@ -21,7 +20,7 @@ class MeshStage {
 
     void addMesh(const Entity& entity);
 
-    void prepareDraw();
+    void prepareDraw() const;
 
     void activateMesh(const Entity& mesh_entity);
 
@@ -37,6 +36,8 @@ class MeshStage {
      * Draw all renderable sprites onto the screen.
      */
     void draw();
+
+    void updateShaders();
 
     ~MeshStage();
 };

@@ -88,8 +88,8 @@ struct MiniSun {
 // Structure to store collision information
 struct Collision {
     // NOTE: The first object is stored in the ECS container.entities.
-    Entity other; // The second object involved in the collision.
-    int side = 0; // side (1 for y, 2 for x) the collision occurrs on
+    Entity other;        // The second object involved in the collision.
+    int side = 0;        // side (1 for y, 2 for x) the collision occurrs on
     float overlap = 0.f; // amount the two objects overlap
     explicit Collision(Entity& other) { this->other = other; };
 };
@@ -161,9 +161,40 @@ struct Rotatable {
     float snap_angle = 0.2617993878;
 };
 
+enum MaterialType { TEXTURED };
+
+enum Layer {
+    BACKGROUND = 0,
+    FOREGROUND = 1,
+    PARTICLES = 2,
+    WORLD_TEXT = 3,
+    UI_BACKGROUND = 4,
+    UI_FOREGROUND = 5,
+    UI_TEXT = 6,
+};
+
+struct TextureMaterial {
+    /** base texture name */
+    std::string name;
+    TextureHandle albedo = 0;
+    TextureHandle normal = 0;
+    float h_offset = 0;
+    float v_offset = 0;
+    vec2 cell_size = {1, 1};
+};
+
+/**
+ * Material for a visible entity.
+ *
+ * Color channels are in range [0, 255].
+ *
+ * If the material type is TEXTURED, then the albedo and normal fields should be non-zero.
+ */
 struct Material {
-    std::string texture;
-    std::string shader = "textured";
+    MaterialType type = TEXTURED;
+    TextureMaterial texture {};
+    vec4 color = vec4(255, 255, 255, 255);
+    Layer layer = FOREGROUND;
 };
 
 /**
@@ -190,7 +221,8 @@ struct Text {
     unsigned int size;
     /** Color channel values are in range [0, 255] */
     vec3 color = vec3(255, 255, 255);
-    bool centered;
+    Layer layer = UI_TEXT;
+    bool centered = false;
 };
 
 /**
@@ -225,7 +257,8 @@ struct ParticleSpawner {
      * direction of the particles.
      */
     vec2 direction;
-    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0, 255]. */
+    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0,
+     * 255]. */
     vec4 color = vec4(255, 255, 255, 255);
     /** The angle range that the spawner sends particles in. */
     float spread;
@@ -233,7 +266,8 @@ struct ParticleSpawner {
     vec2 initial_scale;
     /** Controls how many units of scale the particle loses/gains per second. Zero for no change. */
     float scale_change;
-    /** Controls how much the alpha channel of the texture's color decreases per second. Keep in mind that alpha channel values are in range [0, 255]*/
+    /** Controls how much the alpha channel of the texture's color decreases per second. Keep in mind that alpha channel
+     * values are in range [0, 255]*/
     float alpha_fall_off = 0.0f;
     /** How long (in seconds) a spawned particle will live before being deleted. */
     float lifetime;
@@ -273,9 +307,10 @@ struct ButtonHelper {
 
 struct Blackhole {
     float mass;
-    // NOTE: You may notice that we do not need to use the schwarzchild radius at all in our blackhole calculations since it naturally
-    // shows up in the equations that are used. It is still included here to help with level design, in particular all light rays at a 
-    // distance of >= 2.6 schwartzchild radius from the blackhole will not get sucked in (assuming speed of light >= 50).
+    // NOTE: You may notice that we do not need to use the schwarzchild radius at all in our blackhole calculations
+    // since it naturally shows up in the equations that are used. It is still included here to help with level design,
+    // in particular all light rays at a distance of >= 2.6 schwartzchild radius from the blackhole will not get sucked
+    // in (assuming speed of light >= 50).
     float schwarzchild_radius;
 };
 
@@ -316,7 +351,6 @@ enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, L
 enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
 enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };
 
-
 struct Lever {
     LEVER_STATES state;
     LEVER_MOVEMENT_STATES movementState;
@@ -331,14 +365,13 @@ struct Lever {
     // affectedEntity -- which entity is affected by this lever?
 };
 
-
 struct ColoredVertex {
     vec3 position;
     vec3 color;
 };
 
 struct Mesh {
-    vec2 original_size = {1,1};
+    vec2 original_size = {1, 1};
     std::vector<ColoredVertex> vertices;
     std::vector<uint16_t> vertex_indices;
 };
