@@ -12,9 +12,15 @@ class PhysicsSystem {
     static const float GravitationalConstant;
     /// Speed of light for our 2D light-maze world
     static const float SpeedOfLight;
+    static const float MaxOrbitDistance;
+    static const float MaxOrbitAngle;
+    static const float MaxAngleToTravel;
 
     void step(float elapsed_ms);
+    void update_positions(float elapsed_ms);
+    void exert_blackhole_pull(float elapsed_ms);
     void detect_collisions();
+    bool should_light_orbit(Entity light, Entity blackhole);
     PhysicsSystem() = default;
   private:
 

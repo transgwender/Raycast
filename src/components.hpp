@@ -336,3 +336,9 @@ struct Mesh {
     std::vector<uint16_t> vertex_indices;
 };
 
+struct InOrbit {
+    float prevAngle;
+    float totalAngle = 0.0f;
+    Entity bodyOfMass;
+    Entity bodyOfMassJustOrbited;
+};
