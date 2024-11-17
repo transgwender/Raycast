@@ -59,6 +59,7 @@ class WorldSystem {
     void handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap);
     void handle_non_reflection(Entity& collider, Entity& other);
     void handle_turtle_collisions(int i);
+    void handle_portal_collisions(Entity& portal, Entity& light);
 
     // Restart level
     void restart_game();

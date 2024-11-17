@@ -251,6 +251,7 @@ Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STA
 
     return leverEntity;
 }
+
 void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, const float angle,
               const vec2& scale) {
     const auto filename = mesh_path(mesh_name);
@@ -273,3 +274,48 @@ void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& po
     collider.width = mesh_motion.scale.x;
     collider.user_interaction_bounds_type = BOUNDS_TYPE::MESH;
 }
+
+void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const float angle2) {
+    vec2 portal_size = vec2(13, 42);
+
+    const Entity portal_1 = createPortalEntity(pos1, angle1, portal_size, "portal_green");
+    const Entity portal_2 = createPortalEntity(pos2, angle2, portal_size, "portal_purple");
+
+    linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2);
+}
+
+Entity createPortalEntity(const vec2 position, const float angle, const vec2& size, const std::string& sprite_name) {
+    const Entity portal = Entity();
+
+    // Insert portal into registry and create sprite
+    createSprite(portal, position, {size.x, size.y}, angle, sprite_name);
+    registry.collideables.emplace(portal);
+
+    // Configure and add the collider
+    Collider collider{};
+    collider.angle = angle;
+    collider.width = size.x;
+    collider.height = size.y;
+    collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
+
+    registry.colliders.insert(portal, collider);
+
+    return portal;
+}
+
+void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, const float angle1, const vec2& pos2, const float angle2) {
+    Portal p1{};
+    Portal p2{};
+
+    p1.other_portal = portal_2;
+    p1.position = pos1;
+    p1.angle = angle1;
+
+    p2.other_portal = portal_1;
+    p2.position = pos2;
+    p2.angle = angle2;
+
+    registry.portals.insert(portal_1, p1);
+    registry.portals.insert(portal_2, p2);
+}
+

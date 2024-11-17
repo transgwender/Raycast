@@ -302,6 +302,16 @@ struct SpriteSheet {
     std::vector<unsigned int> animationFrames;
 };
 
+struct Portal {
+    Entity other_portal;
+    vec2 position;
+    float length = 45.f;
+
+    // Angle of the portal itself.
+    // The normal direction of projectile exits can be calculated using this angle.
+    float angle;
+};
+
 enum class LEVER_STATES { LEFT, MIDDLE_1, MIDDLE_2, MIDDLE_3, MIDDLE_4, RIGHT, LEVER_STATES_COUNT };
 enum class LEVER_MOVEMENT_STATES { STILL, PUSHED_RIGHT, PUSHED_LEFT, LEVER_MOVEMENT_STATES_COUNT };
 enum class LEVER_EFFECTS { NONE, REMOVE, LEVER_EFFECTS_COUNT };

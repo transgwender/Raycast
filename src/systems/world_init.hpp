@@ -20,10 +20,12 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
                          float cellHeight, const std::vector<unsigned int>& animationFrames,
                          const std::string& textureName = "turtle_sprite_sheet", float imageWidth = 0, float imageHeight = 0);
+Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect, LEVER_STATES activeLever);
+Entity createPortalEntity(vec2 position, float angle, const vec2& size, const std::string& sprite_name);
+void createPortals(vec2 pos1, float angle1, vec2 pos2, float angle2);
+void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, float angle1, const vec2& pos2, float angle2);
 
-Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STATES state, LEVER_EFFECTS effect,
-                   LEVER_STATES activeLever);
-void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, const float angle, const vec2& scale);
+void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, float angle, const vec2& scale);
 
 void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position);
 void initLinearRails(const Entity& entity, OnLinearRails);
