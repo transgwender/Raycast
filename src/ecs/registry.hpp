@@ -25,7 +25,7 @@ class ECSRegistry {
     ComponentContainer<Level> levels;
     ComponentContainer<OnLinearRails> entitiesOnLinearRails;
     ComponentContainer<Lerpable> lerpables;
-    ComponentContainer<Rotateable> rotateables;
+    ComponentContainer<Rotatable> rotatable;
     ComponentContainer<Highlightable> highlightables;
     ComponentContainer<Collider> colliders;
     ComponentContainer<Collideable> collideables;
@@ -65,7 +65,7 @@ class ECSRegistry {
         registry_list.push_back(&levels);
         registry_list.push_back(&entitiesOnLinearRails);
         registry_list.push_back(&lerpables);
-        registry_list.push_back(&rotateables);
+        registry_list.push_back(&rotatable);
         registry_list.push_back(&highlightables);
         registry_list.push_back(&colliders);
         registry_list.push_back(&collideables);

@@ -14,6 +14,10 @@ inline vec2 lerp(vec2 start, vec2 end, float t) {
     return vec2(lerp(start.x, end.x, t), lerp(start.y, end.y, t));
 }
 
+/// @brief returns the value snapped to the nearest whole number multiple of the interval
+/// @param value: the value to round
+/// @param interval: the number to round to
+float snap(float value, float interval);
 
 ///////////////////////////////////////////////////////////////////////////////////
 ///

@@ -155,7 +155,7 @@
                     "type": "interactable"
                 },
                 {
-                    "type": "rotateable"
+                    "type": "rotatable"
                 },
                 {
                     "type": "highlightable",

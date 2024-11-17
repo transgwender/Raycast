@@ -329,7 +329,7 @@
           ]
         },
         {
-          "type": "rotateable"
+          "type": "rotatable"
         },
         {
           "type": "highlightable",

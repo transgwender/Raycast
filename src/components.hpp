@@ -134,6 +134,7 @@ struct TexturedVertex {
 struct OnLinearRails {
     float angle = 0;
     float length = 100; // This is really the "half" length.
+    int snap_segments = 5; // the number of discrete positions the mirror snaps to in both directions
     vec2 firstEndpoint = {0, 0};
     vec2 secondEndpoint = {0, 0};
     vec2 direction = {0, 0};
@@ -147,8 +148,18 @@ struct Lerpable {
     float t_step = 0.01;
 };
 
+// Represents a value that rounds to the nearest integer multiple of
+// another value
+template <typename T>
+struct Snaps {
+    T& value;
+    T multiple;
+};
+
 // Represents entities that can be rotated by the user
-struct Rotateable {};
+struct Rotatable {
+    float snap_angle = 0.2617993878;
+};
 
 struct Material {
     std::string texture;
@@ -250,6 +261,8 @@ struct Mirror {
     std::string mirrorType;
     float railLength = 0;
     float railAngle = 0;
+    int snap_segments = 5;
+    float snap_angle = 0.2617993878;
 };
 
 struct ButtonHelper {

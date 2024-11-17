@@ -26,8 +26,11 @@ class InputManager {
         /// Interface to query and update state of mouse
         void update_mouse_button_state(int key, int action, int mod, vec2 pos);
         void update_mouse_position(vec2 pos);
+        void update_mouse_to_entity_displacement(vec2 pos);
         bool is_mouse_button_pressed(int mouse_button);
         bool is_mouse_button_released(int mouse_button);
+
+        vec2 displacement_to_entity();
 
         /// Additional helpers to filter entities/components based on input state
         std::vector<Entity> get_entities_at_mouse_pos();
@@ -41,4 +44,6 @@ class InputManager {
         std::pair<int, int> mouse_button_states;
         int mod;
         vec2 mouse_position;
+        vec2 displacement_from_entity;
+        Entity* selected_entity;
 };

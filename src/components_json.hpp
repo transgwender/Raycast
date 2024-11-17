@@ -155,6 +155,18 @@ inline void from_json(const json& j, Mirror& c) {
     } else {
         c.railAngle = 0;
     }
+
+    if (j.contains("snap-segments")) {
+        c.snap_segments = j.at("snap-segments").get_to(c.snap_segments);
+    } else {
+        c.snap_segments = 5;
+    }
+
+    if (j.contains("snap-angle")) {
+        c.snap_angle = j.at("snap-angle").get_to(c.snap_angle);
+    } else {
+        c.snap_angle = 0.2617993878;
+    }
 }
 
 inline void to_json(json& j, const PointLight& c) {

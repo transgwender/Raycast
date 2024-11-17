@@ -534,30 +534,32 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
     }
 
     if(shouldAllowInput()) {
-        // hanlde the mirror movements
+        // handle the mirror movements
         for(auto entity : input_manager.active_entities) {
             Motion &clicked_motion = registry.motions.get(entity);
             vec2 to_mouse = clicked_motion.position - screenToWorld(mouse_position);
 
-            if (registry.rotateables.has(entity)) { // rotateable mirrors
+            if (registry.rotatable.has(entity)) { // rotatable mirrors
                 // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
-                clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2;
+                clicked_motion.angle = raycast::math::snap(raycast::math::heading(to_mouse) - M_PI_2, registry.rotatable.get(entity).snap_angle);
             }
 
             if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
                 OnLinearRails &rails = registry.entitiesOnLinearRails.get(entity);
-                // ideally the fist endpoint should correspond to the left endpoint, but if we roatate
+                // ideally the fist endpoint should correspond to the left endpoint, but if we rotate
                 // beyond the y-axis it flips so this check is necessary
                 if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
                     clicked_motion.position = raycast::math::clampToLineSegment(
                         rails.firstEndpoint,
                         rails.secondEndpoint,
-                        screenToWorld(mouse_position));
+                        {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
+                        raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)});
                 } else {
                     clicked_motion.position = raycast::math::clampToLineSegment(
                         rails.secondEndpoint,
                         rails.firstEndpoint,
-                        screenToWorld(mouse_position));
+                        {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
+                        raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)});
                 }
             }
         }
@@ -600,9 +602,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
     if (IS_PRESSED(GLFW_MOUSE_BUTTON_LEFT)) {
         for (const Entity& entity : hovered_entities) {
-            if (registry.entitiesOnLinearRails.has(entity) || registry.rotateables.has(entity)) {
+            if (registry.entitiesOnLinearRails.has(entity) || registry.rotatable.has(entity)) {
                 input_manager.active_entities.push_back(entity);
             }
+        }
+        if (hovered_entities.size() > 0) {
+            input_manager.update_mouse_to_entity_displacement(registry.motions.get(hovered_entities[0]).position);
         }
     }
 }

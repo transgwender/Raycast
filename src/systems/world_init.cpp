@@ -64,7 +64,7 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
 
     // Draw mirror attachment
     OnLinearRails rails;
-    Rotateable rotateable;
+    Rotatable rotatable;
     const auto attachment = Entity();
     if (mirror.mirrorType == "rotate") {
         createSprite(attachment, mirror.position, vec2(12, 12), mirror.angle, "gear");
@@ -79,8 +79,10 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
     createSprite(entity, mirror.position, scale, mirror.angle, "mirror_1");
 
     if (mirror.mirrorType == "rotate") {
-        registry.rotateables.insert(entity, rotateable);
+        rotatable.snap_angle = mirror.snap_angle;
+        registry.rotatable.insert(entity, rotatable);
     } else {
+        rails.snap_segments = mirror.snap_segments;
         initLinearRails(entity, rails);
     }
 
