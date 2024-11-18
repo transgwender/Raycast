@@ -75,78 +75,94 @@ void PhysicsSystem::exert_blackhole_pull(float elapsed_ms) {
             Motion& light_ray_motion = registry.motions.get(light_ray_entity);
 
             if (should_light_orbit(light_ray_entity, blackhole_entity) && !registry.inOrbits.has(light_ray_entity)) {
-                if (!registry.inOrbits.has(light_ray_entity)) {
-                    InOrbit in_orbit;
-                    vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
-                    in_orbit.prevAngle = atan2(relativePosition.y, relativePosition.x);
-                    in_orbit.bodyOfMass = blackhole_entity;
-                    registry.inOrbits.emplace(light_ray_entity, in_orbit);
-                } else if
-                    (registry.inOrbits.get(light_ray_entity).bodyOfMassJustOrbited != blackhole_entity) {
-                    InOrbit& in_orbit = registry.inOrbits.get(light_ray_entity);
-                    vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
-                    in_orbit.prevAngle = atan2(relativePosition.y, relativePosition.x);
-                    in_orbit.bodyOfMass = blackhole_entity;   
-                }
+                startLightOrbit(light_ray_entity, light_ray_motion, blackhole_motion, blackhole_entity);
             }
 
             if (registry.inOrbits.has(light_ray_entity) && registry.inOrbits.get(light_ray_entity).bodyOfMass == blackhole_entity) {
-                InOrbit& in_orbit = registry.inOrbits.get(light_ray_entity);
-                vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
+                updateVelocityDuringOrbit(light_ray_entity, light_ray_motion, blackhole_motion, t);
 
-                // Updating the velocity of the light particle to orbit around the black hole
-                float det = relativePosition.x * light_ray_motion.velocity.y - relativePosition.y * light_ray_motion.velocity.x;
-
-                vec2 tangent = det > 0 ? vec2(-relativePosition.y, relativePosition.x) : vec2(relativePosition.y, -relativePosition.x);
-                light_ray_motion.velocity = tangent / glm::length(tangent) * glm::length(light_ray_motion.velocity);
-
-                // Updating the total angle travelled
-                float radius = glm::length(relativePosition);
-                float delta_angle = t * glm::length(light_ray_motion.velocity) / radius;
-                in_orbit.totalAngle += delta_angle;
-
-                if (in_orbit.totalAngle >= PhysicsSystem::MaxAngleToTravel) {
-                    in_orbit.bodyOfMassJustOrbited = in_orbit.bodyOfMass;
-                    in_orbit.bodyOfMass = Entity(); // this does bother me :(
-                }
-
-
-                
             } else {
-                // Now, these aren't very _realistic_ calculations in that they do not model relativity and all that
-                // stuff
-                // that a really smart guy named Albert Einstein worked on. But they do try to mimic relativity and are
-                // not as naive as a Newtonian model of a blackhole. This means that the path that the light follows is
-                // actually fairly realistic (it respects the ratios of the schwarzchild radius at which light should be
-                // sucked in vs when it should escape without having to cheat and hardcode them!). The formulas we used
-                // are credited to Chris Orban from STEMCoding. See this link:
-                // https://www.asc.ohio-state.edu/orban.14/stemcoding/blackhole.html
-
-                // TODO: Summarize math in README.md for Peyton
-                if (registry.inOrbits.has(light_ray_entity) &&
-                    registry.inOrbits.get(light_ray_entity).bodyOfMassJustOrbited == blackhole_entity) {
-                    continue; // This is a temp fix so that the black hole doesn't influence the light ray once it is released.
-                }
-                vec2 to_blackhole = blackhole_motion.position - light_ray_motion.position;
-                float theta = raycast::math::heading(to_blackhole);
-                float distance_to_blackhole = glm::length(to_blackhole);
-                float force_gravity = PhysicsSystem::GravitationalConstant * blackhole.mass /
-                                      (distance_to_blackhole * distance_to_blackhole);
-                float delta_theta =
-                    -force_gravity * (15.0 / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
-                delta_theta /= std::abs(
-                    1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole.mass /
-                              (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
-                light_ray_motion.angle += delta_theta;
-                light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);
-                light_ray_motion.velocity =
-                    raycast::math::set_mag(light_ray_motion.velocity, PhysicsSystem::SpeedOfLight);
+                int retFlag;
+                updateVelocityFromBlackholePull(light_ray_entity, blackhole_entity, blackhole_motion, light_ray_motion,
+                                                blackhole, retFlag);
+                if (retFlag == 3)
+                    continue;
             }
-
-           
-
-
         }
+    }
+}
+
+void PhysicsSystem::updateVelocityFromBlackholePull(Entity& light_ray_entity, Entity& blackhole_entity,
+                                                    Motion& blackhole_motion, Motion& light_ray_motion,
+                                                    Blackhole& blackhole, int& retFlag) {
+    retFlag = 1;
+    // Now, these aren't very _realistic_ calculations in that they do not model relativity and all that
+    // stuff
+    // that a really smart guy named Albert Einstein worked on. But they do try to mimic relativity and are
+    // not as naive as a Newtonian model of a blackhole. This means that the path that the light follows is
+    // actually fairly realistic (it respects the ratios of the schwarzchild radius at which light should be
+    // sucked in vs when it should escape without having to cheat and hardcode them!). The formulas we used
+    // are credited to Chris Orban from STEMCoding. See this link:
+    // https://www.asc.ohio-state.edu/orban.14/stemcoding/blackhole.html
+
+    // TODO: Summarize math in README.md for Peyton
+    if (registry.inOrbits.has(light_ray_entity) &&
+        registry.inOrbits.get(light_ray_entity).bodyOfMassJustOrbited == blackhole_entity) {
+        {
+            retFlag = 3;
+            return;
+        }; // This is a temp fix so that the black hole doesn't influence the light ray once it is released.
+    }
+    vec2 to_blackhole = blackhole_motion.position - light_ray_motion.position;
+    float theta = raycast::math::heading(to_blackhole);
+    float distance_to_blackhole = glm::length(to_blackhole);
+    float force_gravity =
+        PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * distance_to_blackhole);
+    float delta_theta = -force_gravity * (15.0 / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
+    delta_theta /=
+        std::abs(1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole.mass /
+                           (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
+    light_ray_motion.angle += delta_theta;
+    light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);
+    light_ray_motion.velocity = raycast::math::set_mag(light_ray_motion.velocity, PhysicsSystem::SpeedOfLight);
+}
+
+void PhysicsSystem::updateVelocityDuringOrbit(Entity& light_ray_entity, Motion& light_ray_motion,
+                                              Motion& blackhole_motion, const float t) {
+    InOrbit& in_orbit = registry.inOrbits.get(light_ray_entity);
+    vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
+
+    // Updating the velocity of the light particle to orbit around the black hole
+    float det = relativePosition.x * light_ray_motion.velocity.y - relativePosition.y * light_ray_motion.velocity.x;
+
+    vec2 tangent =
+        det > 0 ? vec2(-relativePosition.y, relativePosition.x) : vec2(relativePosition.y, -relativePosition.x);
+    light_ray_motion.velocity = tangent / glm::length(tangent) * glm::length(light_ray_motion.velocity);
+
+    // Updating the total angle travelled
+    float radius = glm::length(relativePosition);
+    float delta_angle = t * glm::length(light_ray_motion.velocity) / radius;
+    in_orbit.totalAngle += delta_angle;
+
+    if (in_orbit.totalAngle >= PhysicsSystem::MaxAngleToTravel) {
+        in_orbit.bodyOfMassJustOrbited = in_orbit.bodyOfMass;
+        in_orbit.bodyOfMass = Entity(); // this does bother me :(
+    }
+}
+
+void PhysicsSystem::startLightOrbit(Entity& light_ray_entity, Motion& light_ray_motion, Motion& blackhole_motion,
+                                    Entity& blackhole_entity) {
+    if (!registry.inOrbits.has(light_ray_entity)) {
+        InOrbit in_orbit;
+        vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
+        in_orbit.prevAngle = atan2(relativePosition.y, relativePosition.x);
+        in_orbit.bodyOfMass = blackhole_entity;
+        registry.inOrbits.emplace(light_ray_entity, in_orbit);
+    } else if (registry.inOrbits.get(light_ray_entity).bodyOfMassJustOrbited != blackhole_entity) {
+        InOrbit& in_orbit = registry.inOrbits.get(light_ray_entity);
+        vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
+        in_orbit.prevAngle = atan2(relativePosition.y, relativePosition.x);
+        in_orbit.bodyOfMass = blackhole_entity;
     }
 }
 
