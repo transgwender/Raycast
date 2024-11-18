@@ -524,12 +524,11 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     }
 
     if (IS_PRESSED(GLFW_KEY_M)) {
-        if (music_muted) {
-            Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
+        if (Mix_PausedMusic()) {
+            Mix_ResumeMusic();
         } else {
-            Mix_VolumeMusic(0);
+            Mix_PauseMusic();
         }
-        music_muted = !music_muted;
     }
 
 
