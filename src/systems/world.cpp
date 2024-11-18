@@ -351,6 +351,10 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         return;
     }
 
+    if (registry.inOrbits.has(reflected)) {
+        registry.inOrbits.get(reflected).bodyOfMassJustOrbited = Entity(); // When collision with a mirror happens, reset last body of mass orbitted
+    }
+
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
     float angle_addition = M_PI_2;
