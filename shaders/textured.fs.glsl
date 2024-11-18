@@ -23,15 +23,16 @@ in vec3 frag_pos;
 uniform sampler2D albedo_tex;
 uniform sampler2D normal_tex;
 uniform bool highlight;
-uniform bool skip_lighting;
 uniform bool is_blackhole;
+uniform int layer;
 
 uniform vec3 ambient_light;
 
 uniform int point_lights_count;
 uniform PointLight point_lights[MAX_LIGHTS];
 
-layout(location = 0) out vec4 color;
+layout(location = 0) out vec4 world_color;
+layout(location = 1) out vec4 ui_color;
 
 vec3 calculate_ambient_light() {
     vec3 albedo = vec3(texture(albedo_tex, tex_coord));
@@ -43,7 +44,7 @@ vec3 calculate_point_light(PointLight light) {
     vec3 light_dir = normalize(light.position - frag_pos);
 
     // diffuse shading
-	vec3 normal = normalize((texture(normal_tex, tex_coord).xyz * 2.0 - 1.0)*0.25);
+	vec3 normal = normalize((texture(normal_tex, tex_coord).xyz * 2.0) - 1.0);
     float diff = max(dot(normal, light_dir), 0.0);
 
     // attenuation
@@ -52,21 +53,17 @@ vec3 calculate_point_light(PointLight light) {
 
     // calculate final light
     vec3 albedo = vec3(texture(albedo_tex, tex_coord));
-    vec3 diffuse_component = light.diffuse * diff * albedo;
-    return diffuse_component*attenuation;
+    vec3 diffuse_component = light.diffuse * diff * attenuation * albedo;
+    return diffuse_component;
 }
 
 void main() {
-    if (skip_lighting) {
-        color = texture(albedo_tex, tex_coord);
+    if (layer > 2) {
+        ui_color = texture(albedo_tex, tex_coord);
+        world_color = vec4(0.0);
         if (highlight) {
-            color += vec4(vec3(0.18), 0.0);
+            ui_color += vec4(vec3(0.18), 0.0);
         }
-        return;
-    }
-
-    if (is_blackhole) {
-        color = vec4(0.0, 0.0, 0.0, 0.0);
         return;
     }
 
@@ -79,5 +76,6 @@ void main() {
         result += vec3(0.18);
     }
 
-    color = vec4(result, (texture(albedo_tex, tex_coord)).w);
+    world_color = vec4(result, (texture(albedo_tex, tex_coord)).w);
+    ui_color = vec4(0.0);
 }

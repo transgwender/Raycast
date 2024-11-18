@@ -13,8 +13,11 @@ typedef GLuint TextureHandle;
 class TextureManager {
     bool initialized = false;
     std::unordered_map<std::string, TextureHandle> textures;
+    std::unordered_map<std::string, std::filesystem::file_time_type> write_times;
+    std::filesystem::file_time_type last_albedo_write_time;
+    std::filesystem::file_time_type last_normal_write_time;
 
-    void addFromPath(const std::filesystem::path& path);
+    void addFromPath(const std::filesystem::directory_entry& entry);
 
   public:
     /**
@@ -39,4 +42,11 @@ class TextureManager {
      * @param texture Renderer texture ID
      */
     void add(const std::string& name, const TextureHandle& texture);
+
+    /**
+     * Update any textures that have updated on disk since the last time the texture manager
+     * was initialized/updated.
+     * @return whether any textures were updated
+     */
+    bool update();
 };

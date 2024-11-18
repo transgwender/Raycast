@@ -45,7 +45,10 @@ void SoundSystem::free_sounds() {
             Mix_FreeChunk(chunk);
     }
 
+    sfxs.clear();
+
     Mix_CloseAudio();
+    Mix_Quit();
 }
 
 void SoundSystem::load_chunks() {
@@ -66,8 +69,14 @@ void SoundSystem::load_chunks() {
 }
 
 void SoundSystem::play_sound(const std::string& filename, const float volume_multiplier) {
-    Mix_Chunk* sfx_to_play = sfxs[filename];
+    const auto it = sfxs.find(filename);
+    if (it == sfxs.end()) {
+        LOG_ERROR("Sound effect not found: {}", filename);
+        return;
+    }
 
-    sfx_to_play->volume = MIX_MAX_VOLUME * volume_multiplier;
+    Mix_Chunk* sfx_to_play = it->second;
+
+    Mix_VolumeChunk(sfx_to_play, static_cast<int>(MIX_MAX_VOLUME * volume_multiplier));
     Mix_PlayChannel(-1, sfx_to_play, 0);
 }

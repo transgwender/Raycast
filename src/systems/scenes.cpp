@@ -134,6 +134,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         std::string background_tag;
                         data["id"].get_to(background_tag);
                         background.try_parse_background(background_tag);
+                    } else if (type == "portal_pair") {
+                        createPortals(data["portal_position"], data["portal_angle"], data["other_portal_position"], data["other_portal_angle"]);
                     }
                 }
             }

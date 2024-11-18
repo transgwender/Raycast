@@ -61,6 +61,7 @@ void ParticleSystem::step(float elapsed_ms) {
         }
         particle.color.a -= particle.alpha_fall_off * delta_time;
         particle.scale += particle.scale_change * delta_time;
+        particle.scale = max(particle.scale, 0.0f);
         particle.position += particle.scale_change * delta_time * -1 / 2;
         particle.angle += particle.spin_velocity * delta_time;
         particle.position += particle.linear_velocity * delta_time;

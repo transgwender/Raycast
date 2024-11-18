@@ -9,6 +9,7 @@
 #include <iostream>
 
 #include "components_json.hpp"
+#include "glm/detail/func_trigonometric.inl"
 #include "logging/log.hpp"
 #include "systems/menu.hpp"
 #include "systems/physics.hpp"
@@ -233,7 +234,7 @@ void WorldSystem::restart_game() {
 
     // add frame counter
     frame_rate_entity = Entity();
-    registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), false});
+    registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), UI_TEXT, false});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {
@@ -248,10 +249,15 @@ void WorldSystem::handle_collisions() {
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
     for (int i = 0; i < collisionsRegistry.size(); i++) {
+        if (registry.portals.has(collisionsRegistry.entities[i]) &&
+            registry.lightRays.has(collisionsRegistry.components[i].other)) {
+            handle_portal_collisions(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            continue;
+        }
 
-        // TODO: handle portal collision
-
-        if (registry.turtles.has(collisionsRegistry.entities[i]) && !registry.lightRays.has(collisionsRegistry.components[i].other)) {
+        // Ignore Turtle to Light ray collision
+        if (registry.turtles.has(collisionsRegistry.entities[i]) &&
+            !registry.lightRays.has(collisionsRegistry.components[i].other)) {
             handle_turtle_collisions(i);
             continue;
         }
@@ -469,6 +475,44 @@ void WorldSystem::handle_turtle_collisions(int i) {
     //}
 }
 
+void WorldSystem::handle_portal_collisions(Entity& portal, Entity& light) {
+    auto light_motion = registry.motions.get(light);
+    auto enter_portal = registry.portals.get(portal);
+    auto exit_portal = registry.portals.get(enter_portal.other_portal);
+
+    // Calculate portal normal direction
+    vec2 portal_normal = {cos(enter_portal.angle), sin(enter_portal.angle)};
+
+    // Normalize light's velocity to get its direction
+    vec2 light_direction = normalize(light_motion.velocity);
+
+    // Check if the light collided with the backside of the portal
+    float dot_product = dot(light_direction, portal_normal);
+    if (dot_product > 0) {
+        // Light collided with the backside
+        sounds.play_sound("light-collision.wav");
+        registry.remove_all_components_of(light);
+        return;
+    }
+
+    // Calculate position offset
+    float offset_length = 15;
+    vec2 exit_position_offset = {
+        cos(exit_portal.angle) * offset_length,
+        sin(exit_portal.angle) * offset_length
+    };
+
+    // Calculate angle offset
+    float velocity_angle = atan2(light_motion.velocity.y, light_motion.velocity.x);
+    float exit_angle_offset = M_PI - enter_portal.angle - velocity_angle;
+
+    // Remove and create new light at exit portal position
+    registry.remove_all_components_of(light);
+    createLight(light, exit_portal.position + exit_position_offset, exit_portal.angle + exit_angle_offset);
+    sounds.play_sound("portal_long.wav", 0.25);
+}
+
+
 // Should the game be over?
 bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); }
 
@@ -484,12 +528,11 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
     }
 
     if (IS_PRESSED(GLFW_KEY_M)) {
-        if (music_muted) {
-            Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
+        if (Mix_PausedMusic()) {
+            Mix_ResumeMusic();
         } else {
-            Mix_VolumeMusic(0);
+            Mix_PauseMusic();
         }
-        music_muted = !music_muted;
     }
 
 

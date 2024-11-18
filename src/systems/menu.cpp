@@ -47,7 +47,7 @@ void MenuSystem::generate_level_win_popup(int levelCurrent, int levelCount) {
 
     if (levelCurrent < levelCount) {
         Entity popup_background = Entity();
-        createSprite(popup_background, vec2(xPos, yPos), vec2(200, 70), 0, "popup_win");
+        createSprite(popup_background, vec2(xPos, yPos), vec2(200, 70), 0, "popup_win", UI_BACKGROUND);
         registry.menuItems.emplace(popup_background);
 
         Entity restart_button = Entity();
@@ -63,7 +63,7 @@ void MenuSystem::generate_level_win_popup(int levelCurrent, int levelCount) {
         registry.menuItems.emplace(next_button);
     } else {
         Entity popup_background = Entity();
-        createSprite(popup_background, vec2(xPos, yPos), vec2(130, 70), 0, "popup_win");
+        createSprite(popup_background, vec2(xPos, yPos), vec2(130, 70), 0, "popup_win", UI_BACKGROUND);
         registry.menuItems.emplace(popup_background);
 
         Entity restart_button = Entity();
@@ -87,7 +87,7 @@ void MenuSystem::generate_pause_popup(int levelCurrent) {
     int yPos = native_height/2;
 
     Entity popup_background = Entity();
-    createSprite(popup_background, vec2(xPos, yPos), vec2(80, 115), 0, "popup_pause");
+    createSprite(popup_background, vec2(xPos, yPos), vec2(80, 115), 0, "popup_pause", UI_BACKGROUND);
     registry.menuItems.emplace(popup_background);
 
     LOG_INFO("Pausing");

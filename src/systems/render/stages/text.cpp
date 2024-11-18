@@ -15,8 +15,6 @@
  */
 
 void TextStage::init() {
-    text_shader = shader_manager.get("text");
-
     initFont();
     initFrame();
 
@@ -30,12 +28,12 @@ void TextStage::init() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    // add this stage's frame texture to the texture manager
-    texture_manager.add("$text_stage", frame_texture);
+    updateShaders();
+
+    checkGlErrors();
 }
 
 void TextStage::initFont() {
-    FT_Library library;
     if (FT_Init_FreeType(&library) != 0) {
         LOG_ERROR("Failed to initialize FreeType");
         return;
@@ -43,7 +41,6 @@ void TextStage::initFont() {
 
     if (FT_New_Face(library, font_path(font_name).c_str(), 0, &face) != 0) {
         LOG_ERROR("Failed to load font");
-        return;
     }
 }
 
@@ -53,15 +50,30 @@ void TextStage::initFrame() {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
 
     // create a new screen texture and bind it to our new framebuffer
-    glGenTextures(1, &frame_texture);
-    glBindTexture(GL_TEXTURE_2D, frame_texture);
+    glGenTextures(1, &world_text_texture);
+    glBindTexture(GL_TEXTURE_2D, world_text_texture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frame_width, frame_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, world_text_texture, 0);
+
+    glGenTextures(1, &ui_text_texture);
+    glBindTexture(GL_TEXTURE_2D, ui_text_texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, frame_width, frame_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, ui_text_texture, 0);
+
+    const GLenum draw_buffers[2] = {GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    glDrawBuffers(2, draw_buffers);
+
+    // add this stage's frame textures to the texture manager
+    texture_manager.add("$world_text", world_text_texture);
+    texture_manager.add("$ui_text", ui_text_texture);
 
     // go back to the default framebuffer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    checkGlErrors();
 }
 
 void TextStage::createCharacterSet(const unsigned int size) {
@@ -109,28 +121,29 @@ std::vector<Character>& TextStage::getCharacterSet(const unsigned int size) {
     return character_sets[size];
 }
 
-void TextStage::renderText(const std::string& text, float x, float y, const unsigned int size, const vec3 color, bool centered) {
-    glUseProgram(text_shader);
+void TextStage::renderText(const Text& text, float x, float y) {
+    glUseProgram(shader);
     glViewport(0, 0, frame_width, frame_height);
 
-    setUniformFloatVec3(text_shader, "textColor", color / 255.0f);
-    setUniformFloatMat4(text_shader, "projection", projection_matrix);
+    setUniformFloatVec3(shader, "textColor", text.color / 255.0f);
+    setUniformFloatMat4(shader, "projection", projection_matrix);
+    setUniformInt(shader, "layer", text.layer);
 
     glActiveTexture(GL_TEXTURE0);
     glBindVertexArray(vao);
     checkGlErrors();
 
-    auto characters = getCharacterSet(size);
+    auto characters = getCharacterSet(text.size);
 
     float start_pos_x = x;
     float start_pos_y = y;
 
-    if (centered) {
+    if (text.centered) {
         float max_x = 0;
         float max_y = 0;
 
         // get width info
-        for (const unsigned char c : text) {
+        for (const unsigned char c : text.text) {
             const float scale = 1.0;
             auto [texture, size, bearing, advance] = characters[c];
             if (c == '\n') {
@@ -156,7 +169,7 @@ void TextStage::renderText(const std::string& text, float x, float y, const unsi
     }
 
     // iterate through all characters
-    for (const unsigned char c : text) {
+    for (const unsigned char c : text.text) {
         const float scale = 1.0;
         auto [texture, size, bearing, advance] = characters[c];
 
@@ -180,7 +193,7 @@ void TextStage::renderText(const std::string& text, float x, float y, const unsi
         transform *= translate(mat4(1.0f), vec3(pos_x, pos_y, 0.0f));
         transform *= glm::scale(mat4(1.0f), vec3(scale_x, scale_y, 0.0f));
 
-        setUniformFloatMat4(text_shader, "transform", transform);
+        setUniformFloatMat4(shader, "transform", transform);
 
         // render glyph texture over quad
         glBindTexture(GL_TEXTURE_2D, texture);
@@ -220,13 +233,30 @@ void TextStage::draw() {
     const auto world_height = static_cast<float>(native_height);
 
     for (const Text& text : registry.texts.components) {
+        if (text.layer == UI_TEXT) continue;
         const float x = (text.position.x / world_width) * static_cast<float>(frame_width);
         const float y = (text.position.y / world_height) * static_cast<float>(frame_height);
-        renderText(text.text, x, y, text.size, text.color, text.centered);
+        renderText(text, x, y);
+    }
+
+    for (const Text& text : registry.texts.components) {
+        if (text.layer == WORLD_TEXT) continue;
+        const float x = (text.position.x / world_width) * static_cast<float>(frame_width);
+        const float y = (text.position.y / world_height) * static_cast<float>(frame_height);
+        renderText(text, x, y);
     }
 }
+
+void TextStage::updateShaders() {
+    shader = shader_manager.get("text");
+}
+
 
 TextStage::~TextStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
+
+    // Destroy &Face FIRST and then &FreeType because face is a child reference of library.
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
 }

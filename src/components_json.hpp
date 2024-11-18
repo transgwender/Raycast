@@ -317,6 +317,7 @@ inline void to_json(json& j, const Text& c) {
         {"size", c.size},
         {"text", c.text },
         {"color", c.color},
+        {"layer", c.layer},
         {"centered", c.centered}
     };
 }
@@ -326,6 +327,7 @@ inline void from_json(const json& j, Text& c) {
     j.at("size").get_to(c.size);
     j.at("text").get_to(c.text);
     j.at("color").get_to(c.color);
+    j.at("layer").get_to(c.layer);
     j.at("centered").get_to(c.centered);
 }
 

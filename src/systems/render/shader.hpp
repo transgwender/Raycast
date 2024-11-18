@@ -2,12 +2,15 @@
 #include "common.hpp"
 #include <string>
 #include <unordered_map>
+#include <filesystem>
 
 typedef GLuint ShaderHandle;
 
 class ShaderManager {
     bool initialized = false;
     std::unordered_map<std::string, ShaderHandle> shaders;
+    std::unordered_map<std::string, std::filesystem::file_time_type> write_times;
+    std::filesystem::file_time_type last_shaders_write_time;
 
     ShaderHandle add(const std::string& name);
 
@@ -21,6 +24,13 @@ class ShaderManager {
     void init();
 
     [[nodiscard]] ShaderHandle get(const std::string& name) const;
+
+    /**
+     * Reload shaders from disk if they have changed.
+     *
+     * @return whether any shaders have been recompiled.
+     */
+    bool update();
 
     ~ShaderManager();
 };

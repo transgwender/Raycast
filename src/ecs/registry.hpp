@@ -47,6 +47,7 @@ class ECSRegistry {
     ComponentContainer<LightUp> litEntities;
     ComponentContainer<DeleteData> deleteDatas;
     ComponentContainer<InOrbit> inOrbits;
+    ComponentContainer<Portal> portals;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -88,6 +89,7 @@ class ECSRegistry {
         registry_list.push_back(&litEntities);
         registry_list.push_back(&deleteDatas);
         registry_list.push_back(&inOrbits);
+        registry_list.push_back(&portals);
     }
 
     void clear_all_components() {

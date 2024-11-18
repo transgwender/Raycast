@@ -61,8 +61,8 @@ inline std::string background_path(const std::string& name) {
     return data_path() + "/backgrounds/" + name;
 }
 
-const int window_width_px = 1280;
-const int window_height_px = 720;
+extern int window_width_px;
+extern int window_height_px;
 
 static int native_width = 320;
 static int native_height = 180;

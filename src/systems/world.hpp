@@ -54,11 +54,13 @@ class WorldSystem {
     void on_mouse_move(vec2 pos);
     std::vector<Entity> clicked_entities(double xpos, double ypos);
     void on_mouse_button(int key, int action, int mod, double xpos, double ypos);
+    void on_resize(int width, int height);
 
     // Handle different collision cases
     void handle_reflection(Entity& reflective, Entity& reflected, int side, float overlap);
     void handle_non_reflection(Entity& collider, Entity& other);
     void handle_turtle_collisions(int i);
+    void handle_portal_collisions(Entity& portal, Entity& light);
 
     // Restart level
     void restart_game();
@@ -81,7 +83,6 @@ class WorldSystem {
 
     // Music references
     SoundSystem sounds;
-    bool music_muted = false;
 
     // C++ random number generator
     std::default_random_engine rng;
