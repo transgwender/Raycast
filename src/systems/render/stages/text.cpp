@@ -34,7 +34,6 @@ void TextStage::init() {
 }
 
 void TextStage::initFont() {
-    FT_Library library;
     if (FT_Init_FreeType(&library) != 0) {
         LOG_ERROR("Failed to initialize FreeType");
         return;
@@ -256,4 +255,8 @@ void TextStage::updateShaders() {
 TextStage::~TextStage() {
     glDeleteBuffers(1, &vbo);
     glDeleteVertexArrays(1, &vao);
+
+    // Destroy &Face FIRST and then &FreeType because face is a child reference of library.
+    FT_Done_Face(face);
+    FT_Done_FreeType(library);
 }

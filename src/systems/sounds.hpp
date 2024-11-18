@@ -12,6 +12,8 @@ const std::string BGM_FILENAME = "8BitCave.wav";
 
 class SoundSystem {
     public:
+        Mix_Music* background_music = nullptr;
+
         /**
          * Initialize SDL Mixer
          */
@@ -34,7 +36,6 @@ class SoundSystem {
         void play_sound(const std::string& filename, float volume_multiplier = 1);
 
     private:
-        Mix_Music* background_music = nullptr;
         std::unordered_map<std::string, Mix_Chunk*> sfxs;
 
         void load_chunks();
