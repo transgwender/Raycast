@@ -14,6 +14,7 @@
 #include "systems/menu.hpp"
 #include "systems/physics.hpp"
 #include "utils/math.hpp"
+#include "utils/defines.hpp"
 
 #include <utils.h>
 
@@ -563,6 +564,14 @@ void WorldSystem::on_key(int key, int, int action, int mod) {
         LOG_INFO("Current speed = {}", current_speed);
     }
     current_speed = fmax(0.f, current_speed);
+
+
+
+#ifdef ALLOW_DEBUG_FUNCTIONS
+    if (IS_PRESSED(GLFW_KEY_0)) {
+        persistence->debug_set_all_accessible(scenes.level_count());
+    }
+#endif
 }
 
 void move_mirror(vec2 position) { registry.motions.get(registry.reflectives.entities[0]).position = position; }

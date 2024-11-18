@@ -2,6 +2,7 @@
 
 #include "json.hpp"
 #include <map>
+#include "utils/defines.hpp"
 
 using json = nlohmann::json;
 
@@ -21,6 +22,10 @@ class PersistenceSystem {
     bool get_is_locked(int levelNum);
     void set_beaten(int levelNum);
     void set_accessible(int levelNum);
+
+#ifdef ALLOW_DEBUG_FUNCTIONS
+    void debug_set_all_accessible(int levelCount);
+#endif
 
   private:
     std::map<int, LEVEL_STATE> data;
