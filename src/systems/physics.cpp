@@ -111,8 +111,8 @@ void PhysicsSystem::exert_blackhole_pull(float elapsed_ms) {
                 blackhole_motion.position = zone.position;
                 // only apply the endzone gravitational pull when the light is near the end zone 
                 vec2 to_light = light_ray_motion.position - blackhole_motion.position;
-                if (glm::length(to_light) < 50.0) {
-                    __updateVelocityFromBlackholePull(blackhole_motion, light_ray_motion, 5.0);
+                if (glm::length(to_light) < zone.force_field_radius) {
+                    __updateVelocityFromBlackholePull(blackhole_motion, light_ray_motion, zone.mass);
                 }
             }
         }

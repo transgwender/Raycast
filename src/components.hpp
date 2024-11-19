@@ -39,7 +39,7 @@ struct Zone {
     // endzones behave like blackholes in that they attract light that is within 
     // "force_field_radius" of it -- this is to make the levels ever so slightly easier
     float mass = 5.0;
-    float force_field_radius = 50.0;
+    float force_field_radius = 20.0;
 };
 
 // Light source captures the characteristics of a source of light, such as the
