@@ -42,15 +42,15 @@ Entity createLight(const Entity& entity, vec2 position, float dir) {
     point_light.quadratic = 0.0075;
 
     ParticleSpawner spawner;
-    spawner.texture = texture_manager.get("light");
+    spawner.texture = texture_manager.getVirtual("light");
     spawner.initial_speed = 0.0f;
     spawner.spin_velocity = 0.0f;
     spawner.direction = vec2(0, 1);
-    spawner.color = vec4(255, 255, 0, 255);
+    spawner.color = vec4(1, 1, 0, 1);
     spawner.spread = 0.0f;
     spawner.initial_scale = vec2(8, 8);
     spawner.scale_change = -15.f;
-    spawner.alpha_fall_off = 255.0f;
+    spawner.alpha_fall_off = 1.0f;
     spawner.lifetime = 1;
     spawner.max_particles = 8;
     registry.particleSpawners.insert(light, spawner);

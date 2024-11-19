@@ -233,9 +233,9 @@ struct Text {
  * Choice of parameters here and in `ParticleSpawner` based on Godot's CPUParticles2D.
  */
 struct Particle {
-    TextureHandle texture;
+    VirtualTextureHandle texture;
     vec2 position;
-    vec4 color = {255, 255, 0, 255.0};
+    vec4 color = {1, 1, 1, 1.0};
     vec2 scale = {24, 24};
     float angle = 0.f;
     vec2 linear_velocity = {0.0, 5.0};
@@ -248,7 +248,7 @@ struct Particle {
 /** Object that spawns particles according to various parameters. */
 struct ParticleSpawner {
     /** The texture ID of the texture that all spawned particles will take. */
-    TextureHandle texture;
+    VirtualTextureHandle texture;
     /** The position of the spawner. */
     vec2 position;
     /** The initial speed of the spawned particles. */
@@ -260,9 +260,8 @@ struct ParticleSpawner {
      * direction of the particles.
      */
     vec2 direction;
-    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0,
-     * 255]. */
-    vec4 color = vec4(255, 255, 255, 255);
+    /** The color of the particle. The texture will be tinted this color. Color AND alpha channels are in range [0, 1]. */
+    vec4 color = vec4(1, 1, 1, 1);
     /** The angle range that the spawner sends particles in. */
     float spread;
     /** Controls the initial scale of the particles. */

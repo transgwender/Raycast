@@ -5,7 +5,41 @@
 void ParticleSystem::init() {
     // initialize rng
     rng = std::default_random_engine(std::random_device()());
+    std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
 
+    // particle test
+    // auto light_texture = texture_manager.getVirtual("light");
+    // auto smoke_texture = texture_manager.getVirtual("smoke");
+    // for (int i = 0; i < 300000; i++) {
+    //     Particle p;
+    //     if (dist(rng) < 0.0f) {
+    //         p.scale = vec2(4.0f);
+    //         p.texture = light_texture;
+    //     } else {
+    //         p.scale = vec2(6.0f);
+    //         p.texture = smoke_texture;
+    //     }
+    //     p.position = vec2(320, 180) * vec2(dist(rng), dist(rng));
+    //     p.color = vec4(dist(rng), dist(rng), dist(rng), 0.5);
+    //     p.angle = 0.0f;
+    //     p.linear_velocity = vec2(1) * vec2(dist(rng), dist(rng)) * 40.0f;
+    //     p.spin_velocity = 0.0f;
+    //     p.scale_change = 0.0f;
+    //     p.alpha_fall_off = 0.0f;
+    //     p.lifetime = 50.0;
+    //     registry.particles.insert(Entity(), p);
+    // }
+
+    // sprite particle test
+    // for (int i = 0; i < 3000; i++) {
+    //     auto position = vec2(320 * dist(rng), 180 * dist(rng));
+    //     auto color = vec4(dist(rng), dist(rng), dist(rng), 1) / 2.f;
+    //     auto linear_velocity = vec2(1) * vec2(dist(rng), dist(rng)) * 40.0f;
+    //     const auto entity = createSprite(Entity(), position, {4.0, 4.0}, 0.0, "light", FOREGROUND, color);
+    //     registry.motions.get(entity).velocity = linear_velocity;
+    // }
+
+    // particle spawner test
     // ParticleSpawner spawner;
     // spawner.texture = texture_manager.get("light");
     // spawner.position = vec2(160, 80);
@@ -17,9 +51,8 @@ void ParticleSystem::init() {
     // spawner.initial_scale = vec2(8, 8);
     // spawner.scale_change = 0.f;
     // spawner.alpha_fall_off = 255.0f;
-    // spawner.lifetime = 1.0;
+    // spawner.lifetime = 10.0;
     // spawner.max_particles = 4;
-    // registry.particleSpawners.insert(Entity(), spawner);
 }
 
 void ParticleSystem::step(float elapsed_ms) {
@@ -61,7 +94,8 @@ void ParticleSystem::step(float elapsed_ms) {
         }
         particle.color.a -= particle.alpha_fall_off * delta_time;
         particle.scale += particle.scale_change * delta_time;
-        particle.scale = max(particle.scale, 0.0f);
+        particle.scale.x = particle.scale.x < 0.0f ? 0.0f : particle.scale.x;
+        particle.scale.y = particle.scale.y < 0.0f ? 0.0f : particle.scale.y;
         particle.position += particle.scale_change * delta_time * -1 / 2;
         particle.angle += particle.spin_velocity * delta_time;
         particle.position += particle.linear_velocity * delta_time;

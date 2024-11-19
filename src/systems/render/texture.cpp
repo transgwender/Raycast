@@ -11,9 +11,11 @@ void TextureManager::addFromPath(const std::filesystem::directory_entry& entry) 
     const auto& path = entry.path();
     const std::string texture_name = path.stem().string();
 
-    if (!path.has_extension()) return;
+    if (!path.has_extension())
+        return;
     const std::string extension = path.extension().string();
-    if (extension[extension.size() - 1] == '~') return;
+    if (extension[extension.size() - 1] == '~')
+        return;
 
     if (texture_name.rfind('$', 0) == 0) {
         LOG_ERROR("Texture with name {} in the textures folder starts with reserved prefix character '$'. Please "
@@ -43,8 +45,11 @@ void TextureManager::addFromPath(const std::filesystem::directory_entry& entry) 
         glDeleteTextures(1, &textures[texture_name]);
     }
 
+    texture_count++;
     write_times[texture_name] = entry.last_write_time();
     textures[texture_name] = texture;
+    name_to_virtual[texture_name] = texture_count;
+    virtual_to_actual[texture_count] = texture;
 }
 
 void TextureManager::init() {
@@ -66,7 +71,6 @@ void TextureManager::init() {
 
     initialized = true;
 }
-
 
 bool TextureManager::update() {
     bool textures_updated = false;
@@ -95,6 +99,22 @@ TextureHandle TextureManager::get(const std::string& name) const {
     return textures.at(name);
 }
 
+VirtualTextureHandle TextureManager::getVirtual(const std::string& name) const {
+    if (name_to_virtual.find(name) == name_to_virtual.end()) {
+        LOG_ERROR("Failed to find virutal ID for texture {}", name);
+        return 0;
+    }
+    return name_to_virtual.at(name);
+}
+
+TextureHandle TextureManager::get(VirtualTextureHandle virtual_handle) const {
+    if (virtual_to_actual.find(virtual_handle) == virtual_to_actual.end()) {
+        LOG_ERROR("The virtual texture ID '{}'", virtual_handle)
+        return 0;
+    }
+    return virtual_to_actual.at(virtual_handle);
+}
+
 TextureHandle TextureManager::getNormal(const std::string& name) const {
     const std::string normal_name = name + "_n";
     if (textures.find(normal_name) == textures.end()) {
@@ -107,5 +127,8 @@ void TextureManager::add(const std::string& name, const TextureHandle& texture) 
     if (textures.find(name) != textures.end()) {
         LOG_WARN("Texture with name '{}' already exists. Adding it again will overwrite the texture ID.", name);
     }
+    texture_count++;
     textures[name] = texture;
+    name_to_virtual[name] = texture_count;
+    virtual_to_actual[texture_count] = texture;
 }
