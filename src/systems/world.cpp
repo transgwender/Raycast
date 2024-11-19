@@ -316,7 +316,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
                 persistence->set_accessible(level.id + 1);
                 sounds.play_sound("win.wav");
             }
-            //            registry.remove_all_components_of(other);
+            registry.remove_all_components_of(other);
             break;
         }
         case ZONE_TYPE::START: {
