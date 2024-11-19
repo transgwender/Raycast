@@ -3,6 +3,7 @@
 #include "registry.hpp"
 #include "render.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <optional>
 
 void ParticleStage::createBuffers() {
     glGenBuffers(1, &quad_vbo);
