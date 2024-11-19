@@ -107,7 +107,7 @@
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
+                        255.0,
                         45.0
                     ],
                     "zone_type": 1,

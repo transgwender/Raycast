@@ -14,7 +14,7 @@ const float PhysicsSystem::GravitationalConstant = 8;
 const float PhysicsSystem::SpeedOfLight = 100;
 const float PhysicsSystem::MaxOrbitDistance = 30;
 const float PhysicsSystem::MaxOrbitAngle = M_PI_2 / 2; // RADIANS
-const float PhysicsSystem::MaxAngleToTravel = M_PI;
+const float PhysicsSystem::MaxAngleToTravel = 1 * M_PI / 3;
 
 
 bool PhysicsSystem::shouldStep() {
@@ -206,13 +206,20 @@ void PhysicsSystem::detect_collisions() {
             vec2 collision = Collisions::overlap(entity_i, entity_j);
             if (collision.x != 0) {
                 // LOG_INFO("Collision detected\n");
-                Collision& c1 = registry.collisions.emplace_with_duplicates(entity_i, entity_j);
-                Collision& c2 = registry.collisions.emplace_with_duplicates(entity_j, entity_i);
+                try {
+                    Collision& c1 = registry.collisions.emplace_with_duplicates(entity_i, entity_j);
+                    Collision& c2 = registry.collisions.emplace_with_duplicates(entity_j, entity_i);
 
-                c1.side = collision.x;
-                c2.side = collision.x;
-                c1.overlap = collision.y;
-                c2.overlap = collision.y;
+                    c1.side = collision.x;
+                    c2.side = collision.x;
+                    c1.overlap = collision.y;
+                    c2.overlap = collision.y;
+                } catch (...) {
+                    LOG_CRITICAL("Something BAD happened with Collisions");
+                }
+
+
+
             }
         }
     }

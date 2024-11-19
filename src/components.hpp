@@ -298,7 +298,7 @@ struct Mirror {
     float railLength = 0;
     float railAngle = 0;
     int snap_segments = 5;
-    float snap_angle = 0.2617993878;
+    float snap_angle = 0.2617993878 / 2;
 };
 
 struct ButtonHelper {
