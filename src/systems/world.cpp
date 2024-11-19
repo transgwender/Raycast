@@ -151,8 +151,8 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             if (light.last_reflected_timeout > 0)
                 light.last_reflected_timeout -= elapsed_ms_since_last_update;
             Motion& motion = registry.motions.get(lightEntity);
-            if (motion.position.x < -15 || motion.position.x > native_width + 15 || motion.position.y < -15 ||
-                motion.position.y > native_height + 15) {
+            if (motion.position.x < -10 || motion.position.x > native_width + 10 || motion.position.y < -10 ||
+                motion.position.y > native_height + 10) {
                 registry.remove_all_components_of(lightEntity);
             }
         }

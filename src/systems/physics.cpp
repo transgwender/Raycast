@@ -20,8 +20,8 @@ void __updateVelocityFromBlackholePull(Motion &blackhole_motion, Motion &light_m
 const float PhysicsSystem::GravitationalConstant = 8;
 const float PhysicsSystem::SpeedOfLight = 100;
 const float PhysicsSystem::MaxOrbitDistance = 30;
-const float PhysicsSystem::MaxOrbitAngle = M_PI_2 / 2; // RADIANS
-const float PhysicsSystem::MaxAngleToTravel = 1 * M_PI / 3;
+const float PhysicsSystem::MaxOrbitAngle = 5 * M_PI_2 / 12; // RADIANS
+const float PhysicsSystem::MaxAngleToTravel = 3 * M_PI / 4;
 
 
 bool PhysicsSystem::shouldStep() {
