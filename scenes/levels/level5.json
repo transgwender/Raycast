@@ -191,7 +191,7 @@
                     "type": "mirror",
                     "position": [
                         150.0,
-                        35.0
+                        40.0
                     ],
                     "angle": -0.7854,
                     "mirror-type": "rotate"

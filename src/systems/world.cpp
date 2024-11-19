@@ -506,7 +506,7 @@ void WorldSystem::handle_portal_collisions(Entity& portal, Entity& light) {
 
     // Calculate angle offset
     float velocity_angle = atan2(light_motion.velocity.y, light_motion.velocity.x);
-    float exit_angle_offset = M_PI - enter_portal.angle - velocity_angle;
+    float exit_angle_offset = M_PI - enter_portal.angle + velocity_angle;
 
     // Remove and create new light at exit portal position
     registry.remove_all_components_of(light);
