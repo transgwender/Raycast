@@ -8,6 +8,13 @@
 #include <climits>
 #include <iostream>
 
+
+/// PRIVATE declarations
+
+void __updateVelocityFromBlackholePull(Motion &blackhole_motion, Motion &light_motion, float blackhole_mass);
+
+/// End of PRIVATE declarations
+
 // NOTE: of course these values deviate from the "real world" values and have been scaled to make sense in our little light maze 
 // world -- for our purposes they lead to realistic behaviour
 const float PhysicsSystem::GravitationalConstant = 8;
@@ -29,14 +36,10 @@ bool PhysicsSystem::shouldStep() {
  * Advance the physics simulation by one step
  */
 void PhysicsSystem::step(float elapsed_ms) {
-    if(!shouldStep()) return;
-
-    update_positions(elapsed_ms);
-
+    if (!shouldStep()) return;
     exert_blackhole_pull(elapsed_ms);
+    update_positions(elapsed_ms);
 }
-
-
 
 void PhysicsSystem::update_positions(float elapsed_ms) {
     const float t = elapsed_ms / raycast::time::ONE_SECOND_IN_MS;
@@ -90,6 +93,30 @@ void PhysicsSystem::exert_blackhole_pull(float elapsed_ms) {
             }
         }
     }
+
+    // End zone are really, really small blackholes too! This is to make it more enjoyable to play levels (you don't need to get the angles) 
+    // _exactly_ right to win the level and it also serves as a great animation.
+    // NOTE: we do not add the blackhole component to the end zone directly since blackhole components have their own shader code that we don't want 
+    // to apply to the endzone
+    for (int i = 0; i < registry.zones.size(); i++) {
+        Zone &zone = registry.zones.components[i];
+        if (zone.type == ZONE_TYPE::END) {
+            uint light_rays_count = registry.lightRays.size();
+            for (uint j = 0; j < light_rays_count; j++) {
+                Entity light_ray_entity = registry.lightRays.entities[j];
+                Motion& light_ray_motion = registry.motions.get(light_ray_entity);
+                // come to me my dear light
+                Entity endzone_entity = registry.zones.entities[i];
+                Motion blackhole_motion;
+                blackhole_motion.position = zone.position;
+                // only apply the endzone gravitational pull when the light is near the end zone 
+                vec2 to_light = light_ray_motion.position - blackhole_motion.position;
+                if (glm::length(to_light) < zone.force_field_radius) {
+                    __updateVelocityFromBlackholePull(blackhole_motion, light_ray_motion, zone.mass);
+                }
+            }
+        }
+    }
 }
 
 void PhysicsSystem::updateVelocityFromBlackholePull(Entity& light_ray_entity, Entity& blackhole_entity,
@@ -113,22 +140,27 @@ void PhysicsSystem::updateVelocityFromBlackholePull(Entity& light_ray_entity, En
             return;
         }; // This is a temp fix so that the black hole doesn't influence the light ray once it is released.
     }
+    __updateVelocityFromBlackholePull(blackhole_motion, light_ray_motion, blackhole.mass);
+}
+
+/// @brief updates the light_motion based on the blackhole with motion blackhole_motiona and mass blackhole_mass
+void __updateVelocityFromBlackholePull(Motion &blackhole_motion, Motion &light_ray_motion, float blackhole_mass) {
     vec2 to_blackhole = blackhole_motion.position - light_ray_motion.position;
     float theta = raycast::math::heading(to_blackhole);
     float distance_to_blackhole = glm::length(to_blackhole);
     float force_gravity =
-        PhysicsSystem::GravitationalConstant * blackhole.mass / (distance_to_blackhole * distance_to_blackhole);
+        PhysicsSystem::GravitationalConstant * blackhole_mass / (distance_to_blackhole * distance_to_blackhole);
     float delta_theta = -force_gravity * (15.0 / PhysicsSystem::SpeedOfLight) * ::sin(light_ray_motion.angle - theta);
     delta_theta /=
-        std::abs(1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole.mass /
-                           (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
+        std::abs(1.0 - 2.0 * PhysicsSystem::GravitationalConstant * blackhole_mass /
+                (distance_to_blackhole * PhysicsSystem::SpeedOfLight * PhysicsSystem::SpeedOfLight));
     light_ray_motion.angle += delta_theta;
     light_ray_motion.velocity = raycast::math::from_angle(light_ray_motion.angle);
     light_ray_motion.velocity = raycast::math::set_mag(light_ray_motion.velocity, PhysicsSystem::SpeedOfLight);
 }
 
 void PhysicsSystem::updateVelocityDuringOrbit(Entity& light_ray_entity, Motion& light_ray_motion,
-                                              Motion& blackhole_motion, const float t) {
+        Motion& blackhole_motion, const float t) {
     InOrbit& in_orbit = registry.inOrbits.get(light_ray_entity);
     vec2 relativePosition = light_ray_motion.position - blackhole_motion.position;
 

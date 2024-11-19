@@ -49,12 +49,16 @@ inline void to_json(json& j, const Zone& c) {
         {"type", "zone"},
         {"position", c.position},
         {"zone_type", static_cast<ZONE_TYPE>(c.type)},
+        {"mass", c.mass},
+        {"force_field_radius", c.force_field_radius},
     };
 }
 
 inline void from_json(const json& j, Zone& c) {
     j.at("position").get_to(c.position);
     j.at("zone_type").get_to(c.type);
+    c.mass = j.value("mass", 5.0);
+    c.force_field_radius = j.value("force_field_radius", 50.0);
 }
 
 // LightSource
