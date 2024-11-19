@@ -315,6 +315,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
                 menus.generate_level_win_popup(level.id, (int)scenes.level_count());
                 persistence->set_beaten(level.id);
                 persistence->set_accessible(level.id + 1);
+                persistence->try_write_save();
                 sounds.play_sound("win.wav");
             }
             //            registry.remove_all_components_of(other);
