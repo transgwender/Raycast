@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "level_id",
+            "name": "Turtle Level",
             "data": [
                 {
                     "type": "level",
@@ -180,53 +180,6 @@
                 },
                 {
                     "type": "collideable"
-                }
-            ]
-        },
-        {
-            "name": "turtle",
-            "data": [
-                {
-                    "type": "sprite_sheet",
-                    "position": [
-                        180.0,
-                        114.0
-                    ],
-                    "sheetWidth": 384,
-                    "sheetHeight": 192,
-                    "cellWidth": 32,
-                    "cellHeight": 32,
-                    "imageWidth": 32,
-                    "imageHeight": 32,
-                    "texture": "turtle_sprite_sheet",
-                    "animationFrames": [
-                        12,
-                        10,
-                        4,
-                        6,
-                        5,
-                        10
-                    ]
-                },
-                {
-                    "type": "dash_the_turtle",
-                    "behavior": 3,
-                    "minimumDisplacement": [
-                        10000,
-                        10000
-                    ]
-                },
-                {
-                    "type": "collider",
-                    "width": 16,
-                    "height": 32,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "gravity"
                 }
             ]
         },
@@ -436,7 +389,7 @@
                 {
                     "type": "sprite_sheet",
                     "position": [
-                        180.0,
+                        240.0,
                         114.0
                     ],
                     "sheetWidth": 384,
@@ -518,10 +471,10 @@
                     "type": "text",
                     "position": [
                         210.0,
-                        120.0
+                        100.0
                     ],
                     "size": 32,
-                    "text": "<< HINT: sea turtles are attracted\n to large bodies of light",
+                    "text": "HINT: sea turtles are attracted\n to large bodies of light",
                     "color": [
                         255,
                         255,
@@ -538,7 +491,7 @@
                 {
                     "type": "lever",
                     "position": [
-                        150.0,
+                        180.0,
                         120.0
                     ],
                     "state": 5,
