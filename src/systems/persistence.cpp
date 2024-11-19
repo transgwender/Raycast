@@ -72,3 +72,14 @@ bool PersistenceSystem::try_write_save() {
 
     return true;
 }
+
+#ifdef ALLOW_DEBUG_FUNCTIONS
+void PersistenceSystem::debug_set_all_accessible(int levelCount) {
+
+    LOG_INFO("DEBUG: Setting all levels accessible");
+
+    for (int i = 1; i <= levelCount; ++i) {
+        set_accessible(i);
+    }
+}
+#endif
