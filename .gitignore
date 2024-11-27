@@ -9,3 +9,4 @@ out/
 build
 /CMakeSettings.json
 tags
+compile_commands.json
