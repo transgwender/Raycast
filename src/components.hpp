@@ -193,6 +193,11 @@ struct TextureMaterial {
     vec2 cell_size = {1, 1};
 };
 
+enum BlendMode {
+    ADDITIVE = 0,
+    MULTIPLY = 1
+};
+
 /**
  * Material for a visible entity.
  *
@@ -205,6 +210,7 @@ struct Material {
     TextureMaterial texture {};
     vec4 color = vec4(255, 255, 255, 255);
     Layer layer = FOREGROUND;
+    BlendMode blend_mode = MULTIPLY;
 };
 
 /**

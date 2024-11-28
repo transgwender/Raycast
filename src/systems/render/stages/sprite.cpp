@@ -71,6 +71,9 @@ void SpriteStage::activateShader(const Entity& entity, const Motion& motion, con
 
     setUniformInt(shader, "layer", material.layer);
 
+    setUniformFloatVec4(shader, "fcolor", material.color / 255.0f);
+    setUniformInt(shader, "blend_mode", material.blend_mode);
+
     setUniformFloat(shader, "horizontal_offset", material.texture.h_offset);
     setUniformFloat(shader, "vertical_offset", material.texture.v_offset);
     setUniformFloatVec2(shader, "cell_size", material.texture.cell_size);

@@ -28,6 +28,9 @@ uniform int layer;
 
 uniform vec3 ambient_light;
 
+uniform vec4 fcolor;
+uniform int blend_mode;
+
 uniform int point_lights_count;
 uniform PointLight point_lights[MAX_LIGHTS];
 
@@ -57,6 +60,14 @@ vec3 calculate_point_light(PointLight light) {
     return diffuse_component;
 }
 
+vec4 apply_tint_color(vec4 input_color) {
+    if (blend_mode == 0) {
+        return input_color + fcolor;
+    } else if (blend_mode == 1) {
+        return input_color * fcolor;
+    }
+}
+
 void main() {
     if (layer > 2) {
         ui_color = texture(albedo_tex, tex_coord);
@@ -64,6 +75,7 @@ void main() {
         if (highlight) {
             ui_color += vec4(vec3(0.18), 0.0);
         }
+        ui_color = apply_tint_color(ui_color);
         return;
     }
 
@@ -77,5 +89,7 @@ void main() {
     }
 
     world_color = vec4(result, (texture(albedo_tex, tex_coord)).w);
+    world_color = apply_tint_color(world_color);
+
     ui_color = vec4(0.0);
 }
