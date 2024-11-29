@@ -175,7 +175,7 @@ Entity createResumeButton(const Entity& entity, vec2 position, vec2 scale, const
 // imageHeight and imageWidth control the actual dimensions of the sprite when rendered onto the screen
 Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, float sheetHeight, float cellWidth,
                          float cellHeight, const std::vector<unsigned int>& animationFrames,
-                         const std::string& textureName, float imageWidth, float imageHeight) {
+                         const std::string& textureName, float imageWidth, float imageHeight, const vec4& color, float angle) {
     SpriteSheet ss;
     ss.position = position;
     ss.sheetWidth = sheetWidth;
@@ -185,9 +185,9 @@ Entity createSpriteSheet(const Entity& entity, vec2 position, float sheetWidth, 
     ss.animationFrames = animationFrames;
 
     if (imageWidth == 0 || imageHeight == 0) {
-        createSprite(entity, position, vec2(cellWidth, cellHeight), 0, textureName);
+        createSprite(entity, position, vec2(cellWidth, cellHeight), angle, textureName, FOREGROUND, color);
     } else {
-        createSprite(entity, position, vec2(imageWidth, imageHeight), 0, textureName);
+        createSprite(entity, position, vec2(imageWidth, imageHeight), angle, textureName, FOREGROUND, color);
     }
 
     registry.spriteSheets.insert(entity, ss);
@@ -276,20 +276,28 @@ void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& po
     collider.user_interaction_bounds_type = BOUNDS_TYPE::MESH;
 }
 
+unsigned int world_init::portal_color_i = 1;
+
 void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const float angle2) {
     vec2 portal_size = vec2(13, 42);
 
-    const Entity portal_1 = createPortalEntity(pos1, angle1, portal_size, "portal_green");
-    const Entity portal_2 = createPortalEntity(pos2, angle2, portal_size, "portal_purple");
+    const world_init w;
+    const vec4 color = w.portal_colors[world_init::portal_color_i % 10];
+
+    const Entity portal_1 = createPortalEntity(pos1, angle1, portal_size, color);
+    const Entity portal_2 = createPortalEntity(pos2, angle2, portal_size, color);
+
+    // Increment static portal color counter to generate next color
+    world_init::portal_color_i += 1;
 
     linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2);
 }
 
-Entity createPortalEntity(const vec2 position, const float angle, const vec2& size, const std::string& sprite_name) {
+Entity createPortalEntity(const vec2 position, const float angle, const vec2& size, const vec4& color) {
     const Entity portal = Entity();
 
     // Insert portal into registry and create sprite
-    createSprite(portal, position, {size.x, size.y}, angle, sprite_name);
+    createSpriteSheet(portal, position, 512.f, 64.f, 64.f, 64.f, {8}, "portal_ss", 58, 58, color, angle);
     registry.collideables.emplace(portal);
 
     // Configure and add the collider

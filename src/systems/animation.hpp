@@ -2,7 +2,7 @@
 #include "components.hpp"
 
 class AnimationSystem {
-    float animation_speed = 240.f;
+    float animation_speed = 160.f;
 
     void animateLever(const Entity& entity, SpriteSheet& ss) const;
 
