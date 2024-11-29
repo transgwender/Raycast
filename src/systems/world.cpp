@@ -435,9 +435,6 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     // Correct light position with overlap
     light_motion.position -= normalize(light_motion.velocity) * overlap;
 
-    // spawn light sparks
-    // ParticleSystem::createLightSpark(reflective_surface_normal, light_motion);
-
     // Update motion
     light_motion.velocity = reflected_velocity;
     light.last_reflected = reflective;
