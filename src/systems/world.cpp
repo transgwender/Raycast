@@ -11,10 +11,11 @@
 #include "components_json.hpp"
 #include "glm/detail/func_trigonometric.inl"
 #include "logging/log.hpp"
+#include "particles.hpp"
 #include "systems/menu.hpp"
 #include "systems/physics.hpp"
-#include "utils/math.hpp"
 #include "utils/defines.hpp"
+#include "utils/math.hpp"
 
 #include <utils.h>
 
@@ -327,6 +328,7 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         default: {
             sounds.play_sound("light-collision.wav");
             // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
+            ParticleSystem::createLightDissipation(registry.motions.get(other));
             registry.remove_all_components_of(other);
             break;
         }

@@ -248,7 +248,9 @@ struct Particle {
     vec4 color = {1, 1, 1, 1.0};
     vec2 scale = {24, 24};
     float angle = 0.f;
-    vec2 linear_velocity = {0.0, 5.0};
+    vec2 direction = {0.0, 5.0};
+    float speed = 10.0f;
+    float damping = 0.0f;
     float spin_velocity = 0.0f;
     float scale_change = 0.0f;
     float alpha_fall_off = 0.0f;
@@ -278,15 +280,26 @@ struct ParticleSpawner {
     vec2 initial_scale;
     /** Controls how many units of scale the particle loses/gains per second. Zero for no change. */
     float scale_change;
-    /** Controls how much the alpha channel of the texture's color decreases per second. Keep in mind that alpha channel
-     * values are in range [0, 255]*/
-    float alpha_fall_off = 0.0f;
+    /** Controls how fast the linear velocity stops. */
+    float damping = 0.0f;
+    /** Controls how much the alpha channel of the texture's color changes per second. Keep in mind that alpha channel
+     * values are in range [0, 1]*/
+    float alpha_change = 0.0f;
     /** How long (in seconds) a spawned particle will live before being deleted. */
     float lifetime;
+    /** Determines how long the spawner itself will be alive for, before its removed from the world. */
+    float time_to_live = std::numeric_limits<float>::infinity();
     /** The max number of particles from this spawner that should exist at any given time (may be off +/- 1). */
-    float max_particles;
+    int max_particles;
+    /** Make it so that all particles are released at once instead of gradually. */
+    bool explosive = false;
+    /** If explosive, this determines the interval in which the explosion happens. */
+    float explosion_interval = 0.0f;
+    /** If explosive, controls if the particles are equally spread out or sent out in a random angle. */
+    bool uniform_explosion = false;
 
     float _cooldown = 0.0f;
+    float _explosion_cooldown = 0.0f;
 };
 
 /**

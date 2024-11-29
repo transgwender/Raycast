@@ -1,4 +1,6 @@
 #pragma once
+#include "common.hpp"
+#include "components.hpp"
 #include <random>
 
 class ParticleSystem {
@@ -8,4 +10,6 @@ class ParticleSystem {
 public:
     void init();
     void step(float elapsed_ms);
+
+    static Entity createLightDissipation(const Motion& light_motion);
 };

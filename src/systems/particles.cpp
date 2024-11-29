@@ -1,58 +1,40 @@
 #include "particles.hpp"
+
+#include "ai.hpp"
 #include "registry.hpp"
 #include "render.hpp"
 
 void ParticleSystem::init() {
     // initialize rng
     rng = std::default_random_engine(std::random_device()());
-    std::uniform_real_distribution<float> dist(-1.0f, 1.0f);
+    uniform_dist = std::uniform_real_distribution<float>(0.0f, 1.0f);
 
     // particle test
-    // auto light_texture = texture_manager.getVirtual("light");
-    // auto smoke_texture = texture_manager.getVirtual("smoke");
-    // for (int i = 0; i < 300000; i++) {
-    //     Particle p;
-    //     if (dist(rng) < 0.0f) {
-    //         p.scale = vec2(4.0f);
-    //         p.texture = light_texture;
-    //     } else {
-    //         p.scale = vec2(6.0f);
-    //         p.texture = smoke_texture;
-    //     }
-    //     p.position = vec2(320, 180) * vec2(dist(rng), dist(rng));
-    //     p.color = vec4(dist(rng), dist(rng), dist(rng), 0.5);
-    //     p.angle = 0.0f;
-    //     p.linear_velocity = vec2(1) * vec2(dist(rng), dist(rng)) * 40.0f;
-    //     p.spin_velocity = 0.0f;
-    //     p.scale_change = 0.0f;
-    //     p.alpha_fall_off = 0.0f;
-    //     p.lifetime = 50.0;
-    //     registry.particles.insert(Entity(), p);
-    // }
-
-    // sprite particle test
-    // for (int i = 0; i < 3000; i++) {
-    //     auto position = vec2(320 * dist(rng), 180 * dist(rng));
-    //     auto color = vec4(dist(rng), dist(rng), dist(rng), 1) / 2.f;
-    //     auto linear_velocity = vec2(1) * vec2(dist(rng), dist(rng)) * 40.0f;
-    //     const auto entity = createSprite(Entity(), position, {4.0, 4.0}, 0.0, "light", FOREGROUND, color);
-    //     registry.motions.get(entity).velocity = linear_velocity;
-    // }
-
-    // particle spawner test
     // ParticleSpawner spawner;
-    // spawner.texture = texture_manager.get("light");
-    // spawner.position = vec2(160, 80);
-    // spawner.initial_speed = 5.0f;
+    // spawner.texture = texture_manager.get("white_circle");
+    // spawner.position = vec2(160, 50);
+    // spawner.initial_speed = 300.0f;
+    // spawner.damping = 2500.0f;
     // spawner.spin_velocity = 0.0f;
-    // spawner.direction = vec2(0, 1);
-    // spawner.color = vec4(255, 255, 0, 255);
-    // spawner.spread = M_PI_2;
-    // spawner.initial_scale = vec2(8, 8);
-    // spawner.scale_change = 0.f;
-    // spawner.alpha_fall_off = 255.0f;
-    // spawner.lifetime = 10.0;
-    // spawner.max_particles = 4;
+    // spawner.direction = vec2(1, 0);
+    // spawner.color = vec4(1, 1, 0, 1);
+    // spawner.spread = 2 * M_PI;
+    // spawner.initial_scale = vec2(3, 3);
+    // spawner.scale_change = -12.0f;
+    // spawner.alpha_change = -4.0f;
+    // spawner.lifetime = 0.25f;
+    // spawner.max_particles = 10;
+    // spawner.explosive = true;
+    // spawner.uniform_explosion = true;
+    // spawner.explosion_interval = 1.0f;
+    //
+    // Motion m;
+    // m.scale = vec2(8.f);
+    // m.position = spawner.position;
+    //
+    // auto e = Entity();
+    // registry.particleSpawners.insert(e, spawner);
+    // registry.motions.insert(e, m);
 }
 
 void ParticleSystem::step(float elapsed_ms) {
@@ -61,26 +43,55 @@ void ParticleSystem::step(float elapsed_ms) {
     for (int i = 0; i < registry.particleSpawners.size(); i++) {
         ParticleSpawner& spawner = registry.particleSpawners.components[i];
         const Entity& spawner_entity = registry.particleSpawners.entities[i];
+
+        spawner.time_to_live -= delta_time;
+        if (spawner.time_to_live <= 0.0f) {
+            registry.particleSpawners.remove(spawner_entity);
+            continue;
+        }
+
         const Motion& motion = registry.motions.get(spawner_entity);
         spawner.position = motion.position - (motion.scale / 2.0f);
 
         spawner._cooldown -= delta_time;
         if (spawner._cooldown <= 0.0f) {
-            spawner._cooldown = spawner.lifetime / spawner.max_particles;
+            if (spawner.explosive) {
+                spawner._cooldown = spawner.explosion_interval;
+            } else {
+                spawner._cooldown = spawner.lifetime / spawner.max_particles;
+            }
 
-            // cooldown is up, spawn a new particle
-            Particle p;
-            p.texture = spawner.texture;
-            p.position = spawner.position;
-            p.color = spawner.color;
-            p.scale = spawner.initial_scale;
-            p.angle = 0.0f;
-            p.linear_velocity = spawner.direction * spawner.initial_speed;
-            p.spin_velocity = spawner.spin_velocity;
-            p.scale_change = spawner.scale_change;
-            p.alpha_fall_off = spawner.alpha_fall_off;
-            p.lifetime = spawner.lifetime;
-            registry.particles.insert(Entity(), p);
+            int num_particles = spawner.explosive ? spawner.max_particles : 1;
+
+            for (int j = 0; j < num_particles; j++) {
+                float rotation_angle;
+                // choose a direction
+                if (spawner.explosive && spawner.uniform_explosion) {
+                    rotation_angle = (spawner.spread * (static_cast<float>(j) / num_particles)) - (spawner.spread / 2);
+                } else {
+                    rotation_angle = (spawner.spread * uniform_dist(rng)) - (spawner.spread / 2);
+                }
+
+                float new_x = (spawner.direction.x * cos(rotation_angle)) - (spawner.direction.y * sin(rotation_angle));
+                float new_y = (spawner.direction.x * sin(rotation_angle)) + (spawner.direction.y * cos(rotation_angle));
+                auto particle_direction = vec2(new_x, new_y);
+
+                // cooldown is up, spawn a new particle
+                Particle p;
+                p.texture = spawner.texture;
+                p.position = spawner.position;
+                p.color = spawner.color;
+                p.scale = spawner.initial_scale;
+                p.angle = 0.0f;
+                p.direction = particle_direction;
+                p.speed = spawner.initial_speed;
+                p.damping = spawner.damping;
+                p.spin_velocity = spawner.spin_velocity;
+                p.scale_change = spawner.scale_change;
+                p.alpha_fall_off = spawner.alpha_change;
+                p.lifetime = spawner.lifetime;
+                registry.particles.insert(Entity(), p);
+            }
         }
     }
 
@@ -92,12 +103,50 @@ void ParticleSystem::step(float elapsed_ms) {
             registry.particles.remove(particle_entity);
             continue;
         }
-        particle.color.a -= particle.alpha_fall_off * delta_time;
+
+        particle.color.a += particle.alpha_fall_off * delta_time;
+
         particle.scale += particle.scale_change * delta_time;
         particle.scale.x = particle.scale.x < 0.0f ? 0.0f : particle.scale.x;
         particle.scale.y = particle.scale.y < 0.0f ? 0.0f : particle.scale.y;
         particle.position += particle.scale_change * delta_time * -1 / 2;
+
         particle.angle += particle.spin_velocity * delta_time;
-        particle.position += particle.linear_velocity * delta_time;
+
+        particle.speed -= particle.damping * delta_time;
+        particle.speed = particle.speed < 0.0f ? 0.0f : particle.speed;
+        particle.position += particle.speed * particle.direction * delta_time;
     }
 }
+
+Entity ParticleSystem::createLightDissipation(const Motion& light_motion) {
+    ParticleSpawner spawner;
+    spawner.texture = texture_manager.get("white_circle");
+    spawner.position = (light_motion.position + (light_motion.scale / 2.0f)) - 1.0f;
+    spawner.time_to_live = 1.0f;
+    spawner.initial_speed = 300.0f;
+    spawner.damping = 3500.0f;
+    spawner.spin_velocity = 0.0f;
+    spawner.direction = vec2(1, 0);
+    spawner.color = vec4(1, 1, 0, 1);
+    spawner.spread = 2 * M_PI;
+    spawner.initial_scale = vec2(3, 3);
+    spawner.scale_change = -12.0f;
+    spawner.alpha_change = -4.0f;
+    spawner.lifetime = 0.5f;
+    spawner.max_particles = 10;
+    spawner.explosive = true;
+    spawner.uniform_explosion = true;
+    spawner.explosion_interval = 1.0f;
+
+    Motion m;
+    m.scale = light_motion.scale;
+    m.position = spawner.position;
+
+    auto e = Entity();
+    registry.particleSpawners.insert(e, spawner);
+    registry.motions.insert(e, m);
+
+    return e;
+}
+
