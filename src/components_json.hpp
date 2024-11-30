@@ -177,7 +177,7 @@ inline void from_json(const json& j, Mirror& c) {
     if (j.contains("snap-angle")) {
         c.snap_angle = j.at("snap-angle").get_to(c.snap_angle);
     } else {
-        c.snap_angle = 0.1308996939;
+        c.snap_angle = 0.2617993878;
     }
 }
 

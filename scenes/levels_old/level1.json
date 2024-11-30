@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Bad angle",
+            "name": "Tutorial",
             "data": [
                 {
                     "type": "level",
-                    "id": 8
+                    "id": 1
                 }
             ]
         },
@@ -19,24 +19,24 @@
             ]
         },
         {
-            "name": "beam",
+            "name": "platforms",
             "data": [
                 {
                     "type": "sprite",
                     "position": [
-                        130.0,
-                        50.0
+                        180.0,
+                        150.0
                     ],
                     "scale": [
-                        120,
-                        10
+                        180,
+                        120
                     ],
-                    "texture": "beam2"
+                    "texture": "platforms_1"
                 },
                 {
                     "type": "collider",
-                    "width": 120,
-                    "height": 10,
+                    "width": 180,
+                    "height": 120,
                     "bounds": 1
                 },
                 {
@@ -45,56 +45,14 @@
                 {
                     "type": "zone",
                     "position": [
-                        220.0,
-                        70.0
+                        180.0,
+                        120.0
                     ],
                     "scale": [
-                        220,
-                        10
+                        180,
+                        120
                     ],
                     "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "right-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        270.0,
-                        150.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "left-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        50.0,
-                        150.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
                 }
             ]
         },
@@ -104,14 +62,102 @@
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        105.0
+                        60.0,
+                        155.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 1.57,
                     "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rail help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        90.0,
+                        26.0
+                    ],
+                    "size": 32,
+                    "text": "<< Click and drag to SLIDE\n mirror with rails",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        54.0,
+                        35.0
+                    ],
+                    "angle": 0.785,
+                    "rail-length": 27,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "Rotatable mirror help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        215.0,
+                        32.0
+                    ],
+                    "size": 32,
+                    "text": "Click and drag to ROTATE\n mirror with gears >>",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "far-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        295.0,
+                        35.0
+                    ],
+                    "angle": 1.57,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "rotatable"
                 },
                 {
                     "type": "highlightable",
@@ -125,15 +171,36 @@
                 {
                     "type": "zone",
                     "position": [
-                        280.0,
-                        30.0
+                        10.0,
+                        147.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 2.617993878
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        212.0,
+                        148.0
+                    ],
+                    "size": 32,
+                    "text": "GOAL: Guide light to end zone >>",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
                 }
             ]
         },
@@ -143,8 +210,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        55.0,
-                        30.0
+                        296.0,
+                        146.0
                     ],
                     "zone_type": 1,
                     "angle": 0

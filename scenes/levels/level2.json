@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Thread the Needle",
+            "name": "Tutorial - Goal",
             "data": [
                 {
                     "type": "level",
@@ -19,224 +19,19 @@
             ]
         },
         {
-            "name": "lower_left_spike",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        130.0,
-                        120.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 260,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        130.0,
-                        120.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "middle_right_spike",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 260,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        190.0,
-                        70.0
-                    ],
-                    "scale": [
-                        260,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "bottom_right_mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        290.0,
-                        155.0
+                        160.0,
+                        130.0
                     ],
-                    "angle": 1.5708,
+                    "angle": 1.57,
                     "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
-                },
-                {
-                    "type": "rotatable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_right_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        300.0,
-                        95.0
-                    ],
-                    "angle": 1.5708,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        20.0,
-                        80.0
-                    ],
-                    "angle": 1.5708,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_left_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        55.0,
-                        15.0
-                    ],
-                    "angle": 1.5708,
-                    "rail-length": 35,
-                    "rail-angle": 0
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_second_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        120.0,
-                        55.0
-                    ],
-                    "angle": 1.5708,
-                    "rail-length": 35,
-                    "rail-angle": 0
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top_third_mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        170.0,
-                        15.0
-                    ],
-                    "angle": 1.1,
-                    "rail-length": 35,
-                    "rail-angle": 0
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "lerpable",
-                    "should_switch_direction": false,
-                    "t": 0,
-                    "t_step": 0
                 },
                 {
                     "type": "highlightable",
@@ -250,8 +45,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        32.0,
-                        150.0
+                        50.0,
+                        122.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -263,13 +58,34 @@
             ]
         },
         {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        180.0,
+                        53.0
+                    ],
+                    "size": 48,
+                    "text": "< Feed plants light to win",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        270.0,
-                        35.0
+                        160.0,
+                        50.0
                     ],
                     "zone_type": 1,
                     "angle": 0
