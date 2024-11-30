@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Bounce down",
+            "name": "Black Hole 2",
             "data": [
                 {
                     "type": "level",
@@ -14,7 +14,51 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_1"
+                    "id": "cyber_3"
+                }
+            ]
+        },
+        {
+            "name": "m87",
+            "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 5,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
+                    "position": [
+                        170.0,
+                        104.0
+                    ],
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        170.0,
+                        104.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
                 }
             ]
         },
@@ -24,10 +68,10 @@
                 {
                     "type": "mirror",
                     "position": [
-                        270.0,
-                        93.0
+                        80.0,
+                        155.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 1.57,
                     "mirror-type": "rotate"
                 },
                 {
@@ -45,36 +89,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        40.0
+                        20.0,
+                        100.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0.23
-                }
-            ]
-        },
-        {
-            "name": "End zone help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        65.0,
-                        143.0
-                    ],
-                    "size": 48,
-                    "text": "< Feed plants light to win",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "angle": 0.7
                 }
             ]
         },
@@ -84,8 +107,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        140.0
+                        255.0,
+                        45.0
                     ],
                     "zone_type": 1,
                     "angle": 0

@@ -1,0 +1,125 @@
+{
+  "objList": [
+    {
+      "name": "Portal Test",
+      "data": [
+        {
+          "type": "level",
+          "id": 8
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [
+            320,
+            180
+          ],
+          "texture": "background_cyber_2"
+        }
+      ]
+    },
+    {
+      "name": "portal help text",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            90.0,
+            110.0
+          ],
+          "size": 32,
+          "text": "PORTALS!!",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 3,
+          "centered": false
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [100, 140],
+          "portal_angle": 3.14,
+          "other_portal_position": [170, 30],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "far-rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            295.0,
+            30.0
+          ],
+          "angle": 1.57,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            140.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            286.0,
+            120.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}
