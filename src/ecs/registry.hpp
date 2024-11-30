@@ -48,6 +48,8 @@ class ECSRegistry {
     ComponentContainer<DeleteData> deleteDatas;
     ComponentContainer<InOrbit> inOrbits;
     ComponentContainer<Portal> portals;
+    ComponentContainer<EndLevel> endLevels;
+    ComponentContainer<EndCutsceneCount> endCutsceneCounts;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -90,6 +92,8 @@ class ECSRegistry {
         registry_list.push_back(&deleteDatas);
         registry_list.push_back(&inOrbits);
         registry_list.push_back(&portals);
+        registry_list.push_back(&endLevels);
+        registry_list.push_back(&endCutsceneCounts);
     }
 
     void clear_all_components() {

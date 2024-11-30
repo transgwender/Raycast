@@ -108,7 +108,8 @@ void WorldSystem::init(PersistenceSystem *persistence_ptr) {
 
 bool WorldSystem::isInLevel() {
     assert(registry.levels.size() <= 1);
-    return !registry.levels.components.empty();
+    assert(registry.endLevels.size() <= 1);
+    return (!registry.levels.components.empty() || !registry.endLevels.components.empty());
 }
 
 bool WorldSystem::shouldStep() {
@@ -128,6 +129,11 @@ bool WorldSystem::shouldAllowInput() {
 
 // Update our game world
 bool WorldSystem::step(float elapsed_ms_since_last_update) {
+    if(do_restart) {
+        do_restart = false;
+        restart_game();
+    }
+
     // update frame rate value
     const int fps_value = Utils::fps(elapsed_ms_since_last_update);
     registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
@@ -184,6 +190,14 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             auto& sources = registry.lightSources.entities;
 
             for (int i = 0; i < sources.size(); i++) {
+
+                if (registry.endCutsceneCounts.size() > 0) {
+                    auto &endCutscene = registry.endCutsceneCounts.components.front();
+                    if (++endCutscene.lightCount > endCutscene.maxInclusive) {
+                        break;
+                    }
+                }
+
                 Zone& zone = registry.zones.get(sources[i]);
                 vec2 position = zone.position;
                 float angle = registry.lightSources.components[i].angle;
@@ -234,6 +248,12 @@ void WorldSystem::restart_game() {
         menus.generate_level_select_buttons((int)scenes.level_count());
     }
 
+    if (!registry.endCutsceneCounts.components.empty()) {
+        sounds.stop_background();
+    } else {
+        sounds.play_background();
+    }
+
     // add frame counter
     frame_rate_entity = Entity();
     registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), UI_TEXT, false});
@@ -242,7 +262,8 @@ void WorldSystem::restart_game() {
 void WorldSystem::change_scene(std::string& scene_tag) {
     Scene& scene = registry.scenes.get(scene_state_entity);
     scene.scene_tag = scene_tag;
-    restart_game(); // TODO: Change to function for changing scene specifically
+    do_restart = true;
+//    restart_game(); // TODO: Change to function for changing scene specifically
 }
 
 // Handle collisions between entities
@@ -274,7 +295,8 @@ void WorldSystem::handle_collisions() {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
             if (registry.minisuns.has(collisionsRegistry.entities[i])) {
                 handle_minisun_collision(collisionsRegistry.entities[i]);
-
+            } else if (registry.endCutsceneCounts.has(collisionsRegistry.entities[i])) {
+                handle_end_cutscene_collision(collisionsRegistry.entities[i]);
             }
         }
     }
@@ -298,6 +320,19 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
     }
 }
 
+void WorldSystem::handle_end_cutscene_collision(Entity& end_cutscene_count_entity) {
+    auto &end_cutscene = registry.endCutsceneCounts.get(end_cutscene_count_entity);
+    std::string next_tag = "end_" + std::to_string(++end_cutscene.sequence);
+    scenes.reload_background(next_tag);
+    if (end_cutscene.sequence == 3) {
+        sounds.play_forest();
+    }
+    if (end_cutscene.sequence == end_cutscene.maxInclusive) {
+        registry.texts.insert(Entity(), {"Thank you for playing our game", {20, 20}, 36, vec4(255.0), UI_TEXT, false});
+        registry.texts.insert(Entity(), {"Press any button to return to the main menu", {180, 20}, 36, vec4(255.0), UI_TEXT, false});
+    }
+}
+
 // When colliding entities to not reflect, if one of the entities
 // is a light ray and the other is an end zone, win the level
 // if the other entity is not an end-zone, destroy light ray
@@ -310,14 +345,26 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
             LOG_INFO("Level beaten!");
             //            std::string next_scene = "gamefinish";
             //            change_scene(next_scene);
-            assert(registry.levels.size() == 1);
-            Level& level = registry.levels.components.front();
-            if (registry.menus.components.empty()) {
-                menus.generate_level_win_popup(level.id, (int)scenes.level_count());
-                persistence->set_beaten(level.id);
-                persistence->set_accessible(level.id + 1);
-                persistence->try_write_save();
-                sounds.play_sound("win.wav");
+            if (registry.levels.size() > 0) {
+                assert(registry.levels.size() == 1);
+                Level& level = registry.levels.components.front();
+                if (registry.menus.components.empty()) {
+                    if (level.id == scenes.level_count()) {
+                        std::string tag = "end1";
+                        change_scene(tag);
+                    } else {
+                        menus.generate_level_win_popup(level.id, (int)scenes.level_count());
+                        persistence->set_beaten(level.id);
+                        persistence->set_accessible(level.id + 1);
+                        persistence->try_write_save();
+                        sounds.play_sound("win.wav");
+                    }
+                }
+            } else if (registry.endLevels.size() > 0) {
+                assert(registry.endLevels.size() == 1);
+                EndLevel& endLevel = registry.endLevels.components.front();
+                std::string tag = "end" + std::to_string(endLevel.id+1);
+                change_scene(tag);
             }
             registry.remove_all_components_of(other);
             break;
@@ -524,6 +571,17 @@ bool WorldSystem::is_over() const { return bool(glfwWindowShouldClose(window)); 
 void WorldSystem::on_key(int key, int, int action, int mod) {
     input_manager.update_key_state(key, action, mod);
 
+    if (registry.endCutsceneCounts.size() > 0) {
+        EndCutsceneCount endCutscene = registry.endCutsceneCounts.components.front();
+        if (endCutscene.sequence == endCutscene.maxInclusive) {
+            if (action == 0) {
+                std::string tag = "mainmenu";
+                change_scene(tag);
+            }
+        }
+        return;
+    }
+
     // Resetting game
     if (IS_RELEASED(GLFW_KEY_R)) {
         int w, h;
@@ -634,6 +692,17 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 
 void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, double ypos) {
     input_manager.update_mouse_button_state(key, action, mod, vec2(xpos, ypos));
+
+    if (registry.endCutsceneCounts.size() > 0) {
+        EndCutsceneCount endCutscene = registry.endCutsceneCounts.components.front();
+        if (endCutscene.sequence == endCutscene.maxInclusive) {
+            if (action == 0) {
+                std::string tag = "mainmenu";
+                change_scene(tag);
+            }
+        }
+        return;
+    }
 
     auto hovered_entities = input_manager.get_entities_at_mouse_pos();
     if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {

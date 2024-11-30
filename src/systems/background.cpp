@@ -21,6 +21,8 @@ void BackgroundSystem::init() {
 // Attempts to parse a specified scene. Returns true if successful. False if
 // not.
 bool BackgroundSystem::try_parse_background(std::string& background_tag) {
+    background_entities.clear();
+
     if (background_tag.empty()) return true; // No background, deemed a success
     std::string filename = backgrounds.at(background_tag);
     std::ifstream background_file(filename);
@@ -36,7 +38,9 @@ bool BackgroundSystem::try_parse_background(std::string& background_tag) {
         try {
             std::string main_background;
             j["background"].get_to(main_background);
-            createSprite(Entity(), vec2(native_width/2, native_height/2), vec2(native_width, native_height), 0, main_background);
+            Entity background = Entity();
+            createSprite(background, vec2(native_width/2, native_height/2), vec2(native_width, native_height), 0, main_background, BACKGROUND);
+            background_entities.push_back(background);
             for (auto& data : j["extra"]) {
                 vec2 position;
                 vec2 scale;
@@ -46,7 +50,9 @@ bool BackgroundSystem::try_parse_background(std::string& background_tag) {
                 data["scale"][0].get_to(scale.x);
                 data["scale"][1].get_to(scale.y);
                 data["texture"].get_to(texture);
-                createSprite(Entity(), position, scale, 0, texture, BACKGROUND);
+                Entity sprite = Entity();
+                createSprite(sprite, position, scale, 0, texture, FOREGROUND);
+                background_entities.push_back(sprite);
             }
             // catches all errors deriving from the standard exception class, this is better than a catch(...) statement since it gives
             // us information about the error via e.what()
@@ -66,4 +72,11 @@ bool BackgroundSystem::try_parse_background(std::string& background_tag) {
 
     LOG_INFO("Successfully loaded backgrounds\n");
     return true;
+}
+
+void BackgroundSystem::clear_background() {
+    for (auto &it : background_entities) {
+        registry.remove_all_components_of(it);
+    }
+    background_entities.clear();
 }

@@ -74,7 +74,7 @@
         },
         {
           "type": "light_source",
-          "angle": 0
+          "angle": 1.5
         }
       ]
     },

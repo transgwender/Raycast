@@ -1,0 +1,63 @@
+{
+  "objList": [
+    {
+      "name": "End Cutscene",
+      "data": [
+        {
+          "type": "end_level",
+          "id": 4
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_1"
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            110.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            286.0,
+            110.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}

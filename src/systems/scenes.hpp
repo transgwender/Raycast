@@ -17,6 +17,8 @@ class SceneSystem {
         return levels.size();
     }
 
+    void reload_background(std::string& background_tag);
+
   private:
     BackgroundSystem background;
 
@@ -30,5 +32,4 @@ class SceneSystem {
         {"levelmenu", scene_path("levelmenu.json")},
         {"gamefinish", scene_path("gamefinish.json")},
     };
-
 };

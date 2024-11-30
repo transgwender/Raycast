@@ -1,0 +1,148 @@
+{
+  "background": "background",
+  "extra": [
+    {
+      "position": [
+        0,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        32,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground1"
+    },
+    {
+      "position": [
+        64,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        96,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        128,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground1"
+    },
+    {
+      "position": [
+        160,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        192,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground1"
+    },
+    {
+      "position": [
+        224,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        256,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground1"
+    },
+    {
+      "position": [
+        288,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        320,
+        180.0
+      ],
+      "scale": [
+        32,
+        34
+      ],
+      "texture": "ground0"
+    },
+    {
+      "position": [
+        160,
+        160.0
+      ],
+      "scale": [
+        7.38,
+        13
+      ],
+      "texture": "tree1"
+    },
+    {
+      "position": [
+        160,
+        155.0
+      ],
+      "scale": [
+        14,
+        6.7
+      ],
+      "texture": "leaves0"
+    }
+  ]
+}

@@ -13,6 +13,11 @@ struct Level {
     int id = 1;
 };
 
+struct EndLevel {
+    int id = 1;
+};
+
+
 // Scene should generate buttons
 struct LevelSelect {};
 
@@ -406,4 +411,11 @@ struct InOrbit {
     float totalAngle = 0.0f;
     Entity bodyOfMass;
     Entity bodyOfMassJustOrbited;
+};
+
+struct EndCutsceneCount {
+    int lightCount = 0;
+    int sequence = 0;
+    int maxInclusive;
+    vec2 position;
 };

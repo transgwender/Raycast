@@ -40,6 +40,13 @@ void SceneSystem::init(Entity &scene_state_entity) {
         scene_paths.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
     }
 
+    folder = scene_path("end");
+    for (const auto& entry : fs::directory_iterator(folder)) {
+        const auto& path = entry.path();
+        auto filename = entry.path().filename().replace_extension();
+        scene_paths.insert(std::make_pair<std::string, std::string>(filename.string(), path.string()));
+    }
+
     background.init();
 }
 
@@ -136,6 +143,16 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         background.try_parse_background(background_tag);
                     } else if (type == "portal_pair") {
                         createPortals(data["portal_position"], data["portal_angle"], data["other_portal_position"], data["other_portal_angle"]);
+                    } else if (type == "end_level") {
+                        PARSE_COMPONENT(EndLevel, endLevels);
+                    } else if (type == "end_cutscene_count") {
+                        EndCutsceneCount end{};
+                        data.get_to(end);
+                        registry.endCutsceneCounts.insert(entity, end);
+                        Motion motion{};
+                        motion.position = end.position;
+                        motion.scale = {3, 3};
+                        registry.motions.insert(entity, motion);
                     }
                 }
             }
@@ -157,4 +174,9 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
 
     LOG_INFO("Successfully loaded scene\n");
     return true;
+}
+
+void SceneSystem::reload_background(std::string& background_tag) {
+    background.clear_background();
+    background.try_parse_background(background_tag);
 }

@@ -87,6 +87,14 @@ inline void from_json(const json& j, Level& c) {
     j.at("id").get_to(c.id);
 }
 
+inline void to_json(json& j, const EndLevel& c) {
+    j = json{ {"type", "end_level"}, {"id", c.id} };
+}
+
+inline void from_json(const json& j, EndLevel& c) {
+    j.at("id").get_to(c.id);
+}
+
 inline void to_json(json& j, const Reflective& c) {
     (void)c;
     j = json{{"type", "light_source"}};
@@ -363,4 +371,15 @@ inline void to_json(json& j, const DeleteData& c) {
 inline void from_json(const json& j, DeleteData& c) {
     (void)j;
     (void)c;
+}
+
+inline void to_json(json& j, const EndCutsceneCount& c) {
+    j = json{{"type", "end_cutscene_count"}, {"position", c.position}, {"maxInclusive", c.maxInclusive}};
+}
+
+inline void from_json(const json& j, EndCutsceneCount& c) {
+    j.at("position").get_to(c.position);
+    j.at("maxInclusive").get_to(c.maxInclusive);
+    c.lightCount = 0;
+    c.sequence = 0;
 }

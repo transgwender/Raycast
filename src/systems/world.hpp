@@ -62,6 +62,8 @@ class WorldSystem {
     void handle_turtle_collisions(int i);
     void handle_portal_collisions(Entity& portal, Entity& light);
 
+    void handle_end_cutscene_collision(Entity& end_cutscene_count_entity);
+
     // Restart level
     void restart_game();
     void change_scene(std::string &scene_tag);
@@ -90,6 +92,7 @@ class WorldSystem {
 
     Entity frame_rate_entity;
     bool frame_rate_enabled = true;
+    bool do_restart = false;
 
     bool shouldStep();
     bool shouldAllowInput();
