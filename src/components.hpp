@@ -241,6 +241,7 @@ struct Text {
     vec3 color = vec3(255, 255, 255);
     Layer layer = UI_TEXT;
     bool centered = false;
+    std::string font_name = "Silver.ttf";
 };
 
 /**
@@ -304,7 +305,6 @@ struct ParticleSpawner {
     bool uniform_explosion = false;
 
     float _cooldown = 0.0f;
-    float _explosion_cooldown = 0.0f;
 };
 
 /**

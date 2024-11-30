@@ -38,10 +38,14 @@ void TextStage::initFont() {
         LOG_ERROR("Failed to initialize FreeType");
         return;
     }
+}
 
+void TextStage::addFace(const std::string& font_name) {
+    FT_Face face;
     if (FT_New_Face(library, font_path(font_name).c_str(), 0, &face) != 0) {
         LOG_ERROR("Failed to load font");
     }
+    faces[font_name] = face;
 }
 
 void TextStage::initFrame() {
@@ -76,9 +80,11 @@ void TextStage::initFrame() {
     checkGlErrors();
 }
 
-void TextStage::createCharacterSet(const unsigned int size) {
+void TextStage::createCharacterSet(const std::string& font_name, const unsigned int size) {
     // disable byte alignment requirement
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    const auto face = faces[font_name];
 
     FT_Set_Pixel_Sizes(face, 0, size);
 
@@ -101,8 +107,8 @@ void TextStage::createCharacterSet(const unsigned int size) {
         // set texture options
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
         // now store character for later use
         const Character character = {texture, ivec2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
@@ -110,15 +116,21 @@ void TextStage::createCharacterSet(const unsigned int size) {
                                      static_cast<unsigned int>(face->glyph->advance.x)};
         characters.push_back(character);
     }
-    character_sets[size] = characters;
+    character_sets[font_name][size] = characters;
 }
 
-std::vector<Character>& TextStage::getCharacterSet(const unsigned int size) {
-    if (character_sets.find(size) == character_sets.end()) {
-        LOG_INFO("Creating font map of size {}", size);
-        createCharacterSet(size);
+std::vector<Character>& TextStage::getCharacterSet(const std::string& font_name, const unsigned int size) {
+    if (character_sets.find(font_name) == character_sets.end()) {
+        addFace(font_name);
+        character_sets[font_name] = std::unordered_map<unsigned int, std::vector<Character>>();
     }
-    return character_sets[size];
+
+    if (character_sets[font_name].find(size) == character_sets[font_name].end()) {
+        LOG_INFO("Creating font map of size {}", size);
+        createCharacterSet(font_name, size);
+    }
+
+    return character_sets[font_name][size];
 }
 
 void TextStage::renderText(const Text& text, float x, float y) {
@@ -133,7 +145,7 @@ void TextStage::renderText(const Text& text, float x, float y) {
     glBindVertexArray(vao);
     checkGlErrors();
 
-    auto characters = getCharacterSet(text.size);
+    auto characters = getCharacterSet(text.font_name, text.size);
 
     float start_pos_x = x;
     float start_pos_y = y;
@@ -257,6 +269,8 @@ TextStage::~TextStage() {
     glDeleteVertexArrays(1, &vao);
 
     // Destroy &Face FIRST and then &FreeType because face is a child reference of library.
-    FT_Done_Face(face);
+    for (const auto& [_, face] : faces) {
+        FT_Done_Face(face);
+    }
     FT_Done_FreeType(library);
 }

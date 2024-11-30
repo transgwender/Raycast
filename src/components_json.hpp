@@ -330,7 +330,8 @@ inline void to_json(json& j, const Text& c) {
         {"text", c.text },
         {"color", c.color},
         {"layer", c.layer},
-        {"centered", c.centered}
+        {"centered", c.centered},
+        {"font_name", c.font_name}
     };
 }
 
@@ -341,6 +342,11 @@ inline void from_json(const json& j, Text& c) {
     j.at("color").get_to(c.color);
     j.at("layer").get_to(c.layer);
     j.at("centered").get_to(c.centered);
+    if (j.contains("font_name")) {
+        j.at("font_name").get_to(c.font_name);
+    } else {
+        c.font_name = "Silver.ttf";
+    }
 }
 
 inline void to_json(json& j, const MenuItem& c) {

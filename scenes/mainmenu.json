@@ -1,20 +1,11 @@
 {
     "objList": [
         {
-            "name": "logo",
+            "name": "background",
             "data": [
                 {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        60.0
-                    ],
-                    "texture": "logo",
-                    "scale": [
-                        155.0,
-                        43.0
-                    ],
-                    "layer": 6
+                    "type": "background",
+                    "id": "test"
                 }
             ]
         },
@@ -64,6 +55,28 @@
             ]
         },
         {
+            "name": "Title",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        160,
+                        50
+                    ],
+                    "size": 285,
+                    "text": "RAYCAST",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 6,
+                    "centered": true,
+                    "font_name": "m6x11plus.ttf"
+                }
+            ]
+        },
+        {
             "name": "Members",
             "data": [
                 {
@@ -72,7 +85,7 @@
                         2,
                         140
                     ],
-                    "size": 32,
+                    "size": 38,
                     "text": "UBC CPSC 427 - 2024W1\nProject Group 03:\n\nArpit Kumar\nGwendolyn Kornak\nJackson Li\nJocelyn Baker\nMuhammad Assad\nSuraj Emmattiparambil",
                     "color": [
                         255,

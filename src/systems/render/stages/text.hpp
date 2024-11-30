@@ -11,13 +11,12 @@ struct Character {
 };
 
 class TextStage {
-    const std::string font_name = "Silver.ttf";
+    /** Maps from a font to a character set. */
+    std::unordered_map<std::string, std::unordered_map<unsigned int, std::vector<Character>>> character_sets;
 
-    /** Maps from a font size to a character set. */
-    std::unordered_map<unsigned int, std::vector<Character>> character_sets;
+    std::unordered_map<std::string, FT_Face> faces;
 
     FT_Library library = nullptr;
-    FT_Face face = nullptr;
 
     GLuint vao = 0;
     GLuint vbo = 0;
@@ -30,8 +29,8 @@ class TextStage {
 
     // render text at this specific resolution.
     // this is much higher than 320x180, so the text will look sharper
-    const int frame_width = 1280;
-    const int frame_height = 720;
+    const int frame_width = 1920;
+    const int frame_height = 1080;
 
     mat4 projection_matrix = {};
 
@@ -44,15 +43,17 @@ class TextStage {
 
     void initFont();
 
+    void addFace(const std::string& font_name);
+
     /**
      * Initialize the frame buffer and associated texture that this stage
      * will render to.
      */
     void initFrame();
 
-    void createCharacterSet(unsigned int size);
+    void createCharacterSet(const std::string& font_name, unsigned int size);
 
-    std::vector<Character>& getCharacterSet(unsigned int size);
+    std::vector<Character>& getCharacterSet(const std::string& font_name, unsigned int size);
 
     void prepareDraw();
 
