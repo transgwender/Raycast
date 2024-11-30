@@ -256,7 +256,7 @@ void WorldSystem::restart_game() {
 
     // add frame counter
     frame_rate_entity = Entity();
-    registry.texts.insert(frame_rate_entity, {"", {1, 6}, 38, vec4(255.0), UI_TEXT, false});
+    registry.texts.insert(frame_rate_entity, {"", {2, 6}, 57, vec4(255.0), UI_TEXT, false});
 }
 
 void WorldSystem::change_scene(std::string& scene_tag) {

@@ -5,7 +5,7 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "test"
+                    "id": "forest"
                 }
             ]
         },
@@ -18,7 +18,7 @@
                         160.0,
                         115.0
                     ],
-                    "label": "Start",
+                    "label": "start",
                     "scale": [
                         96.0,
                         32.0
@@ -83,7 +83,7 @@
                     "type": "text",
                     "position": [
                         2,
-                        140
+                        148
                     ],
                     "size": 38,
                     "text": "UBC CPSC 427 - 2024W1\nProject Group 03:\n\nArpit Kumar\nGwendolyn Kornak\nJackson Li\nJocelyn Baker\nMuhammad Assad\nSuraj Emmattiparambil",
