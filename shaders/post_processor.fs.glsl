@@ -46,14 +46,6 @@ void main() {
         vec3 scene = texture(input2, texcoord).rgb;
         scene += blurred;
 
-        // tone mapping (converting HDR color back to LDR) and gamma correction
-        // adapted from https://learnopengl.com/Advanced-Lighting/HDR (the exposure tone mapping algorithm)
-        const float gamma = 2.2;
-        const float exposure = 1.0;
-
-        vec3 result = vec3(1.0) - exp(-scene * exposure);
-        result = pow(result, vec3(1.0 / gamma));
-
         color = vec4(scene, 1.0);
         return;
     }
