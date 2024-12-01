@@ -55,14 +55,15 @@ void CompositorStage::createTextures() {
 
 void CompositorStage::init(GLFWwindow* window_arg) {
     window = window_arg;
-    createVertexAndIndexBuffers();
-    createTextures();
 
     // get a reference to the frame textures from the other pipeline stages.
     world_texture = texture_manager.get("$world_texture");
     ui_texture = texture_manager.get("$ui_texture");
     world_text_texture = texture_manager.get("$world_text");
     ui_text_texture = texture_manager.get("$ui_text");
+
+    createVertexAndIndexBuffers();
+    createTextures();
 
     updateShaders();
 
@@ -79,7 +80,7 @@ void CompositorStage::setupTextures() const {
     };
 
     static GLuint textures[] = {
-        world_texture,
+        bloom_tex1,
         ui_texture,
         world_text_texture,
         ui_text_texture
@@ -111,8 +112,10 @@ void CompositorStage::prepare() const {
 void CompositorStage::composite() const {
     glUseProgram(compositor_shader);
 
-    glViewport(0, 0, upscaled_width, upscaled_height);
-    glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    int w, h;
+    glfwGetFramebufferSize(window, &w, &h);
+    glViewport(0, 0, w, h);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)
     GLint position_location = glGetAttribLocation(compositor_shader, "in_position");
@@ -158,17 +161,16 @@ void CompositorStage::bloomBlurPass() const {
 }
 
 void CompositorStage::bloomComposite() const {
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
-    glViewport(0, 0, w, h);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+    glViewport(0, 0, bloom_pass_width, bloom_pass_height);
+    glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
 
     setUniformInt(post_processor_shader, "input1", 0);
     setUniformInt(post_processor_shader, "input2", 1);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, bloom_tex0);
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, composited_texture);
+    glBindTexture(GL_TEXTURE_2D, world_texture);
 
     setUniformInt(post_processor_shader, "mode", 3);
 
@@ -190,8 +192,8 @@ void CompositorStage::postProcess() const {
 
 void CompositorStage::draw() const {
     prepare();
-    composite();
     postProcess();
+    composite();
 }
 
 void CompositorStage::updateShaders() {
