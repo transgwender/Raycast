@@ -20,18 +20,24 @@ class CompositorStage {
     GLuint ibo = 0;
     GLuint vao = 0;
 
+    GLuint frame_buffer;
+
     TextureHandle world_texture = 0;
     TextureHandle ui_texture = 0;
     TextureHandle world_text_texture = 0;
     TextureHandle ui_text_texture = 0;
+    TextureHandle composited_texture = 0;
 
-    ShaderHandle shader = 0;
+    ShaderHandle compositor_shader = 0;
+    ShaderHandle post_processor_shader = 0;
 
     GLFWwindow* window = nullptr;
 
     void createVertexAndIndexBuffers();
+    void createScreenTexture();
 
     void setupTextures() const;
+    void prepare() const;
 
   public:
     /**
@@ -42,6 +48,8 @@ class CompositorStage {
     /**
      * Composite all frames from this pipeline iteration into a single frame and apply scaling.
      */
+    void composite() const;
+    void postProcess() const;
     void draw() const;
 
     void updateShaders();

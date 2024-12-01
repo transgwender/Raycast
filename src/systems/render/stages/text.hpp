@@ -29,8 +29,8 @@ class TextStage {
 
     // render text at this specific resolution.
     // this is much higher than 320x180, so the text will look sharper
-    const int frame_width = 1920;
-    const int frame_height = 1080;
+    const int frame_width = upscaled_width;
+    const int frame_height = upscaled_height;
 
     mat4 projection_matrix = {};
 
