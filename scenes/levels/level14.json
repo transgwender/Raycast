@@ -1,6 +1,7 @@
 {
     "objList": [
         {
+            "name": "Sliding doors",
             "data": [
                 {
                     "type": "level",
@@ -18,12 +19,17 @@
             ]
         },
         {
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        140.0,
+                        90.0
                     ],
+                    "angle": 0.1,
                     "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -36,12 +42,17 @@
         },
 
         {
+            "name": "bottom-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        260.0,
+                        90.0
                     ],
+                    "angle": 0,
                     "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -66,6 +77,7 @@
                 },
                 {
                     "type": "light_source",
+                    "angle": 0
                 }
             ]
         },
@@ -75,6 +87,8 @@
                 {
                     "type": "zone",
                     "position": [
+                        60.0,
+                        100.0
                     ],
                     "zone_type": 1,
                     "angle": 0
