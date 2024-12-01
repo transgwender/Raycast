@@ -72,7 +72,7 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                     if (type == "sprite") {
                         Sprite c{};
                         data.get_to(c);
-                        createSprite(entity, c.position, c.scale, c.angle, c.texture);
+                        createSprite(entity, c.position, c.scale, c.angle, c.texture, FOREGROUND, c.color);
                     } else if (type == "change_scene") {
                         PARSE_COMPONENT(ChangeScene, changeScenes);
                     } else if (type == "zone") {
@@ -153,6 +153,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         motion.position = end.position;
                         motion.scale = {3, 3};
                         registry.motions.insert(entity, motion);
+                    } else if (type == "ambient_light") {
+                        PARSE_COMPONENT(AmbientLight, ambientLights);
                     }
                 }
             }

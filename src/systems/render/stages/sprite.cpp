@@ -102,7 +102,13 @@ void SpriteStage::prepareDraw() const {
     setUniformInt(shader, "albedo_tex", 0);
     setUniformInt(shader, "normal_tex", 1);
 
-    setUniformFloatVec3(shader, "ambient_light", ambient_light_colour / 255.0f);
+    if (registry.ambientLights.size() == 0) {
+        LOG_WARN("No ambient light found, using default ambient light.");
+        registry.ambientLights.insert(Entity(), {default_ambient_light_colour});
+        setUniformFloatVec3(shader, "ambient_light", default_ambient_light_colour / 255.0f);
+    } else {
+        setUniformFloatVec3(shader, "ambient_light", registry.ambientLights.components[0].color / 255.0f);
+    }
     setUniformFloatMat3(shader, "projection", projection_matrix);
 
     // set point lights

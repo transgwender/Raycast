@@ -316,6 +316,7 @@ struct Sprite {
     vec2 scale = {10, 10};
     float angle = 0;
     std::string texture;
+    vec4 color = {255, 255, 255, 255};
 };
 
 struct Mirror {
@@ -417,4 +418,8 @@ struct EndCutsceneCount {
     int sequence = 0;
     int maxInclusive;
     vec2 position;
+};
+
+struct AmbientLight {
+    vec3 color = {255, 255, 255};
 };

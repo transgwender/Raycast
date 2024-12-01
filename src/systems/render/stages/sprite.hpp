@@ -35,7 +35,7 @@ class SpriteStage {
 
     const uint16_t textured_indices[6] = {0, 3, 1, 1, 3, 2};
 
-    vec3 ambient_light_colour = 1.0f * vec3(156, 194, 255);
+    vec3 default_ambient_light_colour = 1.0f * vec3(156, 194, 255);
 
     void createVertexAndIndexBuffers();
 

@@ -10,6 +10,15 @@
             ]
         },
         {
+            "name": "Ambient Light",
+            "data": [
+                {
+                    "type": "ambient_light",
+                    "color": [255.0, 255.0, 255.0]
+                }
+            ]
+        },
+        {
             "name": "play_button",
             "data": [
                 {
@@ -67,7 +76,8 @@
                     "scale": [
                         184.0,
                         92.0
-                    ]
+                    ],
+                    "color": [260.0, 260.0, 260.0, 255.0]
                 }
             ]
         },
