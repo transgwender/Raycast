@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Rails",
+            "name": "Breakout",
             "data": [
                 {
                     "type": "level",
-                    "id": 9
+                    "id": 13
                 }
             ]
         },
@@ -19,15 +19,36 @@
             ]
         },
         {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        100.0,
+                        57.0
+                    ],
+                    "angle": 0,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
             "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        135.0,
-                        122.0
+                        150.0,
+                        130.0
                     ],
-                    "angle": 0.785,
+                    "angle": 1.5707963268,
                     "rail-length": 50,
                     "rail-angle": 0
                 },
@@ -46,8 +67,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        122.0
+                        40.0,
+                        60.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -59,34 +80,13 @@
             ]
         },
         {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        155.0,
-                        116.0
-                    ],
-                    "size": 48,
-                    "text": "< Drag mirrors along rails",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        160.0,
-                        50.0
+                        280.0,
+                        60.0
                     ],
                     "zone_type": 1,
                     "angle": 0

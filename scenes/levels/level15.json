@@ -1,7 +1,6 @@
 {
     "objList": [
         {
-            "name": "Sliding doors",
             "data": [
                 {
                     "type": "level",
@@ -19,17 +18,50 @@
             ]
         },
         {
-            "name": "left-move-mirror",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        250.0,
+                        185.0
+                    ],
+                    "scale": [
+                        140,
+                        10
+                    ],
+                    "angle": -1.5707963268,
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 140,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "bottom-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        140.0,
-                        90.0
                     ],
-                    "angle": 0.1,
-                    "rail-length": 50,
-                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -41,17 +73,12 @@
             ]
         },
         {
-            "name": "bottom-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        260.0,
                         90.0
                     ],
-                    "angle": 0,
-                    "rail-length": 50,
-                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -68,8 +95,6 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -86,8 +111,6 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        100.0
                     ],
                     "zone_type": 1,
                     "angle": 0

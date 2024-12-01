@@ -1,10 +1,11 @@
 {
     "objList": [
         {
+            "name": "Double-sided",
             "data": [
                 {
                     "type": "level",
-                    "id": 16
+                    "id": 12
                 }
             ]
         },
@@ -18,12 +19,17 @@
             ]
         },
         {
+            "name": "bottom-left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        150.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -34,14 +40,61 @@
                 }
             ]
         },
-
         {
-            "name": "move-mirror",
+            "name": "top-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        260.0,
+                        110.0
                     ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        40.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        40.0
+                    ],
+                    "angle": -0.7853981634,
+                    "rail-length": 50,
                     "rail-angle": 0
                 },
                 {
@@ -59,12 +112,15 @@
                 {
                     "type": "zone",
                     "position": [
+                        40.0,
+                        110.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
+                    "angle": 0
                 }
             ]
         },
@@ -74,6 +130,8 @@
                 {
                     "type": "zone",
                     "position": [
+                        110.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0
