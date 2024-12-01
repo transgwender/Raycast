@@ -66,9 +66,9 @@
                     "size": 285,
                     "text": "RAYCAST",
                     "color": [
-                        255,
-                        255,
-                        255
+                        300,
+                        300,
+                        300
                     ],
                     "layer": 6,
                     "centered": true,
