@@ -91,7 +91,8 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
     registry.colliders.emplace(entity);
     auto& collider = registry.colliders.get(entity);
     collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
-    collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    // collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    collider.user_interaction_bounds_type = BOUNDS_TYPE::RECTANGULAR;
     collider.width = scale.x;
     collider.height = scale.y;
 
