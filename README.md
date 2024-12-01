@@ -28,3 +28,5 @@ Turtle by Elthen https://elthen.itch.io/2d-pixel-art-turtle-sprites
 Platformer Asset Collection by Name By Another Rose https://opengameart.org/content/platformer-asset-collection
 
 Birds and Wind - Ambient, Birds, Wind and Synth by Spring Spring https://opengameart.org/content/birds-and-wind-ambient-birds-wind-and-synth
+
+Legacy Collection by ansimuz https://ansimuz.itch.io/gothicvania-patreon-collection
