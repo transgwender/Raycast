@@ -25,7 +25,7 @@
                     "type": "mirror",
                     "position": [
                         135.0,
-                        130.0
+                        125.0
                     ],
                     "angle": 1.5707963268,
                     "rail-length": 50,
@@ -87,7 +87,7 @@
                 {
                     "type": "zone",
                     "position": [
-                        260.0,
+                        240.0,
                         40.0
                     ],
                     "zone_type": 1,
