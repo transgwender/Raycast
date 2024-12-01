@@ -33,7 +33,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer0);
     glGenTextures(1, &bloom_tex0);
     glBindTexture(GL_TEXTURE_2D, bloom_tex0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -45,7 +45,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
     glGenTextures(1, &bloom_tex1);
     glBindTexture(GL_TEXTURE_2D, bloom_tex1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -129,14 +129,14 @@ void CompositorStage::composite() const {
 }
 
 void CompositorStage::bloomBrightnessPass() const {
-    glViewport(0, 0, upscaled_width, upscaled_height);
+    glViewport(0, 0, bloom_pass_width, bloom_pass_height);
 
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
     glClear(GL_COLOR_BUFFER_BIT);
 
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, composited_texture);
+    glBindTexture(GL_TEXTURE_2D, world_texture);
     setUniformInt(post_processor_shader, "mode", 0);
 
     glClear(GL_COLOR_BUFFER_BIT);
@@ -144,9 +144,9 @@ void CompositorStage::bloomBrightnessPass() const {
 }
 
 void CompositorStage::bloomBlurPass() const {
-    constexpr int blur_passes = 10;
+    constexpr int blur_passes = 6;
 
-    glViewport(0, 0, upscaled_width, upscaled_height);
+    glViewport(0, 0, bloom_pass_width, bloom_pass_height);
     glActiveTexture(GL_TEXTURE0);
 
     for (int i = 0; i < blur_passes; i++) {

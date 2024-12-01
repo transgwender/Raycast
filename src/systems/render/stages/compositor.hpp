@@ -37,6 +37,9 @@ class CompositorStage {
     ShaderHandle compositor_shader = 0;
     ShaderHandle post_processor_shader = 0;
 
+    int bloom_pass_width = native_width * 2;
+    int bloom_pass_height = native_height * 2;
+
     GLFWwindow* window = nullptr;
 
     void createVertexAndIndexBuffers();
