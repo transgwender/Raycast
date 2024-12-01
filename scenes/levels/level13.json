@@ -1,10 +1,11 @@
 {
     "objList": [
         {
+            "name": "Breakout",
             "data": [
                 {
                     "type": "level",
-                    "id": 16
+                    "id": 13
                 }
             ]
         },
@@ -13,17 +14,21 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_1"
                 }
             ]
         },
         {
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        100.0,
+                        57.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 0,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
@@ -34,14 +39,17 @@
                 }
             ]
         },
-
         {
             "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
+                        150.0,
+                        130.0
                     ],
+                    "angle": 1.5707963268,
+                    "rail-length": 50,
                     "rail-angle": 0
                 },
                 {
@@ -59,12 +67,15 @@
                 {
                     "type": "zone",
                     "position": [
+                        40.0,
+                        60.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
+                    "angle": 0
                 }
             ]
         },
@@ -74,6 +85,8 @@
                 {
                     "type": "zone",
                     "position": [
+                        280.0,
+                        60.0
                     ],
                     "zone_type": 1,
                     "angle": 0
