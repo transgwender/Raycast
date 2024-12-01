@@ -122,7 +122,7 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
         registry.buttons.emplace(entity);
     }
     Text text;
-    text.size = 19*5;
+    text.size = 57;
     text.position = position;
     text.text = label;
     text.color = color;
