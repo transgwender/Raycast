@@ -312,13 +312,13 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         auto &minisun = registry.minisuns.get(minisun_entity);
         minisun.lit = true;
         LightUp l;
-        minisun.light_level_percentage = 0.2f;
+        minisun.light_level_percentage = 0.4f;
         registry.litEntities.insert(minisun_entity, l);
     } else {
         LightUp& minisun_light = registry.litEntities.get(minisun_entity);
         minisun_light.counter_ms = LIGHT_TIMER_MS;
         auto& minisun = registry.minisuns.get(minisun_entity);
-        minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.2f, 0.0f, 1.0f);
+        minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.4f, 0.0f, 1.0f);
 
     }
 }
