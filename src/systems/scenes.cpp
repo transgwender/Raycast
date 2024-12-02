@@ -19,7 +19,9 @@ data.get_to(__ty);                                                             \
 
 namespace fs = std::filesystem;
 
-void SceneSystem::init(Entity &scene_state_entity) {
+void SceneSystem::init(Entity &scene_state_entity, PersistenceSystem *persistence_ptr) {
+    persistence = persistence_ptr;
+
     Scene& scene = registry.scenes.emplace(scene_state_entity);
     scene.scene_tag = "mainmenu";
 
@@ -155,6 +157,30 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                         registry.motions.insert(entity, motion);
                     } else if (type == "ambient_light") {
                         PARSE_COMPONENT(AmbientLight, ambientLights);
+                    } else if (type == "setting") {
+                        Setting setting{};
+                        data.get_to(setting);
+                        if (setting.setting == "music") {
+                            registry.texts.insert(entity, {"Music Volume", {120, setting.position_y}, 36, vec4(255.0), UI_TEXT, true});
+                            int index = floor(persistence->get_settings_music_volume() * 26);
+                            if (index > 25) index = 25;
+                            std::string slider_texture = "slider" + std::to_string(index);
+                            createEmptyButton(entity, {200, setting.position_y}, {52, 10}, "", slider_texture);
+                            registry.volumeSliders.insert(entity, {setting.setting});
+                        } else if (setting.setting == "sfx") {
+                            registry.texts.insert(entity, {"SFX Volume", {120, setting.position_y}, 36, vec4(255.0), UI_TEXT, true});
+                            int index = floor(persistence->get_settings_sfx_volume() * 26);
+                            if (index > 25) index = 25;
+                            std::string slider_texture = "slider" + std::to_string(index);
+                            createEmptyButton(entity, {200, setting.position_y}, {52, 10}, "", slider_texture);
+                            registry.volumeSliders.insert(entity, {setting.setting});
+                        } else if (setting.setting == "hard") {
+                            registry.texts.insert(entity, {"Hard Mode", {120, setting.position_y}, 36, vec4(255.0), UI_TEXT, true});
+                            int index = persistence->get_settings_hard_mode();
+                            std::string toggle_texture = "toggle" + std::to_string(index);
+                            createEmptyButton(entity, {200, setting.position_y}, {10, 10}, "", toggle_texture);
+                            registry.toggles.insert(entity, {setting.setting});
+                        }
                     }
                 }
             }

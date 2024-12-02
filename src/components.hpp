@@ -125,6 +125,14 @@ struct ChangeScene {
 
 struct ResumeGame {};
 
+struct VolumeSlider {
+    std::string setting;
+};
+
+struct Toggle {
+    std::string setting;
+};
+
 struct DeleteData {
     bool isDoubleChecking = false;
 };
@@ -422,4 +430,9 @@ struct EndCutsceneCount {
 
 struct AmbientLight {
     vec3 color = {255, 255, 255};
+};
+
+struct Setting {
+    std::string setting;
+    float position_y;
 };

@@ -97,10 +97,12 @@ GLFWwindow* WorldSystem::create_window() {
 }
 
 void WorldSystem::init(PersistenceSystem *persistence_ptr) {
-    scenes.init(scene_state_entity);
-    sounds.load_all_sounds();
     this->persistence = persistence_ptr;
     menus.init(persistence_ptr);
+    sounds.change_volume_music(persistence->get_settings_music_volume());
+    sounds.change_volume_sfx(persistence->get_settings_sfx_volume());
+    scenes.init(scene_state_entity, persistence_ptr);
+    sounds.load_all_sounds();
 
     // Set all states to default
     restart_game();
@@ -221,6 +223,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 
 // Reset the world state to its initial state
 void WorldSystem::restart_game() {
+    input_manager.active_entities.clear();
     // Debugging for memory/component leaks
     registry.list_all_components();
     LOG_INFO("Restarting game state");
@@ -249,7 +252,7 @@ void WorldSystem::restart_game() {
     }
 
     if (!registry.endCutsceneCounts.components.empty()) {
-        sounds.stop_background();
+        sounds.stop_music();
     } else {
         sounds.play_background();
     }
@@ -665,7 +668,11 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
 
             if (registry.rotatable.has(entity)) { // rotatable mirrors
                 // NOTE: we need to substract PI/2 since by default the mirror is perpendicular to +x-axis
-                clicked_motion.angle = raycast::math::snap(raycast::math::heading(to_mouse) - M_PI_2, registry.rotatable.get(entity).snap_angle);
+                if (persistence->get_settings_hard_mode()) { // HARD MODE: No snapping
+                    clicked_motion.angle = raycast::math::heading(to_mouse) - M_PI_2, registry.rotatable.get(entity);
+                } else {
+                    clicked_motion.angle = raycast::math::snap(raycast::math::heading(to_mouse) - M_PI_2, registry.rotatable.get(entity).snap_angle);
+                }
             }
 
             if (registry.entitiesOnLinearRails.has(entity)) { // mirrors on rails
@@ -673,17 +680,25 @@ void WorldSystem::on_mouse_move(vec2 mouse_position) {
                 // ideally the fist endpoint should correspond to the left endpoint, but if we rotate
                 // beyond the y-axis it flips so this check is necessary
                 if (rails.firstEndpoint.x < rails.secondEndpoint.x) {
-                    clicked_motion.position = raycast::math::clampToLineSegment(
-                        rails.firstEndpoint,
-                        rails.secondEndpoint,
-                        {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
-                        raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)});
+                    vec2 point;
+                    if (persistence->get_settings_hard_mode()) { // HARD MODE: No snapping
+                        point = {(screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x,
+                                 (screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y};
+                    } else {
+                        point = {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
+                                  raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)};
+                    }
+                    clicked_motion.position = raycast::math::clampToLineSegment(rails.firstEndpoint, rails.secondEndpoint, point);
                 } else {
-                    clicked_motion.position = raycast::math::clampToLineSegment(
-                        rails.secondEndpoint,
-                        rails.firstEndpoint,
-                        {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
-                        raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)});
+                    vec2 point;
+                    if (persistence->get_settings_hard_mode()) { // HARD MODE: No snapping
+                        point = {(screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x,
+                                  (screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y};
+                    } else {
+                        point = {raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).x, rails.length / rails.snap_segments),
+                                  raycast::math::snap((screenToWorld(mouse_position) - input_manager.displacement_to_entity()).y, rails.length / rails.snap_segments)};
+                    }
+                    clicked_motion.position = raycast::math::clampToLineSegment(rails.secondEndpoint, rails.firstEndpoint, point);
                 }
             }
         }
@@ -730,6 +745,37 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 } else {
                     d.isDoubleChecking = true;
                     text.text = "Are you sure?";
+                }
+            }
+            if (registry.volumeSliders.has(entity)) {
+                auto &v = registry.volumeSliders.get(entity);
+                auto &m = registry.motions.get(entity);
+                auto &t = registry.materials.get(entity);
+                float left = m.position.x - m.scale.x/2;
+                int width, height;
+                glfwGetWindowSize(window, &width, &height);
+                float scaled = (xpos/width) * native_width;
+                float value = (scaled - left)/m.scale.x;
+                int index = floor(value * 26);
+                if (index > 25) index = 25;
+                std::string slider_texture = "slider" + std::to_string(index);
+                t.texture = get_tex(slider_texture);
+                if (v.setting == "music") {
+                    persistence->set_settings_music_volume(value);
+                    sounds.change_volume_music(value);
+                } else if (v.setting == "sfx") {
+                    persistence->set_settings_sfx_volume(value);
+                    sounds.change_volume_sfx(value);
+                }
+            }
+            if (registry.toggles.has(entity)) {
+                auto &t = registry.toggles.get(entity);
+                auto &m = registry.materials.get(entity);
+                if (t.setting == "hard") {
+                    persistence->set_settings_hard_mode(!persistence->get_settings_hard_mode());
+                    int index = persistence->get_settings_hard_mode();
+                    std::string toggle_texture = "toggle" + std::to_string(index);
+                    m.texture = get_tex(toggle_texture);
                 }
             }
         }
