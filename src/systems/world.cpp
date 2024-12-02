@@ -221,6 +221,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
 
 // Reset the world state to its initial state
 void WorldSystem::restart_game() {
+    input_manager.active_entities.clear();
     // Debugging for memory/component leaks
     registry.list_all_components();
     LOG_INFO("Restarting game state");
