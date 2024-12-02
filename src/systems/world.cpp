@@ -479,35 +479,29 @@ void WorldSystem::handle_turtle_collisions(int i) {
     if (abs(overlapX) < abs(overlapY)) {
          if (turtle_motion.position.x < barrier_motion.position.x) {
             // Place the turtle to the left of the barrier
-            turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
+            // turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
 
             // If the "barrier" is a lever, push it to the right!
             if (registry.levers.has(other)) {
+                if (registry.motions.get(turtle).velocity.x > 0) {
+                    registry.levers.get(other).state = LEVER_STATES::RIGHT;
+                } else {
+                    registry.levers.get(other).state = LEVER_STATES::LEFT;
+                }
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
-                DashTheTurtle& t = registry.turtles.get(turtle);
-                // To ensure lever SFX is played once only
-                if (!t.tired)
-                    sounds.play_sound("lever.wav");
 
-                t.tired = true;
-                t.behavior = DASH_STATES::IDLE;
             }
         }
          if (turtle_motion.position.x > barrier_motion.position.x) {
             // Place the turtle to the right of the barrier
-            turtle_motion.position.x =
-                 barrier_motion.position.x + abs(barrier_collider.width / 2) + abs(turtle_collider.width / 2) - 0.01f;
 
             // If the "barrier" is a lever, push it to the left!
             if (registry.levers.has(other)) {
-                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
-                DashTheTurtle& t = registry.turtles.get(turtle);
-                // To ensure lever SFX is played once only
-                if (!t.tired)
-                    sounds.play_sound("lever.wav");
-
-                t.tired = true;
-                t.behavior = DASH_STATES::IDLE;
+                if (registry.motions.get(turtle).velocity.x > 0) {
+                    registry.levers.get(other).state = LEVER_STATES::RIGHT;
+                } else {
+                    registry.levers.get(other).state = LEVER_STATES::LEFT;
+                }
             }
         }
 

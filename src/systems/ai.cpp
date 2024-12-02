@@ -51,6 +51,11 @@ void AISystem::updateDash(float elapsed_ms) {
             if (minimumDistanceSquared <= compareDistanceSquared) {
                 t.behavior = DASH_STATES::WALK;
                 t.nearestLightRayDirection = minimumDisplacement;
+            } else if (!(abs(dashMotion.position.x - t.originalPosition.x) <= 1)) {
+                t.behavior = DASH_STATES::WALK;
+                minimumDisplacement =
+                    vec2(dashMotion.position.x - t.originalPosition.x, dashMotion.position.y - t.originalPosition.y);
+                t.nearestLightRayDirection = minimumDisplacement;
             } else if (minimumDistanceSquared <= lookReactDistanceSquared) {
                 t.behavior = DASH_STATES::STARE;
                 t.nearestLightRayDirection = minimumDisplacement;

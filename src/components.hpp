@@ -357,6 +357,7 @@ struct DashTheTurtle {
     DASH_STATES behavior;
     bool tired = false;
     vec2 nearestLightRayDirection;
+    vec2 originalPosition;
 };
 
 struct SpriteSheet {
