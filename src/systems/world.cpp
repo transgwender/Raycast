@@ -274,7 +274,7 @@ void WorldSystem::handle_collisions() {
     // registry.collisions.emplace_with_duplicates(Entity(), Entity());
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
-    for (int i = 0; i < collisionsRegistry.size(); i++) {
+    for (int i = 0; i < collisionsRegistry.entities.size(); i++) {
         if (registry.portals.has(collisionsRegistry.entities[i]) &&
             registry.lightRays.has(collisionsRegistry.components[i].other)) {
             handle_portal_collisions(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
@@ -295,12 +295,13 @@ void WorldSystem::handle_collisions() {
             handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other,
                               collisionsRegistry.components[i].side, collisionsRegistry.components[i].overlap);
         } else {
-            handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            
             if (registry.minisuns.has(collisionsRegistry.entities[i])) {
                 handle_minisun_collision(collisionsRegistry.entities[i]);
             } else if (registry.endCutsceneCounts.has(collisionsRegistry.entities[i])) {
                 handle_end_cutscene_collision(collisionsRegistry.entities[i]);
             }
+            handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
     }
     // Remove all collisions from this simulation step
