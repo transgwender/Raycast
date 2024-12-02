@@ -18,7 +18,7 @@ using Clock = std::chrono::high_resolution_clock;
 
 bool window_focused = true;
 
-int main(int argc, char* argv[]) {
+int main() {
     // Global systems
     WorldSystem world;
     RenderSystem renderer;
@@ -31,11 +31,6 @@ int main(int argc, char* argv[]) {
     // Initialize default logger
     raycast::logging::LogManager log_manager;
     log_manager.Initialize();
-
-    // Set working directory
-    std::filesystem::current_path(std::filesystem::canonical(argv[0]).parent_path());
-    LOG_INFO("Current working directory: " + std::filesystem::current_path().string());
-
 
     // Initializing window
     GLFWwindow* window = world.create_window();
