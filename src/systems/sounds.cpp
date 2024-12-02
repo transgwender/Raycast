@@ -27,7 +27,7 @@ void SoundSystem::load_all_sounds() {
         throw std::runtime_error("Failed to load music: " + BGM_FILENAME);
     }
 
-    is_curr_background = false;
+    active_music = NONE;
 
     forest_sounds = Mix_LoadMUS(music_path(FS_FILENAME).c_str());
 
@@ -88,24 +88,38 @@ void SoundSystem::play_sound(const std::string& filename, const float volume_mul
 
     Mix_Chunk* sfx_to_play = it->second;
 
-    Mix_VolumeChunk(sfx_to_play, static_cast<int>(MIX_MAX_VOLUME * volume_multiplier));
+    Mix_VolumeChunk(sfx_to_play, static_cast<int>(MIX_MAX_VOLUME * volume_multiplier * sfx_volume));
     Mix_PlayChannel(-1, sfx_to_play, 0);
 }
 
 void SoundSystem::play_background() {
-    if (is_curr_background) return;
+    if (active_music == MAIN) return;
 
-    Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER);
+    Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER * music_volume);
     Mix_PlayMusic(background_music, -1);
-    is_curr_background = true;
+    active_music = MAIN;
 }
 
 void SoundSystem::play_forest() {
-    Mix_VolumeMusic(MIX_MAX_VOLUME * FS_VOLUME_MULTIPLIER);
+    Mix_VolumeMusic(MIX_MAX_VOLUME * FS_VOLUME_MULTIPLIER * music_volume);
     Mix_FadeInMusic(forest_sounds, -1, 200);
+    active_music = FOREST;
 }
 
-void SoundSystem::stop_background() {
-    is_curr_background = false;
+void SoundSystem::stop_music() {
+    active_music = NONE;
     Mix_FadeOutMusic(2000);
+}
+
+void SoundSystem::change_volume_music(float volume) {
+    music_volume = volume;
+    if (active_music == MAIN) {
+        Mix_VolumeMusic(MIX_MAX_VOLUME * BGM_VOLUME_MULTIPLIER * music_volume);
+    } else if (active_music == FOREST) {
+        Mix_VolumeMusic(MIX_MAX_VOLUME * FS_VOLUME_MULTIPLIER * music_volume);
+    }
+}
+
+void SoundSystem::change_volume_sfx(float volume) {
+    sfx_volume = volume;
 }

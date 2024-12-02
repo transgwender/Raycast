@@ -125,6 +125,14 @@ struct ChangeScene {
 
 struct ResumeGame {};
 
+struct VolumeSlider {
+    std::string setting;
+};
+
+struct Toggle {
+    std::string setting;
+};
+
 struct DeleteData {
     bool isDoubleChecking = false;
 };
@@ -418,4 +426,9 @@ struct EndCutsceneCount {
     int sequence = 0;
     int maxInclusive;
     vec2 position;
+};
+
+struct Setting {
+    std::string setting;
+    float position_y;
 };

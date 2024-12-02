@@ -15,6 +15,8 @@ class ECSRegistry {
     ComponentContainer<Collision> collisions;
     ComponentContainer<Interactable> interactables;
     ComponentContainer<ChangeScene> changeScenes;
+    ComponentContainer<VolumeSlider> volumeSliders;
+    ComponentContainer<Toggle> toggles;
     ComponentContainer<ResumeGame> resumeGames;
     ComponentContainer<Zone> zones;
     ComponentContainer<LightSource> lightSources;
@@ -59,6 +61,8 @@ class ECSRegistry {
         registry_list.push_back(&collisions);
         registry_list.push_back(&interactables);
         registry_list.push_back(&changeScenes);
+        registry_list.push_back(&volumeSliders);
+        registry_list.push_back(&toggles);
         registry_list.push_back(&resumeGames);
         registry_list.push_back(&zones);
         registry_list.push_back(&lightSources);

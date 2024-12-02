@@ -121,14 +121,16 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     if (!registry.buttons.has(entity)) {
         registry.buttons.emplace(entity);
     }
-    Text text;
-    text.size = 57;
-    text.position = position;
-    text.text = label;
-    text.color = color;
-    text.layer = UI_TEXT;
-    text.centered = true;
-    registry.texts.insert(entity, text);
+    if (!label.empty()) {
+        Text text;
+        text.size = 57;
+        text.position = position;
+        text.text = label;
+        text.color = color;
+        text.layer = UI_TEXT;
+        text.centered = true;
+        registry.texts.insert(entity, text);
+    }
     return entity;
 }
 

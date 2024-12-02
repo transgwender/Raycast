@@ -43,6 +43,30 @@
             ]
         },
         {
+            "name": "settings_button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        160.0,
+                        150.0
+                    ],
+                    "label": "Settings",
+                    "scale": [
+                        96.0,
+                        32.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "settings"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
             "name": "Team name",
             "data": [
                 {
@@ -81,29 +105,6 @@
                     ],
                     "layer": 6,
                     "centered": false
-                }
-            ]
-        },
-        {
-            "name": "reset_data_button",
-            "data": [
-                {
-                    "type": "button",
-                    "position": [
-                        270.0,
-                        165.0
-                    ],
-                    "label": "Reset Data",
-                    "scale": [
-                        80.0,
-                        20.0
-                    ]
-                },
-                {
-                    "type": "delete_data"
-                },
-                {
-                    "type": "menu_item"
                 }
             ]
         }
