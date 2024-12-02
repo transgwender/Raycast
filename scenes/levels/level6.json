@@ -389,7 +389,7 @@
                 {
                     "type": "sprite_sheet",
                     "position": [
-                        260.0,
+                        240.0,
                         114.0
                     ],
                     "sheetWidth": 384,
@@ -438,7 +438,7 @@
                     "path": "star.obj",
                     "position": [
                         120,
-                        90
+                        110
                     ],
                     "angle": 0,
                     "scale": [
@@ -470,8 +470,8 @@
                 {
                     "type": "text",
                     "position": [
-                        220.0,
-                        110.0
+                        210.0,
+                        100.0
                     ],
                     "size": 32,
                     "text": "HINT: sea turtles are attracted\n to large bodies of light",
@@ -491,7 +491,7 @@
                 {
                     "type": "lever",
                     "position": [
-                        150.0,
+                        180.0,
                         120.0
                     ],
                     "state": 5,
@@ -513,8 +513,8 @@
                 },
                 {
                     "type": "collider",
-                    "width": 80,
-                    "height": 8,
+                    "width": 90,
+                    "height": 10,
                     "bounds": 1
                 },
                 {
