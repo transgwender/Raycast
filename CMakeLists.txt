@@ -49,6 +49,7 @@ file(GLOB SOURCE_FILES
 
 # external libraries will be installed into /usr/local/include and /usr/local/lib but that folder is not automatically included in the search on MACs
 if (IS_OS_MAC)
+    set(CMAKE_INSTALL_RPATH "@executable_path")
     include_directories(/usr/local/include)
     link_directories(/usr/local/lib)
     # 2024-09-24 - added for M-series Mac's
@@ -67,6 +68,7 @@ target_include_directories(${PROJECT_NAME} PUBLIC ext/stb_image/)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/gl3w)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/nlohmann)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/spdlog)
+#target_link_libraries(${PROJECT_NAME} PRIVATE ext/spdlog::spdlog_header_only)
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
