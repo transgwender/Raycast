@@ -147,7 +147,7 @@ void CompositorStage::bloomBrightnessPass() const {
 }
 
 void CompositorStage::bloomBlurPass() const {
-    constexpr int blur_passes = 6;
+    constexpr int blur_passes = 4;
 
     glViewport(0, 0, bloom_pass_width, bloom_pass_height);
     glActiveTexture(GL_TEXTURE0);
