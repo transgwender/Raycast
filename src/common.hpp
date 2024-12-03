@@ -67,6 +67,9 @@ extern int window_height_px;
 static int native_width = 320;
 static int native_height = 180;
 
+static int upscaled_width = 1280;
+static int upscaled_height = 720;
+
 static bool debug = false;
 
 static int LIGHT_TIMER_MS = 5000/100;

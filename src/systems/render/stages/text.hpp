@@ -58,7 +58,7 @@ class TextStage {
 
     void renderText(const Text& text, float x, float y);
 
-  public:
+public:
     /**
      * Initialize the text rendering system.
      *

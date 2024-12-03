@@ -1,20 +1,20 @@
 {
     "objList": [
         {
-            "name": "logo",
+            "name": "background",
             "data": [
                 {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        60.0
-                    ],
-                    "texture": "logo",
-                    "scale": [
-                        155.0,
-                        43.0
-                    ],
-                    "layer": 6
+                    "type": "background",
+                    "id": "forest"
+                }
+            ]
+        },
+        {
+            "name": "Ambient Light",
+            "data": [
+                {
+                    "type": "ambient_light",
+                    "color": [255.0, 255.0, 255.0]
                 }
             ]
         },
@@ -29,8 +29,8 @@
                     ],
                     "label": "Start",
                     "scale": [
-                        96.0,
-                        32.0
+                        64.0,
+                        24.0
                     ]
                 },
                 {
@@ -53,8 +53,8 @@
                     ],
                     "label": "Settings",
                     "scale": [
-                        96.0,
-                        32.0
+                        64.0,
+                        24.0
                     ]
                 },
                 {
@@ -88,15 +88,33 @@
             ]
         },
         {
+            "name": "logo",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        60.0
+                    ],
+                    "texture": "logo2",
+                    "scale": [
+                        184.0,
+                        92.0
+                    ],
+                    "color": [382.75, 382.75, 382.75, 255.0]
+                }
+            ]
+        },
+        {
             "name": "Members",
             "data": [
                 {
                     "type": "text",
                     "position": [
                         2,
-                        140
+                        133
                     ],
-                    "size": 32,
+                    "size": 38,
                     "text": "UBC CPSC 427 - 2024W1\nProject Group 03:\n\nArpit Kumar\nGwendolyn Kornak\nJackson Li\nJocelyn Baker\nMuhammad Assad\nSuraj Emmattiparambil",
                     "color": [
                         255,

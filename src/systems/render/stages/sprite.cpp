@@ -13,14 +13,14 @@ void SpriteStage::init() {
     // create new render textures and bind it to our new framebuffer
     glGenTextures(1, &world_texture);
     glBindTexture(GL_TEXTURE_2D, world_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, world_texture, 0);
 
     glGenTextures(1, &ui_texture);
     glBindTexture(GL_TEXTURE_2D, ui_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, ui_texture, 0);
@@ -102,7 +102,13 @@ void SpriteStage::prepareDraw() const {
     setUniformInt(shader, "albedo_tex", 0);
     setUniformInt(shader, "normal_tex", 1);
 
-    setUniformFloatVec3(shader, "ambient_light", ambient_light_colour / 255.0f);
+    if (registry.ambientLights.size() == 0) {
+        LOG_WARN("No ambient light found, using default ambient light.");
+        registry.ambientLights.insert(Entity(), {default_ambient_light_colour});
+        setUniformFloatVec3(shader, "ambient_light", default_ambient_light_colour / 255.0f);
+    } else {
+        setUniformFloatVec3(shader, "ambient_light", registry.ambientLights.components[0].color / 255.0f);
+    }
     setUniformFloatMat3(shader, "projection", projection_matrix);
 
     // set point lights

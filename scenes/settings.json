@@ -1,6 +1,24 @@
 {
     "objList": [
         {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "forest"
+                }
+            ]
+        },
+        {
+            "name": "Ambient Light",
+            "data": [
+                {
+                    "type": "ambient_light",
+                    "color": [255.0, 255.0, 255.0]
+                }
+            ]
+        },
+        {
             "name": "back button",
             "data": [
                 {
