@@ -1,0 +1,312 @@
+{
+  "objList": [
+    {
+      "name": "Ringer (new level)",
+      "data": [
+        {
+          "type": "level",
+          "id": 23
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_1"
+        }
+      ]
+    },
+    {
+      "name": "center_blackhole",
+      "data": [
+        {
+          "type": "blackhole",
+          "mass": 5,
+          "schwarzchild_radius": 24.0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            160,
+            100.0
+          ],
+          "texture": "light",
+          "scale": [
+            10.0,
+            10.0
+          ],
+          "angle": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "width": 20.0,
+          "height": 20.0,
+          "bounds": 0
+        },
+        {
+          "type": "zone",
+          "position": [
+            160,
+            100.0
+          ],
+          "scale": [
+            60,
+            20
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            30.0,
+            90.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "start-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            113.43534469,
+            90.0
+          ],
+          "angle": 0.785,
+          "rail-length": 25,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "bottom_right_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            206.56465531,
+            90.0
+          ],
+          "angle": 1.085,
+          "rail-length": 25,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "top_right_wall",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            273.5,
+            -5.4079122012
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "angle": 1.8286774465,
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 100,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            250.0,
+            130.0
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "bottom_right_wall",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            250,
+            111.0
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "angle": 1.8286774465,
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 100,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            250.0,
+            130.0
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "lower_bottom_right_wall",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            224.5072934014,
+            207.7
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "angle": 1.8286774465,
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 100,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            250.0,
+            130.0
+          ],
+          "scale": [
+            100,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "top_left_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            108.917,
+            40.0
+          ],
+          "angle": 0.785,
+          "rail-length": 25,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "top_right_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            211.083,
+            40.0
+          ],
+          "angle": 0.685,
+          "rail-length": 25,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            290.0,
+            64.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}

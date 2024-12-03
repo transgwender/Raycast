@@ -230,9 +230,15 @@ void PhysicsSystem::detect_collisions() {
     ComponentContainer<Collideable>& collideable_registry = registry.collideables;
     for (uint i = 0; i < collideable_registry.components.size(); i++) {
         Entity entity_i = collideable_registry.entities[i];
+        if (registry.invisibles.has(entity_i)) {
+            continue;
+        }
         // start collision detection from next entity (to avoid self-, repeated-comparisons)
         for (uint j = i + 1; j < collideable_registry.components.size(); j++) {
             Entity entity_j = collideable_registry.entities[j];
+            if (registry.invisibles.has(entity_j)) {
+                continue;
+            }
             // create a collisions event for each entity colliding with other
             // (to ensure both orders exist for later collision handling)
             vec2 collision = Collisions::overlap(entity_i, entity_j);

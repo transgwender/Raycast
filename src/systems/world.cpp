@@ -149,7 +149,17 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             auto& lever = registry.levers.components[i];
             if ((int) lever.state == (int) lever.activeLever) {
                 if (lever.effect == LEVER_EFFECTS::REMOVE) {
-                    registry.remove_all_components_of(lever.affectedEntity);
+                    if (!registry.invisibles.has(lever.affectedEntity)) {
+                        registry.invisibles.emplace(lever.affectedEntity);
+                    }
+                    //registry.remove_all_components_of(lever.affectedEntity);
+                }
+            } else {
+                if (lever.effect == LEVER_EFFECTS::REMOVE) {
+                    if (registry.invisibles.has(lever.affectedEntity)) {
+                        registry.invisibles.remove(lever.affectedEntity);
+                    }
+                    // registry.remove_all_components_of(lever.affectedEntity);
                 }
             }
         }
@@ -274,7 +284,7 @@ void WorldSystem::handle_collisions() {
     // registry.collisions.emplace_with_duplicates(Entity(), Entity());
     // Loop over all collisions detected by the physics system
     auto& collisionsRegistry = registry.collisions;
-    for (int i = 0; i < collisionsRegistry.size(); i++) {
+    for (int i = 0; i < collisionsRegistry.entities.size(); i++) {
         if (registry.portals.has(collisionsRegistry.entities[i]) &&
             registry.lightRays.has(collisionsRegistry.components[i].other)) {
             handle_portal_collisions(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
@@ -295,12 +305,13 @@ void WorldSystem::handle_collisions() {
             handle_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other,
                               collisionsRegistry.components[i].side, collisionsRegistry.components[i].overlap);
         } else {
-            handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
+            
             if (registry.minisuns.has(collisionsRegistry.entities[i])) {
                 handle_minisun_collision(collisionsRegistry.entities[i]);
             } else if (registry.endCutsceneCounts.has(collisionsRegistry.entities[i])) {
                 handle_end_cutscene_collision(collisionsRegistry.entities[i]);
             }
+            handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
     }
     // Remove all collisions from this simulation step
@@ -312,13 +323,13 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         auto &minisun = registry.minisuns.get(minisun_entity);
         minisun.lit = true;
         LightUp l;
-        minisun.light_level_percentage = 0.2f;
+        minisun.light_level_percentage = 0.4f;
         registry.litEntities.insert(minisun_entity, l);
     } else {
         LightUp& minisun_light = registry.litEntities.get(minisun_entity);
         minisun_light.counter_ms = LIGHT_TIMER_MS;
         auto& minisun = registry.minisuns.get(minisun_entity);
-        minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.2f, 0.0f, 1.0f);
+        minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.4f, 0.0f, 1.0f);
 
     }
 }
@@ -479,35 +490,29 @@ void WorldSystem::handle_turtle_collisions(int i) {
     if (abs(overlapX) < abs(overlapY)) {
          if (turtle_motion.position.x < barrier_motion.position.x) {
             // Place the turtle to the left of the barrier
-            turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
+            // turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
 
             // If the "barrier" is a lever, push it to the right!
             if (registry.levers.has(other)) {
+                if (registry.motions.get(turtle).velocity.x > 0) {
+                    registry.levers.get(other).state = LEVER_STATES::RIGHT;
+                } else {
+                    registry.levers.get(other).state = LEVER_STATES::LEFT;
+                }
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
-                DashTheTurtle& t = registry.turtles.get(turtle);
-                // To ensure lever SFX is played once only
-                if (!t.tired)
-                    sounds.play_sound("lever.wav");
 
-                t.tired = true;
-                t.behavior = DASH_STATES::IDLE;
             }
         }
          if (turtle_motion.position.x > barrier_motion.position.x) {
             // Place the turtle to the right of the barrier
-            turtle_motion.position.x =
-                 barrier_motion.position.x + abs(barrier_collider.width / 2) + abs(turtle_collider.width / 2) - 0.01f;
 
             // If the "barrier" is a lever, push it to the left!
             if (registry.levers.has(other)) {
-                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
-                DashTheTurtle& t = registry.turtles.get(turtle);
-                // To ensure lever SFX is played once only
-                if (!t.tired)
-                    sounds.play_sound("lever.wav");
-
-                t.tired = true;
-                t.behavior = DASH_STATES::IDLE;
+                if (registry.motions.get(turtle).velocity.x > 0) {
+                    registry.levers.get(other).state = LEVER_STATES::RIGHT;
+                } else {
+                    registry.levers.get(other).state = LEVER_STATES::LEFT;
+                }
             }
         }
 

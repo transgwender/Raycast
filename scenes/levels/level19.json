@@ -1,11 +1,11 @@
 {
   "objList": [
     {
-      "name": "Portal rails",
+      "name": "Level 20 (!!! 20)",
       "data": [
         {
           "type": "level",
-          "id": 12
+          "id": 19
         }
       ]
     },
@@ -27,29 +27,16 @@
       ]
     },
     {
-      "name": "portals",
-      "data":  [
-        {
-          "type": "portal_pair",
-          "portal_position": [210, 110],
-          "portal_angle": 3.14,
-          "other_portal_position": [110, 70],
-          "other_portal_angle": 0.3
-        }
-      ]
-    },
-    {
-      "name": "middle_mirror",
+      "name": "rotate-mirror",
       "data": [
         {
           "type": "mirror",
           "position": [
-            160.0,
-            90.0
+            100.0,
+            100.0
           ],
           "angle": 0,
-          "rail-length": 25,
-          "rail-angle": 1.5707963268
+          "mirror-type": "rotate"
         },
         {
           "type": "interactable"
@@ -61,13 +48,37 @@
       ]
     },
     {
+      "name": "portals",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 140, 55 ],
+          "portal_angle": 3.14,
+          "other_portal_position": [ 180, 135 ],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "portals2",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 140, 135 ],
+          "portal_angle": 3.14,
+          "other_portal_position": [ 180, 55 ],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
       "name": "start_zone",
       "data": [
         {
           "type": "zone",
           "position": [
             20.0,
-            110.0
+            100.0
           ],
           "zone_type": 0,
           "angle": 30
@@ -84,8 +95,8 @@
         {
           "type": "zone",
           "position": [
-            286.0,
-            70.0
+            300.0,
+            90.0
           ],
           "zone_type": 1,
           "angle": 0

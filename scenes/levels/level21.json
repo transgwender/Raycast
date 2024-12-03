@@ -1,0 +1,193 @@
+{
+  "objList": [
+    {
+      "name": "Yin and Yin (Level 26) (!!! 26)",
+      "data": [
+        {
+          "type": "level",
+          "id": 21
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_1"
+        }
+      ]
+    },
+    {
+      "name": "bottom_left_blackhole",
+      "data": [
+        {
+          "type": "blackhole",
+          "mass": 5.2,
+          "schwarzchild_radius": 24.0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            110.0,
+            123.0
+          ],
+          "texture": "light",
+          "scale": [
+            10.0,
+            10.0
+          ],
+          "angle": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "width": 20.0,
+          "height": 20.0,
+          "bounds": 0
+        },
+        {
+          "type": "zone",
+          "position": [
+            110.0,
+            123.0
+          ],
+          "scale": [
+            60,
+            20
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "top_right_blackhole",
+      "data": [
+        {
+          "type": "blackhole",
+          "mass": 4.5,
+          "schwarzchild_radius": 24.0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            230,
+            80.0
+          ],
+          "texture": "light",
+          "scale": [
+            10.0,
+            10.0
+          ],
+          "angle": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "width": 20.0,
+          "height": 20.0,
+          "bounds": 0
+        },
+        {
+          "type": "zone",
+          "position": [
+            250.0,
+            80.0
+          ],
+          "scale": [
+            60,
+            20
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "middle_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            155.0,
+            40.0
+          ],
+          "angle": -0.7854,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "middle_bottom_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            185.0,
+            145.0
+          ],
+          "angle": -0.7854,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            38.0,
+            40.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 1.5707963268
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            300.0,
+            75.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}

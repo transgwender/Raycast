@@ -223,13 +223,17 @@ inline void from_json(const json& j, Highlightable& c) {
 }
 
 inline void to_json(json& j, const DashTheTurtle& c) {
-    j = json{{"type", "dashTheTurtle"}, {"behavior", c.behavior}, {"minimumDisplacement", c.nearestLightRayDirection}};
+    j = json{{"type", "dashTheTurtle"},
+             {"behavior", c.behavior},
+             {"minimumDisplacement", c.nearestLightRayDirection},
+             {"originalPosition", c.originalPosition}};
 }
 
 inline void from_json(const json& j, DashTheTurtle& c) {
 
     j.at("behavior").get_to(c.behavior);
     j.at("minimumDisplacement").get_to(c.nearestLightRayDirection);
+    j.at("originalPosition").get_to(c.originalPosition);
 }
 
 inline void to_json(json& j, const Motion& c) {

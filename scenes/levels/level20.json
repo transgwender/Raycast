@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Black Hole",
+            "name": "Black Hole (!!! Level 25)",
             "data": [
                 {
                     "type": "level",
-                    "id": 3
+                    "id": 20
                 }
             ]
         },
@@ -89,10 +89,10 @@
                 {
                     "type": "mirror",
                     "position": [
-                        295.0,
-                        30.0
+                        210.0,
+                        50.0
                     ],
-                    "angle": 1.57,
+                    "angle": 0,
                     "mirror-type": "rotate"
                 },
                 {
@@ -110,8 +110,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        20.0,
-                        140.0
+                        40.0,
+                        120.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -128,8 +128,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
-                        140.0
+                        280.0,
+                        80.0
                     ],
                     "zone_type": 1,
                     "angle": 0

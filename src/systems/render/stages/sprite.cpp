@@ -182,7 +182,9 @@ void SpriteStage::draw() const {
     for (int i = 0; i < registry.materials.size(); i++) {
         const Entity& entity = registry.materials.entities[i];
         const auto& material = registry.materials.components[i];
-        drawSprite(entity, material);
+        if (!registry.invisibles.has(entity)) {
+            drawSprite(entity, material);
+        }
     }
 }
 

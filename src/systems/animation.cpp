@@ -30,19 +30,6 @@ void AnimationSystem::animateLever(const Entity& entity, SpriteSheet& ss) const 
 
     // Update animation frame
     if (ss.timeElapsed >= animation_speed) {
-        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_RIGHT &&
-            ss.currFrame < ss.animationFrames[ss.currState] - 1) {
-            ss.currFrame = (ss.currFrame + 1) % ss.animationFrames[ss.currState];
-            ss.timeElapsed = 0.f;
-            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
-        }
-
-        if (lever.movementState == LEVER_MOVEMENT_STATES::PUSHED_LEFT && ss.currFrame > 0) {
-            ss.currFrame = (ss.currFrame - 1) % ss.animationFrames[ss.currState];
-            ss.timeElapsed = 0.f;
-            lever.movementState = LEVER_MOVEMENT_STATES::STILL;
-        }
-
-        lever.state = (LEVER_STATES)ss.currFrame;
+        ss.currFrame = (int)lever.state;
     }
 }
