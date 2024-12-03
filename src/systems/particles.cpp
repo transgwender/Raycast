@@ -150,3 +150,30 @@ Entity ParticleSystem::createLightDissipation(const Motion& light_motion) {
     return e;
 }
 
+Entity ParticleSystem::createPortalParticles(const Portal& portal, const vec4& color) {
+    ParticleSpawner spawner;
+    spawner.texture = texture_manager.get("white_circle");
+    spawner.position = portal.position + vec2(13, 42) / 2.0f;
+    spawner.initial_speed = 300.0f;
+    spawner.damping = 3000.0f;
+    spawner.spin_velocity = 0.0f;
+    spawner.direction = vec2(cos(portal.angle), sin(portal.angle));
+    spawner.color = vec4(color.x / 255, color.y / 255, color.z / 255, color.w / 255);
+    spawner.spread = M_PI / 2;
+    spawner.initial_scale = vec2(3, 3);
+    spawner.scale_change = -12.0f;
+    spawner.alpha_change = 1.f;
+    spawner.lifetime = 0.5f;
+    spawner.max_particles = 8;
+
+    Motion m;
+    m.scale = vec2(13, 42);
+    m.position = spawner.position;
+
+    auto e = Entity();
+    registry.particleSpawners.insert(e, spawner);
+    registry.motions.insert(e, m);
+
+    return e;
+}
+

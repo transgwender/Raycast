@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Black Hole",
+            "name": "Getting angular",
             "data": [
                 {
                     "type": "level",
@@ -14,83 +14,18 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_3"
                 }
             ]
         },
         {
-            "name": "black hole help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        28.0,
-                        43.0
-                    ],
-                    "size": 32,
-                    "text": "Black holes pull the light! >>",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
-            "name": "m87",
-            "data": [
-                {
-                    "type": "blackhole",
-                    "mass": 5.0,
-                    "schwarzchild_radius": 24.0
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        120.0,
-                        40.0
-                    ],
-                    "texture": "light",
-                    "scale": [
-                        10.0,
-                        10.0
-                    ],
-                    "angle": 0
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "collider",
-                    "width": 20.0,
-                    "height": 20.0,
-                    "bounds": 1
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        120.0,
-                        40.0
-                    ],
-                    "scale": [
-                        60,
-                        20
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "far-rotate-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        295.0,
-                        30.0
+                        160.0,
+                        130.0
                     ],
                     "angle": 1.57,
                     "mirror-type": "rotate"
@@ -110,8 +45,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        20.0,
-                        140.0
+                        50.0,
+                        122.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -123,13 +58,34 @@
             ]
         },
         {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        170.0,
+                        58.0
+                    ],
+                    "size": 48,
+                    "text": "Feed plants light to win >",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
-                        140.0
+                        270.0,
+                        55.0
                     ],
                     "zone_type": 1,
                     "angle": 0

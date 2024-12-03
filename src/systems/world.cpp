@@ -377,17 +377,14 @@ void WorldSystem::handle_non_reflection(Entity& collider, Entity& other) {
         }
         default: {
             sounds.play_sound("light-collision.wav");
-            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             ParticleSystem::createLightDissipation(registry.motions.get(other));
             registry.remove_all_components_of(other);
             break;
         }
         }
     } else {
-        // TEMP FIX regarding awkward turtle collision box: TODO
         if (!registry.turtles.has(collider)) {
             sounds.play_sound("light-collision.wav");
-            // LOG_INFO("Hit non-reflective object. Light ray fizzles out");
             registry.remove_all_components_of(other);
         }
     }
@@ -488,6 +485,10 @@ void WorldSystem::handle_turtle_collisions(int i) {
             if (registry.levers.has(other)) {
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
                 DashTheTurtle& t = registry.turtles.get(turtle);
+                // To ensure lever SFX is played once only
+                if (!t.tired)
+                    sounds.play_sound("lever.wav");
+
                 t.tired = true;
                 t.behavior = DASH_STATES::IDLE;
             }
@@ -501,6 +502,10 @@ void WorldSystem::handle_turtle_collisions(int i) {
             if (registry.levers.has(other)) {
                 registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_LEFT;
                 DashTheTurtle& t = registry.turtles.get(turtle);
+                // To ensure lever SFX is played once only
+                if (!t.tired)
+                    sounds.play_sound("lever.wav");
+
                 t.tired = true;
                 t.behavior = DASH_STATES::IDLE;
             }

@@ -20,18 +20,33 @@ class CompositorStage {
     GLuint ibo = 0;
     GLuint vao = 0;
 
+    GLuint frame_buffer = 0;
+    GLuint bloom_buffer0 = 0;
+    GLuint bloom_buffer1 = 0;
+
     TextureHandle world_texture = 0;
     TextureHandle ui_texture = 0;
     TextureHandle world_text_texture = 0;
     TextureHandle ui_text_texture = 0;
 
-    ShaderHandle shader = 0;
+    TextureHandle composited_texture = 0;
+
+    TextureHandle bloom_tex0 = 0;
+    TextureHandle bloom_tex1 = 0;
+
+    ShaderHandle compositor_shader = 0;
+    ShaderHandle post_processor_shader = 0;
+
+    int bloom_pass_width = native_width * 2;
+    int bloom_pass_height = native_height * 2;
 
     GLFWwindow* window = nullptr;
 
     void createVertexAndIndexBuffers();
+    void createTextures();
 
     void setupTextures() const;
+    void prepare() const;
 
   public:
     /**
@@ -42,6 +57,11 @@ class CompositorStage {
     /**
      * Composite all frames from this pipeline iteration into a single frame and apply scaling.
      */
+    void composite() const;
+    void bloomBrightnessPass() const;
+    void bloomBlurPass() const;
+    void bloomComposite() const;
+    void postProcess() const;
     void draw() const;
 
     void updateShaders();

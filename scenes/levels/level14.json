@@ -1,0 +1,108 @@
+{
+    "objList": [
+        {
+            "name": "Double bounce",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 14
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_5"
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        135.0,
+                        125.0
+                    ],
+                    "angle": 1.5707963268,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        155.0,
+                        85.0
+                    ],
+                    "angle": 1.5707963268,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        60.0,
+                        40.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 1
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        240.0,
+                        40.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}

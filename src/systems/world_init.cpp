@@ -1,6 +1,7 @@
 #include "world_init.hpp"
 #include "ecs/registry.hpp"
 #include "systems/physics.hpp"
+#include "systems/particles.hpp"
 #include "utils/math.hpp"
 #include "utils/mesh_utils.hpp"
 
@@ -46,11 +47,11 @@ Entity createLight(const Entity& entity, vec2 position, float dir) {
     spawner.initial_speed = 0.0f;
     spawner.spin_velocity = 0.0f;
     spawner.direction = vec2(0, 1);
-    spawner.color = vec4(1, 1, 0, 1);
+    spawner.color = vec4(1.7, 1.7, 0, 1);
     spawner.spread = 0.0f;
     spawner.initial_scale = vec2(8, 8);
     spawner.scale_change = -15.f;
-    spawner.alpha_change = -1.0f;
+    spawner.alpha_change = -1.7f;
     spawner.lifetime = 1;
     spawner.max_particles = 8;
     registry.particleSpawners.insert(light, spawner);
@@ -91,7 +92,8 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
     registry.colliders.emplace(entity);
     auto& collider = registry.colliders.get(entity);
     collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
-    collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    // collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    collider.user_interaction_bounds_type = BOUNDS_TYPE::RECTANGULAR;
     collider.width = scale.x;
     collider.height = scale.y;
 
@@ -207,7 +209,7 @@ void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position) {
         createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "start_gem_spritesheet");
     } else if (zType == ZONE_TYPE::END) {
         const std::vector<unsigned int> frames = {7};
-        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_gem_spritesheet");
+        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_plant_big");
     }
 }
 
@@ -278,13 +280,13 @@ void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& po
     collider.user_interaction_bounds_type = BOUNDS_TYPE::MESH;
 }
 
-unsigned int world_init::portal_color_i = 1;
+unsigned int world_init::portal_color_i = 0;
 
 void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const float angle2) {
     vec2 portal_size = vec2(13, 42);
 
     const world_init w;
-    const vec4 color = w.portal_colors[world_init::portal_color_i % 10];
+    const vec4 color = w.portal_colors[world_init::portal_color_i % 8];
 
     const Entity portal_1 = createPortalEntity(pos1, angle1, portal_size, color);
     const Entity portal_2 = createPortalEntity(pos2, angle2, portal_size, color);
@@ -292,7 +294,7 @@ void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const f
     // Increment static portal color counter to generate next color
     world_init::portal_color_i += 1;
 
-    linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2);
+    linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2, color);
 }
 
 Entity createPortalEntity(const vec2 position, const float angle, const vec2& size, const vec4& color) {
@@ -314,7 +316,7 @@ Entity createPortalEntity(const vec2 position, const float angle, const vec2& si
     return portal;
 }
 
-void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, const float angle1, const vec2& pos2, const float angle2) {
+void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, const float angle1, const vec2& pos2, const float angle2, const vec4& color) {
     Portal p1{};
     Portal p2{};
 
@@ -328,5 +330,8 @@ void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos
 
     registry.portals.insert(portal_1, p1);
     registry.portals.insert(portal_2, p2);
+
+    ParticleSystem::createPortalParticles(p1, color);
+    ParticleSystem::createPortalParticles(p2, color);
 }
 

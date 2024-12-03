@@ -312,7 +312,6 @@ struct ParticleSpawner {
     bool uniform_explosion = false;
 
     float _cooldown = 0.0f;
-    float _explosion_cooldown = 0.0f;
 };
 
 /**
@@ -325,6 +324,7 @@ struct Sprite {
     vec2 scale = {10, 10};
     float angle = 0;
     std::string texture;
+    vec4 color = {255, 255, 255, 255};
 };
 
 struct Mirror {
@@ -334,7 +334,7 @@ struct Mirror {
     float railLength = 0;
     float railAngle = 0;
     int snap_segments = 5;
-    float snap_angle = 0.2617993878 / 2;
+    float snap_angle = 0.2617993878;
 };
 
 struct ButtonHelper {
@@ -426,6 +426,10 @@ struct EndCutsceneCount {
     int sequence = 0;
     int maxInclusive;
     vec2 position;
+};
+
+struct AmbientLight {
+    vec3 color = {255, 255, 255};
 };
 
 struct Setting {

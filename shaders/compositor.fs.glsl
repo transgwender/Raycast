@@ -5,8 +5,6 @@ uniform sampler2D ui;
 uniform sampler2D world_text;
 uniform sampler2D ui_text;
 
-uniform float time;
-
 in vec2 texcoord;
 
 layout(location = 0) out vec4 color;

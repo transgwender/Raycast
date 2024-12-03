@@ -28,6 +28,17 @@ template <> struct nlohmann::adl_serializer<vec3> {
         j.at(2).get_to(c.z);
     }
 };
+template <> struct nlohmann::adl_serializer<vec4> {
+    static void to_json(json& j, const glm::vec4& c) {
+        j = json::array({c.r, c.g, c.b, c.a});
+    }
+    static void from_json(const json& j, glm::vec4& c) {
+        j.at(0).get_to(c.r);
+        j.at(1).get_to(c.g);
+        j.at(2).get_to(c.b);
+        j.at(3).get_to(c.a);
+    }
+};
 
 
 ////////////////////////////////////////////////////////////////
@@ -133,6 +144,11 @@ inline void from_json(const json& j, Sprite& c) {
     } else {
         c.angle = 0;
     }
+    if (j.contains("color")) {
+        j.at("color").get_to(c.color);
+    } else {
+        c.color = {255, 255, 255, 255};
+    }
 }
 
 inline void to_json(json& j, const Mirror& c) {
@@ -177,7 +193,7 @@ inline void from_json(const json& j, Mirror& c) {
     if (j.contains("snap-angle")) {
         c.snap_angle = j.at("snap-angle").get_to(c.snap_angle);
     } else {
-        c.snap_angle = 0.1308996939;
+        c.snap_angle = 0.2617993878;
     }
 }
 
@@ -382,6 +398,17 @@ inline void from_json(const json& j, EndCutsceneCount& c) {
     j.at("maxInclusive").get_to(c.maxInclusive);
     c.lightCount = 0;
     c.sequence = 0;
+}
+
+inline void to_json(json& j, const AmbientLight& c) {
+    j = json {
+        {"type", "ambient_light"},
+        {"color", c.color},
+    };
+}
+
+inline void from_json(const json& j, AmbientLight& c) {
+    j.at("color").get_to(c.color);
 }
 
 inline void to_json(json& j, const Setting& c) {

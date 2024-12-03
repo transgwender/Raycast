@@ -1,0 +1,107 @@
+{
+    "objList": [
+        {
+            "name": "Sliding doors",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 15
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_4"
+                }
+            ]
+        },
+        {
+            "name": "left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        140.0,
+                        90.0
+                    ],
+                    "angle": 0.1,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        260.0,
+                        90.0
+                    ],
+                    "angle": 0,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        60.0,
+                        40.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        60.0,
+                        100.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}
