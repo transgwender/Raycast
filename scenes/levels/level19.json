@@ -62,10 +62,10 @@
         {
           "type": "mirror",
           "position": [
-            220.0,
-            90.0
+            215.0,
+            86.0
           ],
-          "angle": 0,
+          "angle": 1.57079632679,
           "mirror-type": "rotate"
         },
         {
@@ -221,8 +221,8 @@
           "type": "mesh",
           "path": "star.obj",
           "position": [
-            220,
-            140
+            203,
+            144
           ],
           "angle": 0,
           "scale": [
