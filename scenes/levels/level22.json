@@ -63,7 +63,7 @@
           "type": "mirror",
           "position": [
             280.0,
-            115.0
+            95.0
           ],
           "angle": 0,
           "mirror-type": "rotate"
@@ -78,13 +78,77 @@
       ]
     },
     {
+      "name": "lerp-mirror-2",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            80.0,
+            95.0
+          ],
+          "angle": 0.78539816339,
+          "rail-length": 50,
+          "rail-angle": 0
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror-2",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            60.0,
+            135.0
+          ],
+          "angle": 0,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "help text",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            170.0,
+            160.0
+          ],
+          "size": 48,
+          "text": "Feed star to illuminate >",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 3,
+          "centered": false
+        }
+      ]
+    },
+    {
       "name": "start_zone",
       "data": [
         {
           "type": "zone",
           "position": [
             280.0,
-            40.0
+            20.0
           ],
           "zone_type": 0,
           "angle": 30
@@ -101,8 +165,8 @@
         {
           "type": "zone",
           "position": [
-            2850.0,
-            80.0
+            40.0,
+            40.0
           ],
           "zone_type": 1,
           "angle": 0
@@ -125,7 +189,7 @@
           "type": "sprite_sheet",
           "position": [
             80.0,
-            151.0
+            161.0
           ],
           "sheetWidth": 384,
           "sheetHeight": 192,
@@ -152,7 +216,7 @@
           ],
           "originalPosition": [
             80.0,
-            151.0
+            161.0
           ]
         },
         {
@@ -176,18 +240,18 @@
           "type": "lever",
           "position": [
             150.0,
-            151.0
+            161.0
           ],
           "state": 0,
           "movementState": 0,
           "effect": 1,
-          "activeLever": 5
+          "activeLever": 0
         },
         {
           "type": "mirror",
           "position": [
-            155.0,
-            40.0
+            280.0,
+            50.0
           ],
           "angle": -0.7854,
           "mirror-type": "rotate"
