@@ -1,0 +1,164 @@
+{
+    "objList": [
+        {
+            "name": "Bad angle",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 8
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_4"
+                }
+            ]
+        },
+        {
+            "name": "beam",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        130.0,
+                        50.0
+                    ],
+                    "scale": [
+                        120,
+                        10
+                    ],
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 120,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "right-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        270.0,
+                        150.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "left-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        50.0,
+                        150.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        160.0,
+                        105.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        280.0,
+                        30.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 2.617993878
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        55.0,
+                        30.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}
