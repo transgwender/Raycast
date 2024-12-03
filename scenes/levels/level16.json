@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Double bounce",
+            "name": "Out of the way",
             "data": [
                 {
                     "type": "level",
@@ -19,17 +19,76 @@
             ]
         },
         {
-            "name": "move-mirror",
+            "name": "beam",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        250.0,
+                        185.0
+                    ],
+                    "scale": [
+                        140,
+                        10
+                    ],
+                    "angle": -1.5707963268,
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 140,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "bottom-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        135.0,
-                        130.0
+                        160.0,
+                        140.0
                     ],
                     "angle": 1.5707963268,
-                    "rail-length": 50,
-                    "rail-angle": 0
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        160.0,
+                        40.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
@@ -46,11 +105,11 @@
                 {
                     "type": "mirror",
                     "position": [
-                        155.0,
-                        85.0
+                        150.0,
+                        90.0
                     ],
-                    "angle": 1.5707963268,
-                    "rail-length": 50,
+                    "angle": -0.7853981634,
+                    "rail-length": 40,
                     "rail-angle": 0
                 },
                 {
@@ -68,15 +127,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        40.0
+                        35.0,
+                        80.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 1
+                    "angle": 0
                 }
             ]
         },
@@ -86,8 +145,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        260.0,
-                        40.0
+                        285.0,
+                        120.0
                     ],
                     "zone_type": 1,
                     "angle": 0
