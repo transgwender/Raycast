@@ -8,7 +8,7 @@
 #include <string>
 
 constexpr float BGM_VOLUME_MULTIPLIER = 0.3;
-const std::string BGM_FILENAME = "8BitCave.wav";
+const std::string BGM_FILENAME = "Arcade-Puzzler.wav";
 constexpr float FS_VOLUME_MULTIPLIER = 0.5;
 const std::string FS_FILENAME = "ForestAmbient.wav";
 

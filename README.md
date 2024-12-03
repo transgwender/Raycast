@@ -1,19 +1,28 @@
-```
-'########:::::'###::::'##:::'##::'######:::::'###:::::'######::'########:
- ##.... ##:::'## ##:::. ##:'##::'##... ##:::'## ##:::'##... ##:... ##..::
- ##:::: ##::'##:. ##:::. ####::: ##:::..:::'##:. ##:: ##:::..::::: ##::::
- ########::'##:::. ##:::. ##:::: ##:::::::'##:::. ##:. ######::::: ##::::
- ##.. ##::: #########:::: ##:::: ##::::::: #########::..... ##:::: ##::::
- ##::. ##:: ##.... ##:::: ##:::: ##::: ##: ##.... ##:'##::: ##:::: ##::::
- ##:::. ##: ##:::: ##:::: ##::::. ######:: ##:::: ##:. ######::::: ##::::
-..:::::..::..:::::..:::::..::::::......:::..:::::..:::......::::::..:::::
-```
-The world has fallen into darkness, and nearly all life has disappeared. The last surviving plant needs light to photosynthesize. As the player, you guide the final source of light through a series of levels by moving mirrors, navigating around blocks and avoiding getting trapped in black holes. Each level presents new challenges in guiding the light, with the ultimate goal of reviving the last plant on Earth.
+# Raycast
+Light-hearted and relaxing puzzle game about directing light to photosynthesize a plant!
 
+## Milestones
+### [M1]
+- Added rotatable and moveable mirrors
+- Added main menu
+- Added ambient and diffuse lighting
+- Added 2D
+### [M2]
+- Added sprite sheet animation system
+- Added precise collision system
+- Added text rendering
+- Added mesh collisions
+- Added AI system
+### [M3]
+- Added portal mechanic
+- Added black hole gamification logic
+- Adjusted mirror user interaction
+- Added level persistence
+### [M4]
+- Added bloom lighting visual effects
+- Added particle system
 
-[WIP]
-
-**Attribution**
+### Attribution
 
 UI Assets by Kenney.nl https://kenney.nl/assets/
 
