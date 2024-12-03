@@ -118,6 +118,27 @@
           "other_portal_angle": 0
         }
       ]
+    },
+    {
+      "name": "Attributions",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            140,
+            45
+          ],
+          "size": 27,
+          "text": "ATTRIBUTIONS:\n\nUI Assets by Kenney.nl\nhttps://kenney.nl/assets/\n\nForest by Arcade Island\nhttps://arcadeisland.itch.io/forest\n\nCastle Brick Tileset by Jordon Games\nhttps://jordon-games.itch.io/castle-stone-tileset\n\nSilver by Poppy Works\nhttps://poppyworks.itch.io/silver\n\nTurtle by Elthen\nhttps://elthen.itch.io/2d-pixel-art-turtle-sprites\n\nPlatformer Asset Collection by Name By Another Rose\nhttps://opengameart.org/content/platformer-asset-collection\n\nBirds and Wind - Ambient, Birds, Wind and Synth by Spring Spring\nhttps://opengameart.org/content/birds-and-wind-ambient-birds-wind-and-synth",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": false
+        }
+      ]
     }
   ]
 }

@@ -114,6 +114,27 @@
           "mirror-type": "rotate"
         }
       ]
+    },
+    {
+      "name": "Members",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            250,
+            50
+          ],
+          "size": 64,
+          "text": "              CREDITS:\n\n            Arpit Kumar\n        Gwendolyn Kornak\n            Jackson Li\n          Jocelyn Baker\n         Muhammad Assad\n     Suraj Emmattiparambil",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": true
+        }
+      ]
     }
   ]
 }

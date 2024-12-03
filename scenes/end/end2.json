@@ -146,6 +146,27 @@
           "zone_type": 3
         }
       ]
+    },
+    {
+      "name": "Members",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            160,
+            40
+          ],
+          "size": 64,
+          "text": "Project for UBC CPSC 427 - 2024W1\n     Made by Project Group 03\n           Team Lightbox",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": true
+        }
+      ]
     }
   ]
 }
