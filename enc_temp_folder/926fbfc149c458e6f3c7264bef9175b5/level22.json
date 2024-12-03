@@ -5,7 +5,7 @@
       "data": [
         {
           "type": "level",
-          "id": 19
+          "id": 22
         }
       ]
     },
@@ -24,11 +24,11 @@
         {
           "type": "sprite",
           "position": [
-            120.0,
+            160.0,
             220.0
           ],
           "scale": [
-            240,
+            360,
             120
           ],
           "texture": "platforms_1"
@@ -45,11 +45,11 @@
         {
           "type": "zone",
           "position": [
-            120.0,
+            160.0,
             220.0
           ],
           "scale": [
-            240,
+            360,
             120
           ],
           "zone_type": 3
@@ -170,7 +170,7 @@
       ]
     },
     {
-      "name": "lever-linked stone",
+      "name": "lever-linked mirror",
       "data": [
         {
           "type": "lever",
@@ -184,33 +184,20 @@
           "activeLever": 5
         },
         {
-          "type": "sprite",
+          "type": "mirror",
           "position": [
-            248.0,
-            90.0
+            155.0,
+            40.0
           ],
-          "scale": [
-            15,
-            180
-          ],
-          "texture": "beam2-vert"
+          "angle": -0.7854,
+          "mirror-type": "rotate"
         },
         {
-          "type": "collider",
-          "width": 15,
-          "height": 180,
-          "bounds": 1
+          "type": "interactable"
         },
         {
-          "type": "collideable"
-        },
-        {
-          "type": "zone",
-          "position": [
-            248.0,
-            90.0
-          ],
-          "zone_type": 3
+          "type": "highlightable",
+          "isHighlighted": false
         }
       ]
     },
@@ -221,7 +208,7 @@
           "type": "mesh",
           "path": "star.obj",
           "position": [
-            220,
+            280,
             140
           ],
           "angle": 0,
