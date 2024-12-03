@@ -21,6 +21,18 @@ void PersistenceSystem::init() {
         data[1] = LEVEL_STATE::ACCESSIBLE;
     }
 
+    std::ifstream setting_file("settings");
+
+    if (setting_file.is_open()) {
+        nlohmann::json j;
+        setting_file >> j;
+        j.get_to(current_settings);
+
+        LOG_INFO("Loading settings: {}", j.dump());
+
+        setting_file.close();
+    }
+
 }
 
 bool PersistenceSystem::get_is_accessible(int levelNum) {
@@ -70,6 +82,14 @@ bool PersistenceSystem::try_write_save() {
 
     LOG_INFO("Saving data: {}", j.dump());
 
+    j = current_settings;
+
+    std::ofstream setting_file("settings");
+    setting_file << j;
+    setting_file.close();
+
+    LOG_INFO("Saving settings: {}", j.dump());
+
     return true;
 }
 
@@ -83,3 +103,28 @@ void PersistenceSystem::debug_set_all_accessible(int levelCount) {
     }
 }
 #endif
+
+
+float PersistenceSystem::get_settings_music_volume() {
+    return current_settings.musicVolume;
+}
+
+float PersistenceSystem::get_settings_sfx_volume() {
+    return current_settings.sfxVolume;
+}
+
+bool PersistenceSystem::get_settings_hard_mode() {
+    return current_settings.hardMode;
+}
+
+void PersistenceSystem::set_settings_music_volume(float volume) {
+    current_settings.musicVolume = volume;
+}
+
+void PersistenceSystem::set_settings_sfx_volume(float volume) {
+    current_settings.sfxVolume = volume;
+}
+
+void PersistenceSystem::set_settings_hard_mode(bool hard) {
+    current_settings.hardMode = hard;
+}

@@ -383,3 +383,12 @@ inline void from_json(const json& j, EndCutsceneCount& c) {
     c.lightCount = 0;
     c.sequence = 0;
 }
+
+inline void to_json(json& j, const Setting& c) {
+    j = json{{"type", "setting"}, {"setting", c.setting}, {"position_y", c.position_y}};
+}
+
+inline void from_json(const json& j, Setting& c) {
+    j.at("setting").get_to(c.setting);
+    j.at("position_y").get_to(c.position_y);
+}

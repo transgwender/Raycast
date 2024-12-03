@@ -9,21 +9,16 @@
 class world_init {
   public:
     static unsigned int portal_color_i;
-    vec4 portal_colors[10] = {
-        vec4(0, 255, 0, 255),       // Bright Green
+    vec4 portal_colors[8] = {
         vec4(255, 223, 0, 255),     // Yellow
+        vec4(255, 255, 255, 255),   // White
         vec4(255, 105, 180, 255),   // Hot Pink
         vec4(0, 255, 255, 255),     // Cyan
-        vec4(70, 130, 180, 255),    // Steel Blue
+        vec4(255, 30, 30, 255),     // Red
         vec4(148, 0, 211, 255),     // Dark Violet
-        vec4(100, 149, 237, 255),   // Cornflower Blue
-        vec4(144, 238, 144, 255),   // Light Green
-        vec4(173, 216, 230, 255),   // Light Blue
-        vec4(255, 255, 102, 255)    // Light Yellow
+        vec4(100, 248, 100, 255),   // Light Green
+        vec4(100, 150, 230, 255),   // Light Blue
     };
-
-
-
 };
 
 Entity createSprite(const Entity& entity, vec2 position, vec2 scale, float angle, const std::string& textureName,
@@ -53,7 +48,7 @@ Entity createLever(const Entity& affectedEntity, const vec2& position, LEVER_STA
 Entity createPortalEntity(vec2 position, float angle, const vec2& size, const vec4& color);
 void createPortals(vec2 pos1, float angle1, vec2 pos2, float angle2);
 void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, float angle1, const vec2& pos2,
-                 float angle2);
+                 float angle2, const vec4& color);
 void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& position, float angle, const vec2& scale);
 
 void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position);

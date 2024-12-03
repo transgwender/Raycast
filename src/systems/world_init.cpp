@@ -1,6 +1,7 @@
 #include "world_init.hpp"
 #include "ecs/registry.hpp"
 #include "systems/physics.hpp"
+#include "systems/particles.hpp"
 #include "utils/math.hpp"
 #include "utils/mesh_utils.hpp"
 
@@ -122,14 +123,16 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
     if (!registry.buttons.has(entity)) {
         registry.buttons.emplace(entity);
     }
-    Text text;
-    text.size = 57;
-    text.position = position;
-    text.text = label;
-    text.color = color;
-    text.layer = UI_TEXT;
-    text.centered = true;
-    registry.texts.insert(entity, text);
+    if (!label.empty()) {
+        Text text;
+        text.size = 57;
+        text.position = position;
+        text.text = label;
+        text.color = color;
+        text.layer = UI_TEXT;
+        text.centered = true;
+        registry.texts.insert(entity, text);
+    }
     return entity;
 }
 
@@ -277,13 +280,13 @@ void initMesh(const Entity& entity, const std::string& mesh_name, const vec2& po
     collider.user_interaction_bounds_type = BOUNDS_TYPE::MESH;
 }
 
-unsigned int world_init::portal_color_i = 1;
+unsigned int world_init::portal_color_i = 0;
 
 void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const float angle2) {
     vec2 portal_size = vec2(13, 42);
 
     const world_init w;
-    const vec4 color = w.portal_colors[world_init::portal_color_i % 10];
+    const vec4 color = w.portal_colors[world_init::portal_color_i % 8];
 
     const Entity portal_1 = createPortalEntity(pos1, angle1, portal_size, color);
     const Entity portal_2 = createPortalEntity(pos2, angle2, portal_size, color);
@@ -291,7 +294,7 @@ void createPortals(const vec2 pos1, const float angle1, const vec2 pos2, const f
     // Increment static portal color counter to generate next color
     world_init::portal_color_i += 1;
 
-    linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2);
+    linkPortals(portal_1, portal_2, pos1, angle1, pos2, angle2, color);
 }
 
 Entity createPortalEntity(const vec2 position, const float angle, const vec2& size, const vec4& color) {
@@ -313,7 +316,7 @@ Entity createPortalEntity(const vec2 position, const float angle, const vec2& si
     return portal;
 }
 
-void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, const float angle1, const vec2& pos2, const float angle2) {
+void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos1, const float angle1, const vec2& pos2, const float angle2, const vec4& color) {
     Portal p1{};
     Portal p2{};
 
@@ -327,5 +330,8 @@ void linkPortals(const Entity& portal_1, const Entity& portal_2, const vec2& pos
 
     registry.portals.insert(portal_1, p1);
     registry.portals.insert(portal_2, p2);
+
+    ParticleSystem::createPortalParticles(p1, color);
+    ParticleSystem::createPortalParticles(p2, color);
 }
 

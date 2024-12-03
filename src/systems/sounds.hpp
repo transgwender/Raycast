@@ -12,12 +12,18 @@ const std::string BGM_FILENAME = "8BitCave.wav";
 constexpr float FS_VOLUME_MULTIPLIER = 0.5;
 const std::string FS_FILENAME = "ForestAmbient.wav";
 
+enum CurrentMusic {
+    MAIN,
+    FOREST,
+    NONE
+};
+
 class SoundSystem {
     public:
         Mix_Music* background_music = nullptr;
         Mix_Music* forest_sounds = nullptr;
 
-        bool is_curr_background = false;
+        CurrentMusic active_music = NONE;
 
         /**
          * Initialize SDL Mixer
@@ -43,10 +49,17 @@ class SoundSystem {
         void play_background();
         void play_forest();
 
-        void stop_background();
+        void stop_music();
+
+        void change_volume_music(float volume);
+        void change_volume_sfx(float volume);
 
       private:
+
         std::unordered_map<std::string, Mix_Chunk*> sfxs;
+
+        float sfx_volume = 0.7;
+        float music_volume = 0.7;
 
         void load_chunks();
 };

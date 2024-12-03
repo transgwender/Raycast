@@ -3,12 +3,13 @@
 // internal
 #include "background.hpp"
 #include "common.hpp"
+#include "persistence.hpp"
 #include "render.hpp"
 #include <map>
 
 class SceneSystem {
   public:
-    void init(Entity &scene_state_entity);
+    void init(Entity &scene_state_entity, PersistenceSystem *persistence_ptr);
 
     // add entities
     bool try_parse_scene(std::string &scene_tag);
@@ -21,6 +22,7 @@ class SceneSystem {
 
   private:
     BackgroundSystem background;
+    PersistenceSystem *persistence;
 
     std::map<std::string, std::string> levels {
         // dynamically allocated
@@ -31,5 +33,6 @@ class SceneSystem {
         {"mainmenu", scene_path("mainmenu.json")},
         {"levelmenu", scene_path("levelmenu.json")},
         {"gamefinish", scene_path("gamefinish.json")},
+        {"settings", scene_path("settings.json")},
     };
 };
