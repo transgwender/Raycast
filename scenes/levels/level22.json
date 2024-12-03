@@ -1,7 +1,7 @@
 {
   "objList": [
     {
-      "name": "Level 21 (!!! 21)",
+      "name": "Level 27 (!!! 27)",
       "data": [
         {
           "type": "level",
@@ -19,125 +19,90 @@
       ]
     },
     {
-      "name": "platforms",
+      "name": "move-mirror-left",
       "data": [
+        {
+          "type": "mirror",
+          "position": [
+            105.0,
+            100.0
+          ],
+          "angle": -0.5,
+          "rail-length": 60,
+          "rail-angle": 1.57
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "move-mirror-right",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            215.0,
+            100.0
+          ],
+          "angle": 0.5,
+          "rail-length": 60,
+          "rail-angle": 1.57
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "center_blackhole",
+      "data": [
+        {
+          "type": "blackhole",
+          "mass": 5,
+          "schwarzchild_radius": 24.0
+        },
         {
           "type": "sprite",
           "position": [
-            160.0,
-            230.0
+            160,
+            130.0
           ],
+          "texture": "light",
           "scale": [
-            360,
-            120
+            10.0,
+            10.0
           ],
-          "texture": "platforms_1"
-        },
-        {
-          "type": "collider",
-          "width": 240,
-          "height": 120,
-          "bounds": 1
+          "angle": 0
         },
         {
           "type": "collideable"
         },
         {
+          "type": "collider",
+          "width": 20.0,
+          "height": 20.0,
+          "bounds": 0
+        },
+        {
           "type": "zone",
           "position": [
-            160.0,
-            230.0
+            160,
+            100.0
           ],
           "scale": [
-            360,
-            120
+            60,
+            20
           ],
           "zone_type": 3
-        }
-      ]
-    },
-    {
-      "name": "rotate-mirror",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            280.0,
-            95.0
-          ],
-          "angle": 0,
-          "mirror-type": "rotate"
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "lerp-mirror-2",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            80.0,
-            95.0
-          ],
-          "angle": 0.78539816339,
-          "rail-length": 50,
-          "rail-angle": 0
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "rotate-mirror-2",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            60.0,
-            135.0
-          ],
-          "angle": 0,
-          "mirror-type": "rotate"
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "help text",
-      "data": [
-        {
-          "type": "text",
-          "position": [
-            170.0,
-            160.0
-          ],
-          "size": 48,
-          "text": "Feed star to illuminate >",
-          "color": [
-            255,
-            255,
-            255
-          ],
-          "layer": 3,
-          "centered": false
         }
       ]
     },
@@ -147,15 +112,15 @@
         {
           "type": "zone",
           "position": [
-            280.0,
-            20.0
+            30.0,
+            40.0
           ],
           "zone_type": 0,
           "angle": 30
         },
         {
           "type": "light_source",
-          "angle": 1.57
+          "angle": 0
         }
       ]
     },
@@ -165,8 +130,8 @@
         {
           "type": "zone",
           "position": [
-            40.0,
-            40.0
+            285.0,
+            100.0
           ],
           "zone_type": 1,
           "angle": 0
@@ -183,108 +148,25 @@
       ]
     },
     {
-      "name": "turtle",
+      "name": "vert-beam",
       "data": [
         {
-          "type": "sprite_sheet",
+          "type": "sprite",
           "position": [
-            80.0,
-            161.0
+            265.0,
+            180.0
           ],
-          "sheetWidth": 384,
-          "sheetHeight": 192,
-          "cellWidth": 32,
-          "cellHeight": 32,
-          "imageWidth": 32,
-          "imageHeight": 32,
-          "texture": "turtle_sprite_sheet",
-          "animationFrames": [
-            12,
+          "scale": [
             10,
-            4,
-            6,
-            5,
-            10
-          ]
-        },
-        {
-          "type": "dash_the_turtle",
-          "behavior": 3,
-          "minimumDisplacement": [
-            10000,
-            10000
+            140
           ],
-          "originalPosition": [
-            80.0,
-            161.0
-          ]
+          "texture": "beam2-vert"
         },
         {
           "type": "collider",
-          "width": 16,
-          "height": 32,
+          "width": 10,
+          "height": 140,
           "bounds": 1
-        },
-        {
-          "type": "collideable"
-        },
-        {
-          "type": "gravity"
-        }
-      ]
-    },
-    {
-      "name": "lever-linked mirror",
-      "data": [
-        {
-          "type": "lever",
-          "position": [
-            150.0,
-            161.0
-          ],
-          "state": 0,
-          "movementState": 0,
-          "effect": 1,
-          "activeLever": 0
-        },
-        {
-          "type": "mirror",
-          "position": [
-            280.0,
-            50.0
-          ],
-          "angle": -0.7854,
-          "mirror-type": "rotate"
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "minisun",
-      "data": [
-        {
-          "type": "mesh",
-          "path": "star.obj",
-          "position": [
-            280,
-            155
-          ],
-          "angle": 0,
-          "scale": [
-            18,
-            -18
-          ]
-        },
-        {
-          "type": "minisun",
-          "lit": false,
-          "lit_duration": 0
         },
         {
           "type": "collideable"
@@ -292,8 +174,8 @@
         {
           "type": "zone",
           "position": [
-            280.0,
-            155.0
+            105.0,
+            135.0
           ],
           "zone_type": 3
         }
