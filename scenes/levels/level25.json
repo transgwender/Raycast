@@ -126,11 +126,11 @@
         {
           "type": "text",
           "position": [
-            170.0,
-            160.0
+            180.0,
+            147.0
           ],
           "size": 48,
-          "text": "Feed star to illuminate >",
+          "text": "Power stars with light >",
           "color": [
             255,
             255,

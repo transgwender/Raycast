@@ -215,6 +215,27 @@
       ]
     },
     {
+      "name": "help text",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            112.0,
+            135.0
+          ],
+          "size": 48,
+          "text": "Power stars with light >",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 3,
+          "centered": false
+        }
+      ]
+    },
+    {
       "name": "minisun",
       "data": [
         {

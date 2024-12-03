@@ -740,25 +740,23 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 change_scene(tag);
             }
         }
-        return;
     }
 
     auto hovered_entities = input_manager.get_entities_at_mouse_pos();
     if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {
-        input_manager.active_entities.clear();
         // mouse initialized by clicked_entities
         for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));
-            if (registry.changeScenes.has(entity)) {
+            if (registry.changeScenes.has(entity) && input_manager.active_entities.size() == 0) {
                 sounds.play_sound("button-click.wav");
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
-                return;
+                break;
             }
             if (registry.resumeGames.has(entity)) {
                 sounds.play_sound("button-click.wav");
                 menus.try_close_menu();
-                return;
+                break;
             }
             if (registry.deleteDatas.has(entity)) {
                 auto &d = registry.deleteDatas.get(entity);
@@ -803,6 +801,7 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 }
             }
         }
+        input_manager.active_entities.clear();
     }
 
     if (IS_PRESSED(GLFW_MOUSE_BUTTON_LEFT)) {

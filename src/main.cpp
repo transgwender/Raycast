@@ -80,9 +80,9 @@ int main() {
             world.step(elapsed_ms);
             for (int i = 0; i < (int)floor(elapsed_remainder_ms / FIXED_UPDATE_MS); ++i) {
                 physics.step(FIXED_UPDATE_MS);
-                physics.detect_collisions();
-                world.handle_collisions();
             }
+            physics.detect_collisions();
+            world.handle_collisions();
             ai.step(elapsed_ms);
             animation.step(elapsed_ms);
             remainder = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
