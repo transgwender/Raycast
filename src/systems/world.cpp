@@ -149,7 +149,17 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             auto& lever = registry.levers.components[i];
             if ((int) lever.state == (int) lever.activeLever) {
                 if (lever.effect == LEVER_EFFECTS::REMOVE) {
-                    registry.remove_all_components_of(lever.affectedEntity);
+                    if (!registry.invisibles.has(lever.affectedEntity)) {
+                        registry.invisibles.emplace(lever.affectedEntity);
+                    }
+                    //registry.remove_all_components_of(lever.affectedEntity);
+                }
+            } else {
+                if (lever.effect == LEVER_EFFECTS::REMOVE) {
+                    if (registry.invisibles.has(lever.affectedEntity)) {
+                        registry.invisibles.remove(lever.affectedEntity);
+                    }
+                    // registry.remove_all_components_of(lever.affectedEntity);
                 }
             }
         }

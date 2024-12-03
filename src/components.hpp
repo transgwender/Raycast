@@ -433,3 +433,7 @@ struct Setting {
     std::string setting;
     float position_y;
 };
+
+struct Invisible {
+
+};
