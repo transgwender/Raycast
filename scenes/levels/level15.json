@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Out of the way",
+            "name": "Sliding doors",
             "data": [
                 {
                     "type": "level",
@@ -19,59 +19,39 @@
             ]
         },
         {
-            "name": "beam",
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        140.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        160.0,
-                        40.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        150.0,
+                        140.0,
                         90.0
                     ],
-                    "angle": -0.7853981634,
-                    "rail-length": 40,
-                    "rail-angle": 0
+                    "angle": 0.1,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        260.0,
+                        90.0
+                    ],
+                    "angle": 0,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -88,8 +68,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        35.0,
-                        80.0
+                        60.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -106,8 +86,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        285.0,
-                        120.0
+                        60.0,
+                        100.0
                     ],
                     "zone_type": 1,
                     "angle": 0
