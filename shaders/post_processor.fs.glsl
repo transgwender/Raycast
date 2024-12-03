@@ -33,7 +33,7 @@ float brightness(vec3 color) {
 void main() {
     if (mode == 0) {
         vec4 tex_color = texture(input1, texcoord);
-        if (brightness(tex_color.rgb) <= 1.0) {
+        if (brightness(tex_color.rgb) <= 1.5) {
             color = vec4(0.0);
         } else {
             color = tex_color;
