@@ -24,11 +24,11 @@
                 {
                     "type": "text",
                     "position": [
-                        28.0,
+                        4.0,
                         43.0
                     ],
-                    "size": 32,
-                    "text": "Black holes pull the light! >>",
+                    "size": 48,
+                    "text": "Black holes attract light >",
                     "color": [
                         255,
                         255,
