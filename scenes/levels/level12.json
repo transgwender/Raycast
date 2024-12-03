@@ -1,105 +1,151 @@
 {
-  "objList": [
-    {
-      "name": "Portal rails",
-      "data": [
+    "objList": [
         {
-          "type": "level",
-          "id": 12
-        }
-      ]
-    },
-    {
-      "name": "background",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            160.0,
-            90.0
-          ],
-          "scale": [
-            320,
-            180
-          ],
-          "texture": "background_cyber_2"
-        }
-      ]
-    },
-    {
-      "name": "portals",
-      "data":  [
-        {
-          "type": "portal_pair",
-          "portal_position": [210, 110],
-          "portal_angle": 3.14,
-          "other_portal_position": [110, 70],
-          "other_portal_angle": 0.3
-        }
-      ]
-    },
-    {
-      "name": "middle_mirror",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            160.0,
-            90.0
-          ],
-          "angle": 0,
-          "rail-length": 25,
-          "rail-angle": 1.5707963268
+            "name": "Double-sided",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 12
+                }
+            ]
         },
         {
-          "type": "interactable"
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_2"
+                }
+            ]
         },
         {
-          "type": "highlightable",
-          "isHighlighted": false
+            "name": "bottom-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        150.0,
+                        110.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        260.0,
+                        110.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        40.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        40.0
+                    ],
+                    "angle": -0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        40.0,
+                        110.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        110.0,
+                        150.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "start_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            20.0,
-            110.0
-          ],
-          "zone_type": 0,
-          "angle": 30
-        },
-        {
-          "type": "light_source",
-          "angle": 0
-        }
-      ]
-    },
-    {
-      "name": "end_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            286.0,
-            70.0
-          ],
-          "zone_type": 1,
-          "angle": 0
-        },
-        {
-          "type": "collider",
-          "width": 3,
-          "height": 3,
-          "bounds": 0
-        },
-        {
-          "type": "collideable"
-        }
-      ]
-    }
-  ]
+    ]
 }

@@ -1,0 +1,536 @@
+{
+  "objList": [
+    {
+      "name": "Portals Lots of Portals",
+      "data": [
+        {
+          "type": "level",
+          "id": 10
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_1"
+        }
+      ]
+    },
+    {
+      "name": "lower_left_spike",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            130.0,
+            120.0
+          ],
+          "scale": [
+            260,
+            10
+          ],
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 260,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            130.0,
+            120.0
+          ],
+          "scale": [
+            260,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "vert-beam-bottom-left-tall",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            105.0,
+            135.0
+          ],
+          "scale": [
+            10,
+            140
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 140,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            105.0,
+            135.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "vert-beam-short-bottom-right",
+      "data": [
+        {
+          "type": "lever",
+          "position": [
+            170.0,
+            56.0
+          ],
+          "state": 5,
+          "movementState": 0,
+          "effect": 1,
+          "activeLever": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            152.0,
+            195.0
+          ],
+          "scale": [
+            10,
+            140
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 140,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            152.0,
+            195.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "vert-beam-short-top-left",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            50.0,
+            -10.0
+          ],
+          "scale": [
+            10,
+            140
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 140,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            50.0,
+            -10.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "vert-beam-short-top-middle",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            111.0,
+            -5.0
+          ],
+          "scale": [
+            10,
+            140
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 140,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            111.0,
+            -5.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "vert-beam-short-top-middle",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            260.0,
+            -5.0
+          ],
+          "scale": [
+            10,
+            140
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 10,
+          "height": 140,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            260.0,
+            -5.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "middle_right_spike",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            220.0,
+            70.0
+          ],
+          "scale": [
+            220,
+            10
+          ],
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 220,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            220.0,
+            70.0
+          ],
+          "scale": [
+            220,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "bottom_right_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            290.0,
+            155.0
+          ],
+          "angle": 1.5708,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "rotatable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "middle_right_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            300.0,
+            95.0
+          ],
+          "angle": 1.5708,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "middle_left_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            20.0,
+            95.0
+          ],
+          "angle": 1.5708,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "top_mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            80.0,
+            30.0
+          ],
+          "angle": 1.5708,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            32.0,
+            150.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            290.0,
+            35.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "minisun",
+      "data": [
+        {
+          "type": "mesh",
+          "path": "star.obj",
+          "position": [
+            145,
+            52
+          ],
+          "angle": 0,
+          "scale": [
+            12,
+            -12
+          ]
+        },
+        {
+          "type": "minisun",
+          "lit": false,
+          "lit_duration": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            145.0,
+            52.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "portal_pair_1",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 80.0, 150.0 ],
+          "portal_angle": 3.14,
+          "other_portal_position": [ 120.0, 95.0 ],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "portal_pair_2",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 10.0, 40.0 ],
+          "portal_angle": 0,
+          "other_portal_position": [ 180.0, 170.0 ],
+          "other_portal_angle": -1.57
+        }
+      ]
+    },
+    {
+      "name": "portal_pair_3",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 140.0, 10.0 ],
+          "portal_angle": 1.57,
+          "other_portal_position": [ 75.0, 105.0 ],
+          "other_portal_angle": -1.57
+        }
+      ]
+    },
+    {
+      "name": "portal_pair_4",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 120.0, 150.0 ],
+          "portal_angle": 0,
+          "other_portal_position": [ 290.0, 10.0 ],
+          "other_portal_angle": 1.57
+        }
+      ]
+    },
+    {
+      "name": "turtle",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            240.0,
+            50.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [
+            12,
+            10,
+            4,
+            6,
+            5,
+            10
+          ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [
+            10000,
+            10000
+          ]
+        },
+        {
+          "type": "collider",
+          "width": 16,
+          "height": 32,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "gravity"
+        }
+      ]
+    }
+  ]
+}

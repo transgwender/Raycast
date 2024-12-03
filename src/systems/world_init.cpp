@@ -92,7 +92,8 @@ Entity createMirror(const Entity& entity, const Mirror& mirror) {
     registry.colliders.emplace(entity);
     auto& collider = registry.colliders.get(entity);
     collider.bounds_type = BOUNDS_TYPE::RECTANGULAR;
-    collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    // collider.user_interaction_bounds_type = BOUNDS_TYPE::RADIAL;
+    collider.user_interaction_bounds_type = BOUNDS_TYPE::RECTANGULAR;
     collider.width = scale.x;
     collider.height = scale.y;
 
@@ -208,7 +209,7 @@ void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position) {
         createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "start_gem_spritesheet");
     } else if (zType == ZONE_TYPE::END) {
         const std::vector<unsigned int> frames = {7};
-        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_gem_spritesheet");
+        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_plant_big");
     }
 }
 

@@ -1,131 +1,106 @@
 {
-  "objList": [
-    {
-      "name": "The Portal Maze",
-      "data": [
+    "objList": [
         {
-          "type": "level",
-          "id": 9
-        }
-      ]
-    },
-    {
-      "name": "background",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            160.0,
-            90.0
-          ],
-          "scale": [
-            320,
-            180
-          ],
-          "texture": "background_cyber_2"
-        }
-      ]
-    },
-    {
-      "name": "start_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [ 20.0, 160.0 ],
-          "zone_type": 0,
-          "angle": 0
+            "name": "Rails",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 9
+                }
+            ]
         },
         {
-          "type": "light_source",
-          "angle": 0
-        }
-      ]
-    },
-    {
-      "name": "end_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [ 300.0, 20.0 ],
-          "zone_type": 1,
-          "angle": 0
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_1"
+                }
+            ]
         },
         {
-          "type": "collider",
-          "width": 5,
-          "height": 5,
-          "bounds": 0
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        135.0,
+                        122.0
+                    ],
+                    "angle": 0.785,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
         },
         {
-          "type": "collideable"
-        }
-      ]
-    },
-    {
-      "name": "portal_pair_1",
-      "data": [
-        {
-          "type": "portal_pair",
-          "portal_position": [ 80.0, 120.0 ],
-          "portal_angle": 0,
-          "other_portal_position": [ 220.0, 40.0 ],
-          "other_portal_angle": 1.57
-        }
-      ]
-    },
-    {
-      "name": "portal_pair_2",
-      "data": [
-        {
-          "type": "portal_pair",
-          "portal_position": [ 150.0, 80.0 ],
-          "portal_angle": 0,
-          "other_portal_position": [ 260.0, 120.0 ],
-          "other_portal_angle": 3.14
-        }
-      ]
-    },
-    {
-      "name": "rotate-mirror",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            220.0,
-            155.0
-          ],
-          "angle": 0.5,
-          "mirror-type": "rotate"
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        50.0,
+                        122.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
         },
         {
-          "type": "interactable"
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        155.0,
+                        116.0
+                    ],
+                    "size": 48,
+                    "text": "< Drag mirrors along rails",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
         },
         {
-          "type": "highlightable",
-          "isHighlighted": false
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        160.0,
+                        50.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "rotate-mirror2",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            300.0,
-            90.0
-          ],
-          "angle": 0.5,
-          "mirror-type": "rotate"
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    }
-  ]
+    ]
 }
