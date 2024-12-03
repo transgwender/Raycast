@@ -206,7 +206,7 @@ void setZone(const Entity& entity, ZONE_TYPE zType, vec2 position) {
         createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "start_gem_spritesheet");
     } else if (zType == ZONE_TYPE::END) {
         const std::vector<unsigned int> frames = {7};
-        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_gem_spritesheet");
+        createSpriteSheet(entity, position, 112, 16, 16, 16, frames, "end_plant_big");
     }
 }
 
