@@ -396,12 +396,14 @@ struct Lever {
     LEVER_EFFECTS effect;
     LEVER_STATES activeLever;
     Entity affectedEntity;
+    bool pushed = false;
 
     // lever_state -- is it pushed all the way right, all the way left, or somewhere in the middle?
     // lever_movement_states -- is the lever currently being pushed in a certain direction? If so, which direction?
     // lever_effect -- what effect does the lever have when active on the affected entity?
     // active_lever -- is the lever active when pushed right? or left?
     // affectedEntity -- which entity is affected by this lever?
+    // pushed -- has this lever been pushed?
 };
 
 struct ColoredVertex {

@@ -494,6 +494,13 @@ void WorldSystem::handle_turtle_collisions(int i) {
 
             // If the "barrier" is a lever, push it to the right!
             if (registry.levers.has(other)) {
+                Lever& l = registry.levers.get(other);
+                // To ensure lever SFX is played once only
+                if (!l.pushed) {
+                    sounds.play_sound("lever.wav");
+                    l.pushed = true;
+                }
+
                 if (registry.motions.get(turtle).velocity.x > 0) {
                     registry.levers.get(other).state = LEVER_STATES::RIGHT;
                 } else {
@@ -508,6 +515,13 @@ void WorldSystem::handle_turtle_collisions(int i) {
 
             // If the "barrier" is a lever, push it to the left!
             if (registry.levers.has(other)) {
+                Lever& l = registry.levers.get(other);
+                // To ensure lever SFX is played once only
+                if (!l.pushed) {
+                    sounds.play_sound("lever.wav");
+                    l.pushed = true;
+                }
+
                 if (registry.motions.get(turtle).velocity.x > 0) {
                     registry.levers.get(other).state = LEVER_STATES::RIGHT;
                 } else {
