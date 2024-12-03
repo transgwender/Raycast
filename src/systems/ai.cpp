@@ -54,7 +54,6 @@ void AISystem::updateDash(float elapsed_ms) {
                 if (abs(minimumDisplacement.x) <= 20) {
                     t.behavior = DASH_STATES::STARE;
                 }
-
             } else if (abs(dashMotion.position.x - t.originalPosition.x) > 1) {
                 t.behavior = DASH_STATES::WALK;
                 minimumDisplacement =

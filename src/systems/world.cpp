@@ -499,7 +499,7 @@ void WorldSystem::handle_turtle_collisions(int i) {
                 } else {
                     registry.levers.get(other).state = LEVER_STATES::LEFT;
                 }
-                registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
+                //registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
 
             }
         }
