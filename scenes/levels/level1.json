@@ -58,6 +58,27 @@
             ]
         },
         {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        170.0,
+                        93.0
+                    ],
+                    "size": 48,
+                    "text": "Feed plants light to win >",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "help text",
             "data": [
                 {
