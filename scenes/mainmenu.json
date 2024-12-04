@@ -24,8 +24,8 @@
                 {
                     "type": "button",
                     "position": [
-                        90.0,
-                        135.0
+                        160.0,
+                        120.0
                     ],
                     "label": "Start",
                     "scale": [
@@ -48,8 +48,8 @@
                 {
                     "type": "button",
                     "position": [
-                        160.0,
-                        135.0
+                        125.0,
+                        148.0
                     ],
                     "label": "Settings",
                     "scale": [
@@ -72,8 +72,8 @@
                 {
                     "type": "button",
                     "position": [
-                        230.0,
-                        135.0
+                        195.0,
+                        148.0
                     ],
                     "label": "Credits",
                     "scale": [
