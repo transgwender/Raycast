@@ -396,7 +396,7 @@ struct Lever {
     LEVER_EFFECTS effect;
     LEVER_STATES activeLever;
     Entity affectedEntity;
-    bool pushed = false;
+    float sfx_timer = 0.f;
 
     // lever_state -- is it pushed all the way right, all the way left, or somewhere in the middle?
     // lever_movement_states -- is the lever currently being pushed in a certain direction? If so, which direction?

@@ -25,6 +25,8 @@ class SoundSystem {
 
         CurrentMusic active_music = NONE;
 
+        float lever_sfx_duration_ms = 2000.f;
+
         /**
          * Initialize SDL Mixer
          */

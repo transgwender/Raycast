@@ -225,6 +225,13 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
             motion.velocity.y += gravity;
         }
 
+        for (auto& lever : registry.levers.entities) {
+            Lever& l = registry.levers.get(lever);
+            if (l.sfx_timer >= 0.f) {
+                l.sfx_timer -= elapsed_ms_since_last_update;
+            }
+        }
+
         updateDash();
     }
 
@@ -314,6 +321,7 @@ void WorldSystem::handle_collisions() {
             handle_non_reflection(collisionsRegistry.entities[i], collisionsRegistry.components[i].other);
         }
     }
+
     // Remove all collisions from this simulation step
     registry.collisions.clear();
 }
@@ -489,16 +497,12 @@ void WorldSystem::handle_turtle_collisions(int i) {
     // Check to see collision penetration, is there more overlap on the x-axis or the y-axis? Resolve the collision on the axis with the most overlap
     if (abs(overlapX) < abs(overlapY)) {
          if (turtle_motion.position.x < barrier_motion.position.x) {
-            // Place the turtle to the left of the barrier
-            // turtle_motion.position.x = barrier_motion.position.x - abs(barrier_collider.width / 2) - abs(turtle_collider.width / 2) + 0.01f;
-
             // If the "barrier" is a lever, push it to the right!
             if (registry.levers.has(other)) {
                 Lever& l = registry.levers.get(other);
-                // To ensure lever SFX is played once only
-                if (!l.pushed) {
+                if (l.sfx_timer <= 0.f) {
                     sounds.play_sound("lever.wav");
-                    l.pushed = true;
+                    l.sfx_timer = sounds.lever_sfx_duration_ms;
                 }
 
                 if (registry.motions.get(turtle).velocity.x > 0) {
@@ -506,20 +510,15 @@ void WorldSystem::handle_turtle_collisions(int i) {
                 } else {
                     registry.levers.get(other).state = LEVER_STATES::LEFT;
                 }
-                //registry.levers.get(other).movementState = LEVER_MOVEMENT_STATES::PUSHED_RIGHT;
-
             }
         }
          if (turtle_motion.position.x > barrier_motion.position.x) {
-            // Place the turtle to the right of the barrier
-
             // If the "barrier" is a lever, push it to the left!
             if (registry.levers.has(other)) {
                 Lever& l = registry.levers.get(other);
-                // To ensure lever SFX is played once only
-                if (!l.pushed) {
+                if (l.sfx_timer <= 0.f) {
                     sounds.play_sound("lever.wav");
-                    l.pushed = true;
+                    l.sfx_timer = sounds.lever_sfx_duration_ms;
                 }
 
                 if (registry.motions.get(turtle).velocity.x > 0) {
