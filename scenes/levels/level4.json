@@ -58,7 +58,7 @@
             ]
         },
         {
-            "name": "End zone help text",
+            "name": "help text",
             "data": [
                 {
                     "type": "text",

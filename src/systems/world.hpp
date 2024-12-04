@@ -91,7 +91,7 @@ class WorldSystem {
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
 
     Entity frame_rate_entity;
-    bool frame_rate_enabled = true;
+    bool frame_rate_enabled = false;
     bool do_restart = false;
 
     bool shouldStep();
