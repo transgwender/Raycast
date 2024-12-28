@@ -12,6 +12,9 @@
 
 #ifdef __EMSCRIPTEN__
 #include <emscripten.h>
+#else
+#define GL3W_IMPLEMENTATION
+#include <gl3w.h>
 #endif
 
 using Clock = std::chrono::high_resolution_clock;

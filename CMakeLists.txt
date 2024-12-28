@@ -44,7 +44,6 @@ file(GLOB SOURCE_FILES
         src/logging/*.hpp
         src/utils/*.cpp
         src/utils/*.hpp
-        ext/glad/src/glad.c
 )
 
 # external libraries will be installed into /usr/local/include and /usr/local/lib but that folder is not automatically included in the search on MACs
@@ -65,9 +64,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
 # External header-only libraries in the ext/
 target_include_directories(${PROJECT_NAME} PUBLIC ext/stb_image/)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/glm/)
-target_include_directories(${PROJECT_NAME} PUBLIC ext/glad/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/nlohmann)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/spdlog)
+if (NOT IS_OS_EMSCRIPTEN)
+    target_include_directories(${PROJECT_NAME} PUBLIC ext/gl3w)
+endif()
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
@@ -81,7 +82,7 @@ set(glm_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/cmake/glm) # if necessary
 find_package(glm REQUIRED)
 
 if (IS_OS_EMSCRIPTEN)
-    set(USE_FLAGS "-g -s USE_SDL=2 -s USE_FREETYPE=1 -s USE_SDL_MIXER=2 --use-port=contrib.glfw3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sNO_DISABLE_EXCEPTION_CATCHING --embed-file ${CMAKE_CURRENT_SOURCE_DIR}/data@/")
+    set(USE_FLAGS "-g -s USE_WEBGL2=1 -s USE_SDL=2 -s USE_FREETYPE=1 -s USE_SDL_MIXER=2 --use-port=contrib.glfw3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sNO_DISABLE_EXCEPTION_CATCHING --embed-file ${CMAKE_CURRENT_SOURCE_DIR}/data@/")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")

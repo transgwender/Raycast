@@ -16,11 +16,11 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // vsync
 
+#ifndef __EMSCRIPTEN__
     // Load OpenGL function pointers
-    const int version = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
-    if (version == 0) {
-        LOG_ERROR("Failed to load OpenGL.");
-    }
+    const int is_fine = gl3w_init();
+    assert(is_fine == 0);
+#endif
 
     LOG_INFO("Native Resolution = {}, {}", native_width, native_height);
     LOG_INFO("Window Dimensions = {}, {}", window_width_px, window_height_px);
@@ -30,7 +30,7 @@ void RenderSystem::init(GLFWwindow* window_arg) {
 
     world_stage.init();
     mesh_stage.init();
-    // particle_stage.init();
+    particle_stage.init();
     text_stage.init();
     composite_stage.init(window);
 
@@ -70,7 +70,7 @@ void RenderSystem::draw(float elapsed_ms) {
 
     world_stage.draw();
     mesh_stage.draw();
-    // particle_stage.draw();
+    particle_stage.draw();
     text_stage.draw();
     composite_stage.draw();
 

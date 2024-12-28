@@ -9,7 +9,14 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-#include <glad/glad.h>
+
+#ifdef __EMSCRIPTEN__
+#include <GLES2/gl2.h>
+#include <GLES3/gl3.h>
+#else
+#include <gl3w.h>
+#endif
+
 #define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
 
