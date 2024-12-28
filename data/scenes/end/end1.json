@@ -1,0 +1,140 @@
+{
+  "objList": [
+    {
+      "name": "End Cutscene",
+      "data": [
+        {
+          "type": "end_level",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_4"
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            20.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 1.57
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            286.0,
+            110.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            20.0,
+            155.0
+          ],
+          "angle": -0.75,
+          "mirror-type": "rotate"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            300.0,
+            155.0
+          ],
+          "angle": 0.14,
+          "mirror-type": "rotate"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            50.0,
+            120.0
+          ],
+          "angle": -0.6,
+          "mirror-type": "rotate"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            70.0,
+            30.0
+          ],
+          "angle": -2.1,
+          "mirror-type": "rotate"
+        }
+      ]
+    },
+    {
+      "name": "Members",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            250,
+            50
+          ],
+          "size": 64,
+          "text": "              CREDITS:\n\n            Arpit Kumar\n        Gwendolyn Kornak\n            Jackson Li\n          Jocelyn Baker\n         Muhammad Assad\n     Suraj Emmattiparambil",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": true
+        }
+      ]
+    }
+  ]
+}

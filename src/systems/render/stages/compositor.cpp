@@ -24,7 +24,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glGenTextures(1, &composited_texture);
     glBindTexture(GL_TEXTURE_2D, composited_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, composited_texture, 0);
@@ -33,7 +33,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer0);
     glGenTextures(1, &bloom_tex0);
     glBindTexture(GL_TEXTURE_2D, bloom_tex0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -45,7 +45,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
     glGenTextures(1, &bloom_tex1);
     glBindTexture(GL_TEXTURE_2D, bloom_tex1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

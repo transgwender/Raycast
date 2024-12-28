@@ -1,0 +1,149 @@
+{
+    "objList": [
+        {
+            "name": "Black Hole (!!! Level 25)",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 20
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_2"
+                }
+            ]
+        },
+        {
+            "name": "black hole help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        4.0,
+                        43.0
+                    ],
+                    "size": 48,
+                    "text": "Black holes attract light >",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "m87",
+            "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 5.0,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
+                    "position": [
+                        120.0,
+                        40.0
+                    ],
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 1
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        120.0,
+                        40.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "far-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        210.0,
+                        50.0
+                    ],
+                    "angle": 0,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        40.0,
+                        120.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        280.0,
+                        80.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}

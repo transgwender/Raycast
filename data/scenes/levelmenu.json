@@ -1,0 +1,76 @@
+{
+  "objList": [
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "forest"
+        }
+      ]
+    },
+    {
+      "name": "Ambient Light",
+      "data": [
+        {
+          "type": "ambient_light",
+          "color": [255.0, 255.0, 255.0]
+        }
+      ]
+    },
+    {
+      "name": "level select buttons",
+      "data": [
+        {
+          "type": "level_select"
+        }
+      ]
+    },
+    {
+      "name": "back button",
+      "data": [
+        {
+          "type": "button",
+          "position": [
+            22.0,
+            15.0
+          ],
+          "label": "Back",
+          "scale": [
+            30.0,
+            15.0
+          ]
+        },
+        {
+          "type": "change_scene",
+          "scene": "mainmenu"
+        },
+        {
+          "type": "menu_item"
+        }
+
+      ]
+    },
+    {
+      "name": "title",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            160,
+            15
+          ],
+          "size": 96,
+          "text": "Level Select",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": true
+        }
+      ]
+    }
+  ]
+}

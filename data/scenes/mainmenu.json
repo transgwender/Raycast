@@ -1,0 +1,133 @@
+{
+    "objList": [
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "forest"
+                }
+            ]
+        },
+        {
+            "name": "Ambient Light",
+            "data": [
+                {
+                    "type": "ambient_light",
+                    "color": [255.0, 255.0, 255.0]
+                }
+            ]
+        },
+        {
+            "name": "play_button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        160.0,
+                        120.0
+                    ],
+                    "label": "Start",
+                    "scale": [
+                        64.0,
+                        24.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "levelmenu"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
+            "name": "settings_button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        125.0,
+                        148.0
+                    ],
+                    "label": "Settings",
+                    "scale": [
+                        64.0,
+                        24.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "settings"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
+            "name": "credits_button",
+            "data": [
+                {
+                    "type": "button",
+                    "position": [
+                        195.0,
+                        148.0
+                    ],
+                    "label": "Credits",
+                    "scale": [
+                        64.0,
+                        24.0
+                    ]
+                },
+                {
+                    "type": "change_scene",
+                    "scene": "end1"
+                },
+                {
+                    "type": "menu_item"
+                }
+            ]
+        },
+        {
+            "name": "Team name",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        160,
+                        30
+                    ],
+                    "size": 96,
+                    "text": "Lightbox Presents:",
+                    "color": [
+                        210,
+                        210,
+                        210
+                    ],
+                    "layer": 6,
+                    "centered": true
+                }
+            ]
+        },
+        {
+            "name": "logo",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        75.0
+                    ],
+                    "texture": "logo2",
+                    "scale": [
+                        220.8,
+                        111.4
+                    ],
+                    "color": [382.75, 382.75, 382.75, 255.0]
+                }
+            ]
+        }
+    ]
+}

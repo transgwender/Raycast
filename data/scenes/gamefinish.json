@@ -1,0 +1,55 @@
+{
+  "objList": [
+    {
+      "name": "win",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            162.5,
+            37.5
+          ],
+          "texture": "win",
+          "scale": [
+            79.5,
+            57.5
+          ]
+        }
+      ]
+    },
+    {
+      "name": "main_menu_button",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            162.5,
+            125.0
+          ],
+          "texture": "button_main_menu",
+          "scale": [
+            96.0,
+            32.0
+          ]
+        },
+        {
+          "type": "collider",
+          "bounds": 1,
+          "width": 96,
+          "height": 32
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "change_scene",
+          "scene": "mainmenu"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    }
+  ]
+}

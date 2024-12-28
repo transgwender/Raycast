@@ -1,0 +1,164 @@
+{
+    "objList": [
+        {
+            "name": "Beams",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 7
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_2"
+                }
+            ]
+        },
+        {
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        234.0,
+                        73.0
+                    ],
+                    "size": 48,
+                    "text": "< Beams absorb light",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "beam",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        70.0
+                    ],
+                    "scale": [
+                        140,
+                        10
+                    ],
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 140,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        165.0,
+                        133.0
+                    ],
+                    "angle": 0.7853981634,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        55.0,
+                        70.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        80.0,
+                        130.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        160.0,
+                        22.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}

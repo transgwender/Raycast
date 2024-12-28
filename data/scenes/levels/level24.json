@@ -1,0 +1,270 @@
+{
+  "objList": [
+    {
+      "name": "Level 21 (!!! 21)",
+      "data": [
+        {
+          "type": "level",
+          "id": 24
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_1"
+        }
+      ]
+    },
+    {
+      "name": "platforms",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            120.0,
+            220.0
+          ],
+          "scale": [
+            240,
+            120
+          ],
+          "texture": "platforms_1"
+        },
+        {
+          "type": "collider",
+          "width": 240,
+          "height": 120,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            120.0,
+            220.0
+          ],
+          "scale": [
+            240,
+            120
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            215.0,
+            86.0
+          ],
+          "angle": 1.57079632679,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            40.0,
+            80.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            285.0,
+            80.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "turtle",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            80.0,
+            151.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [
+            12,
+            10,
+            4,
+            6,
+            5,
+            10
+          ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [
+            10000,
+            10000
+          ],
+          "originalPosition": [
+            80.0,
+            151.0
+          ]
+        },
+        {
+          "type": "collider",
+          "width": 16,
+          "height": 32,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "lever-linked stone",
+      "data": [
+        {
+          "type": "lever",
+          "position": [
+            150.0,
+            151.0
+          ],
+          "state": 0,
+          "movementState": 0,
+          "effect": 1,
+          "activeLever": 5
+        },
+        {
+          "type": "sprite",
+          "position": [
+            248.0,
+            90.0
+          ],
+          "scale": [
+            15,
+            180
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 15,
+          "height": 180,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            248.0,
+            90.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "help text",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            112.0,
+            135.0
+          ],
+          "size": 48,
+          "text": "Power stars with light >",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 3,
+          "centered": false
+        }
+      ]
+    },
+    {
+      "name": "minisun",
+      "data": [
+        {
+          "type": "mesh",
+          "path": "star.obj",
+          "position": [
+            203,
+            144
+          ],
+          "angle": 0,
+          "scale": [
+            18,
+            -18
+          ]
+        },
+        {
+          "type": "minisun",
+          "lit": false,
+          "lit_duration": 0
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            280.0,
+            110.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    }
+  ]
+}

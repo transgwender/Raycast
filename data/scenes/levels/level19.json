@@ -1,0 +1,116 @@
+{
+  "objList": [
+    {
+      "name": "Level 20 (!!! 20)",
+      "data": [
+        {
+          "type": "level",
+          "id": 19
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [
+            320,
+            180
+          ],
+          "texture": "background_cyber_2"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            100.0,
+            100.0
+          ],
+          "angle": 0,
+          "mirror-type": "rotate"
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 140, 55 ],
+          "portal_angle": 3.14,
+          "other_portal_position": [ 180, 135 ],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "portals2",
+      "data": [
+        {
+          "type": "portal_pair",
+          "portal_position": [ 140, 135 ],
+          "portal_angle": 3.14,
+          "other_portal_position": [ 180, 55 ],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            100.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            300.0,
+            90.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}

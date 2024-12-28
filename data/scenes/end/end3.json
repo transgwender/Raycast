@@ -1,0 +1,144 @@
+{
+  "objList": [
+    {
+      "name": "End Cutscene",
+      "data": [
+        {
+          "type": "end_level",
+          "id": 3
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_2"
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            110.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            286.0,
+            110.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [100, 110],
+          "portal_angle": 3.14,
+          "other_portal_position": [10, 50],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [80, 50],
+          "portal_angle": 3.14,
+          "other_portal_position": [40, 10],
+          "other_portal_angle": 1.57
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [40, 170],
+          "portal_angle": -1.57,
+          "other_portal_position": [285, 20],
+          "other_portal_angle": 2.36
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [125, 160],
+          "portal_angle": -0.78,
+          "other_portal_position": [285, 160],
+          "other_portal_angle": -2.36
+        }
+      ]
+    },
+    {
+      "name": "portals",
+      "data":  [
+        {
+          "type": "portal_pair",
+          "portal_position": [125, 20],
+          "portal_angle": 0.78,
+          "other_portal_position": [130, 110],
+          "other_portal_angle": 0
+        }
+      ]
+    },
+    {
+      "name": "Attributions",
+      "data": [
+        {
+          "type": "text",
+          "position": [
+            140,
+            25
+          ],
+          "size": 36,
+          "text": "ATTRIBUTIONS:\n\nUI Assets by Kenney.nl\nhttps://kenney.nl/assets/\n\nForest by Arcade Island\nhttps://arcadeisland.itch.io/forest\n\nSilver font by Poppy Works\nhttps://poppyworks.itch.io/silver\n\nTurtle by Elthen\nhttps://elthen.itch.io/2d-pixel-art-turtle-sprites\n\nPlatformer Asset Collection by Name By Another Rose\n\nSFX by ZapsPlat.com\nzapslat.com\n\nhttps://opengameart.org/content/platformer-asset-collection\n\nMusic by Eric Matyas\nhttps://soundimage.org\n\nCredits music by Spring Spring\nhttps://opengameart.org/content/birds-and-\n   wind-ambient-birds-wind-and-synth",
+          "color": [
+            255,
+            255,
+            255
+          ],
+          "layer": 6,
+          "centered": false
+        }
+      ]
+    }
+  ]
+}

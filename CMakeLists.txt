@@ -1,6 +1,6 @@
 # adapted from SimpleGL 4 cmake file
 
-cmake_minimum_required(VERSION 3.1)
+cmake_minimum_required(VERSION 3.10)
 project(raycast)
 
 # Set c++17
@@ -20,14 +20,13 @@ elseif (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     set(IS_OS_LINUX 1)
 elseif (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     set(IS_OS_WINDOWS 1)
+elseif (${CMAKE_SYSTEM_NAME} MATCHES "Emscripten")
+    set(IS_OS_EMSCRIPTEN 1)
 else ()
     message(FATAL_ERROR "OS ${CMAKE_SYSTEM_NAME} was not recognized")
 endif ()
 
 # Create executable target
-
-# Generate the shader folder location to the header
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp.in" "${CMAKE_CURRENT_SOURCE_DIR}/ext/project_path.hpp")
 
 # You can switch to use the file GLOB for simplicity but at your own risk
 file(GLOB SOURCE_FILES
@@ -64,9 +63,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES ENABLE_EXPORTS 0)
 
 # External header-only libraries in the ext/
 target_include_directories(${PROJECT_NAME} PUBLIC ext/stb_image/)
-target_include_directories(${PROJECT_NAME} PUBLIC ext/gl3w)
+target_include_directories(${PROJECT_NAME} PUBLIC ext/glm/)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/nlohmann)
 target_include_directories(${PROJECT_NAME} PUBLIC ext/spdlog)
+
+add_library(glad STATIC ext/glad/src/glad.c)
+target_include_directories(glad PUBLIC ext/glad/include)
+target_link_libraries(${PROJECT_NAME} PUBLIC glad)
 
 # Find OpenGL
 find_package(OpenGL REQUIRED)
@@ -78,6 +81,14 @@ endif ()
 
 set(glm_DIR ${CMAKE_CURRENT_SOURCE_DIR}/ext/glm/cmake/glm) # if necessary
 find_package(glm REQUIRED)
+
+if (IS_OS_EMSCRIPTEN)
+    set(USE_FLAGS "-gsource-map -s USE_SDL=2 -s USE_FREETYPE=1 -s USE_SDL_MIXER=2 --use-port=contrib.glfw3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sNO_DISABLE_EXCEPTION_CATCHING --embed-file ${CMAKE_CURRENT_SOURCE_DIR}/data@/")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${USE_FLAGS}")
+    set(CMAKE_EXECUTABLE_SUFFIX .html)
+endif()
 
 # GLFW, SDL2 could be precompiled (on windows) or installed by a package manager (on OSX and Linux)
 if (IS_OS_LINUX OR IS_OS_MAC)
@@ -179,7 +190,7 @@ elseif (IS_OS_WINDOWS)
 endif ()
 
 # Can't find the include and lib. Quit.
-if (NOT GLFW_FOUND OR NOT SDL2_FOUND)
+if ((NOT IS_OS_EMSCRIPTEN) AND (NOT GLFW_FOUND OR NOT SDL2_FOUND))
     if (NOT GLFW_FOUND)
         message(FATAL_ERROR "Can't find GLFW.")
     else ()
@@ -187,28 +198,32 @@ if (NOT GLFW_FOUND OR NOT SDL2_FOUND)
     endif ()
 endif ()
 
-find_package(Freetype REQUIRED)
+if (NOT IS_OS_EMSCRIPTEN)
+    find_package(Freetype REQUIRED)
 
-if (TARGET Freetype AND NOT TARGET Freetype::Freetype)
-    add_library(Freetype::Freetype ALIAS freetype) # target freetype is defined by freetype-targets.cmake
-    # might need to add freetype to global scope if cmake errors here
-    # alternativly if the above does not work for you you can use
-    # add_library(Freetype::Freetype INTERFACE IMPORTED)
-    # target_link_libraries(Freetype::Freetype INTERFACE freetype)
-endif ()
+    if (TARGET Freetype AND NOT TARGET Freetype::Freetype)
+        add_library(Freetype::Freetype ALIAS freetype) # target freetype is defined by freetype-targets.cmake
+        # might need to add freetype to global scope if cmake errors here
+        # alternativly if the above does not work for you you can use
+        # add_library(Freetype::Freetype INTERFACE IMPORTED)
+        # target_link_libraries(Freetype::Freetype INTERFACE freetype)
+    endif ()
 
-if (NOT TARGET Freetype::Freetype)
-    # insert error here
-    # or create the target correctly (see cmakes newer FindFreetype.cmake)
-    message(FATAL_ERROR "Can't find FreeType (fonts).")
-endif ()
+    if (NOT TARGET Freetype::Freetype)
+        # insert error here
+        # or create the target correctly (see cmakes newer FindFreetype.cmake)
+        message(FATAL_ERROR "Can't find FreeType (fonts).")
+    endif ()
+endif()
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/ext/freetype/include")
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLFW_INCLUDE_DIRS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIRS})
 
-target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES} glm::glm Freetype::Freetype)
+if (NOT IS_OS_EMSCRIPTEN)
+    target_link_libraries(${PROJECT_NAME} PUBLIC ${GLFW_LIBRARIES} ${SDL2_LIBRARIES} ${SDL2MIXER_LIBRARIES} glm::glm Freetype::Freetype)
+endif()
 
 # Needed to add this
 if (IS_OS_LINUX)

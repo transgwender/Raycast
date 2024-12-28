@@ -9,13 +9,12 @@
 #ifndef NOMINMAX
 #define NOMINMAX
 #endif
-// clang-format off
-#include <gl3w.h>
+#include <glad/glad.h>
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-// clang-format on
 
 // The glm library provides vector and matrix operations as in GLSL
-#include <glm/ext/vector_int2.hpp> // ivec2
+#define GLM_FORCE_PURE
 #include <glm/mat3x3.hpp>          // mat3
 #include <glm/vec2.hpp>            // vec2
 #include <glm/vec3.hpp>            // vec3
@@ -29,15 +28,19 @@ using namespace glm;
 // Simple utility functions to avoid mistyping directory name
 // audio_path("audio.ogg") -> data/audio/audio.ogg
 // Get defintion of PROJECT_SOURCE_DIR from:
-#include "../ext/project_path.hpp"
+
 inline std::string data_path() {
-    return std::string(PROJECT_SOURCE_DIR) + "data";
+#ifdef __EMSCRIPTEN__
+    return ""; // root directory in virtual file system
+#else
+    return "./data";
+#endif
 };
 inline std::string shader_path(const std::string& name) {
-    return std::string(PROJECT_SOURCE_DIR) + "/shaders/" + name;
+    return data_path() + "/shaders/" + name;
 };
 inline std::string scene_path(const std::string& name) {
-    return std::string(PROJECT_SOURCE_DIR) + "/scenes/" + name;
+    return data_path() + "/scenes/" + name;
 }
 inline std::string textures_path(const std::string& name) {
     return data_path() + "/textures/" + std::string(name);

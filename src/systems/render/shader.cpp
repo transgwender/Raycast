@@ -40,8 +40,19 @@ bool loadShader(const std::string& vs_path, const std::string& fs_path, GLuint& 
     std::stringstream vs_ss, fs_ss;
     vs_ss << vs_is.rdbuf();
     fs_ss << fs_is.rdbuf();
+
     std::string vs_str = vs_ss.str();
     std::string fs_str = fs_ss.str();
+
+#ifdef __EMSCRIPTEN__
+    std::string version = "#version 300 es\n";
+#else
+    std::string version = "#version 330\n";
+#endif
+
+    vs_str = version + vs_str;
+    fs_str = version + fs_str;
+
     const char* vs_src = vs_str.c_str();
     const char* fs_src = fs_str.c_str();
     auto vs_len = (GLsizei)vs_str.size();

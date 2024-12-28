@@ -17,8 +17,10 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     glfwSwapInterval(1); // vsync
 
     // Load OpenGL function pointers
-    const int is_fine = gl3w_init();
-    assert(is_fine == 0);
+    const int version = gladLoadGLLoader((GLADloadproc)glfwGetProcAddress);
+    if (version == 0) {
+        LOG_ERROR("Failed to load OpenGL.");
+    }
 
     LOG_INFO("Native Resolution = {}, {}", native_width, native_height);
     LOG_INFO("Window Dimensions = {}, {}", window_width_px, window_height_px);

@@ -95,7 +95,7 @@ void TextStage::createCharacterSet(const unsigned int size) {
         unsigned int texture;
         glGenTextures(1, &texture);
         glBindTexture(GL_TEXTURE_2D, texture);
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED,
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_R8, face->glyph->bitmap.width, face->glyph->bitmap.rows, 0, GL_RED,
                      GL_UNSIGNED_BYTE, face->glyph->bitmap.buffer);
 
         // set texture options
