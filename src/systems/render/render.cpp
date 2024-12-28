@@ -30,7 +30,7 @@ void RenderSystem::init(GLFWwindow* window_arg) {
 
     world_stage.init();
     mesh_stage.init();
-    particle_stage.init();
+    // particle_stage.init();
     text_stage.init();
     composite_stage.init(window);
 
@@ -70,7 +70,7 @@ void RenderSystem::draw(float elapsed_ms) {
 
     world_stage.draw();
     mesh_stage.draw();
-    particle_stage.draw();
+    // particle_stage.draw();
     text_stage.draw();
     composite_stage.draw();
 

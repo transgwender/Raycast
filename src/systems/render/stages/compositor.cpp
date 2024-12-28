@@ -96,9 +96,9 @@ void CompositorStage::setupTextures() const {
 }
 
 void CompositorStage::prepare() const {
-    glDepthRange(0, 10);
+    // glDepthRange(0, 10);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0);
-    glClearDepth(1.f);
+    // glClearDepth(1.f);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
@@ -125,7 +125,7 @@ void CompositorStage::composite() const {
     setupTextures();
 
     // Draw
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
 
     checkGlErrors();

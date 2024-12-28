@@ -6,13 +6,20 @@
 #include <optional>
 
 void ParticleStage::createBuffers() {
+    LOG_INFO("b1")
     glGenBuffers(1, &quad_vbo);
+    LOG_INFO("b2")
     glBindBuffer(GL_ARRAY_BUFFER, quad_vbo);
+    LOG_INFO("b3")
     glBufferData(GL_ARRAY_BUFFER, sizeof(textured_vertices), textured_vertices, GL_STATIC_DRAW);
+    LOG_INFO("b4")
 
     glGenBuffers(1, &instance_vbo);
+    LOG_INFO("b5")
     glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
+    LOG_INFO("b6")
     allocateInstanceBuffer();
+    LOG_INFO("b7")
 
     checkGlErrors();
 }
@@ -24,52 +31,78 @@ void ParticleStage::allocateInstanceBuffer() const {
 
 void ParticleStage::initVAO() {
     glBindVertexArray(vao);
+    LOG_INFO("a1")
 
     glBindBuffer(GL_ARRAY_BUFFER, quad_vbo);
+    LOG_INFO("a2")
 
     glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    LOG_INFO("a3")
     glEnableVertexAttribArray(0);
+    LOG_INFO("a4")
 
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
+    LOG_INFO("a5")
     glEnableVertexAttribArray(1);
+    LOG_INFO("a6")
 
     glBindBuffer(GL_ARRAY_BUFFER, instance_vbo);
+    LOG_INFO("a7")
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)0);
+    LOG_INFO("a8")
     glEnableVertexAttribArray(2);
+    LOG_INFO("a9")
     glVertexAttribDivisor(2, 1);
+    LOG_INFO("a10")
 
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)offsetof(ParticleGPUData, scale));
+    LOG_INFO("a11")
     glEnableVertexAttribArray(3);
+    LOG_INFO("a12")
     glVertexAttribDivisor(3, 1);
+    LOG_INFO("a13")
 
     glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)offsetof(ParticleGPUData, color));
+    LOG_INFO("a14")
     glEnableVertexAttribArray(4);
+    LOG_INFO("a15")
     glVertexAttribDivisor(4, 1);
+    LOG_INFO("a16")
 
     glVertexAttribPointer(5, 1, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)offsetof(ParticleGPUData, angle));
+    LOG_INFO("a17")
     glEnableVertexAttribArray(5);
+    LOG_INFO("a18")
     glVertexAttribDivisor(5, 1);
+    LOG_INFO("a19")
 }
 
 void ParticleStage::init() {
     // create a new framebuffer to render to
     glGenFramebuffers(1, &frame_buffer);
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
+    LOG_INFO("Initialized particle framebuffers")
 
     frame_texture = texture_manager.get("$world_texture");
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
+    LOG_INFO("Initialized particle frame texture")
 
     glGenVertexArrays(1, &vao);
+    LOG_INFO("Generated VAO")
     createBuffers();
+    LOG_INFO("Created Buffers")
     initVAO();
+    LOG_INFO("Created VAO")
 
     updateShaders();
+    LOG_INFO("Initialized particle shaders")
 
     // go back to defaults
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
+    LOG_INFO("Finished cleaning up")
 
     checkGlErrors();
 }

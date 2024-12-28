@@ -38,7 +38,6 @@ PersistenceSystem persistence;
  * Advance the game loop one step
  */
 void step_game_loop() {
-    LOG_INFO("Inside main loop")
     if (world.is_over()) {
         persistence.try_write_save();
 #ifdef __EMSCRIPTEN__
@@ -56,8 +55,6 @@ void step_game_loop() {
     float elapsed_ms =
         static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count()) / 1000;
     t = now;
-
-    LOG_INFO("Stepping game loop, elapsed ms: {}", elapsed_ms);
 
     if (window_focused) {
         float elapsed_remainder_ms = elapsed_ms + fremainder;
@@ -101,19 +98,11 @@ int main() {
 
     glfwSetWindowFocusCallback(window, on_window_focus);
 
-    LOG_INFO("Starting system initialization")
-
     // Initialize the main systems
     renderer.init(window);
-    LOG_INFO("Finished renderer initialization")
     persistence.init();
-    LOG_INFO("Finished persistence initialization")
     world.init(&persistence);
-    LOG_INFO("Finished world initialization")
     particles.init();
-    LOG_INFO("Finished particles initialization")
-
-    LOG_INFO("Finished system initialization")
 
     // Variable time step loop
     t = Clock::now();

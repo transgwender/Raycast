@@ -131,13 +131,14 @@ void SpriteStage::prepareDraw() const {
     setUniformInt(shader, "point_lights_count", point_lights_count);
 
     glViewport(0, 0, native_width, native_height);
-    glDepthRange(0.0, 1.0);
+    // glDepthRange(0.0, 1.0);
     glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 0.0);
-    glClearDepth(1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClearDepth(1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
+
 
     // Setting active vertex and index buffers
     glBindVertexArray(vao);
