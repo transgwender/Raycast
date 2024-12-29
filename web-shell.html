@@ -1,0 +1,85 @@
+<!-- adapted from https://github.com/emscripten-core/emscripten/blob/main/src/shell_minimal.html -->
+<!doctype html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Raycast</title>
+    <style>
+        .emscripten {
+            padding-right: 0;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+
+        div.emscripten {
+            text-align: center;
+        }
+
+        div.emscripten_border {
+            border: 0;
+        }
+
+        /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
+        canvas.emscripten {
+            border: 0 none;
+            outline: none;
+            background-color: black;
+        }
+
+        body {
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        #status {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten_border">
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+</div>
+
+<script type='text/javascript'>
+    var statusElement = document.getElementById('status');
+
+    var Module = {
+        canvas: (() => {
+            var canvas = document.getElementById('canvas');
+            canvas.addEventListener("webglcontextlost", (e) => {
+                alert('WebGL context lost. You will need to reload the page.');
+                e.preventDefault();
+            }, false);
+            return canvas;
+        })(),
+        setStatus: (text) => {
+            Module.setStatus.last ??= {time: Date.now(), text: ''};
+            if (text === Module.setStatus.last.text) return;
+            var m = text.match(/([^(]+)\((\d+(\.\d+)?)\/(\d+)\)/);
+            var now = Date.now();
+            if (m && now - Module.setStatus.last.time < 30) return; // if this is a progress update, skip it if too soon
+            Module.setStatus.last.time = now;
+            Module.setStatus.last.text = text;
+            statusElement.innerHTML = text;
+        },
+        totalDependencies: 0,
+        monitorRunDependencies: (left) => {
+            this.totalDependencies = Math.max(this.totalDependencies, left);
+            Module.setStatus(left ? 'Preparing...' : 'All downloads complete.');
+        }
+    };
+    Module.setStatus('Downloading...');
+    window.onerror = () => {
+        Module.setStatus('Exception thrown, see JavaScript console');
+        Module.setStatus = (text) => {
+            if (text) console.error('[post-exception status] ' + text);
+        };
+    };
+</script>
+{{{ SCRIPT }}}
+</body>
+</html>

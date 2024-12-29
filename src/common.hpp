@@ -11,6 +11,8 @@
 #endif
 
 #ifdef __EMSCRIPTEN__
+#include <GLFW/emscripten_glfw3.h>
+#include <emscripten.h>
 #include <GLES2/gl2.h>
 #include <GLES3/gl3.h>
 #else

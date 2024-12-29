@@ -96,9 +96,7 @@ void CompositorStage::setupTextures() const {
 }
 
 void CompositorStage::prepare() const {
-    // glDepthRange(0, 10);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0);
-    // glClearDepth(1.f);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
@@ -109,12 +107,29 @@ void CompositorStage::prepare() const {
     checkGlErrors();
 }
 
+/**
+ * Update the viewport and apply letterboxing and pillarboxing.
+ * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
+ */
+void CompositorStage::updateViewport() const {
+    int w, h;
+    glfwGetFramebufferSize(window, &w, &h);
+
+    const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
+
+    const int viewport_width = min(static_cast<float>(w), h * aspect_ratio);
+    const int viewport_height = min(static_cast<float>(h), w / aspect_ratio);
+
+    const auto offset_x = (w - viewport_width) / 2;
+    const auto offset_y = (h - viewport_height) / 2;
+
+    glViewport(offset_x, offset_y, viewport_width, viewport_height);
+}
+
 void CompositorStage::composite() const {
     glUseProgram(compositor_shader);
 
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
-    glViewport(0, 0, w, h);
+    updateViewport();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)

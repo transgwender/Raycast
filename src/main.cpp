@@ -25,8 +25,8 @@ bool window_focused = true;
 
 GLFWwindow* window;
 
-float fremainder = 0;
-std::chrono::time_point<std::chrono::steady_clock> t;
+float remainder_time = 0;
+std::chrono::time_point<std::chrono::steady_clock> last_time;
 
 // Global systems
 WorldSystem world;
@@ -56,11 +56,11 @@ void step_game_loop() {
     // Calculating elapsed times in milliseconds from the previous iteration
     auto now = Clock::now();
     float elapsed_ms =
-        static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - t)).count()) / 1000;
-    t = now;
+        static_cast<float>((std::chrono::duration_cast<std::chrono::microseconds>(now - last_time)).count()) / 1000;
+    last_time = now;
 
     if (window_focused) {
-        float elapsed_remainder_ms = elapsed_ms + fremainder;
+        float elapsed_remainder_ms = elapsed_ms + remainder_time;
 
         world.step(elapsed_ms);
         for (int i = 0; i < (int)floor(elapsed_remainder_ms / FIXED_UPDATE_MS); ++i) {
@@ -70,7 +70,7 @@ void step_game_loop() {
         world.handle_collisions();
         ai.step(elapsed_ms);
         animation.step(elapsed_ms);
-        fremainder = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
+        remainder_time = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
         particles.step(elapsed_ms);
         renderer.draw(elapsed_ms);
     }
@@ -108,10 +108,9 @@ int main() {
     particles.init();
 
     // Variable time step loop
-    t = Clock::now();
+    last_time = Clock::now();
 
 #ifdef __EMSCRIPTEN__
-    LOG_INFO("Creating main loop")
     emscripten_set_main_loop(step_game_loop, 0, 1);
 #else
     while (true) {

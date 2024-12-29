@@ -61,10 +61,17 @@ GLFWwindow* WorldSystem::create_window() {
 #if __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
-    glfwWindowHint(GLFW_RESIZABLE, 0);
+    glfwWindowHint(GLFW_RESIZABLE, 1);
 
     // Create the main window (for rendering, keyboard, and mouse input)
+#ifdef __EMSCRIPTEN__
+    emscripten_glfw_set_next_window_canvas_selector("#canvas");
+#endif
     window = glfwCreateWindow(window_width_px, window_height_px, "Raycast", nullptr, nullptr);
+#ifdef __EMSCRIPTEN__
+    emscripten_glfw_make_canvas_resizable(window, "window", nullptr);
+    glfwGetWindowSize(window, &window_width_px, &window_height_px);
+#endif
     if (window == nullptr) {
         LOG_ERROR("Failed to glfwCreateWindow");
         return nullptr;
@@ -85,10 +92,14 @@ GLFWwindow* WorldSystem::create_window() {
         glfwGetCursorPos(wnd, &xpos, &ypos);
         ((WorldSystem*)glfwGetWindowUserPointer(wnd))->on_mouse_button(_0, _1, _2, xpos, ypos);
     };
+    auto window_resize_redirect = [](GLFWwindow* wnd, int width, int height) {
+        ((WorldSystem*)glfwGetWindowUserPointer(wnd))->on_resize_window(width, height);
+    };
 
     glfwSetKeyCallback(window, key_redirect);
     glfwSetCursorPosCallback(window, cursor_pos_redirect);
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
+    glfwSetWindowSizeCallback(window, window_resize_redirect);
 
     SoundSystem::init();
 
@@ -105,6 +116,14 @@ void WorldSystem::init(PersistenceSystem *persistence_ptr) {
 
     // Set all states to default
     restart_game();
+}
+
+void WorldSystem::on_resize_window(int width, int height) {
+    window_width_px = width;
+    window_height_px = height;
+}
+
+void WorldSystem::on_resize_framebuffer(int width, int height) {
 }
 
 bool WorldSystem::isInLevel() {
