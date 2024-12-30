@@ -54,6 +54,7 @@ class ECSRegistry {
     ComponentContainer<EndCutsceneCount> endCutsceneCounts;
     ComponentContainer<AmbientLight> ambientLights;
     ComponentContainer<Invisible> invisibles;
+    ComponentContainer<Quit> quits;
 
     // constructor that adds all containers for looping over them
     // IMPORTANT: Don't forget to add any newly added containers!
@@ -102,6 +103,7 @@ class ECSRegistry {
         registry_list.push_back(&endCutsceneCounts);
         registry_list.push_back(&ambientLights);
         registry_list.push_back(&invisibles);
+        registry_list.push_back(&quits);
     }
 
     void clear_all_components() {

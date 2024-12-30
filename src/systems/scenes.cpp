@@ -181,6 +181,8 @@ bool SceneSystem::try_parse_scene(std::string& scene_tag) {
                             createEmptyButton(entity, {200, setting.position_y}, {10, 10}, "", toggle_texture);
                             registry.toggles.insert(entity, {setting.setting});
                         }
+                    } else if (type == "quit") {
+                        registry.quits.insert(entity, Quit());
                     }
                 }
             }

@@ -757,6 +757,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
                 menus.try_close_menu();
                 break;
             }
+
+            if (registry.quits.has(entity)) {
+                glfwSetWindowShouldClose(window, 1);
+                //is_over()
+            }
+
             if (registry.deleteDatas.has(entity)) {
                 auto &d = registry.deleteDatas.get(entity);
                 auto &text = registry.texts.get(entity);

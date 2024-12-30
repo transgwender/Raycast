@@ -443,3 +443,5 @@ struct Setting {
 struct Invisible {
 
 };
+
+struct Quit {};
