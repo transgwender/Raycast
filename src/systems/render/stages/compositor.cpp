@@ -117,13 +117,13 @@ void CompositorStage::updateViewport() const {
 
     const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
 
-    const int viewport_width = min(static_cast<float>(w), h * aspect_ratio);
-    const int viewport_height = min(static_cast<float>(h), w / aspect_ratio);
+    viewport_width = min(static_cast<float>(w), h * aspect_ratio);
+    viewport_height = min(static_cast<float>(h), w / aspect_ratio);
 
-    const auto offset_x = (w - viewport_width) / 2;
-    const auto offset_y = (h - viewport_height) / 2;
+    viewport_offset_x = (w - viewport_width) / 2;
+    viewport_offset_y = (h - viewport_height) / 2;
 
-    glViewport(offset_x, offset_y, viewport_width, viewport_height);
+    glViewport(viewport_offset_x, viewport_offset_y, viewport_width, viewport_height);
 }
 
 void CompositorStage::composite() const {

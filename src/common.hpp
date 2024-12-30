@@ -76,6 +76,12 @@ inline std::string background_path(const std::string& name) {
 extern int window_width_px;
 extern int window_height_px;
 
+extern int viewport_offset_x;
+extern int viewport_offset_y;
+
+extern int viewport_width;
+extern int viewport_height;
+
 static int native_width = 320;
 static int native_height = 180;
 
