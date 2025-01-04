@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Tutorial - Intro",
+            "name": "Breakout",
             "data": [
                 {
                     "type": "level",
-                    "id": 1
+                    "id": 15
                 }
             ]
         },
@@ -14,7 +14,7 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_1"
+                    "id": "cyber_4"
                 }
             ]
         },
@@ -24,11 +24,33 @@
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        105.0
+                        100.0,
+                        57.0
                     ],
                     "angle": 0,
                     "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        150.0,
+                        130.0
+                    ],
+                    "angle": 1.5707963268,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -45,8 +67,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        90.0
+                        40.0,
+                        60.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -58,55 +80,13 @@
             ]
         },
         {
-            "name": "End zone help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        170.0,
-                        93.0
-                    ],
-                    "size": 48,
-                    "text": "Feed plants light to win >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        40.0,
-                        120.0
-                    ],
-                    "size": 48,
-                    "text": "Drag to rotate mirrors on cogs >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        270.0,
-                        90.0
+                        280.0,
+                        60.0
                     ],
                     "zone_type": 1,
                     "angle": 0

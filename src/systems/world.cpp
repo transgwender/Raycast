@@ -425,7 +425,7 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     Motion& reflective_surface_motion = registry.motions.get(reflective);
 
     if (registry.inOrbits.has(reflected)) {
-        light_motion.angle += registry.inOrbits.get(reflected).totalAngle + registry.inOrbits.get(reflected).prevAngle - M_PI;
+        light_motion.angle = atan2(light_motion.velocity.y, light_motion.velocity.x);
         registry.inOrbits.get(reflected).bodyOfMassJustOrbited = registry.inOrbits.get(reflected).bodyOfMass;
         registry.inOrbits.get(reflected).bodyOfMass = Entity();
         registry.inOrbits.get(reflected).prevAngle = 0;

@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Zig-Zag",
+            "name": "Straight down",
             "data": [
                 {
                     "type": "level",
-                    "id": 11
+                    "id": 29
                 }
             ]
         },
@@ -14,66 +14,78 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_5"
+                    "id": "cyber_1"
                 }
             ]
         },
         {
-            "name": "left-move-mirror",
+            "name": "portals",
+            "data":  [
+                {
+                    "type": "portal_pair",
+                    "portal_position": [60, 140],
+                    "portal_angle": -1.5707963268,
+                    "other_portal_position": [240, 90],
+                    "other_portal_angle": -2.0943951024
+                }
+            ]
+        },
+        {
+            "name": "blackhole",
             "data": [
                 {
-                    "type": "mirror",
+                    "type": "blackhole",
+                    "mass": 5.2,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
                     "position": [
-                        100.0,
+                        160.0,
                         90.0
                     ],
-                    "angle": 0,
-                    "rail-length": 50,
-                    "rail-angle": 1.5707963268
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
                 },
                 {
-                    "type": "interactable"
+                    "type": "collideable"
                 },
                 {
-                    "type": "highlightable",
-                    "isHighlighted": false
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        110.0,
+                        123.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
                 }
             ]
         },
         {
-            "name": "bottom-right-move-mirror",
+            "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        220.0,
-                        50.0
+                        60.0,
+                        114.0
                     ],
-                    "angle": -0.1,
-                    "rail-length": 25,
-                    "rail-angle": 1.5707963268
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "bottom-right-move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        220.0,
-                        130.0
-                    ],
-                    "angle": -0.1,
-                    "rail-length": 25,
-                    "rail-angle": 1.5707963268
+                    "angle": -0.7853981634,
+                    "rail-length": 30,
+                    "rail-angle": 0.4
                 },
                 {
                     "type": "interactable"
@@ -90,15 +102,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        40.0,
-                        40.0
+                        120.0,
+                        130.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
+                    "angle": 3.1415926536
                 }
             ]
         },
@@ -108,8 +120,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        40.0,
-                        150.0
+                        65.0,
+                        30.0
                     ],
                     "zone_type": 1,
                     "angle": 0

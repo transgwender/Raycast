@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Get steep",
+            "name": "Straight down",
             "data": [
                 {
                     "type": "level",
-                    "id": 18
+                    "id": 23
                 }
             ]
         },
@@ -25,7 +25,7 @@
                     "type": "sprite",
                     "position": [
                         250.0,
-                        165.0
+                        130.0
                     ],
                     "scale": [
                         120,
@@ -64,7 +64,7 @@
                     "type": "sprite",
                     "position": [
                         250.0,
-                        -3.0
+                        10.0
                     ],
                     "scale": [
                         120,
@@ -101,21 +101,21 @@
             "data":  [
                 {
                     "type": "portal_pair",
-                    "portal_position": [250, 80],
-                    "portal_angle": 0,
-                    "other_portal_position": [140, 40],
+                    "portal_position": [290, 20],
+                    "portal_angle": 1.5707963268,
+                    "other_portal_position": [210, 20],
                     "other_portal_angle": 1.5707963268
                 }
             ]
         },
         {
-            "name": "rotate-mirror",
+            "name": "middle-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        185.0,
-                        125.0
+                        140.0,
+                        70.0
                     ],
                     "angle": 0,
                     "mirror-type": "rotate"
@@ -130,16 +130,59 @@
             ]
         },
         {
-            "name": "rotate-mirror",
+            "name": "left-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        105.0,
-                        85.0
+                        40.0,
+                        90.0
                     ],
                     "angle": 0,
                     "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "right-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        210.0,
+                        145.0
+                    ],
+                    "angle": 0,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        135.0,
+                        122.0
+                    ],
+                    "angle": -0.2617993878,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -156,36 +199,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        125.0
+                        40.0,
+                        20.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        7.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "Light passes through portals >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "angle": 1.570796326794897
                 }
             ]
         },
@@ -195,8 +217,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
-                        100.0
+                        290.0,
+                        160.0
                     ],
                     "zone_type": 1,
                     "angle": 0

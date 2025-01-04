@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Out of the way",
+            "name": "Zig-Zag",
             "data": [
                 {
                     "type": "level",
-                    "id": 16
+                    "id": 13
                 }
             ]
         },
@@ -14,103 +14,66 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_5"
                 }
             ]
         },
         {
-            "name": "beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        250.0,
-                        185.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "angle": -1.5707963268,
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "bottom-rotate-mirror",
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        140.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        160.0,
-                        40.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        150.0,
+                        100.0,
                         90.0
                     ],
-                    "angle": -0.7853981634,
-                    "rail-length": 40,
-                    "rail-angle": 0
+                    "angle": 0,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        50.0
+                    ],
+                    "angle": -0.1,
+                    "rail-length": 25,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        130.0
+                    ],
+                    "angle": -0.1,
+                    "rail-length": 25,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -127,8 +90,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        35.0,
-                        80.0
+                        40.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -145,8 +108,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        285.0,
-                        120.0
+                        40.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0

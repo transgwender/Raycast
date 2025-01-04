@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Bounce down",
+            "name": "Sliding doors",
             "data": [
                 {
                     "type": "level",
-                    "id": 4
+                    "id": 17
                 }
             ]
         },
@@ -14,21 +14,44 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "pipes"
+                    "id": "cyber_4"
                 }
             ]
         },
         {
-            "name": "rotate-mirror",
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        270.0,
-                        93.0
+                        140.0,
+                        90.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0.1,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        260.0,
+                        90.0
+                    ],
+                    "angle": 0,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -45,7 +68,7 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
+                        60.0,
                         40.0
                     ],
                     "zone_type": 0,
@@ -53,28 +76,7 @@
                 },
                 {
                     "type": "light_source",
-                    "angle": 0.23
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        65.0,
-                        143.0
-                    ],
-                    "size": 48,
-                    "text": "< Feed plants light to win",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "angle": 0
                 }
             ]
         },
@@ -84,8 +86,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        140.0
+                        60.0,
+                        100.0
                     ],
                     "zone_type": 1,
                     "angle": 0

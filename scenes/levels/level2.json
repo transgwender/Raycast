@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Factory",
+            "name": "Reflection",
             "data": [
                 {
                     "type": "level",
@@ -19,156 +19,15 @@
             ]
         },
         {
-            "name": "top_beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        -20.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2",
-                    "angle": -1.5707963268
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "bottom_beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        200.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2",
-                    "angle": -1.5707963268
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "top_rotate-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
                         160.0,
-                        55.0
+                        130.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "middle_rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        160.0,
-                        90.0
-                    ],
-                    "angle": 0,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "bottom_rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        160.0,
-                        125.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "left_rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        100.0,
-                        90.0
-                    ],
-                    "angle": 0.7853981634,
+                    "angle": 1.57,
                     "mirror-type": "rotate"
                 },
                 {
@@ -186,8 +45,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        130.0,
-                        90.0
+                        50.0,
+                        122.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -199,13 +58,34 @@
             ]
         },
         {
+            "name": "End zone help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        180.0,
+                        53.0
+                    ],
+                    "size": 48,
+                    "text": "< Feed plants light to win",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        250.0,
-                        90.0
+                        160.0,
+                        50.0
                     ],
                     "zone_type": 1,
                     "angle": 0

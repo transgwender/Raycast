@@ -1,11 +1,11 @@
 {
   "objList": [
     {
-      "name": "Ringer (new level)",
+      "name": "Ringer",
       "data": [
         {
           "type": "level",
-          "id": 23
+          "id": 28
         }
       ]
     },

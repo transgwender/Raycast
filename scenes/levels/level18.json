@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Double-sided",
+            "name": "Sneaky",
             "data": [
                 {
                     "type": "level",
-                    "id": 12
+                    "id": 18
                 }
             ]
         },
@@ -19,83 +19,76 @@
             ]
         },
         {
-            "name": "bottom-left-move-mirror",
+            "name": "beam",
             "data": [
                 {
-                    "type": "mirror",
+                    "type": "sprite",
                     "position": [
-                        150.0,
-                        110.0
+                        70.0,
+                        90.0
                     ],
-                    "angle": 0.7853981634,
-                    "rail-length": 50,
-                    "rail-angle": 0
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top-right-move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        260.0,
-                        110.0
+                    "scale": [
+                        140,
+                        10
                     ],
-                    "angle": 0.7853981634,
-                    "rail-length": 50,
-                    "rail-angle": 0
+                    "texture": "beam2"
                 },
                 {
-                    "type": "interactable"
+                    "type": "collider",
+                    "width": 140,
+                    "height": 10,
+                    "bounds": 1
                 },
                 {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top-left-move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        90.0,
-                        40.0
-                    ],
-                    "angle": 0.7853981634,
-                    "rail-length": 50,
-                    "rail-angle": 0
+                    "type": "collideable"
                 },
                 {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "top-right-move-mirror",
-            "data": [
-                {
-                    "type": "mirror",
+                    "type": "zone",
                     "position": [
                         220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        230.0,
                         40.0
                     ],
-                    "angle": -0.7853981634,
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        210.0,
+                        125.0
+                    ],
+                    "angle": 1.0471975512,
                     "rail-length": 50,
-                    "rail-angle": 0
+                    "rail-angle": -0.5235987756
                 },
                 {
                     "type": "interactable"
@@ -112,8 +105,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        40.0,
-                        110.0
+                        60.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -130,8 +123,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        110.0,
-                        150.0
+                        60.0,
+                        140.0
                     ],
                     "zone_type": 1,
                     "angle": 0

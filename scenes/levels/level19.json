@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Black Hole (!!! Level 25)",
+            "name": "Out of the way",
             "data": [
                 {
                     "type": "level",
-                    "id": 20
+                    "id": 19
                 }
             ]
         },
@@ -19,81 +19,98 @@
             ]
         },
         {
-            "name": "black hole help text",
+            "name": "beam",
             "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        4.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "Black holes attract light >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
-            "name": "m87",
-            "data": [
-                {
-                    "type": "blackhole",
-                    "mass": 5.0,
-                    "schwarzchild_radius": 24.0
-                },
                 {
                     "type": "sprite",
                     "position": [
-                        120.0,
-                        40.0
+                        250.0,
+                        185.0
                     ],
-                    "texture": "light",
                     "scale": [
-                        10.0,
-                        10.0
+                        140,
+                        10
                     ],
-                    "angle": 0
+                    "angle": -1.5707963268,
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 140,
+                    "height": 10,
+                    "bounds": 1
                 },
                 {
                     "type": "collideable"
                 },
                 {
-                    "type": "collider",
-                    "width": 20.0,
-                    "height": 20.0,
-                    "bounds": 1
-                },
-                {
                     "type": "zone",
                     "position": [
-                        120.0,
-                        40.0
+                        220.0,
+                        70.0
                     ],
                     "scale": [
-                        60,
-                        20
+                        220,
+                        10
                     ],
                     "zone_type": 3
                 }
             ]
         },
         {
-            "name": "far-rotate-mirror",
+            "name": "bottom-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        210.0,
-                        50.0
+                        160.0,
+                        140.0
                     ],
-                    "angle": 0,
+                    "angle": 1.5707963268,
                     "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        160.0,
+                        40.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        150.0,
+                        90.0
+                    ],
+                    "angle": -0.7853981634,
+                    "rail-length": 40,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -110,8 +127,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        40.0,
-                        120.0
+                        35.0,
+                        80.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -128,8 +145,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        280.0,
-                        80.0
+                        285.0,
+                        120.0
                     ],
                     "zone_type": 1,
                     "angle": 0

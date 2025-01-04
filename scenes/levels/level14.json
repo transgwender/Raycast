@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Doubles",
+            "name": "Double-sided",
             "data": [
                 {
                     "type": "level",
-                    "id": 6
+                    "id": 14
                 }
             ]
         },
@@ -14,21 +14,22 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_5"
+                    "id": "cyber_2"
                 }
             ]
         },
         {
-            "name": "rotate-mirror",
+            "name": "bottom-left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        60.0
+                        150.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -40,16 +41,61 @@
             ]
         },
         {
-            "name": "bottom-rotate-mirror",
+            "name": "top-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        120.0
+                        260.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        40.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        40.0
+                    ],
+                    "angle": -0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -66,8 +112,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        60.0
+                        40.0,
+                        110.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -84,8 +130,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        270.0,
-                        60.0
+                        110.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0
