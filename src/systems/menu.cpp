@@ -8,7 +8,7 @@
 void MenuSystem::generate_level_select_buttons(int levelCount) {
     int columnMax = 9;
     int left = native_width/2 - 3*40;
-    int top = 40;
+    int top = 50;
 
     for (int i = 1; i <= levelCount; ++i) {
         Entity level = Entity();

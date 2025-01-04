@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Thinking with lights",
+            "name": "Sliding doors",
             "data": [
                 {
                     "type": "level",
@@ -14,33 +14,44 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_3"
+                    "id": "cyber_4"
                 }
             ]
         },
         {
-            "name": "portals",
-            "data":  [
-                {
-                    "type": "portal_pair",
-                    "portal_position": [100, 40],
-                    "portal_angle": 1.5707963268,
-                    "other_portal_position": [180, 40],
-                    "other_portal_angle": 1.5707963268
-                }
-            ]
-        },
-        {
-            "name": "rotate-mirror",
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        105.0,
-                        125.0
+                        140.0,
+                        90.0
+                    ],
+                    "angle": 0.1,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        260.0,
+                        90.0
                     ],
                     "angle": 0,
-                    "mirror-type": "rotate"
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -57,8 +68,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        120.0
+                        60.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -70,34 +81,13 @@
             ]
         },
         {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        203.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "< Light passes through portals",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        180.0,
-                        120.0
+                        60.0,
+                        100.0
                     ],
                     "zone_type": 1,
                     "angle": 0

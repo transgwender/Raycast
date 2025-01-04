@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Double bounce",
+            "name": "Double-sided",
             "data": [
                 {
                     "type": "level",
@@ -14,20 +14,20 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_5"
+                    "id": "cyber_2"
                 }
             ]
         },
         {
-            "name": "move-mirror",
+            "name": "bottom-left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        135.0,
-                        125.0
+                        150.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 0.7853981634,
                     "rail-length": 50,
                     "rail-angle": 0
                 },
@@ -40,17 +40,60 @@
                 }
             ]
         },
-
         {
-            "name": "move-mirror",
+            "name": "top-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        155.0,
-                        85.0
+                        260.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        40.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        40.0
+                    ],
+                    "angle": -0.7853981634,
                     "rail-length": 50,
                     "rail-angle": 0
                 },
@@ -69,15 +112,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        40.0
+                        40.0,
+                        110.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 1
+                    "angle": 0
                 }
             ]
         },
@@ -87,8 +130,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        240.0,
-                        40.0
+                        110.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0

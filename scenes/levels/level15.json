@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Sliding doors",
+            "name": "Breakout",
             "data": [
                 {
                     "type": "level",
@@ -19,17 +19,16 @@
             ]
         },
         {
-            "name": "left-move-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        140.0,
-                        90.0
+                        100.0,
+                        57.0
                     ],
-                    "angle": 0.1,
-                    "rail-length": 50,
-                    "rail-angle": 1.5707963268
+                    "angle": 0,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
@@ -41,17 +40,17 @@
             ]
         },
         {
-            "name": "bottom-right-move-mirror",
+            "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        260.0,
-                        90.0
+                        150.0,
+                        130.0
                     ],
-                    "angle": 0,
+                    "angle": 1.5707963268,
                     "rail-length": 50,
-                    "rail-angle": 1.5707963268
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -68,8 +67,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        40.0
+                        40.0,
+                        60.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -86,8 +85,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        100.0
+                        280.0,
+                        60.0
                     ],
                     "zone_type": 1,
                     "angle": 0

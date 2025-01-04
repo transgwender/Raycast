@@ -1,0 +1,442 @@
+{
+  "objList": [
+    {
+      "name": "Indecision",
+      "data": [
+        {
+          "type": "level",
+          "id": 35
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "cyber_4"
+        }
+      ]
+    },
+    {
+      "name": "turtle-platform-top",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            60.0
+          ],
+          "scale": [
+            120,
+            10
+          ],
+          "angle": 0,
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 120,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            160.0,
+            70.0
+          ],
+          "scale": [
+            120,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "turtle-platform-bottom",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            120.0
+          ],
+          "scale": [
+            120,
+            10
+          ],
+          "angle": 0,
+          "texture": "beam2"
+        },
+        {
+          "type": "collider",
+          "width": 120,
+          "height": 10,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            160.0,
+            110.0
+          ],
+          "scale": [
+            120,
+            10
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "lever-linked stone",
+      "data": [
+        {
+          "type": "lever",
+          "position": [
+            160.0,
+            106.0
+          ],
+          "state": 0,
+          "movementState": 0,
+          "effect": 1,
+          "activeLever": 5
+        },
+        {
+          "type": "sprite",
+          "position": [
+            248.0,
+            90.0
+          ],
+          "scale": [
+            15,
+            180
+          ],
+          "texture": "beam2-vert"
+        },
+        {
+          "type": "collider",
+          "width": 15,
+          "height": 180,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            248.0,
+            90.0
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "platforms",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            230.0
+          ],
+          "scale": [
+            360,
+            120
+          ],
+          "texture": "platforms_1"
+        },
+        {
+          "type": "collider",
+          "width": 240,
+          "height": 120,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            160.0,
+            230.0
+          ],
+          "scale": [
+            360,
+            120
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "minisun-top",
+      "data": [
+        {
+          "type": "mesh",
+          "path": "star.obj",
+          "position": [
+            120,
+            40
+          ],
+          "angle": 0,
+          "scale": [
+            18,
+            -18
+          ]
+        },
+        {
+          "type": "minisun",
+          "lit": false,
+          "lit_duration": 3
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            120,
+            60
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "minisun-bottom",
+      "data": [
+        {
+          "type": "mesh",
+          "path": "star.obj",
+          "position": [
+            200,
+            100
+          ],
+          "angle": 0,
+          "scale": [
+            18,
+            -18
+          ]
+        },
+        {
+          "type": "minisun",
+          "lit": false,
+          "lit_duration": 3
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            200,
+            100
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror lever-linked",
+      "data": [
+        {
+          "type": "lever",
+          "position": [
+            160.0,
+            46.0
+          ],
+          "state": 5,
+          "movementState": 0,
+          "effect": 1,
+          "activeLever": 5
+        },
+        {
+          "type": "mirror",
+          "position": [
+            285.0,
+            150.0
+          ],
+          "mirror-type": "rotate",
+          "angle": 1.5707963268
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "move-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            50.0,
+            75.0
+          ],
+          "angle": 0.7854,
+          "rail-length": 50,
+          "rail-angle": 1.5707963268
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            50.0,
+            150.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": -1.5707963268
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            285.0,
+            40.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "top-turtle",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            200.0,
+            41.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [
+            12,
+            10,
+            4,
+            6,
+            5,
+            10
+          ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [
+            10000,
+            10000
+          ],
+          "originalPosition": [
+            200.0,
+            41.0
+          ]
+        },
+        {
+          "type": "collider",
+          "width": 16,
+          "height": 32,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "turtle-bottom",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            120.0,
+            101.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [
+            12,
+            10,
+            4,
+            6,
+            5,
+            10
+          ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [
+            10000,
+            10000
+          ],
+          "originalPosition": [
+            120.0,
+            101.0
+          ]
+        },
+        {
+          "type": "collider",
+          "width": 16,
+          "height": 32,
+          "bounds": 1
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    }
+  ]
+}
