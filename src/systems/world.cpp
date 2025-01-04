@@ -189,7 +189,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                         registry.litEntities.remove(minisunEntity);
                         minisun.lit = false;
                     } else {
-                        light.counter_ms = LIGHT_TIMER_MS;
+                        light.counter_ms = minisun.lit_duration == 0 ? LIGHT_TIMER_MS : LIGHT_TIMER_MS * minisun.lit_duration;
                     }
                 } 
             }
@@ -334,9 +334,9 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         minisun.light_level_percentage = 0.4f;
         registry.litEntities.insert(minisun_entity, l);
     } else {
-        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
-        minisun_light.counter_ms = LIGHT_TIMER_MS;
         auto& minisun = registry.minisuns.get(minisun_entity);
+        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
+        minisun_light.counter_ms = minisun.lit_duration == 0 ? LIGHT_TIMER_MS : LIGHT_TIMER_MS * minisun.lit_duration;
         minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.4f, 0.0f, 1.0f);
 
     }
@@ -421,12 +421,19 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         return;
     }
 
-    if (registry.inOrbits.has(reflected)) {
-        registry.inOrbits.get(reflected).bodyOfMassJustOrbited = Entity(); // When collision with a mirror happens, reset last body of mass orbitted
-    }
-
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
+
+    if (registry.inOrbits.has(reflected)) {
+        light_motion.angle += registry.inOrbits.get(reflected).totalAngle + registry.inOrbits.get(reflected).prevAngle - M_PI;
+        registry.inOrbits.get(reflected).bodyOfMassJustOrbited = registry.inOrbits.get(reflected).bodyOfMass;
+        registry.inOrbits.get(reflected).bodyOfMass = Entity();
+        registry.inOrbits.get(reflected).prevAngle = 0;
+        registry.inOrbits.get(reflected).totalAngle = M_PI;
+        // registry.inOrbits.remove(reflected);
+        // registry.inOrbits.remove(reflected);
+        // registry.inOrbits.emplace(reflected);
+    }
     float angle_addition = M_PI_2;
     if (side == 1) {
         // LOG_INFO("y-Side reflection\n");
@@ -448,6 +455,7 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         LOG_INFO("Reflection edge case -- abort reflection\n");
         return;
     }
+
     // Play reflection sound
     sounds.play_sound("light-collision.wav");
 

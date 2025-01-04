@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Double the fun",
+            "name": "Bounce down",
             "data": [
                 {
                     "type": "level",
-                    "id": 1
+                    "id": 4
                 }
             ]
         },
@@ -14,39 +14,18 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_4"
+                    "id": "pipes"
                 }
             ]
         },
         {
-            "name": "middle-rotate-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        200.0,
-                        80.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "left-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        90.0,
-                        80.0
+                        270.0,
+                        93.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -66,15 +45,36 @@
                 {
                     "type": "zone",
                     "position": [
-                        200.0,
-                        140.0
+                        50.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": -1.5707963268
+                    "angle": 0.23
+                }
+            ]
+        },
+        {
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        65.0,
+                        143.0
+                    ],
+                    "size": 48,
+                    "text": "< Feed plants light to win",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
                 }
             ]
         },
@@ -84,8 +84,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        200.0,
-                        35.0
+                        50.0,
+                        140.0
                     ],
                     "zone_type": 1,
                     "angle": 0

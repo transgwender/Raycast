@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Sneaky",
+            "name": "Zig-Zag",
             "data": [
                 {
                     "type": "level",
-                    "id": 3
+                    "id": 11
                 }
             ]
         },
@@ -14,59 +14,22 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_5"
                 }
             ]
         },
         {
-            "name": "beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        70.0,
-                        90.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "rotate-mirror",
+            "name": "left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        230.0,
-                        40.0
+                        100.0,
+                        90.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0,
+                    "rail-length": 50,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -78,17 +41,39 @@
             ]
         },
         {
-            "name": "move-mirror",
+            "name": "bottom-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        210.0,
-                        125.0
+                        220.0,
+                        50.0
                     ],
-                    "angle": 1.0471975512,
-                    "rail-length": 50,
-                    "rail-angle": -0.5235987756
+                    "angle": -0.1,
+                    "rail-length": 25,
+                    "rail-angle": 1.5707963268
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "bottom-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        130.0
+                    ],
+                    "angle": -0.1,
+                    "rail-length": 25,
+                    "rail-angle": 1.5707963268
                 },
                 {
                     "type": "interactable"
@@ -105,7 +90,7 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
+                        40.0,
                         40.0
                     ],
                     "zone_type": 0,
@@ -123,8 +108,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        140.0
+                        40.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0

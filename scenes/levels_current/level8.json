@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Factory",
+            "name": "Bad angle",
             "data": [
                 {
                     "type": "level",
-                    "id": 2
+                    "id": 8
                 }
             ]
         },
@@ -14,29 +14,28 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_4"
                 }
             ]
         },
         {
-            "name": "top_beam",
+            "name": "beam",
             "data": [
                 {
                     "type": "sprite",
                     "position": [
-                        160.0,
-                        -20.0
+                        130.0,
+                        50.0
                     ],
                     "scale": [
-                        140,
+                        120,
                         10
                     ],
-                    "texture": "beam2",
-                    "angle": -1.5707963268
+                    "texture": "beam2"
                 },
                 {
                     "type": "collider",
-                    "width": 140,
+                    "width": 120,
                     "height": 10,
                     "bounds": 1
                 },
@@ -58,52 +57,13 @@
             ]
         },
         {
-            "name": "bottom_beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        200.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2",
-                    "angle": -1.5707963268
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "top_rotate-mirror",
+            "name": "right-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        55.0
+                        270.0,
+                        150.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -118,34 +78,13 @@
             ]
         },
         {
-            "name": "middle_rotate-mirror",
+            "name": "left-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        90.0
-                    ],
-                    "angle": 0,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "bottom_rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        160.0,
-                        125.0
+                        50.0,
+                        150.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -160,15 +99,15 @@
             ]
         },
         {
-            "name": "left_rotate-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        100.0,
-                        90.0
+                        160.0,
+                        105.0
                     ],
-                    "angle": 0.7853981634,
+                    "angle": 1.5707963268,
                     "mirror-type": "rotate"
                 },
                 {
@@ -186,15 +125,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        130.0,
-                        90.0
+                        280.0,
+                        30.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
+                    "angle": 2.617993878
                 }
             ]
         },
@@ -204,8 +143,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        250.0,
-                        90.0
+                        55.0,
+                        30.0
                     ],
                     "zone_type": 1,
                     "angle": 0

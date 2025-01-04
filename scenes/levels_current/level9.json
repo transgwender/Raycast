@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Double the fun",
+            "name": "Rails",
             "data": [
                 {
                     "type": "level",
-                    "id": 1
+                    "id": 9
                 }
             ]
         },
@@ -14,42 +14,22 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_4"
+                    "id": "pipes"
                 }
             ]
         },
         {
-            "name": "middle-rotate-mirror",
+            "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        200.0,
-                        80.0
+                        135.0,
+                        122.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
-                },
-                {
-                    "type": "interactable"
-                },
-                {
-                    "type": "highlightable",
-                    "isHighlighted": false
-                }
-            ]
-        },
-        {
-            "name": "left-rotate-mirror",
-            "data": [
-                {
-                    "type": "mirror",
-                    "position": [
-                        90.0,
-                        80.0
-                    ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0.785,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -66,15 +46,36 @@
                 {
                     "type": "zone",
                     "position": [
-                        200.0,
-                        140.0
+                        50.0,
+                        122.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": -1.5707963268
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        155.0,
+                        116.0
+                    ],
+                    "size": 48,
+                    "text": "< Drag mirrors along rails",
+                    "color": [
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
                 }
             ]
         },
@@ -84,8 +85,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        200.0,
-                        35.0
+                        160.0,
+                        50.0
                     ],
                     "zone_type": 1,
                     "angle": 0

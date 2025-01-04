@@ -1,7 +1,7 @@
 {
     "objList": [
         {
-            "name": "Rails",
+            "name": "Straight down",
             "data": [
                 {
                     "type": "level",
@@ -14,7 +14,63 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "pipes"
+                    "id": "cyber_1"
+                }
+            ]
+        },
+        {
+            "name": "portals",
+            "data":  [
+                {
+                    "type": "portal_pair",
+                    "portal_position": [60, 140],
+                    "portal_angle": -1.5707963268,
+                    "other_portal_position": [240, 90],
+                    "other_portal_angle": -2.0943951024
+                }
+            ]
+        },
+        {
+            "name": "blackhole",
+            "data": [
+                {
+                    "type": "blackhole",
+                    "mass": 5.2,
+                    "schwarzchild_radius": 24.0
+                },
+                {
+                    "type": "sprite",
+                    "position": [
+                        160.0,
+                        90.0
+                    ],
+                    "texture": "light",
+                    "scale": [
+                        10.0,
+                        10.0
+                    ],
+                    "angle": 0
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "collider",
+                    "width": 20.0,
+                    "height": 20.0,
+                    "bounds": 0
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        110.0,
+                        123.0
+                    ],
+                    "scale": [
+                        60,
+                        20
+                    ],
+                    "zone_type": 3
                 }
             ]
         },
@@ -24,12 +80,12 @@
                 {
                     "type": "mirror",
                     "position": [
-                        135.0,
-                        122.0
+                        60.0,
+                        114.0
                     ],
-                    "angle": 0.785,
-                    "rail-length": 50,
-                    "rail-angle": 0
+                    "angle": -0.7853981634,
+                    "rail-length": 30,
+                    "rail-angle": 0.4
                 },
                 {
                     "type": "interactable"
@@ -46,36 +102,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        122.0
+                        120.0,
+                        130.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        155.0,
-                        116.0
-                    ],
-                    "size": 48,
-                    "text": "< Drag mirrors along rails",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "angle": 3.1415926536
                 }
             ]
         },
@@ -85,8 +120,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        160.0,
-                        50.0
+                        65.0,
+                        30.0
                     ],
                     "zone_type": 1,
                     "angle": 0

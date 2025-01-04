@@ -1,11 +1,11 @@
 {
     "objList": [
         {
-            "name": "Sneaky",
+            "name": "Double-sided",
             "data": [
                 {
                     "type": "level",
-                    "id": 3
+                    "id": 12
                 }
             ]
         },
@@ -19,54 +19,17 @@
             ]
         },
         {
-            "name": "beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        70.0,
-                        90.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "rotate-mirror",
+            "name": "bottom-left-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        230.0,
-                        40.0
+                        150.0,
+                        110.0
                     ],
-                    "angle": 1.5707963268,
-                    "mirror-type": "rotate"
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -78,17 +41,61 @@
             ]
         },
         {
-            "name": "move-mirror",
+            "name": "top-right-move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        210.0,
-                        125.0
+                        260.0,
+                        110.0
                     ],
-                    "angle": 1.0471975512,
+                    "angle": 0.7853981634,
                     "rail-length": 50,
-                    "rail-angle": -0.5235987756
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-left-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        40.0
+                    ],
+                    "angle": 0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "top-right-move-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        220.0,
+                        40.0
+                    ],
+                    "angle": -0.7853981634,
+                    "rail-length": 50,
+                    "rail-angle": 0
                 },
                 {
                     "type": "interactable"
@@ -105,8 +112,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        40.0
+                        40.0,
+                        110.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -123,8 +130,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        60.0,
-                        140.0
+                        110.0,
+                        150.0
                     ],
                     "zone_type": 1,
                     "angle": 0
