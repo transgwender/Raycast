@@ -39,3 +39,5 @@ Platformer Asset Collection by Name By Another Rose https://opengameart.org/cont
 Birds and Wind - Ambient, Birds, Wind and Synth by Spring Spring https://opengameart.org/content/birds-and-wind-ambient-birds-wind-and-synth
 
 Legacy Collection by ansimuz https://ansimuz.itch.io/gothicvania-patreon-collection
+	
+TK'S FREE SOUND FX by Taira Komori https://taira-komori.jpn.org/freesounden.html

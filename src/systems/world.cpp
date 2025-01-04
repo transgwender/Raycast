@@ -449,7 +449,9 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         return;
     }
     // Play reflection sound
-    sounds.play_sound("light-collision.wav");
+    //sounds.play_sound("light-collision.wav");
+    sounds.play_sound("reflection.wav", 0.06f);
+
 
     // Correct light position with overlap
     light_motion.position -= normalize(light_motion.velocity) * overlap;
