@@ -293,7 +293,7 @@ void WorldSystem::restart_game() {
         Text& text_bg = registry.texts.insert(level_name_bg,
                             {
                                 "-",
-                                {native_width / 2.f + 20, native_height / 2.f + 150},
+                                {native_width / 2.f + 19, native_height / 2.f + 151},
                                 3000,
                                 vec4(0.0),
                                 WORLD_TEXT,
