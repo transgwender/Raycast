@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 4
+                    "id": 4,
+                    "name": "Bounce down"
                 }
             ]
         },
@@ -69,6 +70,7 @@
                     "size": 48,
                     "text": "< Feed plants light to win",
                     "color": [
+                        255,
                         255,
                         255,
                         255

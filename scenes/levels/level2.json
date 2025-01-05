@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 2
+                    "id": 2,
+                    "name": "Reflection"
                 }
             ]
         },
@@ -69,6 +70,7 @@
                     "size": 48,
                     "text": "< Feed plants light to win",
                     "color": [
+                        255,
                         255,
                         255,
                         255

@@ -5,7 +5,8 @@
       "data": [
         {
           "type": "level",
-          "id": 31
+          "id": 31,
+          "name": "Missing mirror"
         }
       ]
     },
@@ -132,6 +133,7 @@
           "size": 48,
           "text": "Power stars with light >",
           "color": [
+            255,
             255,
             255,
             255

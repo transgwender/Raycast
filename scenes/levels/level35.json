@@ -5,7 +5,8 @@
       "data": [
         {
           "type": "level",
-          "id": 35
+          "id": 35,
+          "name": "Indecision"
         }
       ]
     },

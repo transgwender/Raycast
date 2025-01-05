@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 24
+                    "id": 24,
+                    "name": "Black hole"
                 }
             ]
         },
@@ -30,6 +31,7 @@
                     "size": 48,
                     "text": "Black holes attract light >",
                     "color": [
+                        255,
                         255,
                         255,
                         255

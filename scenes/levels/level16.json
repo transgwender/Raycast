@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 16
+                    "id": 16,
+                    "name": "Double bounce"
                 }
             ]
         },

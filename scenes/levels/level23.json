@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 23
+                    "id": 23,
+                    "name": "Straight down"
                 }
             ]
         },
