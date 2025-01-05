@@ -101,6 +101,8 @@ GLFWwindow* WorldSystem::create_window() {
     glfwSetMouseButtonCallback(window, mouse_button_redirect);
     glfwSetWindowSizeCallback(window, window_resize_redirect);
 
+    glfwGetWindowContentScale(window, &window_scale_x, &window_scale_y);
+
     SoundSystem::init();
 
     return window;
