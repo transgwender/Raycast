@@ -112,18 +112,34 @@ void CompositorStage::prepare() const {
  * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
  */
 void CompositorStage::updateViewport() const {
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
+    //int w, h;
+    //glfwGetFramebufferSize(window, &w, &h);
 
-    const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
+    //const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
 
-    viewport_width = min(static_cast<float>(w), h * aspect_ratio);
-    viewport_height = min(static_cast<float>(h), w / aspect_ratio);
+    //viewport_width = min(static_cast<float>(w), h * aspect_ratio);
+    //viewport_height = min(static_cast<float>(h), w / aspect_ratio);
 
-    viewport_offset_x = (w - viewport_width) / 2;
-    viewport_offset_y = (h - viewport_height) / 2;
+    //viewport_offset_x = (w - viewport_width) / 2;
+    //viewport_offset_y = (h - viewport_height) / 2;
 
-    glViewport(viewport_offset_x, viewport_offset_y, viewport_width, viewport_height);
+    //glViewport(viewport_offset_x, viewport_offset_y, viewport_width, viewport_height);
+
+    int winW, winH;
+    glfwGetWindowSize(window, &winW, &winH);
+
+    // Calculate aspect ratio
+    const float aspect_ratio = float(native_width) / float(native_height);
+
+    // Letterbox/pillarbox within the actual window size
+    viewport_width = std::min<float>(winW, winH * aspect_ratio);
+    viewport_height = std::min<float>(winH, winW / aspect_ratio);
+
+    viewport_offset_x = (winW - viewport_width) / 2.f;
+    viewport_offset_y = (winH - viewport_height) / 2.f;
+
+    // For many games, you can just call glViewport with these same values:
+    glViewport((GLint)viewport_offset_x, (GLint)viewport_offset_y, (GLsizei)viewport_width, (GLsizei)viewport_height);
 }
 
 void CompositorStage::composite() const {

@@ -35,4 +35,11 @@ inline vec2 screenToWorld(const vec2 screenPos) {
     float worldY = ny * native_height;
 
     return {worldX, worldY};
+
+    //vec2 worldPos = vec2(screenPos.x - viewport_offset_x / 2, screenPos.y - viewport_offset_y / 2);
+    //worldPos.x = (worldPos.x / (window_width_px - viewport_offset_x)) * native_width;
+    //worldPos.y = (worldPos.y / (window_height_px - viewport_offset_y)) * native_height;
+    //return worldPos;
 }
+
+
