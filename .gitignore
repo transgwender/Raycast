@@ -12,3 +12,5 @@ build
 tags
 compile_commands.json
 **/.DS_Store
+/save
+/settings
