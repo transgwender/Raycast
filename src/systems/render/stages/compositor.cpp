@@ -112,16 +112,15 @@ void CompositorStage::prepare() const {
  * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
  */
 void CompositorStage::updateViewport() const {
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
+    glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
 
     const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
 
-    viewport_width = min(static_cast<float>(w), h * aspect_ratio);
-    viewport_height = min(static_cast<float>(h), w / aspect_ratio);
+    viewport_width = min(static_cast<float>(framebuffer_width), framebuffer_height * aspect_ratio);
+    viewport_height = min(static_cast<float>(framebuffer_height), framebuffer_width / aspect_ratio);
 
-    viewport_offset_x = (w - viewport_width) / 2;
-    viewport_offset_y = (h - viewport_height) / 2;
+    viewport_offset_x = (framebuffer_width - viewport_width) / 2;
+    viewport_offset_y = (framebuffer_height - viewport_height) / 2;
 
     glViewport(viewport_offset_x, viewport_offset_y, viewport_width, viewport_height);
 }

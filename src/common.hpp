@@ -82,14 +82,14 @@ extern int viewport_offset_y;
 extern int viewport_width;
 extern int viewport_height;
 
+extern int framebuffer_width;
+extern int framebuffer_height;
+
 static int native_width = 320;
 static int native_height = 180;
 
 static int upscaled_width = 1280;
 static int upscaled_height = 720;
-
-extern float window_scale_x;
-extern float window_scale_y;
 
 static bool debug = false;
 

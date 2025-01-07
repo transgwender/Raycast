@@ -10,8 +10,8 @@ int viewport_offset_y = 0;
 int viewport_width = window_width_px;
 int viewport_height = window_height_px;
 
-float window_scale_x = 1.0f;
-float window_scale_y = 1.0f;
+int framebuffer_width = window_width_px;
+int framebuffer_height = window_height_px;
 
 // Note, we could also use the functions from GLM but we write the
 // transformations here to show the uderlying math
