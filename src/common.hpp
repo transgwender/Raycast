@@ -72,6 +72,13 @@ inline std::string font_path(const std::string& name) {
 inline std::string background_path(const std::string& name) {
     return data_path() + "/backgrounds/" + name;
 }
+inline std::string player_data_path(const std::string& name) {
+#ifdef __EMSCRIPTEN__
+    return "/player_data/" + std::string(name);
+#else
+    return "./" + std::string(name);
+#endif
+}
 
 extern int window_width_px;
 extern int window_height_px;
