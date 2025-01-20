@@ -17,20 +17,36 @@
             text-align: center;
         }
 
-        div.emscripten_border {
-            border: 0;
+        #status {
+            color: white;
         }
 
-        /* the canvas *must not* have any border or padding, or mouse coords will be wrong */
-        canvas.emscripten {
+        #canvas_wrapper_wrapper {
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas_wrapper {
+            position: relative;
+            border: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #canvas {
             border: 0 none;
+            margin: 0;
+            padding: 0;
             outline: none;
             background-color: black;
         }
 
         body {
+            background: black;
             margin: 0;
             font-family: sans-serif;
+            width: 100vw;
+            height: 100vh;
         }
 
         #status {
@@ -40,8 +56,11 @@
 </head>
 <body>
 <div class="emscripten" id="status">Downloading...</div>
-<div class="emscripten_border">
-    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+
+<div id="canvas_wrapper_wrapper">
+    <div id="canvas_wrapper">
+        <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()" tabindex=-1></canvas>
+    </div>
 </div>
 
 <script type='text/javascript'>
@@ -97,6 +116,45 @@
         };
     };
 </script>
+
+<script type="text/javascript">
+    let curTimeout = null;
+    const canvasElem = document.getElementById("canvas")
+
+    function showCanvas() {
+        canvasElem.style.display = "block";
+        canvasElem.click();
+    }
+
+    function updateCanvasSize() {
+        // if (curTimeout) clearTimeout(curTimeout)
+        //
+        // canvasElem.style.display = "none";
+        // curTimeout = setTimeout(showCanvas, 10)
+
+        const canvasWrapper = document.getElementById("canvas_wrapper")
+        const aspectRatio = 16 / 9;
+
+        /**
+         * Update the viewport and apply letterboxing and pillarboxing.
+         * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
+         */
+        const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio)
+        const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio)
+
+        const viewportOffsetX = (window.innerWidth - viewportWidth) / 2;
+        const viewportOffsetY = (window.innerHeight - viewportHeight) / 2;
+
+        canvasWrapper.style.width = viewportWidth + "px";
+        canvasWrapper.style.height = viewportHeight + "px";
+        canvasWrapper.style.left = viewportOffsetX + "px";
+        canvasWrapper.style.top = viewportOffsetY + "px";
+    }
+
+    addEventListener("resize", updateCanvasSize)
+    addEventListener("load", updateCanvasSize)
+</script>
+
 {{{ SCRIPT }}}
 </body>
 </html>

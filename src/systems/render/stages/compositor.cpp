@@ -114,6 +114,11 @@ void CompositorStage::prepare() const {
 void CompositorStage::updateViewport() const {
     glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
 
+#ifdef __EMSCRIPTEN__
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
+    return;
+#endif
+
     const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
 
     viewport_width = min(static_cast<float>(framebuffer_width), framebuffer_height * aspect_ratio);

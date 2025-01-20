@@ -69,7 +69,7 @@ GLFWwindow* WorldSystem::create_window() {
 #endif
     window = glfwCreateWindow(window_width_px, window_height_px, "Raycast", nullptr, nullptr);
 #ifdef __EMSCRIPTEN__
-    emscripten_glfw_make_canvas_resizable(window, "window", nullptr);
+    emscripten_glfw_make_canvas_resizable(window, "#canvas_wrapper", nullptr);
     glfwGetWindowSize(window, &window_width_px, &window_height_px);
 #endif
     if (window == nullptr) {

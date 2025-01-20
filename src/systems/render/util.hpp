@@ -17,6 +17,13 @@ inline mat3 createProjectionMatrix() {
 }
 
 inline vec2 screenToWorld(const vec2 screenPos) {
+#ifdef __EMSCRIPTEN__
+    vec2 worldPos = vec2(screenPos.x, screenPos.y);
+    worldPos.x = (worldPos.x / window_width_px) * native_width;
+    worldPos.y = (worldPos.y / window_height_px) * native_height;
+    return worldPos;
+#endif
+
     const vec2 window_scale = vec2(static_cast<float>(framebuffer_width) / static_cast<float>(window_width_px), static_cast<float>(framebuffer_height) / static_cast<float>(window_height_px));
     const vec2 scaled_screen_pos = screenPos * window_scale;
     const vec2 offset_pos = scaled_screen_pos - vec2(viewport_offset_x, viewport_offset_y);
