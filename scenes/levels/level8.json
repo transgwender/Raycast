@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 8
+                    "id": 8,
+                    "name": "Beams"
                 }
             ]
         },
@@ -30,6 +31,7 @@
                     "size": 48,
                     "text": "< Beams absorb light",
                     "color": [
+                        255,
                         255,
                         255,
                         255

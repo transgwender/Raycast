@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 17
+                    "id": 17,
+                    "name": "Sliding doors"
                 }
             ]
         },

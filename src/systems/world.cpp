@@ -136,6 +136,15 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         restart_game();
     }
 
+    // fade level name text and background
+    if (registry.texts.has(level_name_text)) {
+        Text& name_text = registry.texts.get(level_name_text);
+        Text& bg_text = registry.texts.get(level_name_bg);
+        name_text.color.a -= elapsed_ms_since_last_update * FADE_STEP / 1000.f;
+        name_text.color.a = max(0.0f, name_text.color.a);
+        bg_text.color.a = name_text.color.a;
+    }
+
     // update frame rate value
     const int fps_value = Utils::fps(elapsed_ms_since_last_update);
     registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
@@ -272,6 +281,35 @@ void WorldSystem::restart_game() {
         sounds.stop_music();
     } else {
         sounds.play_background();
+    }
+
+    // Display level name text
+    // display_level_name();
+    // LOG_INFO(registry.levels.size() >= 1);
+    if (registry.levels.size() == 1) {
+        LOG_INFO("Initializing level named {}", registry.levels.components[0].name);
+        level_name_bg = Entity();
+        level_name_text = Entity();
+        Text& text_bg = registry.texts.insert(level_name_bg,
+                            {
+                                "-",
+                                {native_width / 2.f + 19, native_height / 2.f + 151},
+                                3000,
+                                vec4(0.0),
+                                WORLD_TEXT,
+                                true
+                            });
+        text_bg.color.a = 255.f;
+        Text& text = registry.texts.insert(level_name_text,
+                            {
+                                std::to_string(registry.levels.components[0].id) + " - " + registry.levels.components[0].name,
+                                {native_width / 2.f, native_height / 2.f},
+                                128,
+                                vec4(255.0),
+                                WORLD_TEXT,
+                                true
+                            });
+        text.color.w = 400.f;
     }
 
     // add frame counter

@@ -5,7 +5,8 @@
       "data": [
         {
           "type": "level",
-          "id": 30
+          "id": 30,
+          "name": "Dash"
         }
       ]
     },
@@ -223,6 +224,7 @@
           "size": 48,
           "text": "Power stars with light >",
           "color": [
+            255,
             255,
             255,
             255

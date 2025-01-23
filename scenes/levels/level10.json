@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 10
+                    "id": 10,
+                    "name": "Factory"
                 }
             ]
         },

@@ -5,7 +5,8 @@
             "data": [
                 {
                     "type": "level",
-                    "id": 12
+                    "id": 12,
+                    "name": "Backtrack"
                 }
             ]
         },
@@ -70,6 +71,7 @@
                     "size": 48,
                     "text": "Drag mirrors along rails >",
                     "color": [
+                        255,
                         255,
                         255,
                         255
