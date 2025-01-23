@@ -457,7 +457,9 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
     }
 
     // Play reflection sound
-    sounds.play_sound("light-collision.wav");
+    //sounds.play_sound("light-collision.wav");
+    sounds.play_sound("reflection-lower.wav", 0.15f);
+
 
     // Correct light position with overlap
     light_motion.position -= normalize(light_motion.velocity) * overlap;
@@ -755,13 +757,13 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));
             if (registry.changeScenes.has(entity) && input_manager.active_entities.size() == 0) {
-                sounds.play_sound("button-click.wav");
+                sounds.play_sound("click.wav", 0.6f);
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
                 break;
             }
             if (registry.resumeGames.has(entity)) {
-                sounds.play_sound("button-click.wav");
+                sounds.play_sound("click.wav", 0.6f);
                 menus.try_close_menu();
                 break;
             }
