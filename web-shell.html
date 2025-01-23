@@ -118,14 +118,27 @@
 </script>
 
 <script type="text/javascript">
+    /*
+     * Handle mouse down for focus and key down for capturing certain key presses
+     * https://github.com/itchio/itch.io/issues/58#issuecomment-172122538
+     */
+    function onMouseDown() {
+        window.focus();
+    }
+    function onKeyDown(event) {
+        if (event.key === "Escape") {
+            event.preventDefault();
+        }
+    }
+
     function updateCanvasSize() {
-        const canvasWrapper = document.getElementById("canvas_wrapper")
+        const canvasWrapper = document.getElementById("canvas_wrapper");
         const aspectRatio = 16 / 9;
 
         // Update the viewport and apply letterboxing and pillarboxing.
         // Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
-        const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio)
-        const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio)
+        const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio);
+        const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio);
 
         const viewportOffsetX = (window.innerWidth - viewportWidth) / 2;
         const viewportOffsetY = (window.innerHeight - viewportHeight) / 2;
@@ -136,8 +149,10 @@
         canvasWrapper.style.top = viewportOffsetY + "px";
     }
 
-    addEventListener("resize", updateCanvasSize)
-    addEventListener("load", updateCanvasSize)
+    addEventListener("resize", updateCanvasSize);
+    addEventListener("load", updateCanvasSize);
+    addEventListener("mousedown", onMouseDown);
+    addEventListener("keydown", onKeyDown);
 </script>
 
 {{{ SCRIPT }}}

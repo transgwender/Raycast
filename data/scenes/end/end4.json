@@ -89,6 +89,10 @@
           "minimumDisplacement": [
             10000,
             10000
+          ],
+          "originalPosition": [
+            170.0,
+            153.0
           ]
         }
       ]
