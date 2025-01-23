@@ -170,28 +170,6 @@
             ]
         },
         {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        7.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "Light passes through portals >",
-                    "color": [
-                        255,
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
             "name": "end_zone",
             "data": [
                 {
