@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Get steep",
+            "name": "Sneaky",
             "data": [
                 {
                     "type": "level",
-                    "id": 18
+                    "id": 18,
+                    "name": "Sneaky"
                 }
             ]
         },
@@ -14,29 +15,28 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_1"
+                    "id": "cyber_2"
                 }
             ]
         },
         {
-            "name": "beam-top",
+            "name": "beam",
             "data": [
                 {
                     "type": "sprite",
                     "position": [
-                        250.0,
-                        165.0
+                        70.0,
+                        90.0
                     ],
                     "scale": [
-                        120,
+                        140,
                         10
                     ],
-                    "angle": -1.5707963268,
                     "texture": "beam2"
                 },
                 {
                     "type": "collider",
-                    "width": 120,
+                    "width": 140,
                     "height": 10,
                     "bounds": 1
                 },
@@ -54,57 +54,6 @@
                         10
                     ],
                     "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "beam-top",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        250.0,
-                        -3.0
-                    ],
-                    "scale": [
-                        120,
-                        10
-                    ],
-                    "angle": -1.5707963268,
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 120,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "portals",
-            "data":  [
-                {
-                    "type": "portal_pair",
-                    "portal_position": [250, 80],
-                    "portal_angle": 0,
-                    "other_portal_position": [140, 40],
-                    "other_portal_angle": 1.5707963268
                 }
             ]
         },
@@ -114,10 +63,10 @@
                 {
                     "type": "mirror",
                     "position": [
-                        185.0,
-                        125.0
+                        230.0,
+                        40.0
                     ],
-                    "angle": 0,
+                    "angle": 1.5707963268,
                     "mirror-type": "rotate"
                 },
                 {
@@ -130,16 +79,17 @@
             ]
         },
         {
-            "name": "rotate-mirror",
+            "name": "move-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        105.0,
-                        85.0
+                        210.0,
+                        125.0
                     ],
-                    "angle": 0,
-                    "mirror-type": "rotate"
+                    "angle": 1.0471975512,
+                    "rail-length": 50,
+                    "rail-angle": -0.5235987756
                 },
                 {
                     "type": "interactable"
@@ -156,8 +106,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        125.0
+                        60.0,
+                        40.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -169,34 +119,13 @@
             ]
         },
         {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        7.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "Light passes through portals >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        300.0,
-                        100.0
+                        60.0,
+                        140.0
                     ],
                     "zone_type": 1,
                     "angle": 0

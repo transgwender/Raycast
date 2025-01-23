@@ -21,6 +21,7 @@
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
 constexpr size_t MAX_LIGHT_ON_SCREEN = 20;
+constexpr size_t FADE_STEP = 80.f;
 
 // Container for all our entities and game logic. Individual rendering / update
 // is deferred to the relative update() methods
@@ -92,6 +93,8 @@ class WorldSystem {
     std::uniform_real_distribution<float> uniform_dist; // number between 0..1
 
     Entity frame_rate_entity;
+    Entity level_name_bg;
+    Entity level_name_text;
     bool frame_rate_enabled = false;
     bool do_restart = false;
 

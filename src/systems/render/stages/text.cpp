@@ -125,7 +125,7 @@ void TextStage::renderText(const Text& text, float x, float y) {
     glUseProgram(shader);
     glViewport(0, 0, frame_width, frame_height);
 
-    setUniformFloatVec3(shader, "textColor", text.color / 255.0f);
+    setUniformFloatVec4(shader, "textColor", text.color / 255.0f);
     setUniformFloatMat4(shader, "projection", projection_matrix);
     setUniformInt(shader, "layer", text.layer);
 

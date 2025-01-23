@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Rails",
+            "name": "Bad angle",
             "data": [
                 {
                     "type": "level",
-                    "id": 9
+                    "id": 9,
+                    "name": "Bad angle"
                 }
             ]
         },
@@ -14,22 +15,101 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "pipes"
+                    "id": "cyber_4"
                 }
             ]
         },
         {
-            "name": "move-mirror",
+            "name": "beam",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        130.0,
+                        50.0
+                    ],
+                    "scale": [
+                        120,
+                        10
+                    ],
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 120,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "right-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        135.0,
-                        122.0
+                        270.0,
+                        150.0
                     ],
-                    "angle": 0.785,
-                    "rail-length": 50,
-                    "rail-angle": 0
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "left-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        50.0,
+                        150.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        160.0,
+                        105.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
                 },
                 {
                     "type": "interactable"
@@ -46,36 +126,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        122.0
+                        280.0,
+                        30.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        155.0,
-                        116.0
-                    ],
-                    "size": 48,
-                    "text": "< Drag mirrors along rails",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "angle": 2.617993878
                 }
             ]
         },
@@ -85,8 +144,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        160.0,
-                        50.0
+                        55.0,
+                        30.0
                     ],
                     "zone_type": 1,
                     "angle": 0

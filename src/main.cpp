@@ -60,17 +60,16 @@ void step_game_loop() {
     last_time = now;
 
     if (window_focused) {
-        float elapsed_remainder_ms = elapsed_ms + remainder_time;
-
+        float elapsed_remainder_ms = elapsed_ms + remainder;
         world.step(elapsed_ms);
         for (int i = 0; i < (int)floor(elapsed_remainder_ms / FIXED_UPDATE_MS); ++i) {
             physics.step(FIXED_UPDATE_MS);
+            physics.detect_collisions();
+            world.handle_collisions();
         }
-        physics.detect_collisions();
-        world.handle_collisions();
         ai.step(elapsed_ms);
         animation.step(elapsed_ms);
-        remainder_time = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
+        remainder = fmod(elapsed_remainder_ms, (float)FIXED_UPDATE_MS);
         particles.step(elapsed_ms);
         renderer.draw(elapsed_ms);
     }

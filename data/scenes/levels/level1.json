@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Tutorial - Intro",
+            "name": "Light it up",
             "data": [
                 {
                     "type": "level",
-                    "id": 1
+                    "id": 1,
+                    "name": "Light it up"
                 }
             ]
         },
@@ -71,6 +72,7 @@
                     "color": [
                         255,
                         255,
+                        255,
                         255
                     ],
                     "layer": 3,
@@ -90,6 +92,7 @@
                     "size": 48,
                     "text": "Drag to rotate mirrors on cogs >",
                     "color": [
+                        255,
                         255,
                         255,
                         255

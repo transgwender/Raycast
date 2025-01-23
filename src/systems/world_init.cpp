@@ -128,7 +128,7 @@ Entity createEmptyButton(const Entity& entity, vec2 position, vec2 scale, const 
         text.size = 57;
         text.position = position;
         text.text = label;
-        text.color = color;
+        text.color = vec4(color, 255);
         text.layer = UI_TEXT;
         text.centered = true;
         registry.texts.insert(entity, text);

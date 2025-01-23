@@ -1,185 +1,218 @@
 {
-  "objList": [
-    {
-      "name": "Level 27 (!!! 27)",
-      "data": [
+    "objList": [
         {
-          "type": "level",
-          "id": 22
+            "name": "Get steep",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 22,
+                    "name": "Get steep"
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_1"
+                }
+            ]
+        },
+        {
+            "name": "beam-top",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        250.0,
+                        165.0
+                    ],
+                    "scale": [
+                        120,
+                        10
+                    ],
+                    "angle": -1.5707963268,
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 120,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "beam-top",
+            "data": [
+                {
+                    "type": "sprite",
+                    "position": [
+                        250.0,
+                        -3.0
+                    ],
+                    "scale": [
+                        120,
+                        10
+                    ],
+                    "angle": -1.5707963268,
+                    "texture": "beam2"
+                },
+                {
+                    "type": "collider",
+                    "width": 120,
+                    "height": 10,
+                    "bounds": 1
+                },
+                {
+                    "type": "collideable"
+                },
+                {
+                    "type": "zone",
+                    "position": [
+                        220.0,
+                        70.0
+                    ],
+                    "scale": [
+                        220,
+                        10
+                    ],
+                    "zone_type": 3
+                }
+            ]
+        },
+        {
+            "name": "portals",
+            "data":  [
+                {
+                    "type": "portal_pair",
+                    "portal_position": [250, 80],
+                    "portal_angle": 0,
+                    "other_portal_position": [140, 40],
+                    "other_portal_angle": 1.5707963268
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        185.0,
+                        125.0
+                    ],
+                    "angle": 0,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        105.0,
+                        85.0
+                    ],
+                    "angle": 0,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        50.0,
+                        125.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": 0
+                }
+            ]
+        },
+        {
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        7.0,
+                        43.0
+                    ],
+                    "size": 48,
+                    "text": "Light passes through portals >",
+                    "color": [
+                        255,
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        300.0,
+                        100.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
         }
-      ]
-    },
-    {
-      "name": "background",
-      "data": [
-        {
-          "type": "background",
-          "id": "cyber_1"
-        }
-      ]
-    },
-    {
-      "name": "move-mirror-left",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            105.0,
-            100.0
-          ],
-          "angle": -0.5,
-          "rail-length": 60,
-          "rail-angle": 1.57
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "move-mirror-right",
-      "data": [
-        {
-          "type": "mirror",
-          "position": [
-            215.0,
-            100.0
-          ],
-          "angle": 0.5,
-          "rail-length": 60,
-          "rail-angle": 1.57
-        },
-        {
-          "type": "interactable"
-        },
-        {
-          "type": "highlightable",
-          "isHighlighted": false
-        }
-      ]
-    },
-    {
-      "name": "center_blackhole",
-      "data": [
-        {
-          "type": "blackhole",
-          "mass": 5,
-          "schwarzchild_radius": 24.0
-        },
-        {
-          "type": "sprite",
-          "position": [
-            160,
-            130.0
-          ],
-          "texture": "light",
-          "scale": [
-            10.0,
-            10.0
-          ],
-          "angle": 0
-        },
-        {
-          "type": "collideable"
-        },
-        {
-          "type": "collider",
-          "width": 20.0,
-          "height": 20.0,
-          "bounds": 0
-        },
-        {
-          "type": "zone",
-          "position": [
-            160,
-            100.0
-          ],
-          "scale": [
-            60,
-            20
-          ],
-          "zone_type": 3
-        }
-      ]
-    },
-    {
-      "name": "start_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            30.0,
-            40.0
-          ],
-          "zone_type": 0,
-          "angle": 30
-        },
-        {
-          "type": "light_source",
-          "angle": 0
-        }
-      ]
-    },
-    {
-      "name": "end_zone",
-      "data": [
-        {
-          "type": "zone",
-          "position": [
-            285.0,
-            100.0
-          ],
-          "zone_type": 1,
-          "angle": 0
-        },
-        {
-          "type": "collider",
-          "width": 3,
-          "height": 3,
-          "bounds": 0
-        },
-        {
-          "type": "collideable"
-        }
-      ]
-    },
-    {
-      "name": "vert-beam",
-      "data": [
-        {
-          "type": "sprite",
-          "position": [
-            265.0,
-            180.0
-          ],
-          "scale": [
-            10,
-            140
-          ],
-          "texture": "beam2-vert"
-        },
-        {
-          "type": "collider",
-          "width": 10,
-          "height": 140,
-          "bounds": 1
-        },
-        {
-          "type": "collideable"
-        },
-        {
-          "type": "zone",
-          "position": [
-            105.0,
-            135.0
-          ],
-          "zone_type": 3
-        }
-      ]
-    }
-  ]
+    ]
 }

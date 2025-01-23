@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Beams",
+            "name": "Doubles",
             "data": [
                 {
                     "type": "level",
-                    "id": 7
+                    "id": 7,
+                    "name": "Doubles"
                 }
             ]
         },
@@ -14,66 +15,7 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
-                }
-            ]
-        },
-        {
-            "name": "help text",
-            "data": [
-                {
-                    "type": "text",
-                    "position": [
-                        234.0,
-                        73.0
-                    ],
-                    "size": 48,
-                    "text": "< Beams absorb light",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
-                }
-            ]
-        },
-        {
-            "name": "beam",
-            "data": [
-                {
-                    "type": "sprite",
-                    "position": [
-                        160.0,
-                        70.0
-                    ],
-                    "scale": [
-                        140,
-                        10
-                    ],
-                    "texture": "beam2"
-                },
-                {
-                    "type": "collider",
-                    "width": 140,
-                    "height": 10,
-                    "bounds": 1
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        220.0,
-                        70.0
-                    ],
-                    "scale": [
-                        220,
-                        10
-                    ],
-                    "zone_type": 3
+                    "id": "cyber_5"
                 }
             ]
         },
@@ -83,10 +25,10 @@
                 {
                     "type": "mirror",
                     "position": [
-                        165.0,
-                        133.0
+                        160.0,
+                        60.0
                     ],
-                    "angle": 0.7853981634,
+                    "angle": 1.5707963268,
                     "mirror-type": "rotate"
                 },
                 {
@@ -99,13 +41,13 @@
             ]
         },
         {
-            "name": "top-rotate-mirror",
+            "name": "bottom-rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        55.0,
-                        70.0
+                        160.0,
+                        120.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -125,8 +67,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        80.0,
-                        130.0
+                        50.0,
+                        60.0
                     ],
                     "zone_type": 0,
                     "angle": 30
@@ -143,8 +85,8 @@
                 {
                     "type": "zone",
                     "position": [
-                        160.0,
-                        22.0
+                        270.0,
+                        60.0
                     ],
                     "zone_type": 1,
                     "angle": 0

@@ -91,11 +91,12 @@ inline void to_json(json& j, const Lerpable& lr) {
 }
 
 inline void to_json(json& j, const Level& c) {
-    j = json{ {"type", "level"}, {"id", c.id} };
+    j = json{ {"type", "level"}, {"id", c.id}, {"name", c.name} };
 }
 
 inline void from_json(const json& j, Level& c) {
     j.at("id").get_to(c.id);
+    j.at("name").get_to(c.name);
 }
 
 inline void to_json(json& j, const EndLevel& c) {

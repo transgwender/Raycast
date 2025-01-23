@@ -157,6 +157,15 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
         restart_game();
     }
 
+    // fade level name text and background
+    if (registry.texts.has(level_name_text)) {
+        Text& name_text = registry.texts.get(level_name_text);
+        Text& bg_text = registry.texts.get(level_name_bg);
+        name_text.color.a -= elapsed_ms_since_last_update * FADE_STEP / 1000.f;
+        name_text.color.a = max(0.0f, name_text.color.a);
+        bg_text.color.a = name_text.color.a;
+    }
+
     // update frame rate value
     const int fps_value = Utils::fps(elapsed_ms_since_last_update);
     registry.texts.get(frame_rate_entity).text = !frame_rate_enabled ? "" : "FPS: " + std::to_string(fps_value);
@@ -210,7 +219,7 @@ bool WorldSystem::step(float elapsed_ms_since_last_update) {
                         registry.litEntities.remove(minisunEntity);
                         minisun.lit = false;
                     } else {
-                        light.counter_ms = LIGHT_TIMER_MS;
+                        light.counter_ms = minisun.lit_duration == 0 ? LIGHT_TIMER_MS : LIGHT_TIMER_MS * minisun.lit_duration;
                     }
                 } 
             }
@@ -295,6 +304,35 @@ void WorldSystem::restart_game() {
         sounds.play_background();
     }
 
+    // Display level name text
+    // display_level_name();
+    // LOG_INFO(registry.levels.size() >= 1);
+    if (registry.levels.size() == 1) {
+        LOG_INFO("Initializing level named {}", registry.levels.components[0].name);
+        level_name_bg = Entity();
+        level_name_text = Entity();
+        Text& text_bg = registry.texts.insert(level_name_bg,
+                            {
+                                "-",
+                                {native_width / 2.f + 19, native_height / 2.f + 151},
+                                3000,
+                                vec4(0.0),
+                                WORLD_TEXT,
+                                true
+                            });
+        text_bg.color.a = 255.f;
+        Text& text = registry.texts.insert(level_name_text,
+                            {
+                                std::to_string(registry.levels.components[0].id) + " - " + registry.levels.components[0].name,
+                                {native_width / 2.f, native_height / 2.f},
+                                128,
+                                vec4(255.0),
+                                WORLD_TEXT,
+                                true
+                            });
+        text.color.w = 400.f;
+    }
+
     // add frame counter
     frame_rate_entity = Entity();
     registry.texts.insert(frame_rate_entity, {"", {1, 5}, 32, vec4(255.0), UI_TEXT, false});
@@ -355,9 +393,9 @@ void WorldSystem::handle_minisun_collision(Entity& minisun_entity) {
         minisun.light_level_percentage = 0.4f;
         registry.litEntities.insert(minisun_entity, l);
     } else {
-        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
-        minisun_light.counter_ms = LIGHT_TIMER_MS;
         auto& minisun = registry.minisuns.get(minisun_entity);
+        LightUp& minisun_light = registry.litEntities.get(minisun_entity);
+        minisun_light.counter_ms = minisun.lit_duration == 0 ? LIGHT_TIMER_MS : LIGHT_TIMER_MS * minisun.lit_duration;
         minisun.light_level_percentage = clamp(minisun.light_level_percentage + 0.4f, 0.0f, 1.0f);
 
     }
@@ -442,12 +480,19 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         return;
     }
 
-    if (registry.inOrbits.has(reflected)) {
-        registry.inOrbits.get(reflected).bodyOfMassJustOrbited = Entity(); // When collision with a mirror happens, reset last body of mass orbitted
-    }
-
     Motion& light_motion = registry.motions.get(reflected);
     Motion& reflective_surface_motion = registry.motions.get(reflective);
+
+    if (registry.inOrbits.has(reflected)) {
+        light_motion.angle = atan2(light_motion.velocity.y, light_motion.velocity.x);
+        registry.inOrbits.get(reflected).bodyOfMassJustOrbited = registry.inOrbits.get(reflected).bodyOfMass;
+        registry.inOrbits.get(reflected).bodyOfMass = Entity();
+        registry.inOrbits.get(reflected).prevAngle = 0;
+        registry.inOrbits.get(reflected).totalAngle = M_PI;
+        // registry.inOrbits.remove(reflected);
+        // registry.inOrbits.remove(reflected);
+        // registry.inOrbits.emplace(reflected);
+    }
     float angle_addition = M_PI_2;
     if (side == 1) {
         // LOG_INFO("y-Side reflection\n");
@@ -469,8 +514,11 @@ void WorldSystem::handle_reflection(Entity& reflective, Entity& reflected, int s
         LOG_INFO("Reflection edge case -- abort reflection\n");
         return;
     }
+
     // Play reflection sound
-    sounds.play_sound("light-collision.wav");
+    //sounds.play_sound("light-collision.wav");
+    sounds.play_sound("reflection-lower.wav", 0.15f);
+
 
     // Correct light position with overlap
     light_motion.position -= normalize(light_motion.velocity) * overlap;
@@ -768,13 +816,13 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
         for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));
             if (registry.changeScenes.has(entity) && input_manager.active_entities.size() == 0) {
-                sounds.play_sound("button-click.wav");
+                sounds.play_sound("click.wav", 0.6f);
                 ChangeScene& changeScene = registry.changeScenes.get(entity);
                 change_scene(changeScene.scene);
                 break;
             }
             if (registry.resumeGames.has(entity)) {
-                sounds.play_sound("button-click.wav");
+                sounds.play_sound("click.wav", 0.6f);
                 menus.try_close_menu();
                 break;
             }

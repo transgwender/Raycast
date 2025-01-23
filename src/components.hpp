@@ -11,6 +11,7 @@ struct Scene {
 // A level is also a scene, but it may store additional information.
 struct Level {
     int id = 1;
+    std::string name;
 };
 
 struct EndLevel {
@@ -246,7 +247,7 @@ struct Text {
     std::string text;
     vec2 position;
     unsigned int size;
-    vec3 color = vec3(255, 255, 255);
+    vec4 color = vec4(255, 255, 255, 255);
     Layer layer = UI_TEXT;
     bool centered = false;
 };

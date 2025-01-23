@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Doubles",
+            "name": "Getting around",
             "data": [
                 {
                     "type": "level",
-                    "id": 6
+                    "id": 6,
+                    "name": "Getting around"
                 }
             ]
         },
@@ -14,7 +15,7 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_5"
+                    "id": "cyber_1"
                 }
             ]
         },
@@ -24,8 +25,29 @@
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        60.0
+                        130.0,
+                        110.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "left-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        50.0,
+                        40.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -45,8 +67,8 @@
                 {
                     "type": "mirror",
                     "position": [
-                        160.0,
-                        120.0
+                        50.0,
+                        135.0
                     ],
                     "angle": 1.5707963268,
                     "mirror-type": "rotate"
@@ -66,15 +88,15 @@
                 {
                     "type": "zone",
                     "position": [
-                        50.0,
-                        60.0
+                        130.0,
+                        150.0
                     ],
                     "zone_type": 0,
                     "angle": 30
                 },
                 {
                     "type": "light_source",
-                    "angle": 0
+                    "angle": -1.5707963268
                 }
             ]
         },

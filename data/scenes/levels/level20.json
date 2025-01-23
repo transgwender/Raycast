@@ -1,11 +1,12 @@
 {
     "objList": [
         {
-            "name": "Black Hole (!!! Level 25)",
+            "name": "Portal",
             "data": [
                 {
                     "type": "level",
-                    "id": 20
+                    "id": 20,
+                    "name": "Portal"
                 }
             ]
         },
@@ -14,83 +15,30 @@
             "data": [
                 {
                     "type": "background",
-                    "id": "cyber_2"
+                    "id": "cyber_3"
                 }
             ]
         },
         {
-            "name": "black hole help text",
-            "data": [
+            "name": "portals",
+            "data":  [
                 {
-                    "type": "text",
-                    "position": [
-                        4.0,
-                        43.0
-                    ],
-                    "size": 48,
-                    "text": "Black holes attract light >",
-                    "color": [
-                        255,
-                        255,
-                        255
-                    ],
-                    "layer": 3,
-                    "centered": false
+                    "type": "portal_pair",
+                    "portal_position": [100, 40],
+                    "portal_angle": 1.5707963268,
+                    "other_portal_position": [180, 40],
+                    "other_portal_angle": 1.5707963268
                 }
             ]
         },
         {
-            "name": "m87",
-            "data": [
-                {
-                    "type": "blackhole",
-                    "mass": 5.0,
-                    "schwarzchild_radius": 24.0
-                },
-                {
-                    "type": "sprite",
-                    "position": [
-                        120.0,
-                        40.0
-                    ],
-                    "texture": "light",
-                    "scale": [
-                        10.0,
-                        10.0
-                    ],
-                    "angle": 0
-                },
-                {
-                    "type": "collideable"
-                },
-                {
-                    "type": "collider",
-                    "width": 20.0,
-                    "height": 20.0,
-                    "bounds": 1
-                },
-                {
-                    "type": "zone",
-                    "position": [
-                        120.0,
-                        40.0
-                    ],
-                    "scale": [
-                        60,
-                        20
-                    ],
-                    "zone_type": 3
-                }
-            ]
-        },
-        {
-            "name": "far-rotate-mirror",
+            "name": "rotate-mirror",
             "data": [
                 {
                     "type": "mirror",
                     "position": [
-                        210.0,
-                        50.0
+                        105.0,
+                        125.0
                     ],
                     "angle": 0,
                     "mirror-type": "rotate"
@@ -110,7 +58,7 @@
                 {
                     "type": "zone",
                     "position": [
-                        40.0,
+                        50.0,
                         120.0
                     ],
                     "zone_type": 0,
@@ -123,13 +71,35 @@
             ]
         },
         {
+            "name": "help text",
+            "data": [
+                {
+                    "type": "text",
+                    "position": [
+                        203.0,
+                        43.0
+                    ],
+                    "size": 48,
+                    "text": "< Light passes through portals",
+                    "color": [
+                        255,
+                        255,
+                        255,
+                        255
+                    ],
+                    "layer": 3,
+                    "centered": false
+                }
+            ]
+        },
+        {
             "name": "end_zone",
             "data": [
                 {
                     "type": "zone",
                     "position": [
-                        280.0,
-                        80.0
+                        180.0,
+                        120.0
                     ],
                     "zone_type": 1,
                     "angle": 0
