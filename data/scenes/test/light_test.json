@@ -1,0 +1,124 @@
+{
+  "objList": [
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [320, 180],
+          "texture": "background"
+        }
+      ]
+    },
+    {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            100.0,
+            100.0
+          ],
+          "scale": [59, 152],
+          "texture": "tree0"
+        }
+      ]
+    },
+    {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            200.0,
+            100.0
+          ],
+          "scale": [59, 152],
+          "texture": "tree1"
+        }
+      ]
+    },
+    {"name": "ground0", "data": [{"type": "sprite", "position": [0, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [32, 180.0], "scale": [32, 34], "texture": "ground1"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [64, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [96, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [128, 180.0], "scale": [32, 34], "texture": "ground1"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [160, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [192, 180.0], "scale": [32, 34], "texture": "ground1"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [224, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [256, 180.0], "scale": [32, 34], "texture": "ground1"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [288, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {"name": "ground0", "data": [{"type": "sprite", "position": [320, 180.0], "scale": [32, 34], "texture": "ground0"}]} ,
+    {
+      "name": "leaves",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            25.0
+          ],
+          "scale": [320, 54],
+          "texture": "leaves0"
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            10.0,
+            90.0
+          ],
+          "scale": [64, 64],
+          "texture": "bubble_open"
+        },
+        {
+          "type": "zone",
+          "position": [
+            10.0,
+            90.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 30
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            90.0
+          ],
+          "scale": [64, 64],
+          "texture": "bubble_closed"
+        },
+        {
+          "type": "zone",
+          "position": [
+            300.0,
+            90.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "level"
+        }
+      ]
+    }
+  ]
+}

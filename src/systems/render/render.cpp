@@ -16,9 +16,11 @@ void RenderSystem::init(GLFWwindow* window_arg) {
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1); // vsync
 
+#ifndef __EMSCRIPTEN__
     // Load OpenGL function pointers
     const int is_fine = gl3w_init();
     assert(is_fine == 0);
+#endif
 
     LOG_INFO("Native Resolution = {}, {}", native_width, native_height);
     LOG_INFO("Window Dimensions = {}, {}", window_width_px, window_height_px);
@@ -64,6 +66,11 @@ void RenderSystem::draw(float elapsed_ms) {
         if (shader_manager.update()) {
             updateShaders();
         }
+    }
+
+    if (render_skips > 0) {
+        render_skips--;
+        return;
     }
 
     world_stage.draw();

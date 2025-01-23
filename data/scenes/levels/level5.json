@@ -1,0 +1,106 @@
+{
+    "objList": [
+        {
+            "name": "Double the fun",
+            "data": [
+                {
+                    "type": "level",
+                    "id": 5,
+                    "name": "Double the fun"
+                }
+            ]
+        },
+        {
+            "name": "background",
+            "data": [
+                {
+                    "type": "background",
+                    "id": "cyber_4"
+                }
+            ]
+        },
+        {
+            "name": "middle-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        200.0,
+                        80.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "left-rotate-mirror",
+            "data": [
+                {
+                    "type": "mirror",
+                    "position": [
+                        90.0,
+                        80.0
+                    ],
+                    "angle": 1.5707963268,
+                    "mirror-type": "rotate"
+                },
+                {
+                    "type": "interactable"
+                },
+                {
+                    "type": "highlightable",
+                    "isHighlighted": false
+                }
+            ]
+        },
+        {
+            "name": "start_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        200.0,
+                        140.0
+                    ],
+                    "zone_type": 0,
+                    "angle": 30
+                },
+                {
+                    "type": "light_source",
+                    "angle": -1.5707963268
+                }
+            ]
+        },
+        {
+            "name": "end_zone",
+            "data": [
+                {
+                    "type": "zone",
+                    "position": [
+                        200.0,
+                        35.0
+                    ],
+                    "zone_type": 1,
+                    "angle": 0
+                },
+                {
+                    "type": "collider",
+                    "width": 3,
+                    "height": 3,
+                    "bounds": 0
+                },
+                {
+                    "type": "collideable"
+                }
+            ]
+        }
+    ]
+}

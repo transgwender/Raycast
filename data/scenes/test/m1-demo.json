@@ -1,0 +1,466 @@
+{
+  "objList": [
+    {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            90.0
+          ],
+          "scale": [
+            320,
+            180
+          ],
+          "texture": "background"
+        }
+      ]
+    },
+    {
+      "name": "tree0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            55.0,
+            100.0
+          ],
+          "scale": [
+            59,
+            152
+          ],
+          "texture": "tree0"
+        }
+      ]
+    },
+    {
+
+      "name": "leaves",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160.0,
+            25.0
+          ],
+          "scale": [
+            320,
+            54
+          ],
+          "texture": "leaves0"
+        }
+      ]
+    },
+    {
+      "name": "stones",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            180.0,
+            120.0
+          ],
+          "scale": [
+            180,
+            120
+          ],
+          "texture": "stones"
+        },
+        {
+          "type": "collider",
+          "bounds": 1,
+          "width": 180,
+          "height": 120
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "zone",
+          "position": [
+            180.0,
+            120.0
+          ],
+          "scale": [
+            180,
+            120
+          ],
+          "zone_type": 3
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            0,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            32,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            64,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            96,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            128,
+            180
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            160,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            192,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            224,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            256,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground1"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            288,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "ground0",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            320,
+            180.0
+          ],
+          "scale": [
+            32,
+            34
+          ],
+          "texture": "ground0"
+        }
+      ]
+    },
+    {
+      "name": "rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            60.0,
+            155.0
+          ],
+          "angle": 1.57
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "rotatable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "rail-1",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            40.0,
+            30.0
+          ],
+          "scale": [
+            50,
+            2
+          ],
+          "angle": 0,
+          "texture": "mirror"
+        }
+      ]
+    },
+    {
+      "name": "move-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            40.0,
+            30.0
+          ],
+          "angle": 0.785
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "on_linear_rails",
+          "angle": 0,
+          "length": 25
+        },
+        {
+          "type": "lerpable",
+          "should_switch_direction" : false,
+          "t": 0,
+          "t_step": 0
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "far-rotate-mirror",
+      "data": [
+        {
+          "type": "mirror",
+          "position": [
+            295.0,
+            30.0
+          ],
+          "angle": 1.57
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "rotatable"
+        },
+        {
+          "type": "highlightable",
+          "isHighlighted": false
+        }
+      ]
+    },
+    {
+      "name": "level_id",
+      "data": [
+        {
+          "type": "level",
+          "id": 1
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            140.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "sprite",
+          "position": [
+            20.0,
+            140.0
+          ],
+          "texture": "bubble_open",
+          "scale": [
+            12.0,
+            12.0
+          ],
+          "angle": 0.785398163
+        },
+        {
+          "type": "collider",
+          "bounds": 0,
+          "width": 12.0,
+          "height": 12.0
+        },
+        {
+          "type": "light_source",
+          "angle": 0
+        }
+      ]
+    },
+    {
+      "name": "end_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            300.0,
+            140.0
+          ],
+          "zone_type": 1,
+          "angle": 0
+        },
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            140.0
+          ],
+          "texture": "bubble_closed",
+          "scale": [
+            12.0,
+            12.0
+          ]
+        },
+        {
+          "type": "collideable"
+        },
+        {
+          "type": "collider",
+          "bounds": 0,
+          "width": 3.0,
+          "height": 3.0
+        }
+      ]
+    }
+  ]
+}

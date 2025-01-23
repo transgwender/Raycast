@@ -1,0 +1,97 @@
+{
+  "objList": [
+    {
+      "name": "End Cutscene",
+      "data": [
+        {
+          "type": "end_level",
+          "id": 4
+        }
+      ]
+    },
+    {
+      "name": "background",
+      "data": [
+        {
+          "type": "background",
+          "id": "end_0"
+        }
+      ]
+    },
+    {
+      "name": "start_zone",
+      "data": [
+        {
+          "type": "zone",
+          "position": [
+            20.0,
+            20.0
+          ],
+          "zone_type": 0,
+          "angle": 30
+        },
+        {
+          "type": "light_source",
+          "angle": 0.78
+        }
+      ]
+    },
+    {
+      "name": "end_tree",
+      "data": [
+        {
+          "type": "end_cutscene_count",
+          "maxInclusive": 5,
+          "position": [
+            160.0,
+            160.0
+          ]
+        },
+        {
+          "type": "collider",
+          "width": 3,
+          "height": 3,
+          "bounds": 0
+        },
+        {
+          "type": "collideable"
+        }
+      ]
+    },
+    {
+      "name": "turtle",
+      "data": [
+        {
+          "type": "sprite_sheet",
+          "position": [
+            170.0,
+            153.0
+          ],
+          "sheetWidth": 384,
+          "sheetHeight": 192,
+          "cellWidth": 32,
+          "cellHeight": 32,
+          "imageWidth": 32,
+          "imageHeight": 32,
+          "texture": "turtle_sprite_sheet",
+          "animationFrames": [
+            12,
+            10,
+            4,
+            6,
+            5,
+            10
+          ]
+        },
+        {
+          "type": "dash_the_turtle",
+          "behavior": 3,
+          "minimumDisplacement": [
+            10000,
+            10000
+          ]
+        }
+      ]
+    }
+  ]
+}

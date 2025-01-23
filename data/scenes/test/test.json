@@ -1,0 +1,74 @@
+{
+  "objList": [
+    {
+      "name": "aaa",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            100.0,
+            100.0
+          ],
+          "texture": 0
+        }
+      ]
+    },
+    {
+      "name": "bbb",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            250.0,
+            250.0
+          ],
+          "texture": 0
+        }
+      ]
+    },
+    {
+      "name": "ccc",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            400.0,
+            400.0
+          ],
+          "texture": 0
+        }
+      ]
+    },
+    {
+      "name": "play_button",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            1000.0,
+            500.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "change_scene",
+          "scene": "mainmenu"
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            1000.0,
+            500.0
+          ],
+          "scale": [
+            384.0,
+            128.0
+          ]
+        }
+      ]
+    }
+  ]
+}

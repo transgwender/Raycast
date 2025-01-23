@@ -37,7 +37,9 @@ void ParticleStage::initVAO() {
 
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)0);
     glEnableVertexAttribArray(2);
+    checkGlErrors();
     glVertexAttribDivisor(2, 1);
+    checkGlErrors();
 
     glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(ParticleGPUData), (void*)offsetof(ParticleGPUData, scale));
     glEnableVertexAttribArray(3);

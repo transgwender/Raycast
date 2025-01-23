@@ -47,6 +47,7 @@ class CompositorStage {
 
     void setupTextures() const;
     void prepare() const;
+    void updateViewport() const;
 
   public:
     /**

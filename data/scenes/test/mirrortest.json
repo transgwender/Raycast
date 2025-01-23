@@ -1,0 +1,82 @@
+{
+  "objList": [
+    {
+      "name": "mirror",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            300.0,
+            360.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "on_linear_rails",
+          "angle": 100,
+          "length": 200
+        },
+        {
+          "type": "lerpable",
+          "t": 0,
+          "should_switch_direction": true,
+          "t_step": 0.2
+        }
+      ]
+    },
+    {
+      "name": "another-mirror",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            800.0,
+            200.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "interactable"
+        },
+        {
+          "type": "bounding_box",
+          "position": [
+            800.0,
+            100.0
+          ],
+          "scale": [
+            324.0,
+            128.0
+          ]
+        },
+        {
+          "type": "rotatable"
+        }
+      ]
+    },
+    {
+      "name": "yet-another-one",
+      "data": [
+        {
+          "type": "sprite",
+          "position": [
+            1000.0,
+            600.0
+          ],
+          "texture": 1
+        },
+        {
+          "type": "on_linear_rails",
+          "angle": 0,
+          "length": 200
+        },
+        {
+          "type": "lerpable",
+          "t": 0,
+          "should_switch_direction": true,
+          "t_step": 0.4
+        }
+      ]
+    }
+  ]
+}

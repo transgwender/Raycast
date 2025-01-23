@@ -1,11 +1,13 @@
 #include "persistence.hpp"
+
+#include "common.hpp"
 #include "log.hpp"
 #include <fstream>
 #include <iostream>
 
 void PersistenceSystem::init() {
 
-    std::ifstream save_file("save");
+    std::ifstream save_file(player_data_path("save"));
 
     if (save_file.is_open()) {
         nlohmann::json j;
@@ -21,7 +23,7 @@ void PersistenceSystem::init() {
         data[1] = LEVEL_STATE::ACCESSIBLE;
     }
 
-    std::ifstream setting_file("settings");
+    std::ifstream setting_file(player_data_path("settings"));
 
     if (setting_file.is_open()) {
         nlohmann::json j;
@@ -76,7 +78,7 @@ void PersistenceSystem::clear_data() {
 bool PersistenceSystem::try_write_save() {
     json j = data;
 
-    std::ofstream save_file("save");
+    std::ofstream save_file(player_data_path("save"));
     save_file << j;
     save_file.close();
 
@@ -84,7 +86,7 @@ bool PersistenceSystem::try_write_save() {
 
     j = current_settings;
 
-    std::ofstream setting_file("settings");
+    std::ofstream setting_file(player_data_path("settings"));
     setting_file << j;
     setting_file.close();
 

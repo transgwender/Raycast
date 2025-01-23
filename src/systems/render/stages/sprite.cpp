@@ -13,14 +13,14 @@ void SpriteStage::init() {
     // create new render textures and bind it to our new framebuffer
     glGenTextures(1, &world_texture);
     glBindTexture(GL_TEXTURE_2D, world_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, world_texture, 0);
 
     glGenTextures(1, &ui_texture);
     glBindTexture(GL_TEXTURE_2D, ui_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, native_width, native_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, ui_texture, 0);
@@ -131,13 +131,14 @@ void SpriteStage::prepareDraw() const {
     setUniformInt(shader, "point_lights_count", point_lights_count);
 
     glViewport(0, 0, native_width, native_height);
-    glDepthRange(0.0, 1.0);
+    // glDepthRange(0.0, 1.0);
     glClearColor(static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), static_cast<GLfloat>(0.0), 0.0);
-    glClearDepth(1.f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    // glClearDepth(1.f);
+    glClear(GL_COLOR_BUFFER_BIT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glDisable(GL_DEPTH_TEST);
+
 
     // Setting active vertex and index buffers
     glBindVertexArray(vao);

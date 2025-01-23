@@ -24,7 +24,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, frame_buffer);
     glGenTextures(1, &composited_texture);
     glBindTexture(GL_TEXTURE_2D, composited_texture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, upscaled_width, upscaled_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, composited_texture, 0);
@@ -33,7 +33,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer0);
     glGenTextures(1, &bloom_tex0);
     glBindTexture(GL_TEXTURE_2D, bloom_tex0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -45,7 +45,7 @@ void CompositorStage::createTextures() {
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
     glGenTextures(1, &bloom_tex1);
     glBindTexture(GL_TEXTURE_2D, bloom_tex1);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, bloom_pass_width, bloom_pass_height, 0, GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -96,9 +96,7 @@ void CompositorStage::setupTextures() const {
 }
 
 void CompositorStage::prepare() const {
-    glDepthRange(0, 10);
     glClearColor(0.0f, 0.0f, 0.0f, 0.0);
-    glClearDepth(1.f);
     glDisable(GL_BLEND);
     glDisable(GL_DEPTH_TEST);
 
@@ -109,12 +107,33 @@ void CompositorStage::prepare() const {
     checkGlErrors();
 }
 
+/**
+ * Update the viewport and apply letterboxing and pillarboxing.
+ * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
+ */
+void CompositorStage::updateViewport() const {
+    glfwGetFramebufferSize(window, &framebuffer_width, &framebuffer_height);
+
+#ifdef __EMSCRIPTEN__
+    glViewport(0, 0, framebuffer_width, framebuffer_height);
+    return;
+#endif
+
+    const float aspect_ratio = static_cast<float>(native_width) / static_cast<float>(native_height);
+
+    viewport_width = min(static_cast<float>(framebuffer_width), framebuffer_height * aspect_ratio);
+    viewport_height = min(static_cast<float>(framebuffer_height), framebuffer_width / aspect_ratio);
+
+    viewport_offset_x = (framebuffer_width - viewport_width) / 2;
+    viewport_offset_y = (framebuffer_height - viewport_height) / 2;
+
+    glViewport(viewport_offset_x, viewport_offset_y, viewport_width, viewport_height);
+}
+
 void CompositorStage::composite() const {
     glUseProgram(compositor_shader);
 
-    int w, h;
-    glfwGetFramebufferSize(window, &w, &h);
-    glViewport(0, 0, w, h);
+    updateViewport();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     // Set the vertex position and vertex texture coordinates (both stored in the same VBO)
@@ -125,7 +144,7 @@ void CompositorStage::composite() const {
     setupTextures();
 
     // Draw
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
     glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, nullptr);
 
     checkGlErrors();
@@ -161,7 +180,6 @@ void CompositorStage::bloomBlurPass() const {
 }
 
 void CompositorStage::bloomComposite() const {
-
     glViewport(0, 0, bloom_pass_width, bloom_pass_height);
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
 
