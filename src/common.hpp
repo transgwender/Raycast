@@ -92,6 +92,8 @@ extern int viewport_height;
 extern int framebuffer_width;
 extern int framebuffer_height;
 
+extern int render_skips;
+
 static int native_width = 320;
 static int native_height = 180;
 

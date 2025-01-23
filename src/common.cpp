@@ -13,8 +13,10 @@ int viewport_height = window_height_px;
 int framebuffer_width = window_width_px;
 int framebuffer_height = window_height_px;
 
+int render_skips = 0;
+
 // Note, we could also use the functions from GLM but we write the
-// transformations here to show the uderlying math
+// transformations here to show the underlying math
 void Transform::scale(vec2 scale) {
     mat3 S = {{scale.x, 0.f, 0.f}, {0.f, scale.y, 0.f}, {0.f, 0.f, 1.f}};
     mat = mat * S;

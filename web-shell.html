@@ -118,27 +118,12 @@
 </script>
 
 <script type="text/javascript">
-    let curTimeout = null;
-    const canvasElem = document.getElementById("canvas")
-
-    function showCanvas() {
-        canvasElem.style.display = "block";
-        canvasElem.click();
-    }
-
     function updateCanvasSize() {
-        // if (curTimeout) clearTimeout(curTimeout)
-        //
-        // canvasElem.style.display = "none";
-        // curTimeout = setTimeout(showCanvas, 10)
-
         const canvasWrapper = document.getElementById("canvas_wrapper")
         const aspectRatio = 16 / 9;
 
-        /**
-         * Update the viewport and apply letterboxing and pillarboxing.
-         * Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
-         */
+        // Update the viewport and apply letterboxing and pillarboxing.
+        // Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
         const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio)
         const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio)
 

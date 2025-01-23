@@ -180,7 +180,6 @@ void CompositorStage::bloomBlurPass() const {
 }
 
 void CompositorStage::bloomComposite() const {
-
     glViewport(0, 0, bloom_pass_width, bloom_pass_height);
     glBindFramebuffer(GL_FRAMEBUFFER, bloom_buffer1);
 

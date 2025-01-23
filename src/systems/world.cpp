@@ -121,6 +121,9 @@ void WorldSystem::init(PersistenceSystem *persistence_ptr) {
 void WorldSystem::on_resize_window(int width, int height) {
     window_width_px = width;
     window_height_px = height;
+#ifdef __EMSCRIPTEN__
+    render_skips = 60;
+#endif
 }
 
 void WorldSystem::on_resize_framebuffer(int width, int height) {

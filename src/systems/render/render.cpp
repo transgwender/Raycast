@@ -68,6 +68,11 @@ void RenderSystem::draw(float elapsed_ms) {
         }
     }
 
+    if (render_skips > 0) {
+        render_skips--;
+        return;
+    }
+
     world_stage.draw();
     mesh_stage.draw();
     particle_stage.draw();
