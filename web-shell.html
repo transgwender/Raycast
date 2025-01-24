@@ -119,13 +119,13 @@
 
 <script type="text/javascript">
     function updateCanvasSize() {
-        const canvasWrapper = document.getElementById("canvas_wrapper")
+        const canvasWrapper = document.getElementById("canvas_wrapper");
         const aspectRatio = 16 / 9;
 
         // Update the viewport and apply letterboxing and pillarboxing.
         // Adapted from https://gamedev.stackexchange.com/a/54906 by 'aaaaaaaaaaaa'
-        const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio)
-        const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio)
+        const viewportWidth = Math.min(window.innerWidth, window.innerHeight * aspectRatio);
+        const viewportHeight = Math.min(window.innerHeight, window.innerWidth / aspectRatio);
 
         const viewportOffsetX = (window.innerWidth - viewportWidth) / 2;
         const viewportOffsetY = (window.innerHeight - viewportHeight) / 2;
@@ -136,8 +136,10 @@
         canvasWrapper.style.top = viewportOffsetY + "px";
     }
 
-    addEventListener("resize", updateCanvasSize)
-    addEventListener("load", updateCanvasSize)
+    addEventListener("resize", updateCanvasSize);
+    addEventListener("load", updateCanvasSize);
+    addEventListener("mousedown", onMouseDown);
+    addEventListener("keydown", onKeyDown);
 </script>
 
 {{{ SCRIPT }}}
