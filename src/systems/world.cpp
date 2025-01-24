@@ -330,7 +330,7 @@ void WorldSystem::restart_game() {
                                 WORLD_TEXT,
                                 true
                             });
-        text.color.w = 400.f;
+        text.color.w = 650.f;
     }
 
     // add frame counter
@@ -812,6 +812,12 @@ void WorldSystem::on_mouse_button(int key, int action, int mod, double xpos, dou
 
     auto hovered_entities = input_manager.get_entities_at_mouse_pos();
     if (IS_RELEASED(GLFW_MOUSE_BUTTON_LEFT)) {
+        // hide title screen on click
+        if (registry.texts.has(level_name_bg)) {
+            registry.texts.get(level_name_bg).color.a = std::min(registry.texts.get(level_name_bg).color.a, 255.0f) ;
+            registry.texts.get(level_name_text).color.a = std::min(registry.texts.get(level_name_text).color.a, 255.0f) ;
+            // registry.remove_all_components_of(level_name_text);
+        }
         // mouse initialized by clicked_entities
         for (const Entity& entity : hovered_entities) {
             assert(registry.motions.has(entity));

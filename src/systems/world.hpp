@@ -21,7 +21,7 @@
 constexpr size_t LIGHT_SPAWN_DELAY_MS = 1000.f;
 constexpr size_t DOUBLE_REFLECTION_TIMEOUT = 800.f;
 constexpr size_t MAX_LIGHT_ON_SCREEN = 20;
-constexpr size_t FADE_STEP = 80.f;
+constexpr size_t FADE_STEP = 400.f;
 
 // Container for all our entities and game logic. Individual rendering / update
 // is deferred to the relative update() methods
